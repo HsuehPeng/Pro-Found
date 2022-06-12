@@ -155,7 +155,6 @@ enum ImageAsset: String {
 extension UIImage {
 
 	static func asset(_ asset: ImageAsset) -> UIImage? {
-
 		return UIImage(named: asset.rawValue)
 	}
 }

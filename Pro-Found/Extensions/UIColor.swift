@@ -8,7 +8,7 @@
 import UIKit
 
 private enum STColor: String {
-
+	
 	case ocean
 	case ocean10
 	case ocean20
@@ -16,7 +16,6 @@ private enum STColor: String {
 	case ocean40
 	case ocean50
 	case ocean60
-	
 }
 
 extension UIColor {
