@@ -16,9 +16,15 @@ class HomeViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
+
+		setupNavBar()
 	}
 	
 	// MARK: - UI
+	
+	func setupNavBar() {
+		navigationController?.navigationBar.isHidden = true
+	}
 	
 	// MARK: - Actions
 	

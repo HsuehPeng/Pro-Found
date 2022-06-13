@@ -16,6 +16,7 @@ class MainTabController: UITabBarController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		configureViewControllers()
+		
 	}
 	
 	// MARK: - UI
@@ -49,8 +50,8 @@ class MainTabController: UITabBarController {
 		appearance.configureWithDefaultBackground()
 		appearance.backgroundColor = .white
 		nav.navigationBar.standardAppearance = appearance
-		nav.navigationBar.scrollEdgeAppearance = appearance
 		nav.tabBarItem.image = image
+		nav.tabBarItem.selectedImage = image?.withTintColor(UIColor.orange, renderingMode: .alwaysOriginal)
 		return nav
 	}
 }
