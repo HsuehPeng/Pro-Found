@@ -15,17 +15,42 @@ class MainTabController: UITabBarController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .red
+		configureViewControllers()
 	}
 	
 	// MARK: - UI
 	
-	func configureViewControllers() {
-		
-	}
-	
 	// MARK: - Actions
 	
 	// MARK: - Helpers
-
+	
+	func configureViewControllers() {
+		let homeVC = HomeViewController()
+		let homeNav = templateNavigationController(image: UIImage.asset(.home), rootVC: homeVC)
+		
+		let feedVC = FeedViewController()
+		let feedNav = templateNavigationController(image: UIImage.asset(.article), rootVC: feedVC)
+		
+		let articleVC = ArticleViewController()
+		let articleNav = templateNavigationController(image: UIImage.asset(.layers), rootVC: articleVC)
+		
+		let scheduleVC = ScheduleViewController()
+		let scheduleNav = templateNavigationController(image: UIImage.asset(.calendar_selected), rootVC: scheduleVC)
+		
+		let profileVC = ProfileViewController()
+		let profileNav = templateNavigationController(image: UIImage.asset(.account_circle), rootVC: profileVC)
+		
+		viewControllers = [homeNav, feedNav, articleNav, scheduleNav, profileNav]
+	}
+	
+	func templateNavigationController(image: UIImage?, rootVC: UIViewController) -> UINavigationController {
+		let nav = UINavigationController(rootViewController: rootVC)
+		let appearance = UINavigationBarAppearance()
+		appearance.configureWithDefaultBackground()
+		appearance.backgroundColor = .white
+		nav.navigationBar.standardAppearance = appearance
+		nav.navigationBar.scrollEdgeAppearance = appearance
+		nav.tabBarItem.image = image
+		return nav
+	}
 }
