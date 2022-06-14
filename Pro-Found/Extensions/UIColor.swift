@@ -19,6 +19,15 @@ private enum STColor: String {
 	case ocean50
 	case ocean60
 	
+	// DarkColor
+	case dark
+	case dark10
+	case dark20
+	case dark30
+	case dark40
+	case dark50
+	case dark60
+	
 	// OrangeColor
 	
 	case orange
@@ -48,6 +57,14 @@ extension UIColor {
 	static let orange40 = STColor(.orange40)
 	static let orange50 = STColor(.orange50)
 	static let orange60 = STColor(.orange60)
+	
+	static let dark = STColor(.dark)
+	static let dark10 = STColor(.dark10)
+	static let dark20 = STColor(.dark20)
+	static let dark30 = STColor(.dark30)
+	static let dark40 = STColor(.dark40)
+	static let dark50 = STColor(.dark50)
+	static let dark60 = STColor(.dark60)
 	
 	private static func STColor(_ color: STColor) -> UIColor {
 
