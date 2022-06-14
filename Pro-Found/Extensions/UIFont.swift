@@ -15,7 +15,7 @@ enum FontName: String {
 }
 
 extension UIFont {
-	static func customFont(_ font: FontName, size: CGFloat) -> UIFont? {
-		return UIFont(name: font.rawValue, size: size)
+	static func customFont(_ font: FontName, size: CGFloat) -> UIFont {
+		return UIFont(name: font.rawValue, size: size) ?? UIFont.systemFont(ofSize: 16)
 	}
 }
