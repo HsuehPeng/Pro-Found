@@ -11,6 +11,13 @@ class HomeViewController: UIViewController {
 
 	// MARK: - Properties
 	
+	private let topBarView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .white
+		view.translatesAutoresizingMaskIntoConstraints = false
+		return view
+	}()
+	
 	// MARK: - Lifecycle
 
 	override func viewDidLoad() {

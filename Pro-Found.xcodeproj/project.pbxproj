@@ -14,7 +14,12 @@
 		B811E40528531135009C0838 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B811E40328531135009C0838 /* Main.storyboard */; };
 		B811E40728531136009C0838 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B811E40628531136009C0838 /* Assets.xcassets */; };
 		B811E40A28531136009C0838 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B811E40828531136009C0838 /* LaunchScreen.storyboard */; };
+		B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E22857675A00772375 /* FirebaseConstant.swift */; };
+		B83666E528576E0900772375 /* ProfileMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E428576E0900772375 /* ProfileMainTableViewCell.swift */; };
+		B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E728578E1B00772375 /* CustomUIElements.swift */; };
 		B83D19BF285608770049846E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83D19BE285608770049846E /* UIFont.swift */; };
+		B86943CB2858425B008021C9 /* ProfileClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CA2858425B008021C9 /* ProfileClassTableViewCell.swift */; };
+		B86943CE28584DE4008021C9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CD28584DE4008021C9 /* User.swift */; };
 		B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */; };
 		B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */; };
 		B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */; };
@@ -39,7 +44,12 @@
 		B811E40628531136009C0838 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B811E40928531136009C0838 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B811E40B28531136009C0838 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B83666E22857675A00772375 /* FirebaseConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConstant.swift; sourceTree = "<group>"; };
+		B83666E428576E0900772375 /* ProfileMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMainTableViewCell.swift; sourceTree = "<group>"; };
+		B83666E728578E1B00772375 /* CustomUIElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIElements.swift; sourceTree = "<group>"; };
 		B83D19BE285608770049846E /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
+		B86943CA2858425B008021C9 /* ProfileClassTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileClassTableViewCell.swift; sourceTree = "<group>"; };
+		B86943CD28584DE4008021C9 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAsset+UIImageExtension.swift"; sourceTree = "<group>"; };
 		B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -79,8 +89,6 @@
 			isa = PBXGroup;
 			children = (
 				B811E3FC28531135009C0838 /* Pro-Found */,
-				B811E40328531135009C0838 /* Main.storyboard */,
-				B811E40828531136009C0838 /* LaunchScreen.storyboard */,
 				B811E40B28531136009C0838 /* Info.plist */,
 				B811E3FB28531135009C0838 /* Products */,
 				94870A20119C6AA0684F9B42 /* Pods */,
@@ -102,19 +110,50 @@
 				B811E3FD28531135009C0838 /* AppDelegate.swift */,
 				B811E3FF28531135009C0838 /* SceneDelegate.swift */,
 				B8A8FDE62855CE6E00F98326 /* Extensions */,
+				B83666E628576E1000772375 /* Views */,
 				B8C7B3912857259800CA7370 /* Controllers */,
+				B86943CC28584DB6008021C9 /* Models */,
 				B8A8FDF02855DC2E00F98326 /* Resources */,
 			);
 			path = "Pro-Found";
+			sourceTree = "<group>";
+		};
+		B83666E628576E1000772375 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B811E40328531135009C0838 /* Main.storyboard */,
+				B811E40828531136009C0838 /* LaunchScreen.storyboard */,
+				B83666EE285841A400772375 /* ProviewVCViews */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B83666EE285841A400772375 /* ProviewVCViews */ = {
+			isa = PBXGroup;
+			children = (
+				B83666E428576E0900772375 /* ProfileMainTableViewCell.swift */,
+				B86943CA2858425B008021C9 /* ProfileClassTableViewCell.swift */,
+			);
+			path = ProviewVCViews;
+			sourceTree = "<group>";
+		};
+		B86943CC28584DB6008021C9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B86943CD28584DE4008021C9 /* User.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		B8A8FDE62855CE6E00F98326 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */,
+				B83666E22857675A00772375 /* FirebaseConstant.swift */,
 				B8A8FDF12855E4D200F98326 /* Constraint.swift */,
 				B83D19BE285608770049846E /* UIFont.swift */,
 				B8A8FDF32855E4EE00F98326 /* UIColor.swift */,
+				B83666E728578E1B00772375 /* CustomUIElements.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -280,14 +319,19 @@
 			files = (
 				B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */,
 				B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */,
+				B83666E528576E0900772375 /* ProfileMainTableViewCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor.swift in Sources */,
+				B86943CB2858425B008021C9 /* ProfileClassTableViewCell.swift in Sources */,
 				B811E40228531135009C0838 /* MainTabController.swift in Sources */,
 				B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */,
+				B86943CE28584DE4008021C9 /* User.swift in Sources */,
 				B83D19BF285608770049846E /* UIFont.swift in Sources */,
 				B8C7B3992857260D00CA7370 /* ProfileViewController.swift in Sources */,
 				B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */,
 				B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */,
 				B8A8FDF22855E4D200F98326 /* Constraint.swift in Sources */,
+				B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */,
+				B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */,
 				B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */,
 				B811E40028531135009C0838 /* SceneDelegate.swift in Sources */,
 			);
