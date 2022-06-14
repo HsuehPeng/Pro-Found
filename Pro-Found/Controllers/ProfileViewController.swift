@@ -14,6 +14,7 @@ class ProfileViewController: UIViewController {
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(ProfileMainTableViewCell.self, forCellReuseIdentifier: ProfileMainTableViewCell.reuseIdentifier)
+		tableView.register(ProfileClassTableViewCell.self, forCellReuseIdentifier: ProfileClassTableViewCell.reuseIdentifier)
 		tableView.contentInsetAdjustmentBehavior = .never
 		tableView.separatorStyle = .none
 		tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -27,6 +28,7 @@ class ProfileViewController: UIViewController {
 		view.backgroundColor = .white
 		
 		tableView.dataSource = self
+		tableView.delegate = self
 		
 		setupNavBar()
 		setupUI()
@@ -49,19 +51,39 @@ class ProfileViewController: UIViewController {
 
 }
 
+// MARK: - UITableViewDataSource
+
 extension ProfileViewController: UITableViewDataSource {
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+		return 2
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 1
+		if section == 0 {
+			return 1
+		} else {
+			return 2
+		}
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileMainTableViewCell.reuseIdentifier, for: indexPath)
+		guard let mainCell = tableView.dequeueReusableCell(withIdentifier: ProfileMainTableViewCell.reuseIdentifier)
 				as? ProfileMainTableViewCell else { return UITableViewCell() }
-		return cell
+		guard let classCell = tableView.dequeueReusableCell(withIdentifier: ProfileClassTableViewCell.reuseIdentifier)
+				as? ProfileClassTableViewCell else { return UITableViewCell()}
+		
+		if indexPath.section == 0 {
+			return mainCell
+		} else {
+			return classCell
+		}
+		
 	}
 	
+}
+
+extension ProfileViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		return UITableView.automaticDimension
+	}
 }

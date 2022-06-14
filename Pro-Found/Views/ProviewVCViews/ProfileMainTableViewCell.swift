@@ -138,11 +138,12 @@ class ProfileMainTableViewCell: UITableViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
-		addSubview(backImageView)
-		backImageView.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, height: 812 * (280 / 812))
+		contentView.addSubview(backImageView)
+		backImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 812 * (280 / 812))
 		
-		addSubview(profileView)
-		profileView.anchor(top: backImageView.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: -28)
+		contentView.addSubview(profileView)
+		profileView.anchor(top: backImageView.bottomAnchor, left: contentView.leftAnchor,
+						   bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingTop: -28)
 //		profileView.heightAnchor.constraint(equalToConstant: 560).isActive = true
 		
 		profileView.addSubview(profilePhotoImageView)
