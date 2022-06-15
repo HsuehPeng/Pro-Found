@@ -79,7 +79,6 @@ extension ProfileViewController: UITableViewDataSource {
 		} else {
 			return classCell
 		}
-		
 	}
 	
 }
