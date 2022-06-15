@@ -24,6 +24,8 @@ class FeedViewController: UIViewController {
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
+		tableView.register(PostPageFeedCell.self, forCellReuseIdentifier: PostPageFeedCell.reuseIdentifier)
+		tableView.separatorStyle = .none
 		return tableView
 	}()
 	
@@ -32,6 +34,10 @@ class FeedViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
+		
+		tableView.dataSource = self
+		tableView.delegate = self
+		
 		setupNavBar()
 		setupUI()
 	}
@@ -59,4 +65,28 @@ class FeedViewController: UIViewController {
 	
 	// MARK: - Helpers
 
+}
+
+// MARK: - UITableViewDataSource
+ 
+extension FeedViewController: UITableViewDataSource {
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return 1
+	}
+	
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 2
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let feedCell = tableView.dequeueReusableCell(withIdentifier: PostPageFeedCell.reuseIdentifier, for: indexPath)
+				as? PostPageFeedCell else { return UITableViewCell() }
+		return feedCell
+	}
+}
+
+// MARK: - UITableViewDelegate
+
+extension FeedViewController: UITableViewDelegate {
+	
 }
