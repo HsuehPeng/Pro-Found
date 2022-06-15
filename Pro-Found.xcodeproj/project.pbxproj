@@ -36,6 +36,7 @@
 		B8CC5EAE285872F4004C5D7A /* GeneralItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EAD285872F4004C5D7A /* GeneralItemCollectionViewCell.swift */; };
 		B8CC5EB028588BD0004C5D7A /* GeneralTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */; };
 		B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */; };
+		B8CC5EB528598D7C004C5D7A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		B8CC5EAD285872F4004C5D7A /* GeneralItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralItemCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTableViewHeader.swift; sourceTree = "<group>"; };
 		B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPageFeedCell.swift; sourceTree = "<group>"; };
+		B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DCCA7A9A952A4B666B6667CE /* Pods-Pro-Found.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-Found.release.xcconfig"; path = "Target Support Files/Pods-Pro-Found/Pods-Pro-Found.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -99,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				B811E3FC28531135009C0838 /* Pro-Found */,
+				B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */,
 				B811E3FB28531135009C0838 /* Products */,
 				94870A20119C6AA0684F9B42 /* Pods */,
 				ECDCBF75BD00DCA462970A65 /* Frameworks */,
@@ -241,6 +244,7 @@
 				B811E3F628531135009C0838 /* Sources */,
 				B811E3F728531135009C0838 /* Frameworks */,
 				B811E3F828531135009C0838 /* Resources */,
+				C66AA32A0B02DFE705224C32 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -295,6 +299,7 @@
 				B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */,
 				B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */,
 				B811E40528531135009C0838 /* Main.storyboard in Resources */,
+				B8CC5EB528598D7C004C5D7A /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +345,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
+		C66AA32A0B02DFE705224C32 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pro-Found/Pods-Pro-Found-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Pro-Found/Pods-Pro-Found-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Pro-Found/Pods-Pro-Found-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -530,7 +552,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Peng.Pro-Found";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.HsuehPeng.Pro-Found";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -559,7 +581,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Peng.Pro-Found";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.HsuehPeng.Pro-Found";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
