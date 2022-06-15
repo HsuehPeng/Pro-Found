@@ -20,6 +20,8 @@
 		B83D19BF285608770049846E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83D19BE285608770049846E /* UIFont.swift */; };
 		B86943CB2858425B008021C9 /* ProfileClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CA2858425B008021C9 /* ProfileClassTableViewCell.swift */; };
 		B86943CE28584DE4008021C9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CD28584DE4008021C9 /* User.swift */; };
+		B86943D028586079008021C9 /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CF28586079008021C9 /* PrivateKey.swift */; };
+		B86943D32858673C008021C9 /* GeneralItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943D22858673C008021C9 /* GeneralItemTableViewCell.swift */; };
 		B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */; };
 		B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */; };
 		B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */; };
@@ -31,6 +33,9 @@
 		B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B394285725F500CA7370 /* ArticleViewController.swift */; };
 		B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B3962857260300CA7370 /* ScheduleViewController.swift */; };
 		B8C7B3992857260D00CA7370 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B3982857260D00CA7370 /* ProfileViewController.swift */; };
+		B8CC5EAE285872F4004C5D7A /* GeneralItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EAD285872F4004C5D7A /* GeneralItemCollectionViewCell.swift */; };
+		B8CC5EB028588BD0004C5D7A /* GeneralTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */; };
+		B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +55,8 @@
 		B83D19BE285608770049846E /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		B86943CA2858425B008021C9 /* ProfileClassTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileClassTableViewCell.swift; sourceTree = "<group>"; };
 		B86943CD28584DE4008021C9 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		B86943CF28586079008021C9 /* PrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKey.swift; sourceTree = "<group>"; };
+		B86943D22858673C008021C9 /* GeneralItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralItemTableViewCell.swift; sourceTree = "<group>"; };
 		B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAsset+UIImageExtension.swift"; sourceTree = "<group>"; };
 		B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -61,6 +68,9 @@
 		B8C7B394285725F500CA7370 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
 		B8C7B3962857260300CA7370 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		B8C7B3982857260D00CA7370 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		B8CC5EAD285872F4004C5D7A /* GeneralItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTableViewHeader.swift; sourceTree = "<group>"; };
+		B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPageFeedCell.swift; sourceTree = "<group>"; };
 		DCCA7A9A952A4B666B6667CE /* Pods-Pro-Found.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-Found.release.xcconfig"; path = "Target Support Files/Pods-Pro-Found/Pods-Pro-Found.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +117,7 @@
 		B811E3FC28531135009C0838 /* Pro-Found */ = {
 			isa = PBXGroup;
 			children = (
+				B86943CF28586079008021C9 /* PrivateKey.swift */,
 				B811E3FD28531135009C0838 /* AppDelegate.swift */,
 				B811E3FF28531135009C0838 /* SceneDelegate.swift */,
 				B8A8FDE62855CE6E00F98326 /* Extensions */,
@@ -123,6 +134,11 @@
 			children = (
 				B811E40328531135009C0838 /* Main.storyboard */,
 				B811E40828531136009C0838 /* LaunchScreen.storyboard */,
+				B86943D22858673C008021C9 /* GeneralItemTableViewCell.swift */,
+				B8CC5EAD285872F4004C5D7A /* GeneralItemCollectionViewCell.swift */,
+				B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */,
+				B86943D12858670D008021C9 /* HomePageVCViews */,
+				B8CC5EB3285979D2004C5D7A /* PostVCViews */,
 				B83666EE285841A400772375 /* ProviewVCViews */,
 			);
 			path = Views;
@@ -143,6 +159,13 @@
 				B86943CD28584DE4008021C9 /* User.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		B86943D12858670D008021C9 /* HomePageVCViews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = HomePageVCViews;
 			sourceTree = "<group>";
 		};
 		B8A8FDE62855CE6E00F98326 /* Extensions */ = {
@@ -188,6 +211,14 @@
 				B8C7B3982857260D00CA7370 /* ProfileViewController.swift */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		B8CC5EB3285979D2004C5D7A /* PostVCViews */ = {
+			isa = PBXGroup;
+			children = (
+				B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */,
+			);
+			path = PostVCViews;
 			sourceTree = "<group>";
 		};
 		ECDCBF75BD00DCA462970A65 /* Frameworks */ = {
@@ -319,12 +350,16 @@
 			files = (
 				B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */,
 				B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */,
+				B86943D32858673C008021C9 /* GeneralItemTableViewCell.swift in Sources */,
 				B83666E528576E0900772375 /* ProfileMainTableViewCell.swift in Sources */,
+				B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor.swift in Sources */,
 				B86943CB2858425B008021C9 /* ProfileClassTableViewCell.swift in Sources */,
+				B86943D028586079008021C9 /* PrivateKey.swift in Sources */,
 				B811E40228531135009C0838 /* MainTabController.swift in Sources */,
 				B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */,
 				B86943CE28584DE4008021C9 /* User.swift in Sources */,
+				B8CC5EAE285872F4004C5D7A /* GeneralItemCollectionViewCell.swift in Sources */,
 				B83D19BF285608770049846E /* UIFont.swift in Sources */,
 				B8C7B3992857260D00CA7370 /* ProfileViewController.swift in Sources */,
 				B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */,
@@ -333,6 +368,7 @@
 				B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */,
 				B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */,
 				B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */,
+				B8CC5EB028588BD0004C5D7A /* GeneralTableViewHeader.swift in Sources */,
 				B811E40028531135009C0838 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

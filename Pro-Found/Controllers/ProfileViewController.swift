@@ -15,9 +15,11 @@ class ProfileViewController: UIViewController {
 		let tableView = UITableView()
 		tableView.register(ProfileMainTableViewCell.self, forCellReuseIdentifier: ProfileMainTableViewCell.reuseIdentifier)
 		tableView.register(ProfileClassTableViewCell.self, forCellReuseIdentifier: ProfileClassTableViewCell.reuseIdentifier)
+		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
 		tableView.contentInsetAdjustmentBehavior = .never
 		tableView.separatorStyle = .none
 		tableView.translatesAutoresizingMaskIntoConstraints = false
+		tableView.sectionHeaderTopPadding = 0
 		return tableView
 	}()
 	
@@ -77,13 +79,35 @@ extension ProfileViewController: UITableViewDataSource {
 		} else {
 			return classCell
 		}
-		
 	}
 	
 }
+
+// MARK: - UITableViewDelegate
 
 extension ProfileViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return UITableView.automaticDimension
 	}
+	
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
+				as? GeneralTableViewHeader else { return UITableViewHeaderFooterView() }
+		header.seeAllButton.isHidden = true
+		
+		if section == 1 {
+			return header
+		}
+		
+		return nil
+	}
+	
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if section == 1 {
+			return 50
+		}
+		
+		return 0
+	}
+	
 }
