@@ -8,5 +8,7 @@ target 'Pro-Found' do
   # Pods for Pro-Found
 
 	pod 'SwiftLint'
+	pod 'FirebaseAuth'
+	pod 'FirebaseFirestore'
 
 end

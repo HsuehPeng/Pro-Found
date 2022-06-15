@@ -46,7 +46,7 @@ class HomeViewController: UIViewController {
 		let tableView = UITableView()
 		tableView.register(GeneralItemTableViewCell.self, forCellReuseIdentifier: GeneralItemTableViewCell.reuseidentifier)
 		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
-//		tableView.backgroundColor = .orange20
+		tableView.separatorStyle = .none
 		return tableView
 	}()
 	
