@@ -11,5 +11,4 @@ import FirebaseAuth
 struct LoginService {
 	static let shared = LoginService()
 	
-
 }
