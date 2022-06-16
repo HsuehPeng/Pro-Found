@@ -112,14 +112,15 @@ class ScheduleViewController: UIViewController {
 		let flowLayout = UICollectionViewFlowLayout()
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
 
-		let width = (UIScreen.main.bounds.width - 32) / 8
-		let height = 30
 		flowLayout.scrollDirection = .vertical
-		flowLayout.itemSize = CGSize(width: Int(width), height: height)
 		flowLayout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 0, right: 16)
 		flowLayout.minimumInteritemSpacing = 2
 		collectionView.register(CalendarCollectionViewCell.self, forCellWithReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier)
-
+		collectionView.register(GeneralHeaderCollectionReusableView.self,
+								forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+								withReuseIdentifier: GeneralHeaderCollectionReusableView.reuseIdentifier)
+		collectionView.register(ScheduleActivityListCollectionViewCell.self,
+								forCellWithReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier)
 		return collectionView
 	}()
 	
@@ -222,22 +223,70 @@ class ScheduleViewController: UIViewController {
 // MARK: - UICollectionViewDataSource
 
 extension ScheduleViewController: UICollectionViewDataSource {
+	
+	func numberOfSections(in collectionView: UICollectionView) -> Int {
+		3
+	}
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return totalSquares.count
+		if section == 0 {
+			return totalSquares.count
+		} else {
+			return 2
+		}
+		
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier, for: indexPath)
+		guard let calendarCell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier, for: indexPath)
 		as? CalendarCollectionViewCell else { return UICollectionViewCell() }
-		cell.dateLabel.text = totalSquares[indexPath.item]
-		return cell
+		guard let activityCell = collectionView.dequeueReusableCell(withReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier, for: indexPath)
+		as? ScheduleActivityListCollectionViewCell else { return UICollectionViewCell() }
+		
+		calendarCell.dateLabel.text = totalSquares[indexPath.item]
+		
+		if indexPath.section == 0 {
+			return calendarCell
+		} else {
+			return activityCell
+		}
+
 	}
 
 }
 
 // MARK: - UICollectionViewDelegate
 
-extension ScheduleViewController: UICollectionViewDelegate {
-
+extension ScheduleViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
+						at indexPath: IndexPath) -> UICollectionReusableView {
+		guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
+																		   withReuseIdentifier: GeneralHeaderCollectionReusableView.reuseIdentifier,
+																		   for: indexPath)
+				as? GeneralHeaderCollectionReusableView else { return UICollectionReusableView() }
+		
+		return header
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+						referenceSizeForHeaderInSection section: Int) -> CGSize {
+		
+		if section == 0 {
+			return CGSize(width: 0, height: 0)
+		} else {
+			return CGSize(width: view.frame.size.width, height: 30)
+		}
+		
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
+						sizeForItemAt indexPath: IndexPath) -> CGSize {
+		if indexPath.section == 0 {
+			let width = (UIScreen.main.bounds.width - 32) / 8
+			let height = 30
+			return CGSize(width: Int(width), height: height)
+		}
+		
+		return CGSize(width: UIScreen.main.bounds.width, height: 128)
+	}
 }

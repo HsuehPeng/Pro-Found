@@ -43,6 +43,8 @@
 		B8AB0642285B0B3F002110A4 /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0641285B0B3F002110A4 /* LoginService.swift */; };
 		B8AB0645285B2658002110A4 /* CalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */; };
 		B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0646285B2B49002110A4 /* CalendarHelper.swift */; };
+		B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */; };
+		B8AB064B285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */; };
 		B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B38F2857258D00CA7370 /* HomeViewController.swift */; };
 		B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B392285725E200CA7370 /* FeedViewController.swift */; };
 		B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B394285725F500CA7370 /* ArticleViewController.swift */; };
@@ -94,6 +96,8 @@
 		B8AB0641285B0B3F002110A4 /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
 		B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8AB0646285B2B49002110A4 /* CalendarHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarHelper.swift; sourceTree = "<group>"; };
+		B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
+		B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleActivityListCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8C7B38F2857258D00CA7370 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B8C7B392285725E200CA7370 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		B8C7B394285725F500CA7370 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
@@ -170,6 +174,7 @@
 				B811E40328531135009C0838 /* Main.storyboard */,
 				B811E40828531136009C0838 /* LaunchScreen.storyboard */,
 				B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */,
+				B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */,
 				B86943D12858670D008021C9 /* HomePageVCViews */,
 				B8CC5EB3285979D2004C5D7A /* PostVCViews */,
 				B8AB0643285B2633002110A4 /* SchedulePageVCViews */,
@@ -266,6 +271,7 @@
 			isa = PBXGroup;
 			children = (
 				B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */,
+				B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */,
 			);
 			path = SchedulePageVCViews;
 			sourceTree = "<group>";
@@ -446,6 +452,7 @@
 				B8AB0613285A04CC002110A4 /* ProfileClassTableViewHeader.swift in Sources */,
 				B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */,
 				B86943D32858673C008021C9 /* HomePageTutorListTableViewCell.swift in Sources */,
+				B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */,
 				B83666E528576E0900772375 /* ProfileMainTableViewCell.swift in Sources */,
 				B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor+Extension.swift in Sources */,
@@ -468,6 +475,7 @@
 				B8AB061A285A2977002110A4 /* Subject.swift in Sources */,
 				B8A8FDF22855E4D200F98326 /* Constraint.swift in Sources */,
 				B8AB0642285B0B3F002110A4 /* LoginService.swift in Sources */,
+				B8AB064B285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift in Sources */,
 				B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */,
 				B8AB06112859FA13002110A4 /* Events.swift in Sources */,
 				B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */,
