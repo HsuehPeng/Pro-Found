@@ -7,11 +7,23 @@
 
 import UIKit
 
-class GeneralItemTableViewCell: UITableViewCell {
+protocol HomePageTutorListTableViewCellDelegate: AnyObject {
+	func goToTutorProfile(_ cell: HomePageTutorListTableViewCell, tutor: User)
+}
 
-	static let reuseidentifier = "\(GeneralItemTableViewCell.self)"
+class HomePageTutorListTableViewCell: UITableViewCell {
+
+	static let reuseidentifier = "\(HomePageTutorListTableViewCell.self)"
+	
+	weak var delegate: HomePageTutorListTableViewCellDelegate?
 	
 	// MARK: - Properties
+	
+	var tutors: [User]? {
+		didSet {
+			collectionView.reloadData()
+		}
+	}
 	
 	private let collectionView: UICollectionView = {
 		let flowLayout = UICollectionViewFlowLayout()
@@ -21,7 +33,7 @@ class GeneralItemTableViewCell: UITableViewCell {
 //		flowLayout.minimumInteritemSpacing = 20
 		flowLayout.minimumLineSpacing = 20
 		flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-		collectionView.register(GeneralItemCollectionViewCell.self, forCellWithReuseIdentifier: GeneralItemCollectionViewCell.reuseIdentifier)
+		collectionView.register(HomePageTutorCollectionViewCell.self, forCellWithReuseIdentifier: HomePageTutorCollectionViewCell.reuseIdentifier)
 		
 		return collectionView
 	}()
@@ -52,14 +64,16 @@ class GeneralItemTableViewCell: UITableViewCell {
 
 // MARK: - UICollectionViewDataSource
  
-extension GeneralItemTableViewCell: UICollectionViewDataSource {
+extension HomePageTutorListTableViewCell: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return 3
+		return tutors?.count ?? 0
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GeneralItemCollectionViewCell.reuseIdentifier, for: indexPath)
-				as? GeneralItemCollectionViewCell else { return UICollectionViewCell() }
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageTutorCollectionViewCell.reuseIdentifier, for: indexPath)
+				as? HomePageTutorCollectionViewCell, let tutors = tutors else { return UICollectionViewCell() }
+
+		cell.tutor = tutors[indexPath.row]
 		return cell
 	}
 	
@@ -67,6 +81,10 @@ extension GeneralItemTableViewCell: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegate
 
-extension GeneralItemTableViewCell: UICollectionViewDelegate {
-	
+extension HomePageTutorListTableViewCell: UICollectionViewDelegate {
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		guard let tutors = tutors else { return }
+		let tutor = tutors[indexPath.row]
+		delegate?.goToTutorProfile(self, tutor: tutor)
+	}
 }

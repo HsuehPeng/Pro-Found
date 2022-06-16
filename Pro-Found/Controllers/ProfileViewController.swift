@@ -6,16 +6,27 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ProfileViewController: UIViewController {
 
 	// MARK: - Properties
 	
+	var isTutor = false
+	
+	var user: User?
+	
+	var userCourses = [Course]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
+	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(ProfileMainTableViewCell.self, forCellReuseIdentifier: ProfileMainTableViewCell.reuseIdentifier)
 		tableView.register(ProfileClassTableViewCell.self, forCellReuseIdentifier: ProfileClassTableViewCell.reuseIdentifier)
-		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
+		tableView.register(ProfileClassTableViewHeader.self, forHeaderFooterViewReuseIdentifier: ProfileClassTableViewHeader.reuseIdentifier)
 		tableView.contentInsetAdjustmentBehavior = .never
 		tableView.separatorStyle = .none
 		tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -34,6 +45,12 @@ class ProfileViewController: UIViewController {
 		
 		setupNavBar()
 		setupUI()
+		
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		fetchUserData()
 	}
 	
 	// MARK: - UI
@@ -50,6 +67,31 @@ class ProfileViewController: UIViewController {
 	// MARK: - Actions
 	
 	// MARK: - Helpers
+	
+	func fetchUserData() {
+		guard let user = user else { return }
+		print(user.name)
+		
+		UserServie.shared.getUserData(uid: user.userID) { [weak self] result in
+			guard let self = self else { return }
+			
+			switch result {
+			case.success(let user):
+				self.user = user
+				CourseServie.shared.fetchUserCourses(userID: user.userID) { [weak self] result in
+					guard let self = self else { return }
+					switch result {
+					case.success(let courses):
+						self.userCourses = courses
+					case.failure(let error):
+						print(error)
+					}
+				}
+			case.failure(let error):
+				print(error)
+			}
+		}
+	}
 
 }
 
@@ -64,20 +106,21 @@ extension ProfileViewController: UITableViewDataSource {
 		if section == 0 {
 			return 1
 		} else {
-			return 2
+			return userCourses.count
 		}
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let mainCell = tableView.dequeueReusableCell(withIdentifier: ProfileMainTableViewCell.reuseIdentifier)
 				as? ProfileMainTableViewCell else { return UITableViewCell() }
-		guard let classCell = tableView.dequeueReusableCell(withIdentifier: ProfileClassTableViewCell.reuseIdentifier)
+		guard let courseCell = tableView.dequeueReusableCell(withIdentifier: ProfileClassTableViewCell.reuseIdentifier)
 				as? ProfileClassTableViewCell else { return UITableViewCell()}
 		
 		if indexPath.section == 0 {
 			return mainCell
 		} else {
-			return classCell
+			courseCell.course = userCourses[indexPath.row]
+			return courseCell
 		}
 	}
 	
@@ -91,11 +134,11 @@ extension ProfileViewController: UITableViewDelegate {
 	}
 	
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
-				as? GeneralTableViewHeader else { return UITableViewHeaderFooterView() }
-		header.seeAllButton.isHidden = true
+		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ProfileClassTableViewHeader.reuseIdentifier)
+				as? ProfileClassTableViewHeader else { return UITableViewHeaderFooterView() }
 		
 		if section == 1 {
+			header.delegate = self
 			return header
 		}
 		
@@ -108,6 +151,16 @@ extension ProfileViewController: UITableViewDelegate {
 		}
 		
 		return 0
+	}
+	
+}
+
+extension ProfileViewController: ProfileClassTableViewHeaderDelegate {
+	
+	func createCourse(_ header: ProfileClassTableViewHeader) {
+		guard let user = user else { return }
+		let createCourseVC = CreateCourseViewController(user: user)
+		navigationController?.pushViewController(createCourseVC, animated: true)
 	}
 	
 }

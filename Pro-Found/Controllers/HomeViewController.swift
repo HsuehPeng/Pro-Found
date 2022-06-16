@@ -11,6 +11,14 @@ class HomeViewController: UIViewController {
 
 	// MARK: - Properties
 	
+	var user: User?
+	
+	var tutors: [User]? {
+		didSet {
+			tableView.reloadData()
+		}
+	}
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		return view
@@ -44,7 +52,7 @@ class HomeViewController: UIViewController {
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
-		tableView.register(GeneralItemTableViewCell.self, forCellReuseIdentifier: GeneralItemTableViewCell.reuseidentifier)
+		tableView.register(HomePageTutorListTableViewCell.self, forCellReuseIdentifier: HomePageTutorListTableViewCell.reuseidentifier)
 		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
 		tableView.separatorStyle = .none
 		return tableView
@@ -61,6 +69,11 @@ class HomeViewController: UIViewController {
 		
 		setupUI()
 		setupNavBar()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		fetchTutors()
 	}
 	
 	// MARK: - UI
@@ -93,6 +106,18 @@ class HomeViewController: UIViewController {
 	// MARK: - Actions
 	
 	// MARK: - Helpers
+	
+	func fetchTutors() {
+		UserServie.shared.getTutors { [weak self] result in
+			switch result {
+			case .success(let tutors):
+				self?.tutors = tutors
+			case .failure(let error):
+				print("Error getting tutors: \(error)")
+			}
+		}
+	}
+	
 }
 
 // MARK: - UITableViewDataSource
@@ -107,8 +132,10 @@ extension HomeViewController: UITableViewDataSource {
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		guard let cell = tableView.dequeueReusableCell(withIdentifier: GeneralItemTableViewCell.reuseidentifier, for: indexPath)
-				as? GeneralItemTableViewCell else { return UITableViewCell() }
+		guard let cell = tableView.dequeueReusableCell(withIdentifier: HomePageTutorListTableViewCell.reuseidentifier, for: indexPath)
+				as? HomePageTutorListTableViewCell else { return UITableViewCell() }
+		cell.delegate = self
+		cell.tutors = tutors
 		return cell
 	}
 
@@ -130,4 +157,13 @@ extension HomeViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		50
 	}
+}
+
+extension HomeViewController: HomePageTutorListTableViewCellDelegate {
+	func goToTutorProfile(_ cell: HomePageTutorListTableViewCell, tutor: User) {
+		let tutorProfileVC = ProfileViewController()
+		tutorProfileVC.user = tutor
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
+	}
+
 }
