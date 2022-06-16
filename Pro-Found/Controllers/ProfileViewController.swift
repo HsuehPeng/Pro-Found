@@ -119,6 +119,7 @@ extension ProfileViewController: UITableViewDataSource {
 		if indexPath.section == 0 {
 			return mainCell
 		} else {
+			courseCell.delegate = self
 			courseCell.course = userCourses[indexPath.row]
 			return courseCell
 		}
@@ -129,6 +130,11 @@ extension ProfileViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 
 extension ProfileViewController: UITableViewDelegate {
+	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		
+	}
+	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return UITableView.automaticDimension
 	}
@@ -155,6 +161,8 @@ extension ProfileViewController: UITableViewDelegate {
 	
 }
 
+// MARK: - ProfileClassTableViewHeaderDelegate
+
 extension ProfileViewController: ProfileClassTableViewHeaderDelegate {
 	
 	func createCourse(_ header: ProfileClassTableViewHeader) {
@@ -162,5 +170,23 @@ extension ProfileViewController: ProfileClassTableViewHeaderDelegate {
 		let createCourseVC = CreateCourseViewController(user: user)
 		navigationController?.pushViewController(createCourseVC, animated: true)
 	}
-	
+}
+
+// MARK: - ProfileClassTableViewCellDelegate
+
+extension ProfileViewController: ProfileClassTableViewCellDelegate {
+	func showBottomSheet(_ cell: ProfileClassTableViewCell) {
+		let slideVC = SelectClassBottomSheetViewController()
+		slideVC.modalPresentationStyle = .custom
+		slideVC.transitioningDelegate = self
+		present(slideVC, animated: true)
+	}
+}
+
+// MARK: - UIViewControllerTransitioningDelegate
+
+extension ProfileViewController: UIViewControllerTransitioningDelegate {
+	func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+		return SelectClassPresentationVController(presentedViewController: presented, presenting: presenting)
+	}
 }
