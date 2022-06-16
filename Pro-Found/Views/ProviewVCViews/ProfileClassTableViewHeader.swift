@@ -1,17 +1,23 @@
 //
-//  GeneralTableViewHeader.swift
+//  ProfileClassTableViewHeader.swift
 //  Pro-Found
 //
-//  Created by Hsueh Peng Tseng on 2022/6/14.
+//  Created by Hsueh Peng Tseng on 2022/6/15.
 //
 
 import UIKit
 
-class GeneralTableViewHeader: UITableViewHeaderFooterView {
+protocol ProfileClassTableViewHeaderDelegate: AnyObject {
+	func createCourse(_ header: ProfileClassTableViewHeader)
+}
+
+class ProfileClassTableViewHeader: UITableViewHeaderFooterView {
 	
-	static let reuseIdentifier = "\(GeneralTableViewHeader.self)"
+	static let reuseIdentifier = "\(ProfileClassTableViewHeader.self)"
 	
 	// MARK: - Properties
+	
+	weak var delegate: ProfileClassTableViewHeaderDelegate?
 	
 	private let titleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16), textColor: UIColor.dark60, text: "Header Title")
@@ -20,10 +26,10 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
 	
 	lazy var seeAllButton: UIButton = {
 		let button = UIButton()
-		button.setTitle("See All", for: .normal)
+		button.setTitle("Create Course", for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.interBold, size: 14)
 		button.setTitleColor(UIColor.orange, for: .normal)
-		button.addTarget(self, action: #selector(tappedSeeAll), for: .touchUpInside)
+		button.addTarget(self, action: #selector(createCourse), for: .touchUpInside)
 		return button
 	}()
 	
@@ -51,8 +57,8 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
 	
 	// MARK: - Actions
 	
-	@objc func tappedSeeAll() {
-
+	@objc func createCourse() {
+		delegate?.createCourse(self)
 	}
 
 }

@@ -62,9 +62,6 @@ class HomeViewController: UIViewController {
 		setupUI()
 		setupNavBar()
 		
-		UserServie.shared.getUserData(uid: "5VbEWmjZtM1p3C5cunUb") { result in
-			
-		}
 	}
 	
 	// MARK: - UI

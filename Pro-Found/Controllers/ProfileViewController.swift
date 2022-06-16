@@ -15,7 +15,7 @@ class ProfileViewController: UIViewController {
 		let tableView = UITableView()
 		tableView.register(ProfileMainTableViewCell.self, forCellReuseIdentifier: ProfileMainTableViewCell.reuseIdentifier)
 		tableView.register(ProfileClassTableViewCell.self, forCellReuseIdentifier: ProfileClassTableViewCell.reuseIdentifier)
-		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
+		tableView.register(ProfileClassTableViewHeader.self, forHeaderFooterViewReuseIdentifier: ProfileClassTableViewHeader.reuseIdentifier)
 		tableView.contentInsetAdjustmentBehavior = .never
 		tableView.separatorStyle = .none
 		tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -34,6 +34,7 @@ class ProfileViewController: UIViewController {
 		
 		setupNavBar()
 		setupUI()
+		fetchUserData()
 	}
 	
 	// MARK: - UI
@@ -50,6 +51,17 @@ class ProfileViewController: UIViewController {
 	// MARK: - Actions
 	
 	// MARK: - Helpers
+	
+	func fetchUserData() {
+		UserServie.shared.getUserData(uid: "5VbEWmjZtM1p3C5cunUb") { result in
+			switch result {
+			case.success(let user):
+				print(user)
+			case.failure(let error):
+				print(error)
+			}
+		}
+	}
 
 }
 
@@ -91,11 +103,11 @@ extension ProfileViewController: UITableViewDelegate {
 	}
 	
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
-				as? GeneralTableViewHeader else { return UITableViewHeaderFooterView() }
-		header.seeAllButton.isHidden = true
+		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ProfileClassTableViewHeader.reuseIdentifier)
+				as? ProfileClassTableViewHeader else { return UITableViewHeaderFooterView() }
 		
 		if section == 1 {
+			header.delegate = self
 			return header
 		}
 		
@@ -108,6 +120,16 @@ extension ProfileViewController: UITableViewDelegate {
 		}
 		
 		return 0
+	}
+	
+}
+
+extension ProfileViewController: ProfileClassTableViewHeaderDelegate {
+	
+	func createCourse(_ header: ProfileClassTableViewHeader) {
+		let createCourseVC = CreateCourseViewController()
+		navigationController?.pushViewController(createCourseVC, animated: true)
+		
 	}
 	
 }

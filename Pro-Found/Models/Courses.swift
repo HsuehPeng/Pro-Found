@@ -12,12 +12,13 @@ struct Courses: Codable {
 }
 
 struct Course: Codable {
-	let courseID: String
+//	let courseID: String
 	let userID: String
 	let tutorName: String
 	let courseTitle: String
 	let subject: String
 	let location: String
 	let fee: Double
+	let briefIntro: String
 	let detailIntro: String
 }

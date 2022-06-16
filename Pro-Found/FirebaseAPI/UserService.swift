@@ -23,7 +23,6 @@ struct UserServie {
 			}
 			
 			let user = User(dictionary: userData)
-			print(user)
 			completion(.success(user))
 		}
 	}

@@ -48,7 +48,7 @@ class MainTabController: UITabBarController {
 		let nav = UINavigationController(rootViewController: rootVC)
 		let appearance = UINavigationBarAppearance()
 		appearance.configureWithDefaultBackground()
-		appearance.backgroundColor = .white
+//		appearance.backgroundColor = .white
 		nav.navigationBar.standardAppearance = appearance
 		nav.tabBarItem.image = image
 		nav.tabBarItem.selectedImage = image?.withTintColor(UIColor.orange, renderingMode: .alwaysOriginal)

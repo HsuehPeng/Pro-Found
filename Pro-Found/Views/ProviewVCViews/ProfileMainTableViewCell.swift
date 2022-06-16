@@ -57,8 +57,8 @@ class ProfileMainTableViewCell: UITableViewCell {
 		let button = CustomUIElements().makeSmallButton(buttonColor: UIColor.clear,
 												 buttonTextColor: UIColor.dark30,
 															 borderColor: UIColor.dark30,
-															 buttonWidth: 128,
 															 buttonText: "Follow")
+		button.widthAnchor.constraint(equalToConstant: 128).isActive = true
 		return button
 	}()
 	
