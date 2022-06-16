@@ -15,20 +15,21 @@ struct User {
 	let name: String
 	let userID: String
 	let email: String
-	let introContentText: String
+	var introContentText: String?
 	var school: String?
 	var schoolMajor: String?
-	let rating: Double
+	var rating: Double?
 	var profileImageURL: String?
 	var backgroundImageURL: String?
-	let courses: [Course]
-	let articles: [Article]
-	let events: [Event]
-	let posts: [Post]
-	let blockedUsers: [String]
-	let followers: [String]
-	let followerings: [String]
-	let isTutor: Bool
+	var courses: [String]
+	var articles: [String]
+	var events: [String]
+	var posts: [String]
+	var blockedUsers: [String]
+	var followers: [String]
+	var followerings: [String]
+	var subject: String
+	var isTutor: Bool
 }
 
 extension User {
@@ -42,13 +43,14 @@ extension User {
 		rating = dictionary["rating"] as? Double ?? 0
 		profileImageURL = dictionary["profileImageURL"] as? String ?? nil
 		backgroundImageURL = dictionary["backgroundImageURL"] as? String ?? nil
-		courses = dictionary["courses"] as? [Course] ?? []
-		articles = dictionary["articles"] as? [Article] ?? []
-		events = dictionary["events"] as? [Event] ?? []
-		posts = dictionary["posts"] as? [Post] ?? []
+		courses = dictionary["courses"] as? [String] ?? []
+		articles = dictionary["articles"] as? [String] ?? []
+		events = dictionary["events"] as? [String] ?? []
+		posts = dictionary["posts"] as? [String] ?? []
 		blockedUsers = dictionary["blockedUsers"] as? [String] ?? []
 		followers = dictionary["followers"] as? [String] ?? []
 		followerings = dictionary["followerings"] as? [String] ?? []
+		subject = dictionary["subject"] as? String ?? ""
 		isTutor = dictionary["isTutor"] as? Bool ?? false
 	}
 }

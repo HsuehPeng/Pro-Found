@@ -11,14 +11,40 @@ class CreateCourseViewController: UIViewController {
 	
 	// MARK: - Properties
 	
-	private let courseTitleInputView: UIView = {
-		let view = CustomUIElements().inputContainerView(labelText: "Course Title")
-		return view
+	var user: User
+	
+	private let courseTitleLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: UIColor.dark, text: "Course Title")
+		return label
 	}()
 	
-	private let addressInputView: UIView = {
-		let view = CustomUIElements().inputContainerView(labelText: "Address")
-		return view
+	private let courseTitleTextField: UITextField = {
+		let textField = UITextField()
+		return textField
+	}()
+	
+	private let courseTitleDividerView: UIView = {
+		let dividerView = UIView()
+		dividerView.backgroundColor = .dark20
+		return dividerView
+	}()
+	
+	private let addressTitleLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: UIColor.dark, text: "Location")
+		return label
+	}()
+	
+	private let addressTitleTextField: UITextField = {
+		let textField = UITextField()
+		return textField
+	}()
+	
+	private let addressDividerView: UIView = {
+		let dividerView = UIView()
+		dividerView.backgroundColor = .dark20
+		return dividerView
 	}()
 	
 	private lazy var languageButton: UIButton = {
@@ -87,7 +113,7 @@ class CreateCourseViewController: UIViewController {
 	private let feeTextField: UITextField = {
 		let textField = UITextField()
 		textField.keyboardType = .numberPad
-		textField.text = "$"
+		textField.placeholder = "$"
 		textField.font = UIFont.customFont(.interBold, size: 28)
 		return textField
 	}()
@@ -96,10 +122,20 @@ class CreateCourseViewController: UIViewController {
 		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white,
 														borderColor: .clear, buttonText: "Create Course")
 		button.widthAnchor.constraint(equalToConstant: 128).isActive = true
+		button.addTarget(self, action: #selector(createCourse), for: .touchUpInside)
 		return button
 	}()
 	
 	// MARK: - Lifecycle
+	
+	init(user: User) {
+		self.user = user
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -118,14 +154,32 @@ class CreateCourseViewController: UIViewController {
 	// MARK: - UI
 	
 	func setupUI() {
-		view.addSubview(courseTitleInputView)
-		courseTitleInputView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
+		view.addSubview(courseTitleLabel)
+		courseTitleLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor,
 									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(addressInputView)
-		addressInputView.anchor(top: courseTitleInputView.bottomAnchor, left: view.leftAnchor,
+		view.addSubview(courseTitleTextField)
+		courseTitleTextField.anchor(top: courseTitleLabel.bottomAnchor, left: view.leftAnchor,
 									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
+		view.addSubview(courseTitleDividerView)
+		courseTitleDividerView.anchor(top: courseTitleTextField.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		courseTitleDividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+		
+		view.addSubview(addressTitleLabel)
+		addressTitleLabel.anchor(top: courseTitleDividerView.bottomAnchor, left: view.leftAnchor,
+									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(addressTitleTextField)
+		addressTitleTextField.anchor(top: addressTitleLabel.bottomAnchor, left: view.leftAnchor,
+									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(addressDividerView)
+		addressDividerView.anchor(top: addressTitleTextField.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+								  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		addressDividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+
 		let subjectSelectionHStack = UIStackView(arrangedSubviews: [
 			languageButton,
 			techButton,
@@ -138,7 +192,7 @@ class CreateCourseViewController: UIViewController {
 		subjectSelectionHStack.spacing = 2
 		
 		view.addSubview(subjectSelectionHStack)
-		subjectSelectionHStack.anchor(top: addressInputView.bottomAnchor, left: view.leftAnchor,
+		subjectSelectionHStack.anchor(top: addressDividerView.bottomAnchor, left: view.leftAnchor,
 									right: view.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingRight: 8)
 		
 		view.addSubview(briefIntroLabel)
@@ -213,6 +267,26 @@ class CreateCourseViewController: UIViewController {
 	}
 	
 	@objc func popVC() {
+		navigationController?.popViewController(animated: true)
+	}
+	
+	@objc func createCourse() {
+		
+		let buttons = [languageButton, techButton, artButton, musicButton, sportButton]
+		let selectedButton = buttons.filter({ $0.isSelected })
+		guard let courseTitleText = courseTitleTextField.text, !courseTitleText.isEmpty,
+			  let addressText = addressTitleTextField.text, !addressText.isEmpty,
+			  let briefText = briefTextView.text, !briefText.isEmpty,
+			  let introText = introductionTextView.text, !introText.isEmpty,
+			  let feetext = feeTextField.text, !feetext.isEmpty,
+			  let feetextDouble = Double(feetext) else { return }
+		guard selectedButton.count > 0 else { return }
+		guard let selectedSubject = selectedButton.first?.titleLabel?.text else { return }
+		let course = Course(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText,
+							subject: selectedSubject, location: addressText, fee: feetextDouble, briefIntro: briefText,
+							detailIntro: introText)
+		
+		CourseServie.shared.uploadNewCourse(course: course, user: user)
 		navigationController?.popViewController(animated: true)
 	}
 	

@@ -7,11 +7,17 @@
 
 import UIKit
 
-class GeneralItemCollectionViewCell: UICollectionViewCell {
+class HomePageTutorCollectionViewCell: UICollectionViewCell {
 	
-	static let reuseIdentifier = "\(GeneralItemCollectionViewCell.self)"
+	static let reuseIdentifier = "\(HomePageTutorCollectionViewCell.self)"
 	
     // MARK: - Properties
+	
+	var tutor: User? {
+		didSet {
+			configure()
+		}
+	}
 	
 	private let tutorImageView: UIImageView = {
 		let imageView = UIImageView()
@@ -67,6 +73,15 @@ class GeneralItemCollectionViewCell: UICollectionViewCell {
 		subjectButton.centerYAnchor.constraint(equalTo: followersLabel.centerYAnchor).isActive = true
 		subjectButton.anchor(left: followersLabel.rightAnchor, right: contentView.rightAnchor, paddingLeft: 2)
 		
+	}
+	
+	// MARK: - Helpers
+	
+	func configure() {
+		guard let tutor = tutor else { return }
+		nameLabel.text = tutor.name
+		followersLabel.text = String(tutor.followers.count)
+		subjectButton.setTitle(tutor.subject, for: .normal)
 	}
 	
 }

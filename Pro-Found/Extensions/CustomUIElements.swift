@@ -35,6 +35,7 @@ class CustomUIElements {
 					borderWidth: CGFloat = 1) -> UIButton {
 		
 		let button = UIButton()
+		button.backgroundColor = buttonColor
 		button.layer.cornerRadius = 5
 		button.layer.borderWidth = borderWidth
 		button.layer.borderColor = borderColor.cgColor
@@ -53,6 +54,7 @@ class CustomUIElements {
 					borderWidth: CGFloat = 1) -> UIButton {
 		
 		let button = UIButton()
+		button.backgroundColor = buttonColor
 		button.layer.cornerRadius = 5
 		button.layer.borderWidth = borderWidth
 		button.layer.borderColor = borderColor.cgColor

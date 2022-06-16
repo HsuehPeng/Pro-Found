@@ -6,10 +6,21 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ProfileViewController: UIViewController {
 
 	// MARK: - Properties
+	
+	var isTutor = false
+	
+	var user: User?
+	
+	var userCourses = [Course]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
@@ -34,6 +45,11 @@ class ProfileViewController: UIViewController {
 		
 		setupNavBar()
 		setupUI()
+		
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		fetchUserData()
 	}
 	
@@ -53,10 +69,24 @@ class ProfileViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func fetchUserData() {
-		UserServie.shared.getUserData(uid: "5VbEWmjZtM1p3C5cunUb") { result in
+		guard let user = user else { return }
+		print(user.name)
+		
+		UserServie.shared.getUserData(uid: user.userID) { [weak self] result in
+			guard let self = self else { return }
+			
 			switch result {
 			case.success(let user):
-				print(user)
+				self.user = user
+				CourseServie.shared.fetchUserCourses(userID: user.userID) { [weak self] result in
+					guard let self = self else { return }
+					switch result {
+					case.success(let courses):
+						self.userCourses = courses
+					case.failure(let error):
+						print(error)
+					}
+				}
 			case.failure(let error):
 				print(error)
 			}
@@ -76,20 +106,21 @@ extension ProfileViewController: UITableViewDataSource {
 		if section == 0 {
 			return 1
 		} else {
-			return 2
+			return userCourses.count
 		}
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let mainCell = tableView.dequeueReusableCell(withIdentifier: ProfileMainTableViewCell.reuseIdentifier)
 				as? ProfileMainTableViewCell else { return UITableViewCell() }
-		guard let classCell = tableView.dequeueReusableCell(withIdentifier: ProfileClassTableViewCell.reuseIdentifier)
+		guard let courseCell = tableView.dequeueReusableCell(withIdentifier: ProfileClassTableViewCell.reuseIdentifier)
 				as? ProfileClassTableViewCell else { return UITableViewCell()}
 		
 		if indexPath.section == 0 {
 			return mainCell
 		} else {
-			return classCell
+			courseCell.course = userCourses[indexPath.row]
+			return courseCell
 		}
 	}
 	
@@ -127,9 +158,9 @@ extension ProfileViewController: UITableViewDelegate {
 extension ProfileViewController: ProfileClassTableViewHeaderDelegate {
 	
 	func createCourse(_ header: ProfileClassTableViewHeader) {
-		let createCourseVC = CreateCourseViewController()
+		guard let user = user else { return }
+		let createCourseVC = CreateCourseViewController(user: user)
 		navigationController?.pushViewController(createCourseVC, animated: true)
-		
 	}
 	
 }
