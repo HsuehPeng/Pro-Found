@@ -15,21 +15,21 @@ struct User {
 	let name: String
 	let userID: String
 	let email: String
-	var introContentText: String?
-	var school: String?
-	var schoolMajor: String?
-	var rating: Double?
+	var introContentText: String
+	var school: String
+	var schoolMajor: String
+	var rating: Double
 	var courseBooked: Int
-	var profileImageURL: String?
-	var backgroundImageURL: String?
-	var courses: [String]?
-	var articles: [String]?
-	var events: [String]?
-	var posts: [String]?
+	var profileImageURL: String
+	var backgroundImageURL: String
+	var courses: [String]
+	var articles: [String]
+	var events: [String]
+	var posts: [String]
 	var blockedUsers: [String]
 	var followers: [String]
 	var followerings: [String]
-	var subject: String?
+	var subject: String
 	var isTutor: Bool
 }
 
@@ -42,8 +42,8 @@ extension User {
 		school = dictionary["school"] as? String ?? "Test School"
 		schoolMajor = dictionary["schoolMajor"] as? String ?? "Test Major"
 		rating = dictionary["rating"] as? Double ?? 0
-		profileImageURL = dictionary["profileImageURL"] as? String ?? nil
-		backgroundImageURL = dictionary["backgroundImageURL"] as? String ?? nil
+		profileImageURL = dictionary["profileImageURL"] as? String ?? ""
+		backgroundImageURL = dictionary["backgroundImageURL"] as? String ?? ""
 		courses = dictionary["courses"] as? [String] ?? []
 		articles = dictionary["articles"] as? [String] ?? []
 		events = dictionary["events"] as? [String] ?? []

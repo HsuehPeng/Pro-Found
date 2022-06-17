@@ -49,6 +49,8 @@
 		B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064E285B88F2002110A4 /* SelectClassBottomSheetViewController.swift */; };
 		B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0651285C8F36002110A4 /* SignUpViewController.swift */; };
 		B8AB0654285CB4FB002110A4 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0653285CB4FB002110A4 /* ProfileViewController.swift */; };
+		B8AB0656285CCAB0002110A4 /* WritePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */; };
+		B8AB0658285CD05E002110A4 /* CaptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0657285CD05E002110A4 /* CaptionTextView.swift */; };
 		B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B38F2857258D00CA7370 /* HomeViewController.swift */; };
 		B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B392285725E200CA7370 /* FeedViewController.swift */; };
 		B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B394285725F500CA7370 /* ArticleViewController.swift */; };
@@ -106,6 +108,8 @@
 		B8AB064E285B88F2002110A4 /* SelectClassBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectClassBottomSheetViewController.swift; sourceTree = "<group>"; };
 		B8AB0651285C8F36002110A4 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		B8AB0653285CB4FB002110A4 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritePostViewController.swift; sourceTree = "<group>"; };
+		B8AB0657285CD05E002110A4 /* CaptionTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionTextView.swift; sourceTree = "<group>"; };
 		B8C7B38F2857258D00CA7370 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B8C7B392285725E200CA7370 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		B8C7B394285725F500CA7370 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
@@ -302,6 +306,7 @@
 				B811E40128531135009C0838 /* MainTabController.swift */,
 				B8C7B38F2857258D00CA7370 /* HomeViewController.swift */,
 				B8C7B392285725E200CA7370 /* FeedViewController.swift */,
+				B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */,
 				B8C7B394285725F500CA7370 /* ArticleViewController.swift */,
 				B8C7B3962857260300CA7370 /* ScheduleViewController.swift */,
 				B8C7B3982857260D00CA7370 /* TutorProfileViewController.swift */,
@@ -315,6 +320,7 @@
 			isa = PBXGroup;
 			children = (
 				B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */,
+				B8AB0657285CD05E002110A4 /* CaptionTextView.swift */,
 			);
 			path = PostVCViews;
 			sourceTree = "<group>";
@@ -480,6 +486,7 @@
 				B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */,
 				B8AB060F2859FA13002110A4 /* Schedules.swift in Sources */,
 				B8AB060C2859FA13002110A4 /* Posts.swift in Sources */,
+				B8AB0658285CD05E002110A4 /* CaptionTextView.swift in Sources */,
 				B8AB06042859F9F8002110A4 /* UserService.swift in Sources */,
 				B8AB06052859F9F8002110A4 /* CourseService.swift in Sources */,
 				B86943D028586079008021C9 /* PrivateKey.swift in Sources */,
@@ -493,6 +500,7 @@
 				B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */,
 				B8AB0645285B2658002110A4 /* CalendarCollectionViewCell.swift in Sources */,
 				B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */,
+				B8AB0656285CCAB0002110A4 /* WritePostViewController.swift in Sources */,
 				B8AB061A285A2977002110A4 /* Subject.swift in Sources */,
 				B8A8FDF22855E4D200F98326 /* Constraint.swift in Sources */,
 				B8AB0642285B0B3F002110A4 /* LoginService.swift in Sources */,

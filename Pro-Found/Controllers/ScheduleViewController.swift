@@ -326,8 +326,8 @@ extension ScheduleViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let calendarCell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier, for: indexPath)
 		as? CalendarCollectionViewCell else { return UICollectionViewCell() }
-		guard let activityCell = collectionView.dequeueReusableCell(withReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier, for: indexPath)
-		as? ScheduleActivityListCollectionViewCell else { return UICollectionViewCell() }
+		guard let activityCell = collectionView.dequeueReusableCell(withReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier,
+																	for: indexPath) as? ScheduleActivityListCollectionViewCell else { return UICollectionViewCell() }
 		
 		calendarCell.dateLabel.text = totalSquares[indexPath.item]
 		

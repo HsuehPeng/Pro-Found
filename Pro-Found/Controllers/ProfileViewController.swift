@@ -37,7 +37,3 @@ class ProfileViewController: UIViewController {
 	// MARK: - Helpers
 
 }
-
-
-
-

@@ -94,7 +94,9 @@ class LoginViewController: UIViewController {
 				print("Error signing in: \(error)")
 			}
 			
-			guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
+			guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene
+				
+			}).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
 			
 			guard let tab = window.rootViewController as? MainTabController else { return }
 			

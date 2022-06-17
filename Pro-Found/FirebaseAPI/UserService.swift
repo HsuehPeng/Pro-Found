@@ -32,7 +32,7 @@ struct UserServie {
 			"school": user.school,
 			"schoolMajor": user.schoolMajor,
 			"subject": user.subject,
-			"userID": uid,
+			"userID": uid
 		]
 		
 		userRef.setData(userData) { error in

@@ -63,7 +63,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private let profileActionButton: UIButton = {
+	private lazy var profileActionButton: UIButton = {
 		let button = CustomUIElements().makeSmallButton(buttonColor: UIColor.clear,
 												 buttonTextColor: UIColor.dark30,
 															 borderColor: UIColor.dark30,

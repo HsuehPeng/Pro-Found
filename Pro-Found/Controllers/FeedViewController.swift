@@ -29,6 +29,21 @@ class FeedViewController: UIViewController {
 		return tableView
 	}()
 	
+	private lazy var writePostButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.edit)?.withTintColor(UIColor.orange)
+		button.setImage(image, for: .normal)
+		button.setDimensions(width: 54, height: 54)
+		button.layer.cornerRadius = 54 / 2
+		button.backgroundColor = .white
+		button.layer.shadowColor = UIColor.dark60.cgColor
+		button.layer.shadowOffset = CGSize(width: 0, height: 4)
+		button.layer.shadowRadius = 10
+		button.layer.shadowOpacity = 0.3
+		button.addTarget(self, action: #selector(handleWritePost), for: .touchUpInside)
+		return button
+	}()
+	
 	// MARK: - Lifecycle
 
 	override func viewDidLoad() {
@@ -55,6 +70,9 @@ class FeedViewController: UIViewController {
 		view.addSubview(tableView)
 		tableView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
 						 right: view.rightAnchor)
+		
+		view.addSubview(writePostButton)
+		writePostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 24, paddingRight: 16)
 	}
 	
 	func setupNavBar() {
@@ -62,6 +80,12 @@ class FeedViewController: UIViewController {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleWritePost() {
+		let writePostVC = WritePostViewController()
+		writePostVC.modalPresentationStyle = .fullScreen
+		present(writePostVC, animated: true)
+	}
 	
 	// MARK: - Helpers
 
