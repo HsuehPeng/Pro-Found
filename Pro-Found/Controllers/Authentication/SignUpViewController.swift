@@ -1,14 +1,14 @@
 //
-//  LoginViewController.swift
+//  SignUpViewController.swift
 //  Pro-Found
 //
-//  Created by Hsueh Peng Tseng on 2022/6/16.
+//  Created by Hsueh Peng Tseng on 2022/6/17.
 //
 
 import UIKit
 import FirebaseAuth
 
-class LoginViewController: UIViewController {
+class SignUpViewController: UIViewController {
 
 	// MARK: - Properties
 	
@@ -28,20 +28,7 @@ class LoginViewController: UIViewController {
 		return textField
 	}()
 
-	private lazy var loginButton: UIButton = {
-		let button = UIButton(type: .system)
-		button.setTitle("Log In", for: .normal)
-		button.setTitleColor(UIColor.orange, for: .normal)
-		button.backgroundColor = .white
-		button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-		button.layer.cornerRadius = 5
-		button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-		button.translatesAutoresizingMaskIntoConstraints = false
-		button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
-		return button
-	}()
-	
-	private lazy var goSignUpButton: UIButton = {
+	private lazy var signUpButton: UIButton = {
 		let button = UIButton(type: .system)
 		button.setTitle("Sign up", for: .normal)
 		button.setTitleColor(UIColor.orange, for: .normal)
@@ -50,7 +37,7 @@ class LoginViewController: UIViewController {
 		button.layer.cornerRadius = 5
 		button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
 		button.translatesAutoresizingMaskIntoConstraints = false
-		button.addTarget(self, action: #selector(goSignUp), for: .touchUpInside)
+		button.addTarget(self, action: #selector(handleSignup), for: .touchUpInside)
 		return button
 	}()
 	
@@ -58,8 +45,8 @@ class LoginViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		title = "Login"
-		view.backgroundColor = .ocean
+		title = "Sign up"
+		view.backgroundColor = .orange
 		setupUI()
 	}
 	
@@ -71,29 +58,23 @@ class LoginViewController: UIViewController {
 							  paddingTop: 100, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(passwordTextField)
-		passwordTextField.anchor(top: emailTextField.bottomAnchor, left: view.leftAnchor,
+		passwordTextField.anchor(top: emailTextField.topAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(loginButton)
-		loginButton.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor,
-								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
-		
-		view.addSubview(goSignUpButton)
-		(goSignUpButton).anchor(top: loginButton.bottomAnchor, left: view.leftAnchor,
+		view.addSubview(signUpButton)
+		signUpButton.anchor(top: passwordTextField.topAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 	}
 	
 	// MARK: - Selectors
 	
-	@objc func handleLogin() {
+	@objc func handleSignup() {
 		guard let email = emailTextField.text, let password = passwordTextField.text else { return }
-		Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-			
+		Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
 			guard let self = self else { return }
 			if let error = error {
 				print("Error signing in: \(error)")
 			}
-			
 			guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
 			
 			guard let tab = window.rootViewController as? MainTabController else { return }
@@ -101,11 +82,6 @@ class LoginViewController: UIViewController {
 			tab.authenticateUserAndConfigureUI()
 			self.dismiss(animated: true, completion: nil)
 		}
-	}
-	
-	@objc func goSignUp() {
-		let loginVC = SignUpViewController()
-		navigationController?.pushViewController(loginVC, animated: true)
 	}
 
 	// MARK: - Helpers

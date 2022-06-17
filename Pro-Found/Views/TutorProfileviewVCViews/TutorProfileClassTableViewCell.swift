@@ -7,9 +7,15 @@
 
 import UIKit
 
-class ProfileClassTableViewCell: UITableViewCell {
+protocol ProfileClassTableViewCellDelegate: AnyObject {
+	func showBottomSheet(_ cell: TutorProfileClassTableViewCell)
+}
 
-	static let reuseIdentifier = "\(ProfileClassTableViewCell.self)"
+class TutorProfileClassTableViewCell: UITableViewCell {
+
+	static let reuseIdentifier = "\(TutorProfileClassTableViewCell.self)"
+	
+	weak var delegate: ProfileClassTableViewCellDelegate?
 	
 	// MARK: - Properties
 	
@@ -57,6 +63,7 @@ class ProfileClassTableViewCell: UITableViewCell {
 		let button = CustomUIElements().makeMediumButton(buttonColor: .white, buttonTextColor: .orange,
 														 borderColor: .clear, buttonText: "Choose Course")
 		button.widthAnchor.constraint(equalToConstant: 142).isActive = true
+		button.addTarget(self, action: #selector(showBottomSheet), for: .touchUpInside)
 		return button
 	}()
 	
@@ -95,6 +102,10 @@ class ProfileClassTableViewCell: UITableViewCell {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func showBottomSheet() {
+		delegate?.showBottomSheet(self)
+	}
 	
 	// MARK: - Helpers
 	

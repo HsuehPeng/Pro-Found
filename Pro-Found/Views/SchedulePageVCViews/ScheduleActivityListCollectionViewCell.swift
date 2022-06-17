@@ -13,6 +13,14 @@ class ScheduleActivityListCollectionViewCell: UICollectionViewCell {
 	
 	// MARK: - Properties
 	
+	var course: Course? {
+		didSet {
+			configure()
+		}
+	}
+	
+	var event: Event?
+	
 	private let titleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 14),
 												 textColor: .dark60, text: "Class Test Title")
@@ -46,4 +54,13 @@ class ScheduleActivityListCollectionViewCell: UICollectionViewCell {
 		contentView.addSubview(organizerLabel)
 		organizerLabel.anchor(top: titleLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 	}
+	
+	// MARK: - Helpers
+	
+	func configure() {
+		guard let course = course else { return }
+		titleLabel.text = course.courseTitle
+		organizerLabel.text = course.tutorName
+	}
+	
 }

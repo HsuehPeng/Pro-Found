@@ -9,6 +9,8 @@ import Foundation
 import FirebaseAuth
 
 struct LoginService {
+	
 	static let shared = LoginService()
 	
+
 }

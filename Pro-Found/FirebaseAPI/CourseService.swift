@@ -23,7 +23,8 @@ struct CourseServie {
 			"location": course.location,
 			"fee": course.fee,
 			"briefIntro": course.briefIntro,
-			"detailIntro": course.detailIntro
+			"detailIntro": course.detailIntro,
+			"hours": course.hours
 		]
 		
 		courseRef.setData(courseData) { error in
@@ -81,6 +82,18 @@ struct CourseServie {
 					courses.append(course)
 				}
 				completion(.success(courses))
+			}
+		}
+	}
+	
+	func fetchCourse(courseID: String, completion: @escaping (Result<Course, Error>) -> Void) {
+		dbCourses.document(courseID).getDocument { snapshot, error in
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot, let courseData = snapshot.data() else { return }
+				let course = Course(dictionary: courseData)
+				completion(.success(course))
 			}
 		}
 	}

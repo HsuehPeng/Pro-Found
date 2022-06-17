@@ -8,12 +8,12 @@
 import UIKit
 
 protocol ProfileClassTableViewHeaderDelegate: AnyObject {
-	func createCourse(_ header: ProfileClassTableViewHeader)
+	func createCourse(_ header: TutorProfileClassTableViewHeader)
 }
 
-class ProfileClassTableViewHeader: UITableViewHeaderFooterView {
+class TutorProfileClassTableViewHeader: UITableViewHeaderFooterView {
 	
-	static let reuseIdentifier = "\(ProfileClassTableViewHeader.self)"
+	static let reuseIdentifier = "\(TutorProfileClassTableViewHeader.self)"
 	
 	// MARK: - Properties
 	
