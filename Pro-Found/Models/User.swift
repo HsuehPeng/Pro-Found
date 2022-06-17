@@ -19,16 +19,17 @@ struct User {
 	var school: String?
 	var schoolMajor: String?
 	var rating: Double?
+	var courseBooked: Int
 	var profileImageURL: String?
 	var backgroundImageURL: String?
-	var courses: [String]
-	var articles: [String]
-	var events: [String]
-	var posts: [String]
+	var courses: [String]?
+	var articles: [String]?
+	var events: [String]?
+	var posts: [String]?
 	var blockedUsers: [String]
 	var followers: [String]
 	var followerings: [String]
-	var subject: String
+	var subject: String?
 	var isTutor: Bool
 }
 
@@ -52,5 +53,6 @@ extension User {
 		followerings = dictionary["followerings"] as? [String] ?? []
 		subject = dictionary["subject"] as? String ?? ""
 		isTutor = dictionary["isTutor"] as? Bool ?? false
+		courseBooked = dictionary["courseBooked"] as? Int ?? 0
 	}
 }

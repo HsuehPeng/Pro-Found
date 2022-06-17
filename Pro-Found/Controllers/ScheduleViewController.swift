@@ -235,10 +235,12 @@ class ScheduleViewController: UIViewController {
 	
 	func fetchCourses() {
 		for scheduledCoursesIdWithTime in scheduledCoursesIdWithTimes {
-			CourseServie.shared.fetchCourse(courseID: scheduledCoursesIdWithTime.courseID) { result in
+			CourseServie.shared.fetchCourse(courseID: scheduledCoursesIdWithTime.courseID) { [weak self] result in
+				guard let self = self else { return }
 				switch result {
 				case .success(let course):
 					self.scheduledCourses.append(course)
+					print(self.scheduledCourses)
 				case . failure(let error):
 					print(error)
 				}

@@ -53,8 +53,18 @@ struct UserServie {
 
 	}
 	
-	func uploadScheduledCourse(userID: String, courseID: String, time: Double) {
-		dbUsers.document(userID).collection("ScheduledCourse").document().setData([
+	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double) {
+		dbUsers.document(user.userID).collection("ScheduledCourse").document().setData([
+			"\(courseID)": time
+		]) { error in
+			if let error = error {
+				print("Error writing ScheduledCourse: \(error)")
+			} else {
+				print("ScheduledCourse successfully uploaded")
+			}
+		}
+		
+		dbUsers.document(tutor.userID).collection("ScheduledCourse").document().setData([
 			"\(courseID)": time
 		]) { error in
 			if let error = error {
@@ -110,6 +120,60 @@ struct UserServie {
 					courseTimes.append(courseTime)
 				}
 				completion(.success(courseTimes))
+			}
+		}
+	}
+	
+	func follow(sender: User, receiver: User) {
+		dbUsers.document(sender.userID).updateData([
+			"followings": FieldValue.arrayUnion([receiver.userID])
+		]) { error in
+			if let error = error {
+				print("Error updating followings: \(error)")
+			} else {
+				dbUsers.document(receiver.userID).updateData([
+					"followers": FieldValue.arrayUnion([sender.userID])
+				]) { error in
+					if let error = error {
+						print("Error getting followers: \(error)")
+					} else {
+						print("Successfully followed")
+					}
+				}
+			}
+		}
+	}
+	
+	func unfollow(sender: User, receiver: User) {
+		dbUsers.document(sender.userID).updateData([
+			"followings": FieldValue.arrayRemove([receiver.userID])
+		]) { error in
+			if let error = error {
+				print("Error updating followings: \(error)")
+			} else {
+				dbUsers.document(receiver.userID).updateData([
+					"followers": FieldValue.arrayRemove([sender.userID])
+				]) { error in
+					if let error = error {
+						print("Error getting followers: \(error)")
+					} else {
+						print("Successfully unfollowed")
+					}
+				}
+			}
+		}
+	}
+	
+	func checkIfFollow(sender: User, receiver: User, completion: @escaping (Bool) -> Void) {
+		dbUsers.document(sender.userID).parent.whereField("followings", arrayContains: receiver.userID).getDocuments { snapshot, error in
+			if let error = error {
+				completion(false)
+			} else {
+				guard let snapshot = snapshot else {
+					completion(false)
+					return
+				}
+				completion(!snapshot.isEmpty)
 			}
 		}
 	}

@@ -70,14 +70,17 @@ class SignUpViewController: UIViewController {
 	
 	@objc func handleSignup() {
 		guard let email = emailTextField.text, let password = passwordTextField.text else { return }
-		Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-			
+		Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
 			guard let self = self else { return }
 			if let error = error {
 				print("Error signing in: \(error)")
 			}
-
-			self.navigationController?.dismiss(animated: true)
+			guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
+			
+			guard let tab = window.rootViewController as? MainTabController else { return }
+			
+			tab.authenticateUserAndConfigureUI()
+			self.dismiss(animated: true, completion: nil)
 		}
 	}
 

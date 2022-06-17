@@ -8,12 +8,12 @@
 import UIKit
 
 protocol ProfileClassTableViewCellDelegate: AnyObject {
-	func showBottomSheet(_ cell: ProfileClassTableViewCell)
+	func showBottomSheet(_ cell: TutorProfileClassTableViewCell)
 }
 
-class ProfileClassTableViewCell: UITableViewCell {
+class TutorProfileClassTableViewCell: UITableViewCell {
 
-	static let reuseIdentifier = "\(ProfileClassTableViewCell.self)"
+	static let reuseIdentifier = "\(TutorProfileClassTableViewCell.self)"
 	
 	weak var delegate: ProfileClassTableViewCellDelegate?
 	

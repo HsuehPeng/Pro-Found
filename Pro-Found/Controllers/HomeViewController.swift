@@ -55,6 +55,7 @@ class HomeViewController: UIViewController {
 		tableView.register(HomePageTutorListTableViewCell.self, forCellReuseIdentifier: HomePageTutorListTableViewCell.reuseidentifier)
 		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
 		tableView.separatorStyle = .none
+		
 		return tableView
 	}()
 	
@@ -161,7 +162,7 @@ extension HomeViewController: UITableViewDelegate {
 
 extension HomeViewController: HomePageTutorListTableViewCellDelegate {
 	func goToTutorProfile(_ cell: HomePageTutorListTableViewCell, tutor: User) {
-		let tutorProfileVC = ProfileViewController()
+		let tutorProfileVC = TutorProfileViewController()
 		tutorProfileVC.user = user
 		tutorProfileVC.tutor = tutor
 		navigationController?.pushViewController(tutorProfileVC, animated: true)

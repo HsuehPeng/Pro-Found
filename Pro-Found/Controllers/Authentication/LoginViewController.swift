@@ -41,6 +41,19 @@ class LoginViewController: UIViewController {
 		return button
 	}()
 	
+	private lazy var goSignUpButton: UIButton = {
+		let button = UIButton(type: .system)
+		button.setTitle("Sign up", for: .normal)
+		button.setTitleColor(UIColor.orange, for: .normal)
+		button.backgroundColor = .white
+		button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+		button.layer.cornerRadius = 5
+		button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		button.addTarget(self, action: #selector(goSignUp), for: .touchUpInside)
+		return button
+	}()
+	
 	// MARK: - Lifecycle
 	
 	override func viewDidLoad() {
@@ -58,11 +71,15 @@ class LoginViewController: UIViewController {
 							  paddingTop: 100, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(passwordTextField)
-		passwordTextField.anchor(top: emailTextField.topAnchor, left: view.leftAnchor,
+		passwordTextField.anchor(top: emailTextField.bottomAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(loginButton)
-		loginButton.anchor(top: passwordTextField.topAnchor, left: view.leftAnchor,
+		loginButton.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor,
+								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(goSignUpButton)
+		(goSignUpButton).anchor(top: loginButton.bottomAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 	}
 	
@@ -76,9 +93,19 @@ class LoginViewController: UIViewController {
 			if let error = error {
 				print("Error signing in: \(error)")
 			}
-
-			self.navigationController?.dismiss(animated: true)
+			
+			guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
+			
+			guard let tab = window.rootViewController as? MainTabController else { return }
+			
+			tab.authenticateUserAndConfigureUI()
+			self.dismiss(animated: true, completion: nil)
 		}
+	}
+	
+	@objc func goSignUp() {
+		let loginVC = SignUpViewController()
+		navigationController?.pushViewController(loginVC, animated: true)
 	}
 
 	// MARK: - Helpers
