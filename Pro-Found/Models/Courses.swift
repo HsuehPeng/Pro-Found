@@ -12,7 +12,7 @@ struct Courses: Codable {
 }
 
 struct Course: Codable {
-//	let courseID: String
+	var courseID: String?
 	let userID: String
 	let tutorName: String
 	let courseTitle: String
@@ -21,10 +21,12 @@ struct Course: Codable {
 	let fee: Double
 	let briefIntro: String
 	let detailIntro: String
+	let hours: Int
 }
 
 extension Course {
 	init(dictionary: [String: Any]) {
+		courseID = dictionary["courseID"] as? String ?? ""
 		userID = dictionary["userID"] as? String ?? ""
 		tutorName = dictionary["tutorName"] as? String ?? ""
 		courseTitle = dictionary["courseTitle"] as? String ?? ""
@@ -33,5 +35,11 @@ extension Course {
 		location = dictionary["location"] as? String ?? ""
 		subject = dictionary["subject"] as? String ?? ""
 		briefIntro = dictionary["briefIntro"] as? String ?? ""
+		hours = dictionary["hours"] as? Int ?? 0
 	}
+}
+
+struct ScheduledCourseTime {
+	let courseID: String
+	let time: Double
 }

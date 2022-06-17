@@ -1,14 +1,14 @@
 //
-//  LoginViewController.swift
+//  SignUpViewController.swift
 //  Pro-Found
 //
-//  Created by Hsueh Peng Tseng on 2022/6/16.
+//  Created by Hsueh Peng Tseng on 2022/6/17.
 //
 
 import UIKit
 import FirebaseAuth
 
-class LoginViewController: UIViewController {
+class SignUpViewController: UIViewController {
 
 	// MARK: - Properties
 	
@@ -28,16 +28,16 @@ class LoginViewController: UIViewController {
 		return textField
 	}()
 
-	private lazy var loginButton: UIButton = {
+	private lazy var signUpButton: UIButton = {
 		let button = UIButton(type: .system)
-		button.setTitle("Log In", for: .normal)
+		button.setTitle("Sign up", for: .normal)
 		button.setTitleColor(UIColor.orange, for: .normal)
 		button.backgroundColor = .white
 		button.heightAnchor.constraint(equalToConstant: 50).isActive = true
 		button.layer.cornerRadius = 5
 		button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
 		button.translatesAutoresizingMaskIntoConstraints = false
-		button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+		button.addTarget(self, action: #selector(handleSignup), for: .touchUpInside)
 		return button
 	}()
 	
@@ -45,8 +45,8 @@ class LoginViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		title = "Login"
-		view.backgroundColor = .ocean
+		title = "Sign up"
+		view.backgroundColor = .orange
 		setupUI()
 	}
 	
@@ -61,14 +61,14 @@ class LoginViewController: UIViewController {
 		passwordTextField.anchor(top: emailTextField.topAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(loginButton)
-		loginButton.anchor(top: passwordTextField.topAnchor, left: view.leftAnchor,
+		view.addSubview(signUpButton)
+		signUpButton.anchor(top: passwordTextField.topAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 	}
 	
 	// MARK: - Selectors
 	
-	@objc func handleLogin() {
+	@objc func handleSignup() {
 		guard let email = emailTextField.text, let password = passwordTextField.text else { return }
 		Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
 			

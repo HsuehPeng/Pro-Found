@@ -284,7 +284,7 @@ class CreateCourseViewController: UIViewController {
 		guard let selectedSubject = selectedButton.first?.titleLabel?.text else { return }
 		let course = Course(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText,
 							subject: selectedSubject, location: addressText, fee: feetextDouble, briefIntro: briefText,
-							detailIntro: introText)
+							detailIntro: introText, hours: 1)
 		
 		CourseServie.shared.uploadNewCourse(course: course, user: user)
 		navigationController?.popViewController(animated: true)

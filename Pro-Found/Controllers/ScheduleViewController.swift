@@ -6,11 +6,22 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ScheduleViewController: UIViewController {
 
 	// MARK: - Properties
 	
+	var scheduledCourses = [Course]()
+	
+	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
+	
+	var filteredScheduledCourses = [Course]() {
+		didSet {
+			collectionView.reloadData()
+		}
+	}
+
 	var selectedDate = Date()
 	var totalSquares = [String]()
 	
@@ -27,6 +38,11 @@ class ScheduleViewController: UIViewController {
 	
 	private var monthLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 12), textColor: .dark40, text: "Month")
+		return label
+	}()
+	
+	private var yearLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 12), textColor: .dark40, text: "Year")
 		return label
 	}()
 	
@@ -136,6 +152,12 @@ class ScheduleViewController: UIViewController {
 		setupNavBar()
 		setupUI()
 		setMonthView()
+		
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+		fetchScheduledCourses()
 	}
 	
 	// MARK: - UI
@@ -153,7 +175,7 @@ class ScheduleViewController: UIViewController {
 		switchMonthWeekButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
 		switchMonthWeekButton.centerY(inView: topBarView)
 		
-		let monthSwitchHStack = UIStackView(arrangedSubviews: [previousMonthButton, monthLabel, nextMonthButton])
+		let monthSwitchHStack = UIStackView(arrangedSubviews: [previousMonthButton, monthLabel, yearLabel, nextMonthButton])
 		monthSwitchHStack.axis = .horizontal
 		monthSwitchHStack.spacing = 10
 		monthSwitchHStack.distribution = .equalSpacing
@@ -174,7 +196,7 @@ class ScheduleViewController: UIViewController {
 		
 		view.addSubview(collectionView)
 		collectionView.anchor(top: weekdayHStack.bottomAnchor, left: view.leftAnchor,
-							  bottom: view.bottomAnchor, right: view.rightAnchor)
+							  bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
 		
 	}
 	
@@ -196,6 +218,66 @@ class ScheduleViewController: UIViewController {
 	
 	// MARK: - Helpers
 	
+	func fetchScheduledCourses() {
+		guard let userID = Auth.auth().currentUser?.uid else { return }
+		UserServie.shared.getScheduledCourseIDs(userID: userID) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let scheduledCoursesIdWithTimes):
+				let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.time < $1.time })
+				self.scheduledCoursesIdWithTimes = sorted
+				self.fetchCourses()
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func fetchCourses() {
+		for scheduledCoursesIdWithTime in scheduledCoursesIdWithTimes {
+			CourseServie.shared.fetchCourse(courseID: scheduledCoursesIdWithTime.courseID) { result in
+				switch result {
+				case .success(let course):
+					self.scheduledCourses.append(course)
+				case . failure(let error):
+					print(error)
+				}
+			}
+		}
+	}
+	
+	func filterCourseByDate(dateString: String) {
+		
+		filteredScheduledCourses.removeAll()
+		
+		let formatter = DateFormatter()
+		formatter.dateFormat = "dd MMMM yyyy"
+		
+		let filteredCoursesIdWithTimes = scheduledCoursesIdWithTimes.filter { scheduledCourseTime in
+			let date = Date(timeIntervalSince1970: scheduledCourseTime.time)
+			let courseTimeString = formatter.string(from: date)
+			if courseTimeString == dateString {
+				return true
+			} else {
+				return false
+			}
+		}
+		
+		filteredCoursesIdWithTimes.forEach { scheduledCourseTime in
+			for i in 0..<scheduledCourses.count {
+				if scheduledCourseTime.courseID == scheduledCourses[i].courseID {
+					filteredScheduledCourses.append(scheduledCourses[i])
+					break
+				}
+			}
+		}
+	
+	}
+	
+	func findCoursesByDate() {
+
+	}
+	
 	func setMonthView() {
 		totalSquares.removeAll()
 		let daysInMonth = CalendarHelper().daysInMonth(date: selectedDate)
@@ -214,7 +296,8 @@ class ScheduleViewController: UIViewController {
 			}
 		}
 		
-		monthLabel.text = CalendarHelper().monthString(date: selectedDate) + " " + CalendarHelper().yearString(date: selectedDate)
+		monthLabel.text = CalendarHelper().monthString(date: selectedDate)
+		yearLabel.text = CalendarHelper().yearString(date: selectedDate)
 		collectionView.reloadData()
 	}
 	
@@ -231,10 +314,11 @@ extension ScheduleViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		if section == 0 {
 			return totalSquares.count
+		} else if section == 1 {
+			return filteredScheduledCourses.count
 		} else {
-			return 2
+			return 1
 		}
-		
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -247,6 +331,10 @@ extension ScheduleViewController: UICollectionViewDataSource {
 		
 		if indexPath.section == 0 {
 			return calendarCell
+		} else if indexPath.section == 1 {
+			let course = filteredScheduledCourses[indexPath.item]
+			activityCell.course = course
+			return activityCell
 		} else {
 			return activityCell
 		}
@@ -258,6 +346,16 @@ extension ScheduleViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 
 extension ScheduleViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+	
+	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+		if indexPath.section == 0 {
+			guard let cell = collectionView.cellForItem(at: indexPath) as? CalendarCollectionViewCell else { return }
+			guard let monthAndYear = monthLabel.text, let day = cell.dateLabel.text, let year = yearLabel.text else { return }
+			let date = "\(day) \(monthAndYear) \(year)"
+			filterCourseByDate(dateString: date)
+		}
+	}
+	
 	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
 						at indexPath: IndexPath) -> UICollectionReusableView {
 		guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,

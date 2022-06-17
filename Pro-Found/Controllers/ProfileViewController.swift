@@ -16,7 +16,9 @@ class ProfileViewController: UIViewController {
 	
 	var user: User?
 	
-	var userCourses = [Course]() {
+	var tutor: User?
+	
+	var tutorCourses = [Course]() {
 		didSet {
 			tableView.reloadData()
 		}
@@ -69,7 +71,7 @@ class ProfileViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func fetchUserData() {
-		guard let user = user else { return }
+		guard let user = tutor else { return }
 		print(user.name)
 		
 		UserServie.shared.getUserData(uid: user.userID) { [weak self] result in
@@ -77,12 +79,12 @@ class ProfileViewController: UIViewController {
 			
 			switch result {
 			case.success(let user):
-				self.user = user
+				self.tutor = user
 				CourseServie.shared.fetchUserCourses(userID: user.userID) { [weak self] result in
 					guard let self = self else { return }
 					switch result {
 					case.success(let courses):
-						self.userCourses = courses
+						self.tutorCourses = courses
 					case.failure(let error):
 						print(error)
 					}
@@ -106,7 +108,7 @@ extension ProfileViewController: UITableViewDataSource {
 		if section == 0 {
 			return 1
 		} else {
-			return userCourses.count
+			return tutorCourses.count
 		}
 	}
 	
@@ -120,7 +122,7 @@ extension ProfileViewController: UITableViewDataSource {
 			return mainCell
 		} else {
 			courseCell.delegate = self
-			courseCell.course = userCourses[indexPath.row]
+			courseCell.course = tutorCourses[indexPath.row]
 			return courseCell
 		}
 	}
@@ -166,7 +168,7 @@ extension ProfileViewController: UITableViewDelegate {
 extension ProfileViewController: ProfileClassTableViewHeaderDelegate {
 	
 	func createCourse(_ header: ProfileClassTableViewHeader) {
-		guard let user = user else { return }
+		guard let user = tutor else { return }
 		let createCourseVC = CreateCourseViewController(user: user)
 		navigationController?.pushViewController(createCourseVC, animated: true)
 	}
@@ -176,7 +178,8 @@ extension ProfileViewController: ProfileClassTableViewHeaderDelegate {
 
 extension ProfileViewController: ProfileClassTableViewCellDelegate {
 	func showBottomSheet(_ cell: ProfileClassTableViewCell) {
-		let slideVC = SelectClassBottomSheetViewController()
+		guard let course = cell.course, let user = user, let tutor = tutor else { return }
+		let slideVC = SelectClassBottomSheetViewController(user: user, course: course, tutor: tutor)
 		slideVC.modalPresentationStyle = .custom
 		slideVC.transitioningDelegate = self
 		present(slideVC, animated: true)
@@ -186,7 +189,8 @@ extension ProfileViewController: ProfileClassTableViewCellDelegate {
 // MARK: - UIViewControllerTransitioningDelegate
 
 extension ProfileViewController: UIViewControllerTransitioningDelegate {
-	func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+	func presentationController(forPresented presented: UIViewController, presenting: UIViewController?,
+								source: UIViewController) -> UIPresentationController? {
 		return SelectClassPresentationVController(presentedViewController: presented, presenting: presenting)
 	}
 }

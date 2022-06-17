@@ -11,6 +11,10 @@ class SelectClassBottomSheetViewController: UIViewController {
 	
 	// MARK: - Properties
 	
+	var course: Course
+	var user: User
+	var tutor: User
+	
 	var hasSetPointOrigin = false
 	var pointOrigin: CGPoint?
 	
@@ -21,11 +25,17 @@ class SelectClassBottomSheetViewController: UIViewController {
 		return view
 	}()
 	
-	private let datePicker: UIDatePicker = {
+	private lazy var datePicker: UIDatePicker = {
 		let picker = UIDatePicker()
 		picker.datePickerMode = .dateAndTime
 		picker.preferredDatePickerStyle = .inline
 		picker.tintColor = .orange
+		picker.minuteInterval = 30
+		let currentDate = Date()
+		let afterThreeMonthsdate = Calendar.current.date(byAdding: .month, value: 3, to: currentDate)
+		picker.maximumDate = afterThreeMonthsdate
+		picker.minimumDate = currentDate
+		picker.addTarget(self, action: #selector(changeDatePickerValue), for: .valueChanged)
 		return picker
 	}()
 	
@@ -37,6 +47,17 @@ class SelectClassBottomSheetViewController: UIViewController {
 	}()
 	
 	// MARK: - Lifecycle
+	
+	init(user: User, course: Course, tutor: User) {
+		self.user = user
+		self.course = course
+		self.tutor = tutor
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -71,7 +92,15 @@ class SelectClassBottomSheetViewController: UIViewController {
 	
 	// MARK: - Actions
 	
+	@objc func changeDatePickerValue(_ sender: UIDatePicker) {
+
+	}
+	
 	@objc func confirmBookingCourse() {
+		guard let courseID = course.courseID else { return }
+		let timeInterval = datePicker.date.timeIntervalSince1970
+		print(courseID, user.userID, timeInterval)
+		UserServie.shared.uploadScheduledCourse(userID: user.userID, courseID: courseID, time: timeInterval)
 		dismiss(animated: true)
 	}
 	

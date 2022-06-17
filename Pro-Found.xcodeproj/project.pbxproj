@@ -47,6 +47,7 @@
 		B8AB064B285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */; };
 		B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */; };
 		B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064E285B88F2002110A4 /* SelectClassBottomSheetViewController.swift */; };
+		B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0651285C8F36002110A4 /* SignUpViewController.swift */; };
 		B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B38F2857258D00CA7370 /* HomeViewController.swift */; };
 		B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B392285725E200CA7370 /* FeedViewController.swift */; };
 		B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B394285725F500CA7370 /* ArticleViewController.swift */; };
@@ -102,6 +103,7 @@
 		B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleActivityListCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectClassPresentationVController.swift; sourceTree = "<group>"; };
 		B8AB064E285B88F2002110A4 /* SelectClassBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectClassBottomSheetViewController.swift; sourceTree = "<group>"; };
+		B8AB0651285C8F36002110A4 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		B8C7B38F2857258D00CA7370 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B8C7B392285725E200CA7370 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		B8C7B394285725F500CA7370 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 			isa = PBXGroup;
 			children = (
 				B8AB063E285B088E002110A4 /* LoginViewController.swift */,
+				B8AB0651285C8F36002110A4 /* SignUpViewController.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -495,6 +498,7 @@
 				B8AB06112859FA13002110A4 /* Events.swift in Sources */,
 				B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */,
 				B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */,
+				B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */,
 				B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */,
 				B8AB063F285B088E002110A4 /* LoginViewController.swift in Sources */,
 				B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */,

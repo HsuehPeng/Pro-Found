@@ -59,7 +59,7 @@ class HomeViewController: UIViewController {
 	}()
 	
 	// MARK: - Lifecycle
-
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
@@ -162,7 +162,8 @@ extension HomeViewController: UITableViewDelegate {
 extension HomeViewController: HomePageTutorListTableViewCellDelegate {
 	func goToTutorProfile(_ cell: HomePageTutorListTableViewCell, tutor: User) {
 		let tutorProfileVC = ProfileViewController()
-		tutorProfileVC.user = tutor
+		tutorProfileVC.user = user
+		tutorProfileVC.tutor = tutor
 		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}
 

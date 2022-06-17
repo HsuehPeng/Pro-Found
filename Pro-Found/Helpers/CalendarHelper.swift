@@ -20,7 +20,7 @@ struct CalendarHelper {
 	
 	func monthString(date: Date) -> String {
 		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "LLLL"
+		dateFormatter.dateFormat = "MMMM"
 		return dateFormatter.string(from: date)
 	}
 	

@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct UserServie {
 	
 	static let shared = UserServie()
 	
-	func uploadUserData(user: User) {
+	func uploadUserData(user: User, uid: String) {
 		let userRef = dbUsers.document()
 		let userData: [String: Any] = [
 			"articles": user.articles,
@@ -31,7 +32,7 @@ struct UserServie {
 			"school": user.school,
 			"schoolMajor": user.schoolMajor,
 			"subject": user.subject,
-			"userID": user.userID
+			"userID": uid,
 		]
 		
 		userRef.setData(userData) { error in
@@ -39,6 +40,27 @@ struct UserServie {
 				print("Error writing userdata: \(error)")
 			} else {
 				print("User successfully uploaded")
+			}
+		}
+		
+		userRef.collection("ScheduledCourse").document(user.userID).setData([
+			"time": []
+		])
+		
+		userRef.collection("ScheduledEvent").document(user.userID).setData([
+			"time": []
+		])
+
+	}
+	
+	func uploadScheduledCourse(userID: String, courseID: String, time: Double) {
+		dbUsers.document(userID).collection("ScheduledCourse").document().setData([
+			"\(courseID)": time
+		]) { error in
+			if let error = error {
+				print("Error writing ScheduledCourse: \(error)")
+			} else {
+				print("ScheduledCourse successfully uploaded")
 			}
 		}
 	}
@@ -53,7 +75,6 @@ struct UserServie {
 				print("User snapShot doesn't exist")
 				return
 			}
-			
 			let user = User(dictionary: userData)
 			completion(.success(user))
 		}
@@ -71,6 +92,24 @@ struct UserServie {
 					tutors.append(tutor)
 				}
 				completion(.success(tutors))
+			}
+		}
+	}
+	
+	func getScheduledCourseIDs(userID: String, completion: @escaping (Result<[ScheduledCourseTime], Error>) -> Void) {
+		dbUsers.document(userID).collection("ScheduledCourse").getDocuments { snapshot, error in
+			var courseTimes = [ScheduledCourseTime]()
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot else { return }
+				for document in snapshot.documents {
+					let courseTimeData = document.data()
+					guard let courseID = courseTimeData.keys.first, let time = courseTimeData["\(courseID)"] as? Double else { return }
+					let courseTime = ScheduledCourseTime(courseID: courseID, time: time)
+					courseTimes.append(courseTime)
+				}
+				completion(.success(courseTimes))
 			}
 		}
 	}
