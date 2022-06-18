@@ -28,7 +28,7 @@ struct User {
 	var posts: [String]
 	var blockedUsers: [String]
 	var followers: [String]
-	var followerings: [String]
+	var followings: [String]
 	var subject: String
 	var isTutor: Bool
 }
@@ -50,7 +50,7 @@ extension User {
 		posts = dictionary["posts"] as? [String] ?? []
 		blockedUsers = dictionary["blockedUsers"] as? [String] ?? []
 		followers = dictionary["followers"] as? [String] ?? []
-		followerings = dictionary["followerings"] as? [String] ?? []
+		followings = dictionary["followings"] as? [String] ?? []
 		subject = dictionary["subject"] as? String ?? ""
 		isTutor = dictionary["isTutor"] as? Bool ?? false
 		courseBooked = dictionary["courseBooked"] as? Int ?? 0

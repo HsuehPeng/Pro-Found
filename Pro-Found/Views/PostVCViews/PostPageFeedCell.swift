@@ -13,6 +13,14 @@ class PostPageFeedCell: UITableViewCell {
 	
 	// MARK: - Properties
 	
+	var post: Post?
+	
+	var user: User? {
+		didSet {
+			configure()
+		}
+	}
+	
 	private lazy var profileImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFit
@@ -50,6 +58,7 @@ class PostPageFeedCell: UITableViewCell {
 	private let contentTextLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 16),
 												 textColor: UIColor.dark, text: "Content Text")
+		label.numberOfLines = 0
 		return label
 	}()
 	
@@ -118,5 +127,19 @@ class PostPageFeedCell: UITableViewCell {
 		contentView.addSubview(feedHStack)
 		feedHStack.anchor(top: likeCountLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 						  right: contentView.rightAnchor, paddingTop: 20, paddingBottom: 12)
+	}
+	
+	// MARK: - Helpers
+	
+	func configure() {
+		guard let post = post, let user = user else { return }
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "h:mm a ∙ MM/dd/yyyy"
+		let postDate = Date(timeIntervalSince1970: post.timestamp)
+		
+		feedNameLabel.text = user.name
+		feedTimeLabel.text = dateFormatter.string(from: postDate)
+		contentTextLabel.text = post.contentText
+		likeCountLabel.text = String(post.likes)
 	}
 }

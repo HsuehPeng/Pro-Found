@@ -60,7 +60,7 @@ struct CourseServie {
 				completion(.failure(error))
 			} else {
 				for document in snapshot!.documents {
-					print("\(document.documentID) => \(document.data())")
+//					print("\(document.documentID) => \(document.data())")
 					let data = document.data()
 					let course = Course(dictionary: data)
 					courses.append(course)
@@ -76,7 +76,8 @@ struct CourseServie {
 			if let error = error {
 				completion(.failure(error))
 			} else {
-				for document in snapshot!.documents {
+				guard let snapshot = snapshot else { return }
+				for document in snapshot.documents {
 					let data = document.data()
 					let course = Course(dictionary: data)
 					courses.append(course)

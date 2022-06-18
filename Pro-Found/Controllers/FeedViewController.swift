@@ -6,10 +6,22 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class FeedViewController: UIViewController {
 
 	// MARK: - Properties
+	
+	var user: User?
+	
+	var posts = [Post]()
+	
+	var filteredPosts = [Post]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
+	
 		
 	private let topBarView: UIView = {
 		let view = UIView()
@@ -55,6 +67,12 @@ class FeedViewController: UIViewController {
 		
 		setupNavBar()
 		setupUI()
+		
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+		loadUserData()
 	}
 	
 	// MARK: - UI
@@ -82,12 +100,53 @@ class FeedViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func handleWritePost() {
-		let writePostVC = WritePostViewController()
+		guard let user = user else { return }
+		let writePostVC = WritePostViewController(user: user)
 		writePostVC.modalPresentationStyle = .fullScreen
 		present(writePostVC, animated: true)
 	}
 	
 	// MARK: - Helpers
+	
+	func loadUserData() {
+		guard let uid = Auth.auth().currentUser?.uid  else { return }
+		UserServie.shared.getUserData(uid: uid) { result in
+			switch result {
+			case .success(let user):
+				self.user = user
+				self.getPosts()
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func getPosts() {
+		guard let user = user else { return }
+		PostService.shared.getPosts(user: user) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let posts):
+				self.posts = posts
+				self.filteredPosts = self.filterPosts()
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func filterPosts() -> [Post] {
+		guard let user = user else {
+			return []
+		}
+		var filteredPosts = [Post]()
+		for post in posts {
+			if user.followings.contains(post.userID) {
+				filteredPosts.append(post)
+			}
+		}
+		return filteredPosts
+	}
 
 }
 
@@ -99,12 +158,22 @@ extension FeedViewController: UITableViewDataSource {
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 2
+		return filteredPosts.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let feedCell = tableView.dequeueReusableCell(withIdentifier: PostPageFeedCell.reuseIdentifier, for: indexPath)
 				as? PostPageFeedCell else { return UITableViewCell() }
+		let post = filteredPosts[indexPath.row]
+		UserServie.shared.getUserData(uid: post.userID) { result in
+			switch result {
+			case .success(let user):
+				feedCell.user = user
+			case .failure(let error):
+				print(error)
+			}
+		}
+		feedCell.post = post
 		return feedCell
 	}
 }

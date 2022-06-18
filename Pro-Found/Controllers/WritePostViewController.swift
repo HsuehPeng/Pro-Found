@@ -11,6 +11,8 @@ class WritePostViewController: UIViewController {
 	
 	// MARK: - Properties
 	
+	let user: User
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
@@ -65,11 +67,21 @@ class WritePostViewController: UIViewController {
 	private lazy var postButton: UIButton = {
 		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Post")
 		button.widthAnchor.constraint(equalToConstant: 90).isActive = true
+		button.addTarget(self, action: #selector(sendOutPost), for: .touchUpInside)
 		
 		return button
 	}()
 	
 	// MARK: - Lifecycle
+	
+	init(user: User) {
+		self.user = user
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -111,6 +123,17 @@ class WritePostViewController: UIViewController {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func sendOutPost() {
+		guard let postText = postTextView.text else { return }
+		let date = Date()
+		let timestamp = date.timeIntervalSince1970
+		let post = Post(userID: user.userID, contentText: postText, likes: 0, timestamp: timestamp)
+		PostService.shared.uploadPost(post: post, user: user) { [weak self] in
+			guard let self = self else { return }
+			self.dismiss(animated: true)
+		}
+	}
 	
 	@objc func dismissVC() {
 		dismiss(animated: true)
