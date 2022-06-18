@@ -126,7 +126,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		guard let article = article else { return }
 		let imageUrl = URL(string: article.imageURL)
 		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "MMM dd, yyyy"
+		dateFormatter.dateFormat = "MMMM dd, yyyy"
 		let postDate = Date(timeIntervalSince1970: article.timestamp)
 		articleImageView.kf.setImage(with: imageUrl)
 		articleTitleLabel.text = article.articleTitle

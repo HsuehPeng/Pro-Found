@@ -17,16 +17,16 @@ struct Event {
 	let introText: String
 	let imageURL: String
 	var organizer: User
-	var participants: [User]
+	var participants: [String]
 }
 
 extension Event {
-	init(organizer: User, dictionary: [String: Any], eventID: String, participants: [User]) {
+	init(organizer: User, dictionary: [String: Any]) {
 		self.organizer = organizer
-		self.eventID = eventID
-		self.participants = participants
+		participants = dictionary["participants"] as? [String] ?? []
 		userID = dictionary["userID"] as? String ?? ""
 		eventTitle = dictionary["eventTitle"] as? String ?? ""
+		eventID = dictionary["eventID"] as? String ?? ""
 		organizerName = dictionary["organizerName"] as? String ?? ""
 		timestamp = dictionary["timestamp"] as? Double ?? 0
 		location = dictionary["location"] as? String ?? ""

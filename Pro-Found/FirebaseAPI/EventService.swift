@@ -13,49 +13,49 @@ struct EventService {
 	
 	static let shared = EventService()
 	
-	func uploadEvent(article: FirebaseArticle) {
+	func uploadEvent(event: FirebaseEvent) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
-		let articleRef = dbArticles.document()
-		let articleData: [String: Any] = [
+		let eventRef = dbEvents.document()
+		let eventData: [String: Any] = [
 			"userID": uid,
-			"articleID": articleRef.documentID,
-			"articleTitle": article.articleTitle,
-			"subject": article.subject,
-			"timestamp": article.timestamp,
-			"contentText": article.contentText,
-			"imageURL": article.imageURL,
-			"ratings": article.ratings,
-			"authorName": article.authorName
+			"eventID": eventRef.documentID,
+			"eventTitle": event.eventTitle,
+			"organizerName": event.organizerName,
+			"timestamp": event.timestamp,
+			"location": event.location,
+			"introText": event.introText,
+			"imageURL": event.imageURL,
+			"participants": event.participants
 		]
 		
-		articleRef.setData(articleData) { error in
+		eventRef.setData(eventData) { error in
 			if let error = error {
-				print("Error writing article: \(error)")
+				print("Error uploading event: \(error)")
 			} else {
 				dbUsers.document(uid).updateData([
-					"articles": FieldValue.arrayUnion([articleRef.documentID])
+					"events": FieldValue.arrayUnion([eventRef.documentID])
 				])
-				print("New article successfully created")
+				print("New event successfully created")
 			}
 		}
 	}
 	
-	func fetchEvents(completion: @escaping (Result<[Article], Error>) -> Void) {
-		dbArticles.getDocuments { snapshot, error in
-			var articles = [Article]()
+	func fetchEvents(completion: @escaping (Result<[Event], Error>) -> Void) {
+		dbEvents.getDocuments { snapshot, error in
+			var events = [Event]()
 			if let error = error {
 				completion(.failure(error))
 			} else {
 				guard let snapshot = snapshot else { return }
 				let group = DispatchGroup()
 				for document in snapshot.documents {
-					let articleData = document.data()
+					let eventData = document.data()
 					group.enter()
-					UserServie.shared.getUserData(uid: articleData["userID"] as! String) { result in
+					UserServie.shared.getUserData(uid: eventData["userID"] as? String ?? "") { result in
 						switch result {
 						case .success(let user):
-							let article = Article(user: user, dictionary: articleData, articleID: document.documentID)
-							articles.append(article)
+							let event = Event(organizer: user, dictionary: eventData)
+							events.append(event)
 						case .failure(let error):
 							print(error)
 						}
@@ -64,13 +64,13 @@ struct EventService {
 					
 				}
 				group.notify(queue: DispatchQueue.main) {
-					completion(.success(articles))
+					completion(.success(events))
 				}
 			}
 		}
 	}
 	
-	func fetchArticle() {
+	func fetchEvent() {
 		
 	}
 	
