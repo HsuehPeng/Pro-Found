@@ -21,7 +21,7 @@ struct UserServie {
 			"courses": user.courses,
 			"email": user.email,
 			"events": user.events,
-			"followings": user.followerings,
+			"followings": user.followings,
 			"followers": user.followers,
 			"introContenText": user.introContentText,
 			"isTutor": user.isTutor,
@@ -32,7 +32,7 @@ struct UserServie {
 			"school": user.school,
 			"schoolMajor": user.schoolMajor,
 			"subject": user.subject,
-			"userID": uid,
+			"userID": uid
 		]
 		
 		userRef.setData(userData) { error in

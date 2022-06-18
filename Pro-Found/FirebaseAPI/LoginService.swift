@@ -12,5 +12,4 @@ struct LoginService {
 	
 	static let shared = LoginService()
 	
-
 }
