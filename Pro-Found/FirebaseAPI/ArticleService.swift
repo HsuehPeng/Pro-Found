@@ -8,10 +8,31 @@
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
+import UIKit
 
 struct ArticleService {
 	
-	func uploadArticle(article: Article) {
+	static let shared = ArticleService()
+	
+	func createAndDownloadImageURL(articleImage: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
+		guard let imageData = articleImage.jpegData(compressionQuality: 0.3) else { return }
+		let imageFileName = NSUUID().uuidString
+		let storageRef = storageArticleImages.child(imageFileName)
+		
+		storageRef.putData(imageData, metadata: nil) { metadata, error in
+			
+			if let error = error {
+				print(error)
+			}
+
+			storageRef.downloadURL { url, error in
+				guard let url = url?.absoluteString else { return }
+				completion(.success(url))
+			}
+		}
+	}
+	
+	func uploadArticle(article: FirebaseArticle) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let articleRef = dbArticles.document()
 		let articleData: [String: Any] = [
@@ -20,7 +41,10 @@ struct ArticleService {
 			"articleTitle": article.articleTitle,
 			"subject": article.subject,
 			"timestamp": article.timestamp,
-			"contentText": article.contentText
+			"contentText": article.contentText,
+			"imageURL": article.imageURL,
+			"ratings": article.ratings,
+			"authorName": article.authorName
 		]
 		
 		articleRef.setData(articleData) { error in
@@ -33,6 +57,35 @@ struct ArticleService {
 				print("New article successfully created")
 			}
 		}
+	}
+	
+	func fetchArticles(completion: @escaping (Result<[Article], Error>) -> Void) {
+		dbArticles.getDocuments { snapshot, error in
+			var articles = [Article]()
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot else { return }
+				for document in snapshot.documents {
+					let articleData = document.data()
+					
+					UserServie.shared.getUserData(uid: articleData["userID"] as! String) { result in
+						switch result {
+						case .success(let user):
+							let article = Article(user: user, dictionary: articleData, articleID: document.documentID)
+							articles.append(article)
+						case .failure(let error):
+							print(error)
+						}
+					}
+				}
+				completion(.success(articles))
+			}
+		}
+	}
+	
+	func fetchArticle() {
+		
 	}
 	
 }

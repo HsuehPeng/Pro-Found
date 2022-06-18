@@ -6,8 +6,9 @@ target 'Pro-Found' do
   use_frameworks!
 
   # Pods for Pro-Found
-	pod 'SwiftLint'
+
 	pod 'FirebaseAuth'
 	pod 'FirebaseFirestore'
+	pod 'FirebaseStorage'
 
 end

@@ -7,14 +7,16 @@
 
 import Foundation
 
-
 struct Article {
 	let userID: String
 	let articleID: String
 	let articleTitle: String
+	let authorName: String
 	let subject: String
 	let timestamp: Double
 	let contentText: String
+	let imageURL: String
+	let ratings: [Double]
 	var user: User
 }
 
@@ -27,5 +29,19 @@ extension Article {
 		subject = dictionary["subject"] as? String ?? ""
 		timestamp = dictionary["timestamp"] as? Double ?? 0
 		contentText = dictionary["contentText"] as? String ?? ""
+		authorName = dictionary["authorName"] as? String ?? ""
+		imageURL = dictionary["imageURL"] as? String ?? ""
+		ratings = dictionary["ratings"] as? [Double] ?? []
 	}
+}
+
+struct FirebaseArticle {
+	let userID: String
+	let articleTitle: String
+	let authorName: String
+	let subject: String
+	let timestamp: Double
+	let contentText: String
+	let imageURL: String
+	let ratings: [Double]
 }
