@@ -1,24 +1,24 @@
 //
-//  WritePostViewController.swift
+//  WriteArticleViewController.swift
 //  Pro-Found
 //
-//  Created by Hsueh Peng Tseng on 2022/6/17.
+//  Created by Hsueh Peng Tseng on 2022/6/18.
 //
 
 import UIKit
 
-class WritePostViewController: UIViewController {
+class WriteArticleViewController: UIViewController {
 	
 	// MARK: - Properties
 	
 	let user: User
-	
+
 	private let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
 		
 		let titleLabel = UILabel()
-		titleLabel.text = "Write Post"
+		titleLabel.text = "Write Article"
 		titleLabel.font = UIFont.customFont(.interBold, size: 16)
 		titleLabel.textColor = .dark
 		view.addSubview(titleLabel)
@@ -35,15 +35,33 @@ class WritePostViewController: UIViewController {
 		return button
 	}()
 	
-	private let profileImageView: UIImageView = {
+	private let articleImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.backgroundColor = .gray
-		imageView.setDimensions(width: 42, height: 42)
-		imageView.layer.cornerRadius = 42 / 2
+		imageView.layer.cornerRadius = 10
+		imageView.setDimensions(width: 132, height: 200)
 		return imageView
 	}()
 	
-	private let postTextView = CaptionTextView()
+	private let articleTitleLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: UIColor.dark, text: "Article Title")
+		return label
+	}()
+	
+	private let articleTitleTextField: UITextField = {
+		let textField = UITextField()
+		return textField
+	}()
+	
+	private let articleTitleDividerView: UIView = {
+		let dividerView = UIView()
+		dividerView.backgroundColor = .dark20
+		dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+		return dividerView
+	}()
+	
+	private let articleTextView = ArticleTextView()
 	
 	private let bottomBarView: UIView = {
 		let view = UIView()
@@ -99,15 +117,28 @@ class WritePostViewController: UIViewController {
 		topBarView.addSubview(cancelButton)
 		cancelButton.centerY(inView: topBarView, leftAnchor: topBarView.leftAnchor, paddingLeft: 18)
 		
-		view.addSubview(profileImageView)
-		profileImageView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, paddingTop: 12, paddingLeft: 16)
+		view.addSubview(articleImageView)
+		articleImageView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
-		view.addSubview(postTextView)
-		postTextView.anchor(top: topBarView.bottomAnchor, left: profileImageView.rightAnchor, right: view.rightAnchor,
-							paddingTop: 12, paddingLeft: 12, paddingRight: 16)
+		view.addSubview(articleTitleLabel)
+		articleTitleLabel.anchor(top: topBarView.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(articleTitleTextField)
+		articleTitleTextField.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(articleTitleDividerView)
+		articleTitleDividerView.anchor(top: articleTitleTextField.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(articleTextView)
+		articleTextView.anchor(top: articleImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+							   paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
 		
 		view.addSubview(bottomBarView)
-		bottomBarView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: 64)
+		bottomBarView.anchor(top: articleTextView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+							 right: view.rightAnchor,paddingTop: 16, height: 64)
 		
 		let actionButtonHStack = UIStackView(arrangedSubviews: [
 			pickImageButton
@@ -125,17 +156,12 @@ class WritePostViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func sendOutArticle() {
-		guard let postText = postTextView.text else { return }
-		let date = Date()
-		let timestamp = date.timeIntervalSince1970
-		let post = Post(userID: user.userID, contentText: postText, likes: 0, timestamp: timestamp)
-		PostService.shared.uploadPost(post: post, user: user) { [weak self] in
-			guard let self = self else { return }
-			self.dismiss(animated: true)
-		}
+
 	}
 	
 	@objc func dismissVC() {
 		dismiss(animated: true)
 	}
+	
+	// MARK: - Helpers
 }

@@ -22,7 +22,6 @@ class FeedViewController: UIViewController {
 		}
 	}
 	
-		
 	private let topBarView: UIView = {
 		let view = UIView()
 		return view

@@ -52,6 +52,11 @@
 		B8AB0656285CCAB0002110A4 /* WritePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */; };
 		B8AB0658285CD05E002110A4 /* CaptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0657285CD05E002110A4 /* CaptionTextView.swift */; };
 		B8AB065A285D7D15002110A4 /* PostService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0659285D7D15002110A4 /* PostService.swift */; };
+		B8AB065C285DA0B0002110A4 /* ArticleService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB065B285DA0B0002110A4 /* ArticleService.swift */; };
+		B8AB065E285DA567002110A4 /* ArticlePageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB065D285DA567002110A4 /* ArticlePageTableViewCell.swift */; };
+		B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0660285DA60E002110A4 /* ArticlePageCollectionViewCell.swift */; };
+		B8AB0663285DAD7E002110A4 /* WriteArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */; };
+		B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0664285DB54C002110A4 /* ArticleTextView.swift */; };
 		B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B38F2857258D00CA7370 /* HomeViewController.swift */; };
 		B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B392285725E200CA7370 /* FeedViewController.swift */; };
 		B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B394285725F500CA7370 /* ArticleViewController.swift */; };
@@ -112,6 +117,11 @@
 		B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritePostViewController.swift; sourceTree = "<group>"; };
 		B8AB0657285CD05E002110A4 /* CaptionTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionTextView.swift; sourceTree = "<group>"; };
 		B8AB0659285D7D15002110A4 /* PostService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostService.swift; sourceTree = "<group>"; };
+		B8AB065B285DA0B0002110A4 /* ArticleService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleService.swift; sourceTree = "<group>"; };
+		B8AB065D285DA567002110A4 /* ArticlePageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlePageTableViewCell.swift; sourceTree = "<group>"; };
+		B8AB0660285DA60E002110A4 /* ArticlePageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlePageCollectionViewCell.swift; sourceTree = "<group>"; };
+		B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteArticleViewController.swift; sourceTree = "<group>"; };
+		B8AB0664285DB54C002110A4 /* ArticleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTextView.swift; sourceTree = "<group>"; };
 		B8C7B38F2857258D00CA7370 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B8C7B392285725E200CA7370 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		B8C7B394285725F500CA7370 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
@@ -191,6 +201,7 @@
 				B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */,
 				B86943D12858670D008021C9 /* HomePageVCViews */,
 				B8CC5EB3285979D2004C5D7A /* PostVCViews */,
+				B8AB065F285DA56A002110A4 /* ArticlePageVCViews */,
 				B8AB0643285B2633002110A4 /* SchedulePageVCViews */,
 				B83666EE285841A400772375 /* TutorProfileviewVCViews */,
 			);
@@ -270,6 +281,7 @@
 				B8AB0641285B0B3F002110A4 /* LoginService.swift */,
 				B8AB06022859F9F8002110A4 /* UserService.swift */,
 				B8AB06032859F9F8002110A4 /* CourseService.swift */,
+				B8AB065B285DA0B0002110A4 /* ArticleService.swift */,
 				B8AB0659285D7D15002110A4 /* PostService.swift */,
 			);
 			path = FirebaseAPI;
@@ -302,6 +314,16 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		B8AB065F285DA56A002110A4 /* ArticlePageVCViews */ = {
+			isa = PBXGroup;
+			children = (
+				B8AB065D285DA567002110A4 /* ArticlePageTableViewCell.swift */,
+				B8AB0660285DA60E002110A4 /* ArticlePageCollectionViewCell.swift */,
+				B8AB0664285DB54C002110A4 /* ArticleTextView.swift */,
+			);
+			path = ArticlePageVCViews;
+			sourceTree = "<group>";
+		};
 		B8C7B3912857259800CA7370 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -311,6 +333,7 @@
 				B8C7B392285725E200CA7370 /* FeedViewController.swift */,
 				B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */,
 				B8C7B394285725F500CA7370 /* ArticleViewController.swift */,
+				B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */,
 				B8C7B3962857260300CA7370 /* ScheduleViewController.swift */,
 				B8C7B3982857260D00CA7370 /* TutorProfileViewController.swift */,
 				B8AB0614285A0AC4002110A4 /* CreateCourseViewController.swift */,
@@ -474,9 +497,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8AB0663285DAD7E002110A4 /* WriteArticleViewController.swift in Sources */,
 				B8AB060E2859FA13002110A4 /* User.swift in Sources */,
 				B8AB063D285B0264002110A4 /* Tutor.swift in Sources */,
 				B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */,
+				B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */,
+				B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */,
 				B8AB060D2859FA13002110A4 /* Articles.swift in Sources */,
 				B8AB0613285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift in Sources */,
 				B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */,
@@ -487,6 +513,7 @@
 				B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor+Extension.swift in Sources */,
 				B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */,
+				B8AB065E285DA567002110A4 /* ArticlePageTableViewCell.swift in Sources */,
 				B8AB060F2859FA13002110A4 /* Schedules.swift in Sources */,
 				B8AB060C2859FA13002110A4 /* Posts.swift in Sources */,
 				B8AB0658285CD05E002110A4 /* CaptionTextView.swift in Sources */,
@@ -518,6 +545,7 @@
 				B8AB063F285B088E002110A4 /* LoginViewController.swift in Sources */,
 				B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */,
 				B8AB0654285CB4FB002110A4 /* ProfileViewController.swift in Sources */,
+				B8AB065C285DA0B0002110A4 /* ArticleService.swift in Sources */,
 				B8CC5EB028588BD0004C5D7A /* GeneralTableViewHeader.swift in Sources */,
 				B811E40028531135009C0838 /* SceneDelegate.swift in Sources */,
 			);
