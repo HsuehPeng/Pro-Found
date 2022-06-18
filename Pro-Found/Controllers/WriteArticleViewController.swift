@@ -39,6 +39,8 @@ class WriteArticleViewController: UIViewController {
 		let imageView = UIImageView()
 		imageView.backgroundColor = .gray
 		imageView.layer.cornerRadius = 10
+		imageView.image = UIImage.asset(.article)
+		imageView.contentMode = .scaleAspectFit
 		imageView.setDimensions(width: 132, height: 200)
 		return imageView
 	}()
@@ -188,6 +190,7 @@ class WriteArticleViewController: UIViewController {
 	@objc func sendOutArticle() {
 		guard let articleTitle = articleTitleTextField.text, let subjectText = subjectTextField.text, let contentText = articleTextView.text,
 			  let articleImage = articleImageView.image else { return }
+		
 		let currentDate = Date()
 		let interval = currentDate.timeIntervalSince1970
 		ArticleService.shared.createAndDownloadImageURL(articleImage: articleImage) { [weak self] result in
@@ -197,14 +200,13 @@ class WriteArticleViewController: UIViewController {
 				let imageURL = url
 				let firestoreArticle = FirebaseArticle(userID: self.user.userID, articleTitle: articleTitle, authorName: self.user.name,
 													   subject: subjectText, timestamp: interval, contentText: contentText, imageURL: imageURL, ratings: [])
-				ArticleService.shared.uploadArticle(article: firestoreArticle) { [weak self] in
-					guard let self = self else { return }
-					self.dismiss(animated: true)
-				}
+				ArticleService.shared.uploadArticle(article: firestoreArticle)
+				self.dismiss(animated: true)
 			case .failure(let error):
 				print(error)
 			}
 		}
+		
 	}
 	
 	@objc func dismissVC() {

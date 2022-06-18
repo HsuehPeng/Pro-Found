@@ -21,6 +21,10 @@ struct ArticleService {
 		
 		storageRef.putData(imageData, metadata: nil) { metadata, error in
 			
+			if let error = error {
+				print(error)
+			}
+
 			storageRef.downloadURL { url, error in
 				guard let url = url?.absoluteString else { return }
 				completion(.success(url))
@@ -28,7 +32,7 @@ struct ArticleService {
 		}
 	}
 	
-	func uploadArticle(article: FirebaseArticle, completion: @escaping () -> Void) {
+	func uploadArticle(article: FirebaseArticle) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let articleRef = dbArticles.document()
 		let articleData: [String: Any] = [
