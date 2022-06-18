@@ -1,5 +1,5 @@
 //
-//  ArticleService.swift
+//  EventService.swift
 //  Pro-Found
 //
 //  Created by Hsueh Peng Tseng on 2022/6/18.
@@ -9,29 +9,11 @@ import FirebaseAuth
 import FirebaseFirestore
 import UIKit
 
-struct ArticleService {
+struct EventService {
 	
-	static let shared = ArticleService()
+	static let shared = EventService()
 	
-	func createAndDownloadImageURL(articleImage: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
-		guard let imageData = articleImage.jpegData(compressionQuality: 0.3) else { return }
-		let imageFileName = NSUUID().uuidString
-		let storageRef = storageArticleImages.child(imageFileName)
-		
-		storageRef.putData(imageData, metadata: nil) { metadata, error in
-			
-			if let error = error {
-				print(error)
-			}
-
-			storageRef.downloadURL { url, error in
-				guard let url = url?.absoluteString else { return }
-				completion(.success(url))
-			}
-		}
-	}
-	
-	func uploadArticle(article: FirebaseArticle) {
+	func uploadEvent(article: FirebaseArticle) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let articleRef = dbArticles.document()
 		let articleData: [String: Any] = [
@@ -58,7 +40,7 @@ struct ArticleService {
 		}
 	}
 	
-	func fetchArticles(completion: @escaping (Result<[Article], Error>) -> Void) {
+	func fetchEvents(completion: @escaping (Result<[Article], Error>) -> Void) {
 		dbArticles.getDocuments { snapshot, error in
 			var articles = [Article]()
 			if let error = error {
@@ -93,3 +75,4 @@ struct ArticleService {
 	}
 	
 }
+

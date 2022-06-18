@@ -152,6 +152,10 @@ extension HomeViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
 				as? GeneralTableViewHeader else { return  UITableViewHeaderFooterView() }
+		if section == 0 {
+			header.titleLabel.text = "Tutors"
+			return header
+		}
 		return header
 	}
 	

@@ -57,6 +57,7 @@
 		B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0660285DA60E002110A4 /* ArticlePageCollectionViewCell.swift */; };
 		B8AB0663285DAD7E002110A4 /* WriteArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */; };
 		B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0664285DB54C002110A4 /* ArticleTextView.swift */; };
+		B8AB0667285DF3B4002110A4 /* EventService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0666285DF3B4002110A4 /* EventService.swift */; };
 		B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B38F2857258D00CA7370 /* HomeViewController.swift */; };
 		B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B392285725E200CA7370 /* FeedViewController.swift */; };
 		B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B394285725F500CA7370 /* ArticleViewController.swift */; };
@@ -122,6 +123,7 @@
 		B8AB0660285DA60E002110A4 /* ArticlePageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlePageCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteArticleViewController.swift; sourceTree = "<group>"; };
 		B8AB0664285DB54C002110A4 /* ArticleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTextView.swift; sourceTree = "<group>"; };
+		B8AB0666285DF3B4002110A4 /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
 		B8C7B38F2857258D00CA7370 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B8C7B392285725E200CA7370 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		B8C7B394285725F500CA7370 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
@@ -223,8 +225,8 @@
 			isa = PBXGroup;
 			children = (
 				B8AB06072859FA13002110A4 /* Articles.swift */,
-				B8AB060A2859FA13002110A4 /* Courses.swift */,
 				B8AB060B2859FA13002110A4 /* Events.swift */,
+				B8AB060A2859FA13002110A4 /* Courses.swift */,
 				B8AB06062859FA13002110A4 /* Posts.swift */,
 				B8AB06092859FA13002110A4 /* Schedules.swift */,
 				B8AB06082859FA13002110A4 /* User.swift */,
@@ -281,6 +283,7 @@
 				B8AB0641285B0B3F002110A4 /* LoginService.swift */,
 				B8AB06022859F9F8002110A4 /* UserService.swift */,
 				B8AB06032859F9F8002110A4 /* CourseService.swift */,
+				B8AB0666285DF3B4002110A4 /* EventService.swift */,
 				B8AB065B285DA0B0002110A4 /* ArticleService.swift */,
 				B8AB0659285D7D15002110A4 /* PostService.swift */,
 			);
@@ -502,6 +505,7 @@
 				B8AB06052859F9F8002110A4 /* CourseService.swift in Sources */,
 				B86943D028586079008021C9 /* PrivateKey.swift in Sources */,
 				B811E40228531135009C0838 /* MainTabController.swift in Sources */,
+				B8AB0667285DF3B4002110A4 /* EventService.swift in Sources */,
 				B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */,
 				B8AB06102859FA13002110A4 /* Courses.swift in Sources */,
 				B8AB0615285A0AC4002110A4 /* CreateCourseViewController.swift in Sources */,

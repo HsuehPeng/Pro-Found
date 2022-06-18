@@ -74,11 +74,11 @@ class ArticleViewController: UIViewController {
 		
 		setupUI()
 		setupNavBar()
+		loadUserData()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
-		loadUserData()
 		fetchArticles()
 	}
 	
