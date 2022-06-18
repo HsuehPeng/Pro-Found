@@ -61,6 +61,24 @@ class WriteArticleViewController: UIViewController {
 		return dividerView
 	}()
 	
+	private let subjectTitleLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: UIColor.dark, text: "Subject")
+		return label
+	}()
+	
+	private let subjectTextField: UITextField = {
+		let textField = UITextField()
+		return textField
+	}()
+	
+	private let subjectTitleDividerView: UIView = {
+		let dividerView = UIView()
+		dividerView.backgroundColor = .dark20
+		dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+		return dividerView
+	}()
+	
 	private let articleTextView = ArticleTextView()
 	
 	private let bottomBarView: UIView = {
@@ -132,13 +150,25 @@ class WriteArticleViewController: UIViewController {
 		articleTitleDividerView.anchor(top: articleTitleTextField.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
 									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
+		view.addSubview(subjectTitleLabel)
+		subjectTitleLabel.anchor(top: articleTitleDividerView.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(subjectTextField)
+		subjectTextField.anchor(top: subjectTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(subjectTitleDividerView)
+		subjectTitleDividerView.anchor(top: subjectTextField.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
 		view.addSubview(articleTextView)
 		articleTextView.anchor(top: articleImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
 							   paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
 		
 		view.addSubview(bottomBarView)
 		bottomBarView.anchor(top: articleTextView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-							 right: view.rightAnchor,paddingTop: 16, height: 64)
+							 right: view.rightAnchor, paddingTop: 16, height: 64)
 		
 		let actionButtonHStack = UIStackView(arrangedSubviews: [
 			pickImageButton
@@ -156,7 +186,25 @@ class WriteArticleViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func sendOutArticle() {
-
+		guard let articleTitle = articleTitleTextField.text, let subjectText = subjectTextField.text, let contentText = articleTextView.text,
+			  let articleImage = articleImageView.image else { return }
+		let currentDate = Date()
+		let interval = currentDate.timeIntervalSince1970
+		ArticleService.shared.createAndDownloadImageURL(articleImage: articleImage) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let url):
+				let imageURL = url
+				let firestoreArticle = FirebaseArticle(userID: self.user.userID, articleTitle: articleTitle, authorName: self.user.name,
+													   subject: subjectText, timestamp: interval, contentText: contentText, imageURL: imageURL, ratings: [])
+				ArticleService.shared.uploadArticle(article: firestoreArticle) { [weak self] in
+					guard let self = self else { return }
+					self.dismiss(animated: true)
+				}
+			case .failure(let error):
+				print(error)
+			}
+		}
 	}
 	
 	@objc func dismissVC() {
