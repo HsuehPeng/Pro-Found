@@ -13,7 +13,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
 	
 	// MARK: - Properties
 	
-	private let titleLabel: UILabel = {
+	let titleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16), textColor: UIColor.dark60, text: "Header Title")
 		return label
 	}()

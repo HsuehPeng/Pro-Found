@@ -13,7 +13,7 @@ class ArticlePageTableViewCell: UITableViewCell {
 		
 	// MARK: - Properties
 	
-	var filteredArticles: [Article]? {
+	var filteredArticles = [Article]() {
 		didSet {
 			collectionView.reloadData()
 		}
@@ -62,16 +62,20 @@ class ArticlePageTableViewCell: UITableViewCell {
 
 extension ArticlePageTableViewCell: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//		return filteredArticles?.count ?? 0
-		return 5
+		
+		if filteredArticles.count <= 5 {
+			return filteredArticles.count
+		} else {
+			return 5
+		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
 		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ArticlePageCollectionViewCell.reuseIdentifier, for: indexPath)
 				as? ArticlePageCollectionViewCell else { fatalError("Can not dequeue ArticlePageCollectionViewCell") }
-
-//		cell.article = filteredArticles[indexPath.item]
+		
+		cell.article = filteredArticles[indexPath.item]
 		return cell
 	}
 

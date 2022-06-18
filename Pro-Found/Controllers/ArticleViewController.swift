@@ -12,7 +12,20 @@ class ArticleViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var user: User?
+	var user: User? {
+		didSet {
+			guard let user = user else { return }
+			if user.isTutor {
+				writeArticleButton.isHidden = false
+			} else {
+				writeArticleButton.isHidden = true
+			}
+		}
+	}
+	
+	var articles = [Article]()
+	
+	var subjectDict: [String: [Article]] = [:]
 	
 	private let topBarView: UIView = {
 		let view = UIView()
@@ -34,7 +47,7 @@ class ArticleViewController: UIViewController {
 		return tableView
 	}()
 	
-	private lazy var writePostButton: UIButton = {
+	private lazy var writeArticleButton: UIButton = {
 		let button = UIButton()
 		let image = UIImage.asset(.edit)?.withTintColor(UIColor.orange)
 		button.setImage(image, for: .normal)
@@ -46,6 +59,7 @@ class ArticleViewController: UIViewController {
 		button.layer.shadowRadius = 10
 		button.layer.shadowOpacity = 0.3
 		button.addTarget(self, action: #selector(handleWriteArticle), for: .touchUpInside)
+
 		return button
 	}()
 	
@@ -65,6 +79,7 @@ class ArticleViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 		loadUserData()
+		fetchArticles()
 	}
 	
 	// MARK: - UI
@@ -80,8 +95,8 @@ class ArticleViewController: UIViewController {
 		view.addSubview(tableView)
 		tableView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
 		
-		view.addSubview(writePostButton)
-		writePostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 24, paddingRight: 16)
+		view.addSubview(writeArticleButton)
+		writeArticleButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 24, paddingRight: 16)
 	}
 	
 	func setupNavBar() {
@@ -101,7 +116,8 @@ class ArticleViewController: UIViewController {
 	
 	func loadUserData() {
 		guard let uid = Auth.auth().currentUser?.uid  else { return }
-		UserServie.shared.getUserData(uid: uid) { result in
+		UserServie.shared.getUserData(uid: uid) { [weak self] result in
+			guard let self = self else { return }
 			switch result {
 			case .success(let user):
 				self.user = user
@@ -110,6 +126,56 @@ class ArticleViewController: UIViewController {
 			}
 		}
 	}
+	
+	func fetchArticles() {
+		ArticleService.shared.fetchArticles { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case.success(let articles):
+				self.articles = articles
+				self.filterArticles()
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func filterArticles() {
+		var languageArticles:[Article] = []
+		var artArticles:[Article] = []
+		var musicArticles:[Article] = []
+		var sportArticles:[Article] = []
+		var techArticles:[Article] = []
+		
+		for article in articles {
+			switch article.subject {
+			case Subject.language.rawValue:
+				languageArticles.append(article)
+				
+			case Subject.art.rawValue:
+				artArticles.append(article)
+				
+			case Subject.music.rawValue:
+				musicArticles.append(article)
+				
+			case Subject.sport.rawValue:
+				sportArticles.append(article)
+				
+			case Subject.technology.rawValue:
+				techArticles.append(article)
+				
+			default:
+				break
+			}
+		}
+		subjectDict[Subject.language.rawValue] = languageArticles.sorted { $0.timestamp > $1.timestamp }
+		subjectDict[Subject.art.rawValue] = artArticles.sorted { $0.timestamp > $1.timestamp }
+		subjectDict[Subject.music.rawValue] = musicArticles.sorted { $0.timestamp > $1.timestamp }
+		subjectDict[Subject.sport.rawValue] = sportArticles.sorted { $0.timestamp > $1.timestamp }
+		subjectDict[Subject.technology.rawValue] = techArticles.sorted { $0.timestamp > $1.timestamp }
+		tableView.reloadData()
+	}
+	
 }
 
 // MARK: - UITableViewDataSource
@@ -127,6 +193,27 @@ extension ArticleViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticlePageTableViewCell.reuseidentifier, for: indexPath)
 				as? ArticlePageTableViewCell else { return UITableViewCell() }
+		
+		switch indexPath.section {
+		case 0:
+			cell.filteredArticles = subjectDict[Subject.language.rawValue] ?? []
+			return cell
+		case 1:
+			cell.filteredArticles = subjectDict[Subject.technology.rawValue] ?? []
+			return cell
+		case 2:
+			cell.filteredArticles = subjectDict[Subject.music.rawValue] ?? []
+			return cell
+		case 3:
+			cell.filteredArticles = subjectDict[Subject.sport.rawValue] ?? []
+			return cell
+		case 4:
+			cell.filteredArticles = subjectDict[Subject.art.rawValue] ?? []
+			return cell
+		default:
+			break
+		}
+		
 		return cell
 	}
 }
@@ -141,6 +228,27 @@ extension ArticleViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
 				as? GeneralTableViewHeader else { return  UITableViewHeaderFooterView() }
+		
+		switch section {
+		case 0:
+			header.titleLabel.text = Subject.language.rawValue
+			return header
+		case 1:
+			header.titleLabel.text = Subject.technology.rawValue
+			return header
+		case 2:
+			header.titleLabel.text = Subject.music.rawValue
+			return header
+		case 3:
+			header.titleLabel.text = Subject.sport.rawValue
+			return header
+		case 4:
+			header.titleLabel.text = Subject.art.rawValue
+			return header
+		default:
+			break
+		}
+		
 		return header
 	}
 	

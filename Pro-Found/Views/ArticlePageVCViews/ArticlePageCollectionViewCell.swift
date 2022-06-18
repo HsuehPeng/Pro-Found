@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ArticlePageCollectionViewCell: UICollectionViewCell {
 	
@@ -40,6 +41,7 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 	
 	private let subjectButton: UIButton = {
 		let button = UIButton()
+		button.layer.cornerRadius = 5
 		button.setTitle("Subject", for: .normal)
 		button.setTitleColor(UIColor.white, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 9)
@@ -79,7 +81,12 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 	// MARK: - Helpers
 	
 	func configure() {
-
+		guard let article = article else { return }
+		let imageUrl = URL(string: article.imageURL)
+		articleImageView.kf.setImage(with: imageUrl)
+		titleLabel.text = article.articleTitle
+		authorLabel.text = article.authorName
+		subjectButton.setTitle(article.subject, for: .normal)
 	}
 	
 }

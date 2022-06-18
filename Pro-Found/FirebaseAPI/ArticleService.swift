@@ -66,9 +66,10 @@ struct ArticleService {
 				completion(.failure(error))
 			} else {
 				guard let snapshot = snapshot else { return }
+				let group = DispatchGroup()
 				for document in snapshot.documents {
 					let articleData = document.data()
-					
+					group.enter()
 					UserServie.shared.getUserData(uid: articleData["userID"] as! String) { result in
 						switch result {
 						case .success(let user):
@@ -77,9 +78,13 @@ struct ArticleService {
 						case .failure(let error):
 							print(error)
 						}
+						group.leave()
 					}
+					
 				}
-				completion(.success(articles))
+				group.notify(queue: DispatchQueue.main) {
+					completion(.success(articles))
+				}
 			}
 		}
 	}
