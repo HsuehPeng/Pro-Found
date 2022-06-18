@@ -21,6 +21,7 @@
 		B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */; };
 		B86943D028586079008021C9 /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CF28586079008021C9 /* PrivateKey.swift */; };
 		B86943D32858673C008021C9 /* HomePageTutorListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943D22858673C008021C9 /* HomePageTutorListTableViewCell.swift */; };
+		B89AD401285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */; };
 		B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */; };
 		B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */; };
 		B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */; };
@@ -58,6 +59,8 @@
 		B8AB0663285DAD7E002110A4 /* WriteArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */; };
 		B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0664285DB54C002110A4 /* ArticleTextView.swift */; };
 		B8AB0667285DF3B4002110A4 /* EventService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0666285DF3B4002110A4 /* EventService.swift */; };
+		B8AB0669285DFBB8002110A4 /* ArticleDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0668285DFBB8002110A4 /* ArticleDetailViewController.swift */; };
+		B8AB066B285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB066A285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift */; };
 		B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B38F2857258D00CA7370 /* HomeViewController.swift */; };
 		B8C7B393285725E200CA7370 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B392285725E200CA7370 /* FeedViewController.swift */; };
 		B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C7B394285725F500CA7370 /* ArticleViewController.swift */; };
@@ -87,6 +90,7 @@
 		B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileClassTableViewCell.swift; sourceTree = "<group>"; };
 		B86943CF28586079008021C9 /* PrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKey.swift; sourceTree = "<group>"; };
 		B86943D22858673C008021C9 /* HomePageTutorListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageTutorListTableViewCell.swift; sourceTree = "<group>"; };
+		B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailContentTableViewCell.swift; sourceTree = "<group>"; };
 		B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAsset+UIImageExtension.swift"; sourceTree = "<group>"; };
 		B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -124,6 +128,8 @@
 		B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteArticleViewController.swift; sourceTree = "<group>"; };
 		B8AB0664285DB54C002110A4 /* ArticleTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleTextView.swift; sourceTree = "<group>"; };
 		B8AB0666285DF3B4002110A4 /* EventService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventService.swift; sourceTree = "<group>"; };
+		B8AB0668285DFBB8002110A4 /* ArticleDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailViewController.swift; sourceTree = "<group>"; };
+		B8AB066A285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
 		B8C7B38F2857258D00CA7370 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B8C7B392285725E200CA7370 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		B8C7B394285725F500CA7370 /* ArticleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewController.swift; sourceTree = "<group>"; };
@@ -323,6 +329,8 @@
 				B8AB065D285DA567002110A4 /* ArticlePageTableViewCell.swift */,
 				B8AB0660285DA60E002110A4 /* ArticlePageCollectionViewCell.swift */,
 				B8AB0664285DB54C002110A4 /* ArticleTextView.swift */,
+				B8AB066A285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift */,
+				B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */,
 			);
 			path = ArticlePageVCViews;
 			sourceTree = "<group>";
@@ -336,6 +344,7 @@
 				B8C7B392285725E200CA7370 /* FeedViewController.swift */,
 				B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */,
 				B8C7B394285725F500CA7370 /* ArticleViewController.swift */,
+				B8AB0668285DFBB8002110A4 /* ArticleDetailViewController.swift */,
 				B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */,
 				B8C7B3962857260300CA7370 /* ScheduleViewController.swift */,
 				B8C7B3982857260D00CA7370 /* TutorProfileViewController.swift */,
@@ -494,6 +503,7 @@
 				B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */,
 				B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */,
 				B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */,
+				B89AD401285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift in Sources */,
 				B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor+Extension.swift in Sources */,
 				B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */,
@@ -509,6 +519,7 @@
 				B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */,
 				B8AB06102859FA13002110A4 /* Courses.swift in Sources */,
 				B8AB0615285A0AC4002110A4 /* CreateCourseViewController.swift in Sources */,
+				B8AB066B285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift in Sources */,
 				B8CC5EAE285872F4004C5D7A /* HomePageTutorCollectionViewCell.swift in Sources */,
 				B83D19BF285608770049846E /* UIFont+Extension.swift in Sources */,
 				B8C7B3992857260D00CA7370 /* TutorProfileViewController.swift in Sources */,
@@ -524,6 +535,7 @@
 				B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */,
 				B8AB06112859FA13002110A4 /* Events.swift in Sources */,
 				B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */,
+				B8AB0669285DFBB8002110A4 /* ArticleDetailViewController.swift in Sources */,
 				B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */,
 				B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */,
 				B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */,

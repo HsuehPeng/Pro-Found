@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol ArticlePageTableViewCellDelegate: AnyObject {
+	func goArticleDetailVC(_ cell: ArticlePageTableViewCell, article: Article)
+}
+
 class ArticlePageTableViewCell: UITableViewCell {
 
 	static let reuseidentifier = "\(ArticlePageTableViewCell.self)"
+	
+	weak var articleTableViewDelegate: ArticlePageTableViewCellDelegate?
 		
 	// MARK: - Properties
 	
@@ -85,6 +91,7 @@ extension ArticlePageTableViewCell: UICollectionViewDataSource {
 
 extension ArticlePageTableViewCell: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+		let article = filteredArticles[indexPath.item]
+		articleTableViewDelegate?.goArticleDetailVC(self, article: article)
 	}
 }

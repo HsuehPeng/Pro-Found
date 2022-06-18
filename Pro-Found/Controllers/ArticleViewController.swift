@@ -73,13 +73,13 @@ class ArticleViewController: UIViewController {
 		tableView.delegate = self
 		
 		setupUI()
-		setupNavBar()
 		loadUserData()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 		fetchArticles()
+		setupNavBar()
 	}
 	
 	// MARK: - UI
@@ -101,6 +101,7 @@ class ArticleViewController: UIViewController {
 	
 	func setupNavBar() {
 		navigationController?.navigationBar.isHidden = true
+		tabBarController?.tabBar.isHidden = false
 	}
 	
 	// MARK: - Actions
@@ -193,6 +194,7 @@ extension ArticleViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticlePageTableViewCell.reuseidentifier, for: indexPath)
 				as? ArticlePageTableViewCell else { return UITableViewCell() }
+		cell.articleTableViewDelegate = self
 		
 		switch indexPath.section {
 		case 0:
@@ -254,5 +256,14 @@ extension ArticleViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		50
+	}
+}
+
+// MARK: - ArticlePageTableViewCellDelegate
+
+extension ArticleViewController: ArticlePageTableViewCellDelegate {
+	func goArticleDetailVC(_ cell: ArticlePageTableViewCell, article: Article) {
+		let articleDetailVC = ArticleDetailViewController(article: article)
+		navigationController?.pushViewController(articleDetailVC, animated: true)
 	}
 }
