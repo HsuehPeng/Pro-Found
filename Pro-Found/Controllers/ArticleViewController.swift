@@ -51,6 +51,7 @@ class ArticleViewController: UIViewController {
 		let button = UIButton()
 		let image = UIImage.asset(.edit)?.withTintColor(UIColor.orange)
 		button.setImage(image, for: .normal)
+		button.isHidden = true
 		button.setDimensions(width: 54, height: 54)
 		button.layer.cornerRadius = 54 / 2
 		button.backgroundColor = .white

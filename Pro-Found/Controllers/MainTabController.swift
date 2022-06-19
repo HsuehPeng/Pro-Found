@@ -62,7 +62,7 @@ class MainTabController: UITabBarController {
 		let homeVC = HomeViewController()
 		let homeNav = templateNavigationController(image: UIImage.asset(.home), rootVC: homeVC)
 		
-		let feedVC = FeedViewController()
+		let feedVC = InteractionViewController()
 		let feedNav = templateNavigationController(image: UIImage.asset(.article), rootVC: feedVC)
 		
 		let articleVC = ArticleViewController()
