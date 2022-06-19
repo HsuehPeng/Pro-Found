@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 protocol ProfileClassTableViewCellDelegate: AnyObject {
 	func showBottomSheet(_ cell: TutorProfileClassTableViewCell)
@@ -110,7 +111,10 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 	// MARK: - Helpers
 	
 	func configure() {
-		guard let course = course else { return }
+		guard let course = course, let uid = Auth.auth().currentUser?.uid else { return }
+		if course.userID == uid {
+			chooseCourseButton.isHidden = true
+		}
 		classTitleLabel.text = course.courseTitle
 		summaryLabel.text = course.briefIntro
 		let courseFeeInt = Int(course.fee)

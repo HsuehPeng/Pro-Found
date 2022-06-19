@@ -11,7 +11,11 @@ class HomeViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var user: User?
+	var user: User? {
+		didSet {
+			configure()
+		}
+	}
 	
 	var tutors: [User]? {
 		didSet {
@@ -33,21 +37,16 @@ class HomeViewController: UIViewController {
 	}()
 	
 	private let greetingLabel: UILabel = {
+		
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
-											   textColor: UIColor.dark40, text: "Good morning,")
+											   textColor: UIColor.dark40, text: "Welcome back,")
 		return label
 	}()
 	
 	private let nameLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 14),
-											   textColor: UIColor.dark, text: "Test Name")
+											   textColor: UIColor.dark, text: "")
 		return label
-	}()
-	
-	private var logoutButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Log out")
-		button.widthAnchor.constraint(equalToConstant: 60).isActive = true
-		return button
 	}()
 	
 	private lazy var messageButton: UIButton = {
@@ -98,9 +97,6 @@ class HomeViewController: UIViewController {
 		topBarView.addSubview(topBarLabelVStack)
 		topBarLabelVStack.centerY(inView: topBarView, leftAnchor: profilePhotoImageView.rightAnchor, paddingLeft: 12)
 		
-		topBarView.addSubview(logoutButton)
-		logoutButton.centerX(inView: topBarView, topAnchor: topBarView.topAnchor, paddingTop: 10)
-		
 		topBarView.addSubview(messageButton)
 		messageButton.centerY(inView: topBarView)
 		messageButton.anchor(right: topBarView.rightAnchor, paddingRight: 24)
@@ -119,13 +115,19 @@ class HomeViewController: UIViewController {
 	
 	func fetchTutors() {
 		UserServie.shared.getTutors { [weak self] result in
+			guard let self = self else { return }
 			switch result {
 			case .success(let tutors):
-				self?.tutors = tutors
+				self.tutors = tutors
 			case .failure(let error):
 				print("Error getting tutors: \(error)")
 			}
 		}
+	}
+	
+	func configure() {
+		guard let user = user else { return }
+		nameLabel.text = user.name
 	}
 	
 }
@@ -173,11 +175,12 @@ extension HomeViewController: UITableViewDelegate {
 	}
 }
 
+// MARK: - HomePageTutorListTableViewCellDelegate
+
 extension HomeViewController: HomePageTutorListTableViewCellDelegate {
 	func goToTutorProfile(_ cell: HomePageTutorListTableViewCell, tutor: User) {
-		let tutorProfileVC = TutorProfileViewController()
-		tutorProfileVC.user = user
-		tutorProfileVC.tutor = tutor
+		guard let user = user else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: tutor)
 		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}
 

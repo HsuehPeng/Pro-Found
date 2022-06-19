@@ -12,27 +12,28 @@ struct UserServie {
 	
 	static let shared = UserServie()
 	
-	func uploadUserData(user: User, uid: String) {
-		let userRef = dbUsers.document()
+	func uploadUserData(firebaseUser: FirebaseUser, completion: @escaping () -> Void) {
+		let userRef = dbUsers.document(firebaseUser.userID)
 		let userData: [String: Any] = [
-			"articles": user.articles,
-			"backgroundImageURL": user.backgroundImageURL,
-			"blockedUsers": user.blockedUsers,
-			"courses": user.courses,
-			"email": user.email,
-			"events": user.events,
-			"followings": user.followings,
-			"followers": user.followers,
-			"introContenText": user.introContentText,
-			"isTutor": user.isTutor,
-			"name": user.name,
-			"posts": user.posts,
-			"profileImageURL": user.profileImageURL,
-			"rating": user.rating,
-			"school": user.school,
-			"schoolMajor": user.schoolMajor,
-			"subject": user.subject,
-			"userID": uid
+			"articles": firebaseUser.articles ?? [],
+			"backgroundImageURL": firebaseUser.backgroundImageURL ?? "",
+			"blockedUsers": firebaseUser.blockedUsers ?? [],
+			"courses": firebaseUser.courses ?? [],
+			"email": firebaseUser.email,
+			"events": firebaseUser.events ?? [],
+			"followings": firebaseUser.followings ?? [],
+			"followers": firebaseUser.followers ?? [],
+			"introContenText": firebaseUser.introContentText ?? "",
+			"isTutor": firebaseUser.isTutor,
+			"name": firebaseUser.name,
+			"posts": firebaseUser.posts ?? [],
+			"profileImageURL": firebaseUser.profileImageURL ?? "",
+			"rating": firebaseUser.rating ?? 0,
+			"school": firebaseUser.school ?? "",
+			"schoolMajor": firebaseUser.schoolMajor ?? "",
+			"subject": firebaseUser.subject ?? "",
+			"userID": firebaseUser.userID,
+			"courseBooked": firebaseUser.courseBooked ?? 0
 		]
 		
 		userRef.setData(userData) { error in
@@ -40,6 +41,7 @@ struct UserServie {
 				print("Error writing userdata: \(error)")
 			} else {
 				print("User successfully uploaded")
+				completion()
 			}
 		}
 		
@@ -63,6 +65,16 @@ struct UserServie {
 				print("Error writing ScheduledCourse: \(error)")
 			} else {
 				print("ScheduledCourse successfully uploaded")
+			}
+		}
+		
+		dbUsers.document(tutor.userID).updateData([
+			"courseBooked": FieldValue.increment(Int64(1))
+		]) { error in
+			if let error = error {
+				print("Error add one to courseBooked: \(error)")
+			} else {
+				print("CourseBooked successfully added one")
 			}
 		}
 	}
@@ -203,7 +215,8 @@ struct UserServie {
 	}
 	
 	func checkIfFollow(sender: User, receiver: User, completion: @escaping (Bool) -> Void) {
-		dbUsers.document(sender.userID).parent.whereField("followings", arrayContains: receiver.userID).getDocuments { snapshot, error in
+		
+		dbUsers.whereField("userID", isEqualTo: sender.userID).whereField("followings", arrayContains: receiver.userID).getDocuments { snapshot, error in
 			if let _ = error {
 				completion(false)
 			} else {
@@ -211,6 +224,7 @@ struct UserServie {
 					completion(false)
 					return
 				}
+				
 				completion(!snapshot.isEmpty)
 			}
 		}

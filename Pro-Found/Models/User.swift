@@ -7,10 +7,6 @@
 
 import Foundation
 
-struct Users {
-	let users: [User]
-}
-
 struct User {
 	let name: String
 	let userID: String
@@ -55,4 +51,26 @@ extension User {
 		isTutor = dictionary["isTutor"] as? Bool ?? false
 		courseBooked = dictionary["courseBooked"] as? Int ?? 0
 	}
+}
+
+struct FirebaseUser {
+	let name: String
+	let userID: String
+	let email: String
+	var isTutor: Bool
+	var introContentText: String?
+	var school: String?
+	var schoolMajor: String?
+	var rating: Double?
+	var courseBooked: Int?
+	var profileImageURL: String?
+	var backgroundImageURL: String?
+	var courses: [String]?
+	var articles: [String]?
+	var events: [String]?
+	var posts: [String]?
+	var blockedUsers: [String]?
+	var followers: [String]?
+	var followings: [String]?
+	var subject: String?
 }
