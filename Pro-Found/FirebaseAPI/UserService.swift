@@ -97,7 +97,7 @@ struct UserServie {
 		}
 	}
 	
-	func uploadScheduledEvent(participantID: String, eventID: String, time: Double) {
+	func uploadScheduledEvent(participantID: String, eventID: String, time: Double, completion: @escaping () -> Void) {
 		dbUsers.document(participantID).collection("ScheduledEvent").document().setData([
 			"\(eventID)": time
 		]) { error in
@@ -105,10 +105,12 @@ struct UserServie {
 				print("Error writing ScheduledCourse: \(error)")
 			} else {
 				print("ScheduledEvent successfully uploaded")
+				dbEvents.document(eventID).updateData(["participants": FieldValue.arrayUnion([participantID])])
+				completion()
 			}
 		}
 		
-		dbEvents.document(eventID).updateData(["participants": FieldValue.arrayUnion([participantID])])
+		
 	}
 	
 	func getScheduledEventIDs(userID: String, completion: @escaping (Result<[ScheduledEventTime], Error>) -> Void) {
