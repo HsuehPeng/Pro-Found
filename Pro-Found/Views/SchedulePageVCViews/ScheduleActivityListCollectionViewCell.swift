@@ -15,11 +15,15 @@ class ScheduleActivityListCollectionViewCell: UICollectionViewCell {
 	
 	var course: Course? {
 		didSet {
-			configure()
+			configureCourse()
 		}
 	}
 	
-	var event: Event?
+	var event: Event? {
+		didSet {
+			configureEvent()
+		}
+	}
 	
 	private let titleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 14),
@@ -57,10 +61,16 @@ class ScheduleActivityListCollectionViewCell: UICollectionViewCell {
 	
 	// MARK: - Helpers
 	
-	func configure() {
+	func configureCourse() {
 		guard let course = course else { return }
 		titleLabel.text = course.courseTitle
 		organizerLabel.text = course.tutorName
+	}
+	
+	func configureEvent() {
+		guard let event = event else { return }
+		titleLabel.text = event.eventTitle
+		organizerLabel.text = event.organizerName
 	}
 	
 }

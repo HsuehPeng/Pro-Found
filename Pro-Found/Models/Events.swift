@@ -31,13 +31,12 @@ extension Event {
 		timestamp = dictionary["timestamp"] as? Double ?? 0
 		location = dictionary["location"] as? String ?? ""
 		introText = dictionary["introText"] as? String ?? ""
-		imageURL = dictionary["ratings"] as? String ?? ""
+		imageURL = dictionary["imageURL"] as? String ?? ""
 	}
 }
 
 struct FirebaseEvent {
 	let userID: String
-	let eventID: String
 	let eventTitle: String
 	let organizerName: String
 	let timestamp: Double
@@ -45,4 +44,9 @@ struct FirebaseEvent {
 	let introText: String
 	let imageURL: String
 	var participants: [String]
+}
+
+struct ScheduledEventTime {
+	let eventID: String
+	let time: Double
 }

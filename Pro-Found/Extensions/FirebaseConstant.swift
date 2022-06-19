@@ -19,3 +19,4 @@ let dbTutors = db.collection("Tutors")
 
 let storage = Storage.storage().reference()
 let storageArticleImages = storage.child("ArticleImages")
+let storageEventImages = storage.child("EventImages")
