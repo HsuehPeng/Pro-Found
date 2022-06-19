@@ -107,6 +107,8 @@ struct UserServie {
 				print("ScheduledEvent successfully uploaded")
 			}
 		}
+		
+		dbEvents.document(eventID).updateData(["participants": FieldValue.arrayUnion([participantID])])
 	}
 	
 	func getScheduledEventIDs(userID: String, completion: @escaping (Result<[ScheduledEventTime], Error>) -> Void) {

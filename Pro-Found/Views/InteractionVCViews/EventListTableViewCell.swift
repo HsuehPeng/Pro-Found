@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 import Kingfisher
 
 protocol EventListTableViewCellDelegate: AnyObject {
@@ -69,6 +70,7 @@ class EventListTableViewCell: UITableViewCell {
 	private lazy var bookEventButton: UIButton = {
 		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book")
 		button.addTarget(self, action: #selector(bookEvent), for: .touchUpInside)
+		button.setTitle("Booked", for: .disabled)
 		return button
 	}()
 	
@@ -123,6 +125,9 @@ class EventListTableViewCell: UITableViewCell {
 	
 	private func configure() {
 		guard let event = event else { return }
+		
+		checkIfBooked(event: event)
+		
 		let imageUrl = URL(string: event.imageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMMM dd, yyyy ∙ h:mm a"
@@ -132,5 +137,13 @@ class EventListTableViewCell: UITableViewCell {
 		timeLabel.text = dateFormatter.string(from: eventDate)
 		addressLabel.text = event.location
 		organizerNameLabel.text = event.organizerName
+	}
+	
+	private func checkIfBooked(event: Event) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		if event.participants.contains(uid) {
+			bookEventButton.backgroundColor = .dark20
+			bookEventButton.isEnabled = false
+		}
 	}
 }
