@@ -44,12 +44,6 @@ class HomeViewController: UIViewController {
 		return label
 	}()
 	
-	private var logoutButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Log out")
-		button.widthAnchor.constraint(equalToConstant: 60).isActive = true
-		return button
-	}()
-	
 	private lazy var messageButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.chat)?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -98,9 +92,6 @@ class HomeViewController: UIViewController {
 		topBarView.addSubview(topBarLabelVStack)
 		topBarLabelVStack.centerY(inView: topBarView, leftAnchor: profilePhotoImageView.rightAnchor, paddingLeft: 12)
 		
-		topBarView.addSubview(logoutButton)
-		logoutButton.centerX(inView: topBarView, topAnchor: topBarView.topAnchor, paddingTop: 10)
-		
 		topBarView.addSubview(messageButton)
 		messageButton.centerY(inView: topBarView)
 		messageButton.anchor(right: topBarView.rightAnchor, paddingRight: 24)
@@ -119,9 +110,10 @@ class HomeViewController: UIViewController {
 	
 	func fetchTutors() {
 		UserServie.shared.getTutors { [weak self] result in
+			guard let self = self else { return }
 			switch result {
 			case .success(let tutors):
-				self?.tutors = tutors
+				self.tutors = tutors
 			case .failure(let error):
 				print("Error getting tutors: \(error)")
 			}
@@ -175,9 +167,8 @@ extension HomeViewController: UITableViewDelegate {
 
 extension HomeViewController: HomePageTutorListTableViewCellDelegate {
 	func goToTutorProfile(_ cell: HomePageTutorListTableViewCell, tutor: User) {
-		let tutorProfileVC = TutorProfileViewController()
-		tutorProfileVC.user = user
-		tutorProfileVC.tutor = tutor
+		guard let user = user else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: tutor)
 		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}
 

@@ -14,9 +14,9 @@ class TutorProfileViewController: UIViewController {
 	
 	var isTutor = false
 	
-	var user: User?
+	let user: User
 	
-	var tutor: User?
+	let tutor: User
 	
 	var tutorCourses = [Course]() {
 		didSet {
@@ -59,7 +59,17 @@ class TutorProfileViewController: UIViewController {
 	}()
 	
 	// MARK: - Lifecycle
-
+	
+	init(user: User, tutor: User) {
+		self.user = user
+		self.tutor = tutor
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
@@ -74,7 +84,7 @@ class TutorProfileViewController: UIViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		fetchUserData()
+		fetchTutorCourses()
 	}
 	
 	// MARK: - UI
@@ -99,25 +109,12 @@ class TutorProfileViewController: UIViewController {
 	
 	// MARK: - Helpers
 	
-	func fetchUserData() {
-		guard let user = tutor else { return }
-		print(user.name)
-		
-		UserServie.shared.getUserData(uid: user.userID) { [weak self] result in
+	func fetchTutorCourses() {
+		CourseServie.shared.fetchUserCourses(userID: tutor.userID) { [weak self] result in
 			guard let self = self else { return }
-			
 			switch result {
-			case.success(let user):
-				self.tutor = user
-				CourseServie.shared.fetchUserCourses(userID: user.userID) { [weak self] result in
-					guard let self = self else { return }
-					switch result {
-					case.success(let courses):
-						self.tutorCourses = courses
-					case.failure(let error):
-						print(error)
-					}
-				}
+			case.success(let courses):
+				self.tutorCourses = courses
 			case.failure(let error):
 				print(error)
 			}
@@ -125,7 +122,6 @@ class TutorProfileViewController: UIViewController {
 	}
 	
 	func checkIfFollowed() {
-		guard let user = user, let tutor = tutor else { return }
 		UserServie.shared.checkIfFollow(sender: user, receiver: tutor) { [weak self] bool in
 			guard let self = self else { return }
 			self.isFollowed = bool
@@ -156,9 +152,9 @@ extension TutorProfileViewController: UITableViewDataSource {
 				as? TutorProfileClassTableViewCell else { return UITableViewCell()}
 		
 		if indexPath.section == 0 {
+			mainCell.isFollowed = isFollowed
 			mainCell.tutor = tutor
 			mainCell.user = user
-			mainCell.isFollowed = isFollowed
 			return mainCell
 		} else {
 			courseCell.delegate = self
@@ -187,6 +183,7 @@ extension TutorProfileViewController: UITableViewDelegate {
 		
 		if section == 1 {
 			header.delegate = self
+			header.tutor = tutor
 			return header
 		}
 		
@@ -208,7 +205,6 @@ extension TutorProfileViewController: UITableViewDelegate {
 extension TutorProfileViewController: ProfileClassTableViewHeaderDelegate {
 	
 	func createCourse(_ header: TutorProfileClassTableViewHeader) {
-		guard let user = tutor else { return }
 		let createCourseVC = CreateCourseViewController(user: user)
 		navigationController?.pushViewController(createCourseVC, animated: true)
 	}
@@ -218,7 +214,7 @@ extension TutorProfileViewController: ProfileClassTableViewHeaderDelegate {
 
 extension TutorProfileViewController: ProfileClassTableViewCellDelegate {
 	func showBottomSheet(_ cell: TutorProfileClassTableViewCell) {
-		guard let course = cell.course, let user = user, let tutor = tutor else { return }
+		guard let course = cell.course else { return }
 		let slideVC = SelectClassBottomSheetViewController(user: user, course: course, tutor: tutor)
 		slideVC.modalPresentationStyle = .custom
 		slideVC.transitioningDelegate = self

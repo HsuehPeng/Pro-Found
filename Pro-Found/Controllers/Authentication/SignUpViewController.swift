@@ -27,6 +27,14 @@ class SignUpViewController: UIViewController {
 		textField.placeholder = "password"
 		return textField
 	}()
+	
+	private lazy var nameTextField: UITextField = {
+		let textField = UITextField()
+		textField.borderStyle = .roundedRect
+		textField.autocapitalizationType = .none
+		textField.placeholder = "Name"
+		return textField
+	}()
 
 	private lazy var signUpButton: UIButton = {
 		let button = UIButton(type: .system)
@@ -61,26 +69,38 @@ class SignUpViewController: UIViewController {
 		passwordTextField.anchor(top: emailTextField.topAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 		
+		view.addSubview(nameTextField)
+		nameTextField.anchor(top: passwordTextField.topAnchor, left: view.leftAnchor,
+								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
+		
 		view.addSubview(signUpButton)
-		signUpButton.anchor(top: passwordTextField.topAnchor, left: view.leftAnchor,
+		signUpButton.anchor(top: nameTextField.topAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 	}
 	
 	// MARK: - Selectors
 	
 	@objc func handleSignup() {
-		guard let email = emailTextField.text, let password = passwordTextField.text else { return }
+		guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else { return }
+		
 		Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
 			guard let self = self else { return }
 			if let error = error {
 				print("Error signing in: \(error)")
 			}
-			guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
 			
-			guard let tab = window.rootViewController as? MainTabController else { return }
+			guard let uid = authResult?.user.uid else { return }
+			let firebaseUser = FirebaseUser(name: name, userID: uid, email: email, isTutor: false)
 			
-			tab.authenticateUserAndConfigureUI()
-			self.dismiss(animated: true, completion: nil)
+			UserServie.shared.uploadUserData(firebaseUser: firebaseUser) { [weak self] in
+				guard let self = self else { return }
+				guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
+				
+				guard let tab = window.rootViewController as? MainTabController else { return }
+				
+				tab.authenticateUserAndConfigureUI()
+				self.dismiss(animated: true, completion: nil)
+			}
 		}
 	}
 
