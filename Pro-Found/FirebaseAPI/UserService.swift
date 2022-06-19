@@ -43,14 +43,6 @@ struct UserServie {
 			}
 		}
 		
-		userRef.collection("ScheduledCourse").document(user.userID).setData([
-			"time": []
-		])
-		
-		userRef.collection("ScheduledEvent").document(user.userID).setData([
-			"time": []
-		])
-
 	}
 	
 	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double) {
@@ -71,6 +63,66 @@ struct UserServie {
 				print("Error writing ScheduledCourse: \(error)")
 			} else {
 				print("ScheduledCourse successfully uploaded")
+			}
+		}
+	}
+	
+	func getScheduledCourseIDs(userID: String, completion: @escaping (Result<[ScheduledCourseTime], Error>) -> Void) {
+		dbUsers.document(userID).collection("ScheduledCourse").getDocuments { snapshot, error in
+			var courseTimes = [ScheduledCourseTime]()
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot else { return }
+				for document in snapshot.documents {
+					let courseTimeData = document.data()
+					guard let courseID = courseTimeData.keys.first, let time = courseTimeData["\(courseID)"] as? Double else { return }
+					let courseTime = ScheduledCourseTime(courseID: courseID, time: time)
+					courseTimes.append(courseTime)
+				}
+				completion(.success(courseTimes))
+			}
+		}
+	}
+	
+	func uploadScheduledEvent(organizerID: String, eventID: String, time: Double) {
+		dbUsers.document(organizerID).collection("ScheduledEvent").document().setData([
+			"\(eventID)": time
+		]) { error in
+			if let error = error {
+				print("Error writing ScheduledCourse: \(error)")
+			} else {
+				print("ScheduledEvent successfully uploaded")
+			}
+		}
+	}
+	
+	func uploadScheduledEvent(participantID: String, eventID: String, time: Double) {
+		dbUsers.document(participantID).collection("ScheduledEvent").document().setData([
+			"\(eventID)": time
+		]) { error in
+			if let error = error {
+				print("Error writing ScheduledCourse: \(error)")
+			} else {
+				print("ScheduledEvent successfully uploaded")
+			}
+		}
+	}
+	
+	func getScheduledEventIDs(userID: String, completion: @escaping (Result<[ScheduledEventTime], Error>) -> Void) {
+		dbUsers.document(userID).collection("ScheduledEvent").getDocuments { snapshot, error in
+			var eventTimes = [ScheduledEventTime]()
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot else { return }
+				for document in snapshot.documents {
+					let eventTimeData = document.data()
+					guard let eventID = eventTimeData.keys.first, let time = eventTimeData["\(eventID)"] as? Double else { return }
+					let eventTime = ScheduledEventTime(eventID: eventID, time: time)
+					eventTimes.append(eventTime)
+				}
+				completion(.success(eventTimes))
 			}
 		}
 	}
@@ -102,24 +154,6 @@ struct UserServie {
 					tutors.append(tutor)
 				}
 				completion(.success(tutors))
-			}
-		}
-	}
-	
-	func getScheduledCourseIDs(userID: String, completion: @escaping (Result<[ScheduledCourseTime], Error>) -> Void) {
-		dbUsers.document(userID).collection("ScheduledCourse").getDocuments { snapshot, error in
-			var courseTimes = [ScheduledCourseTime]()
-			if let error = error {
-				completion(.failure(error))
-			} else {
-				guard let snapshot = snapshot else { return }
-				for document in snapshot.documents {
-					let courseTimeData = document.data()
-					guard let courseID = courseTimeData.keys.first, let time = courseTimeData["\(courseID)"] as? Double else { return }
-					let courseTime = ScheduledCourseTime(courseID: courseID, time: time)
-					courseTimes.append(courseTime)
-				}
-				completion(.success(courseTimes))
 			}
 		}
 	}
@@ -166,7 +200,7 @@ struct UserServie {
 	
 	func checkIfFollow(sender: User, receiver: User, completion: @escaping (Bool) -> Void) {
 		dbUsers.document(sender.userID).parent.whereField("followings", arrayContains: receiver.userID).getDocuments { snapshot, error in
-			if let error = error {
+			if let _ = error {
 				completion(false)
 			} else {
 				guard let snapshot = snapshot else {

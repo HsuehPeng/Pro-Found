@@ -6,12 +6,25 @@
 //
 
 import UIKit
+import Kingfisher
+
+protocol EventListTableViewCellDelegate: AnyObject {
+	func bookEvent(_ cell: EventListTableViewCell)
+}
 
 class EventListTableViewCell: UITableViewCell {
 	
 	static let reuseIdentifier = "\(EventListTableViewCell.self)"
+	
+	weak var delegate: EventListTableViewCellDelegate?
 
 	// MARK: - Properties
+	
+	var event: Event? {
+		didSet {
+			configure()
+		}
+	}
 	
 	private let eventImageView: UIImageView = {
 		let imageView = UIImageView()
@@ -53,6 +66,12 @@ class EventListTableViewCell: UITableViewCell {
 		return label
 	}()
 	
+	private lazy var bookEventButton: UIButton = {
+		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book")
+		button.addTarget(self, action: #selector(bookEvent), for: .touchUpInside)
+		return button
+	}()
+	
 	// MARK: - Lifecycle
 	
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -82,13 +101,36 @@ class EventListTableViewCell: UITableViewCell {
 		contentView.addSubview(addressLabel)
 		addressLabel.anchor(top: timeLabel.bottomAnchor, left: eventImageView.rightAnchor,
 							right: contentView.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingRight: 16)
+		
+		contentView.addSubview(bookEventButton)
+		bookEventButton.anchor(top: addressLabel.bottomAnchor, left: eventImageView.rightAnchor,
+							right: contentView.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingRight: 16)
 
 		contentView.addSubview(organizerImageView)
 		organizerImageView.anchor(left: eventImageView.rightAnchor, bottom: contentView.bottomAnchor, paddingLeft: 12, paddingBottom: 16)
 
 		contentView.addSubview(organizerNameLabel)
 		organizerNameLabel.centerY(inView: organizerImageView, leftAnchor: organizerImageView.rightAnchor, paddingLeft: 8)
-
-
+	}
+	
+	// MARK: - Actions
+	
+	@objc func bookEvent() {
+		delegate?.bookEvent(self)
+	}
+	
+	// MARK: - Helpers
+	
+	private func configure() {
+		guard let event = event else { return }
+		let imageUrl = URL(string: event.imageURL)
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMMM dd, yyyy ∙ h:mm a"
+		let eventDate = Date(timeIntervalSince1970: event.timestamp)
+		eventImageView.kf.setImage(with: imageUrl)
+		eventTitleLabel.text = event.eventTitle
+		timeLabel.text = dateFormatter.string(from: eventDate)
+		addressLabel.text = event.location
+		organizerNameLabel.text = event.organizerName
 	}
 }

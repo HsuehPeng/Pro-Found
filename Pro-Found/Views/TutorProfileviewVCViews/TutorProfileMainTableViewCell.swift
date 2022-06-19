@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 enum ProfileActions: String {
 	case follow = "Follow"
@@ -222,8 +223,13 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	// MARK: - Helpers
 	
 	func configure() {
-		guard let tutor = tutor else { return }
+		guard let tutor = tutor, let user = user, let uid = Auth.auth().currentUser?.uid else { return }
 		nameLabel.text = tutor.name
+		
+		if user.userID == uid {
+			profileActionButton.isEnabled = false
+			profileActionButton.backgroundColor = .black
+		}
 		
 		if isFollowed {
 			profileActionButton.setTitle("Unfollow", for: .normal)

@@ -126,7 +126,6 @@ class TutorProfileViewController: UIViewController {
 	
 	func checkIfFollowed() {
 		guard let user = user, let tutor = tutor else { return }
-		
 		UserServie.shared.checkIfFollow(sender: user, receiver: tutor) { [weak self] bool in
 			guard let self = self else { return }
 			self.isFollowed = bool

@@ -14,12 +14,8 @@ class InteractionViewController: UIViewController {
 	
 	var user: User? {
 		didSet {
-			guard let user = user else { return }
-			if user.isTutor {
-				writePostButton.isHidden = false
-			} else {
-				writePostButton.isHidden = true
-			}
+			postVC.user = user
+			eventVC.user = user
 		}
 	}
 	
@@ -28,6 +24,12 @@ class InteractionViewController: UIViewController {
 	var filteredPosts = [Post]() {
 		didSet {
 			postVC.filteredPosts = filteredPosts
+		}
+	}
+	
+	var events = [Event]() {
+		didSet {
+			eventVC.events = events
 		}
 	}
 	
@@ -68,22 +70,6 @@ class InteractionViewController: UIViewController {
 		let view = UIView()
 		view.backgroundColor = .dark40
 		return view
-	}()
-	
-	private lazy var writePostButton: UIButton = {
-		let button = UIButton()
-		let image = UIImage.asset(.edit)?.withTintColor(UIColor.orange)
-		button.setImage(image, for: .normal)
-		button.setDimensions(width: 54, height: 54)
-		button.isHidden = true
-		button.layer.cornerRadius = 54 / 2
-		button.backgroundColor = .white
-		button.layer.shadowColor = UIColor.dark60.cgColor
-		button.layer.shadowOffset = CGSize(width: 0, height: 4)
-		button.layer.shadowRadius = 10
-		button.layer.shadowOpacity = 0.3
-		button.addTarget(self, action: #selector(handleWritePost), for: .touchUpInside)
-		return button
 	}()
 	
 	private let contaninerView: UIView = {
@@ -150,9 +136,6 @@ class InteractionViewController: UIViewController {
 		optionBarView.addSubview(eventOptionButton)
 		eventOptionButton.anchor(top: optionBarView.topAnchor, bottom: indicatorView.topAnchor, right: view.rightAnchor)
 		eventOptionButton.widthAnchor.constraint(equalToConstant: view.frame.size.width / 2).isActive = true
-
-		view.addSubview(writePostButton)
-		writePostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 24, paddingRight: 16)
 		
 		view.addSubview(contaninerView)
 		contaninerView.anchor(top: optionBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
@@ -209,6 +192,7 @@ class InteractionViewController: UIViewController {
 			case .success(let user):
 				self.user = user
 				self.getPosts()
+				self.fetchEvents()
 			case .failure(let error):
 				print(error)
 			}
@@ -240,6 +224,18 @@ class InteractionViewController: UIViewController {
 			}
 		}
 		return filteredPosts
+	}
+	
+	func fetchEvents() {
+		EventService.shared.fetchEvents { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let events):
+				self.events = events
+			case .failure(let error):
+				print(error)
+			}
+		}
 	}
 
 }

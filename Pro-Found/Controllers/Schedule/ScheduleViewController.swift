@@ -12,11 +12,28 @@ class ScheduleViewController: UIViewController {
 
 	// MARK: - Properties
 	
+	var user: User? {
+		didSet {
+			guard let user = user else { return }
+			fetchScheduledCourseAndEventIDs(user: user)
+		}
+	}
+	
 	var scheduledCourses = [Course]()
 	
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
 	
 	var filteredScheduledCourses = [Course]() {
+		didSet {
+			collectionView.reloadData()
+		}
+	}
+	
+	var scheduledEventIdWithTimes = [ScheduledEventTime]()
+	
+	var scheduledEvents = [Event]()
+	
+	var filteredScheduledEvents = [Event]() {
 		didSet {
 			collectionView.reloadData()
 		}
@@ -152,12 +169,11 @@ class ScheduleViewController: UIViewController {
 		setupNavBar()
 		setupUI()
 		setMonthView()
-		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
-		fetchScheduledCourses()
+		fetchUserData()
 	}
 	
 	// MARK: - UI
@@ -218,29 +234,73 @@ class ScheduleViewController: UIViewController {
 	
 	// MARK: - Helpers
 	
-	func fetchScheduledCourses() {
+	func fetchUserData() {
 		guard let userID = Auth.auth().currentUser?.uid else { return }
-		UserServie.shared.getScheduledCourseIDs(userID: userID) { [weak self] result in
+		UserServie.shared.getUserData(uid: userID) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
-			case .success(let scheduledCoursesIdWithTimes):
-				let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.time < $1.time })
-				self.scheduledCoursesIdWithTimes = sorted
-				self.fetchCourses()
+			case .success(let user):
+				self.user = user
 			case .failure(let error):
 				print(error)
 			}
 		}
 	}
 	
-	func fetchCourses() {
+	func fetchScheduledCourseAndEventIDs(user: User) {
+		let group = DispatchGroup()
+		
+		group.enter()
+		UserServie.shared.getScheduledCourseIDs(userID: user.userID) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let scheduledCoursesIdWithTimes):
+				let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.time < $1.time })
+				self.scheduledCoursesIdWithTimes = sorted
+			case .failure(let error):
+				print(error)
+			}
+			group.leave()
+		}
+		group.enter()
+		UserServie.shared.getScheduledEventIDs(userID: user.userID) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let scheduledEventIdWithTimes):
+				let sorted = scheduledEventIdWithTimes.sorted(by: { $0.time < $1.time })
+				self.scheduledEventIdWithTimes = sorted
+			case .failure(let error):
+				print(error)
+			}
+			group.leave()
+		}
+		
+		group.notify(queue: DispatchQueue.global()) {
+			self.fetchScheduledCoursesAndEvents(user: user)
+		}
+		
+	}
+	
+	func fetchScheduledCoursesAndEvents(user: User) {
+		
 		for scheduledCoursesIdWithTime in scheduledCoursesIdWithTimes {
 			CourseServie.shared.fetchCourse(courseID: scheduledCoursesIdWithTime.courseID) { [weak self] result in
 				guard let self = self else { return }
 				switch result {
 				case .success(let course):
 					self.scheduledCourses.append(course)
-					print(self.scheduledCourses)
+				case . failure(let error):
+					print(error)
+				}
+			}
+		}
+		
+		for scheduledEventIdWithTime in scheduledEventIdWithTimes {
+			EventService.shared.fetchEvent(user: user, eventID: scheduledEventIdWithTime.eventID) { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let event):
+					self.scheduledEvents.append(event)
 				case . failure(let error):
 					print(error)
 				}
@@ -248,9 +308,10 @@ class ScheduleViewController: UIViewController {
 		}
 	}
 	
-	func filterCourseByDate(dateString: String) {
+	func filterCourseAndEventByDate(dateString: String) {
 		
 		filteredScheduledCourses.removeAll()
+		filteredScheduledEvents.removeAll()
 		
 		let formatter = DateFormatter()
 		formatter.dateFormat = "dd MMMM yyyy"
@@ -265,19 +326,33 @@ class ScheduleViewController: UIViewController {
 			}
 		}
 		
-		filteredCoursesIdWithTimes.forEach { scheduledCourseTime in
+		filteredCoursesIdWithTimes.forEach { scheduledCourseIdWithTime in
 			for i in 0..<scheduledCourses.count {
-				if scheduledCourseTime.courseID == scheduledCourses[i].courseID {
+				if scheduledCourseIdWithTime.courseID == scheduledCourses[i].courseID {
 					filteredScheduledCourses.append(scheduledCourses[i])
 					break
 				}
 			}
 		}
-	
-	}
-	
-	func findCoursesByDate() {
-
+		
+		let filteredEventsIdWithTimes = scheduledEventIdWithTimes.filter { scheduledEventTime in
+			let date = Date(timeIntervalSince1970: scheduledEventTime.time)
+			let eventTimeString = formatter.string(from: date)
+			if eventTimeString == dateString {
+				return true
+			} else {
+				return false
+			}
+		}
+		
+		filteredEventsIdWithTimes.forEach { scheduledEventIdWithTime in
+			for i in 0..<scheduledEvents.count {
+				if scheduledEventIdWithTime.eventID == scheduledEvents[i].eventID {
+					filteredScheduledEvents.append(scheduledEvents[i])
+					break
+				}
+			}
+		}
 	}
 	
 	func setMonthView() {
@@ -319,7 +394,7 @@ extension ScheduleViewController: UICollectionViewDataSource {
 		} else if section == 1 {
 			return filteredScheduledCourses.count
 		} else {
-			return 1
+			return filteredScheduledEvents.count
 		}
 	}
 
@@ -338,6 +413,8 @@ extension ScheduleViewController: UICollectionViewDataSource {
 			activityCell.course = course
 			return activityCell
 		} else {
+			let event = filteredScheduledEvents[indexPath.item]
+			activityCell.event = event
 			return activityCell
 		}
 
@@ -354,7 +431,7 @@ extension ScheduleViewController: UICollectionViewDelegate, UICollectionViewDele
 			guard let cell = collectionView.cellForItem(at: indexPath) as? CalendarCollectionViewCell else { return }
 			guard let monthAndYear = monthLabel.text, let day = cell.dateLabel.text, let year = yearLabel.text else { return }
 			let date = "\(day) \(monthAndYear) \(year)"
-			filterCourseByDate(dateString: date)
+			filterCourseAndEventByDate(dateString: date)
 		}
 	}
 	

@@ -13,6 +13,24 @@ struct EventService {
 	
 	static let shared = EventService()
 	
+	func createAndDownloadImageURL(eventImage: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
+		guard let imageData = eventImage.jpegData(compressionQuality: 0.3) else { return }
+		let imageFileName = NSUUID().uuidString
+		let storageRef = storageEventImages.child(imageFileName)
+		
+		storageRef.putData(imageData, metadata: nil) { metadata, error in
+			
+			if let error = error {
+				print(error)
+			}
+
+			storageRef.downloadURL { url, error in
+				guard let url = url?.absoluteString else { return }
+				completion(.success(url))
+			}
+		}
+	}
+	
 	func uploadEvent(event: FirebaseEvent) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let eventRef = dbEvents.document()
@@ -35,6 +53,7 @@ struct EventService {
 				dbUsers.document(uid).updateData([
 					"events": FieldValue.arrayUnion([eventRef.documentID])
 				])
+				UserServie.shared.uploadScheduledEvent(organizerID: uid, eventID: eventRef.documentID, time: event.timestamp)
 				print("New event successfully created")
 			}
 		}
@@ -70,7 +89,16 @@ struct EventService {
 		}
 	}
 	
-	func fetchEvent() {
+	func fetchEvent(user: User, eventID: String, completion: @escaping (Result<Event, Error>) -> Void) {
+		dbEvents.document(eventID).getDocument { snapshot, error in
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot, let eventData = snapshot.data() else { return }
+				let event = Event(organizer: user, dictionary: eventData)
+				completion(.success(event))
+			}
+		}
 		
 	}
 	
