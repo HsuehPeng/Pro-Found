@@ -115,11 +115,11 @@ class PostPageFeedCell: UITableViewCell {
 		
 		contentView.addSubview(contentTextLabel)
 		contentTextLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor,
-								right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 16, paddingRight: 39)
+								right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 16, paddingRight: 16)
 		
 		contentView.addSubview(likeCountLabel)
 		likeCountLabel.anchor(top: contentTextLabel.bottomAnchor, left: contentView.leftAnchor,
-								paddingTop: 15, paddingLeft: 16)
+							  paddingTop: 15, paddingLeft: 16)
 		
 		let feedHStack = UIStackView(arrangedSubviews: [likeButton, commentButton])
 		feedHStack.axis = .horizontal
@@ -127,6 +127,7 @@ class PostPageFeedCell: UITableViewCell {
 		contentView.addSubview(feedHStack)
 		feedHStack.anchor(top: likeCountLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 						  right: contentView.rightAnchor, paddingTop: 20, paddingBottom: 12)
+
 	}
 	
 	// MARK: - Helpers
