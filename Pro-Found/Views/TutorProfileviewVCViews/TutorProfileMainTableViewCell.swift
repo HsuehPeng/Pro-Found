@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 enum ProfileActions: String {
 	case follow = "Follow"
@@ -14,11 +15,25 @@ enum ProfileActions: String {
 	case resignTutor = "Resign Tutor"
 }
 
-class ProfileMainTableViewCell: UITableViewCell {
+class TutorProfileMainTableViewCell: UITableViewCell {
 
-	static let reuseIdentifier = "\(ProfileMainTableViewCell.self)"
+	static let reuseIdentifier = "\(TutorProfileMainTableViewCell.self)"
 	
 	// MARK: - Properties
+	
+	var tutor: User? {
+		didSet {
+			configure()
+		}
+	}
+	
+	var user: User?
+	
+	var isFollowed: Bool = false {
+		didSet {
+			print(isFollowed)
+		}
+	}
 	
 	private let backImageView: UIImageView = {
 		let imageView = UIImageView()
@@ -53,12 +68,13 @@ class ProfileMainTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private let profileActionButton: UIButton = {
+	private lazy var profileActionButton: UIButton = {
 		let button = CustomUIElements().makeSmallButton(buttonColor: UIColor.clear,
 												 buttonTextColor: UIColor.dark30,
 															 borderColor: UIColor.dark30,
-															 buttonWidth: 128,
 															 buttonText: "Follow")
+		button.widthAnchor.constraint(equalToConstant: 128).isActive = true
+		button.addTarget(self, action: #selector(handleProfileAction), for: .touchUpInside)
 		return button
 	}()
 	
@@ -191,5 +207,40 @@ class ProfileMainTableViewCell: UITableViewCell {
 		profileView.addSubview(majorSubjectLabel)
 		majorSubjectLabel.anchor(top: schoolLabel.bottomAnchor, left: profileView.leftAnchor, bottom: profileView.bottomAnchor,
 							  right: profileView.rightAnchor, paddingLeft: 24, paddingBottom: 36, paddingRight: 24)
+	}
+	
+	// MARK: - Actions
+	
+	@objc func handleProfileAction() {
+		guard let user = user, let tutor = tutor else { return }
+		if isFollowed {
+			UserServie.shared.unfollow(sender: user, receiver: tutor)
+			profileActionButton.setTitle("Follow", for: .normal)
+			isFollowed = false
+		} else {
+			UserServie.shared.follow(sender: user, receiver: tutor)
+			profileActionButton.setTitle("Unfollow", for: .normal)
+			isFollowed = true
+		}
+	}
+	
+	// MARK: - Helpers
+	
+	func configure() {
+		guard let tutor = tutor, let user = user else { return }
+		nameLabel.text = tutor.name
+		classBookedNumber.text = "\(tutor.courseBooked)"
+		
+		if tutor.userID == user.userID {
+			profileActionButton.isEnabled = false
+			profileActionButton.backgroundColor = .black
+		}
+		
+		if isFollowed {
+			profileActionButton.setTitle("Unfollow", for: .normal)
+		} else {
+			profileActionButton.setTitle("Follow", for: .normal)
+		}
+		
 	}
 }

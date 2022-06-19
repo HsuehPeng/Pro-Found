@@ -6,17 +6,25 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class MainTabController: UITabBarController {
 	
 	// MARK: - Properties
 	
+	var user: User? {
+		didSet {
+			guard let homeNav = viewControllers?[0] as? UINavigationController else { return }
+			guard let homevc = homeNav.viewControllers.first as? HomeViewController else { return }
+			homevc.user = user
+		}
+	}
+	
 	// MARK: - Lifecycle
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		configureViewControllers()
-		
+		authenticateUserAndConfigureUI()
 	}
 	
 	// MARK: - UI
@@ -25,11 +33,36 @@ class MainTabController: UITabBarController {
 	
 	// MARK: - Helpers
 	
+	func fetchUser() {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		UserServie.shared.getUserData(uid: uid) { result in
+			switch result {
+			case .success(let user):
+				self.user = user
+			case .failure(let error):
+				print("Error fetching user: \(error)")
+			}
+		}
+	}
+	
+	func authenticateUserAndConfigureUI() {
+		if Auth.auth().currentUser == nil {
+			DispatchQueue.main.async {
+				let nav = UINavigationController(rootViewController: LoginViewController())
+				nav.modalPresentationStyle = .fullScreen
+				self.present(nav, animated: true, completion: nil)
+			}
+		} else {
+			configureViewControllers()
+			fetchUser()
+		}
+	}
+	
 	func configureViewControllers() {
 		let homeVC = HomeViewController()
 		let homeNav = templateNavigationController(image: UIImage.asset(.home), rootVC: homeVC)
 		
-		let feedVC = FeedViewController()
+		let feedVC = InteractionViewController()
 		let feedNav = templateNavigationController(image: UIImage.asset(.article), rootVC: feedVC)
 		
 		let articleVC = ArticleViewController()
@@ -48,7 +81,7 @@ class MainTabController: UITabBarController {
 		let nav = UINavigationController(rootViewController: rootVC)
 		let appearance = UINavigationBarAppearance()
 		appearance.configureWithDefaultBackground()
-		appearance.backgroundColor = .white
+//		appearance.backgroundColor = .white
 		nav.navigationBar.standardAppearance = appearance
 		nav.tabBarItem.image = image
 		nav.tabBarItem.selectedImage = image?.withTintColor(UIColor.orange, renderingMode: .alwaysOriginal)

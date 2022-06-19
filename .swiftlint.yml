@@ -5,6 +5,8 @@ disabled_rules:
   - trailing_whitespace
   - unused_optional_binding
   - vertical_parameter_alignment
+  - type_name
+  - identifier_name
   
 identifier_name:
 
