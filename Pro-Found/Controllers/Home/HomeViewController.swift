@@ -11,7 +11,11 @@ class HomeViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var user: User?
+	var user: User? {
+		didSet {
+			configure()
+		}
+	}
 	
 	var tutors: [User]? {
 		didSet {
@@ -33,14 +37,15 @@ class HomeViewController: UIViewController {
 	}()
 	
 	private let greetingLabel: UILabel = {
+		
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
-											   textColor: UIColor.dark40, text: "Good morning,")
+											   textColor: UIColor.dark40, text: "Welcome back,")
 		return label
 	}()
 	
 	private let nameLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 14),
-											   textColor: UIColor.dark, text: "Test Name")
+											   textColor: UIColor.dark, text: "")
 		return label
 	}()
 	
@@ -120,6 +125,11 @@ class HomeViewController: UIViewController {
 		}
 	}
 	
+	func configure() {
+		guard let user = user else { return }
+		nameLabel.text = user.name
+	}
+	
 }
 
 // MARK: - UITableViewDataSource
@@ -164,6 +174,8 @@ extension HomeViewController: UITableViewDelegate {
 		50
 	}
 }
+
+// MARK: - HomePageTutorListTableViewCellDelegate
 
 extension HomeViewController: HomePageTutorListTableViewCellDelegate {
 	func goToTutorProfile(_ cell: HomePageTutorListTableViewCell, tutor: User) {

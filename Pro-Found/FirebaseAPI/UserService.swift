@@ -32,7 +32,8 @@ struct UserServie {
 			"school": firebaseUser.school ?? "",
 			"schoolMajor": firebaseUser.schoolMajor ?? "",
 			"subject": firebaseUser.subject ?? "",
-			"userID": firebaseUser.userID
+			"userID": firebaseUser.userID,
+			"courseBooked": firebaseUser.courseBooked ?? 0
 		]
 		
 		userRef.setData(userData) { error in
@@ -64,6 +65,16 @@ struct UserServie {
 				print("Error writing ScheduledCourse: \(error)")
 			} else {
 				print("ScheduledCourse successfully uploaded")
+			}
+		}
+		
+		dbUsers.document(tutor.userID).updateData([
+			"courseBooked": FieldValue.increment(Int64(1))
+		]) { error in
+			if let error = error {
+				print("Error add one to courseBooked: \(error)")
+			} else {
+				print("CourseBooked successfully added one")
 			}
 		}
 	}

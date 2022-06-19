@@ -442,7 +442,15 @@ extension ScheduleViewController: UICollectionViewDelegate, UICollectionViewDele
 																		   for: indexPath)
 				as? GeneralHeaderCollectionReusableView else { return UICollectionReusableView() }
 		
+		if indexPath.section == 1 {
+			header.titleLabel.text = "Courses"
+			return header
+		} else if indexPath.section == 2 {
+			header.titleLabel.text = "Events"
+			return header
+		}
 		return header
+
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,

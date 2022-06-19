@@ -229,6 +229,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	func configure() {
 		guard let tutor = tutor, let user = user else { return }
 		nameLabel.text = tutor.name
+		classBookedNumber.text = "\(tutor.courseBooked)"
 		
 		if tutor.userID == user.userID {
 			profileActionButton.isEnabled = false
