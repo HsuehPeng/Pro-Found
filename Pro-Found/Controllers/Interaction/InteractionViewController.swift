@@ -189,7 +189,7 @@ class InteractionViewController: UIViewController {
 			switch result {
 			case .success(let user):
 				self.user = user
-				self.getPosts()
+				self.fetchPosts()
 				self.fetchEvents()
 			case .failure(let error):
 				print(error)
@@ -197,7 +197,7 @@ class InteractionViewController: UIViewController {
 		}
 	}
 	
-	func getPosts() {
+	func fetchPosts() {
 		PostService.shared.getPosts { [weak self] result in
 			guard let self = self else { return }
 			switch result {
@@ -216,7 +216,7 @@ class InteractionViewController: UIViewController {
 		}
 		var filteredPosts = [Post]()
 		for post in posts {
-			if user.followings.contains(post.userID) {
+			if user.followings.contains(post.userID) || post.userID == user.userID {
 				filteredPosts.append(post)
 			}
 		}
@@ -228,11 +228,20 @@ class InteractionViewController: UIViewController {
 			guard let self = self else { return }
 			switch result {
 			case .success(let events):
-				self.events = events
+				self.events = self.filterAndSortEvents(events: events)
 			case .failure(let error):
 				print(error)
 			}
 		}
+	}
+	
+	func filterAndSortEvents(events: [Event]) -> [Event] {
+		let date = Date()
+		let currentTimeInterval = date.timeIntervalSince1970
+		let filteredEvents = events.filter({ $0.timestamp > currentTimeInterval })
+		let sortedFilteredEvents = filteredEvents.sorted(by: { $0.timestamp < $1.timestamp })
+		
+		return sortedFilteredEvents
 	}
 
 }

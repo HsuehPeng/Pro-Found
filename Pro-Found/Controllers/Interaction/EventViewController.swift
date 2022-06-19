@@ -117,7 +117,10 @@ extension EventViewController: EventListTableViewCellDelegate {
 	
 	func bookEvent(_ cell: EventListTableViewCell) {
 		guard let user = user, let event = cell.event else { return }
-		UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp)
+		UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp) {
+			cell.bookEventButton.isEnabled = false
+			cell.bookEventButton.backgroundColor = .dark20
+		}
 	}
 	
 }
