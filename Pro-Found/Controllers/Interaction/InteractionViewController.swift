@@ -157,7 +157,6 @@ class InteractionViewController: UIViewController {
 			self.eventVC.view.isHidden = true
 			
 			UIView.animate(withDuration: 0.5) {
-//				self.indicatorView.frame.origin.x  = sender.frame.origin.x + sender.frame.width / 2 - self.indicatorView.frame.width / 2
 				self.indicatorView.transform = CGAffineTransform(translationX: 0, y: 0)
 				self.indicatorView.layoutIfNeeded()
 			}
@@ -168,7 +167,6 @@ class InteractionViewController: UIViewController {
 			self.eventVC.view.isHidden = false
 			
 			UIView.animate(withDuration: 0.3) {
-//				self.indicatorView.frame.origin.x  = sender.frame.origin.x + sender.frame.width / 2 - self.indicatorView.frame.width / 2
 				self.indicatorView.transform = CGAffineTransform(translationX: self.view.frame.width / 2, y: 0)
 				self.indicatorView.layoutIfNeeded()
 			}
@@ -200,8 +198,7 @@ class InteractionViewController: UIViewController {
 	}
 	
 	func getPosts() {
-		guard let user = user else { return }
-		PostService.shared.getPosts(user: user) { [weak self] result in
+		PostService.shared.getPosts { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let posts):

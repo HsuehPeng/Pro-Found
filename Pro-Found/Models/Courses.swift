@@ -7,13 +7,10 @@
 
 import Foundation
 
-struct Courses: Codable {
-	let courses: [Course]
-}
-
-struct Course: Codable {
-	var courseID: String?
+struct Course {
+	var courseID: String
 	let userID: String
+	let tutor: User
 	let tutorName: String
 	let courseTitle: String
 	let subject: String
@@ -25,7 +22,8 @@ struct Course: Codable {
 }
 
 extension Course {
-	init(dictionary: [String: Any]) {
+	init(tutor: User, dictionary: [String: Any]) {
+		self.tutor = tutor
 		courseID = dictionary["courseID"] as? String ?? ""
 		userID = dictionary["userID"] as? String ?? ""
 		tutorName = dictionary["tutorName"] as? String ?? ""
@@ -37,6 +35,18 @@ extension Course {
 		briefIntro = dictionary["briefIntro"] as? String ?? ""
 		hours = dictionary["hours"] as? Int ?? 0
 	}
+}
+
+struct FirebaseCourse {
+	let userID: String
+	let tutorName: String
+	let courseTitle: String
+	let subject: String
+	let location: String
+	let fee: Double
+	let briefIntro: String
+	let detailIntro: String
+	let hours: Int
 }
 
 struct ScheduledCourseTime {

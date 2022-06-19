@@ -128,8 +128,8 @@ class WritePostViewController: UIViewController {
 		guard let postText = postTextView.text else { return }
 		let date = Date()
 		let timestamp = date.timeIntervalSince1970
-		let post = Post(userID: user.userID, contentText: postText, likes: 0, timestamp: timestamp)
-		PostService.shared.uploadPost(post: post, user: user) { [weak self] in
+		let firebasepost = FirebasePosts(userID: user.userID, contentText: postText, likes: 0, timestamp: timestamp)
+		PostService.shared.uploadPost(firebasePost: firebasepost) { [weak self] in
 			guard let self = self else { return }
 			self.dismiss(animated: true)
 		}

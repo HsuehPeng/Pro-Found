@@ -7,31 +7,33 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseAuth
 
 struct CourseServie {
 	
 	static let shared = CourseServie()
 	
-	func uploadNewCourse(course: Course, user: User) {
+	func uploadNewCourse(fireBasecourse: FirebaseCourse) {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let courseRef = dbCourses.document()
 		let courseData: [String: Any] = [
 			"courseID": courseRef.documentID,
-			"userID": course.userID,
-			"tutorName": course.tutorName,
-			"courseTitle": course.courseTitle,
-			"subject": course.subject,
-			"location": course.location,
-			"fee": course.fee,
-			"briefIntro": course.briefIntro,
-			"detailIntro": course.detailIntro,
-			"hours": course.hours
+			"userID": fireBasecourse.userID,
+			"tutorName": fireBasecourse.tutorName,
+			"courseTitle": fireBasecourse.courseTitle,
+			"subject": fireBasecourse.subject,
+			"location": fireBasecourse.location,
+			"fee": fireBasecourse.fee,
+			"briefIntro": fireBasecourse.briefIntro,
+			"detailIntro": fireBasecourse.detailIntro,
+			"hours": fireBasecourse.hours
 		]
 		
 		courseRef.setData(courseData) { error in
 			if let error = error {
 				print("Error writing document: \(error)")
 			} else {
-				dbUsers.document(user.userID).updateData([
+				dbUsers.document(uid).updateData([
 					"courses": FieldValue.arrayUnion([courseRef.documentID])
 				])
 				print("NewCourse successfully created")
@@ -59,13 +61,29 @@ struct CourseServie {
 			if let error = error {
 				completion(.failure(error))
 			} else {
-				for document in snapshot!.documents {
-//					print("\(document.documentID) => \(document.data())")
-					let data = document.data()
-					let course = Course(dictionary: data)
-					courses.append(course)
+				guard let snapshot = snapshot else { return }
+				let group = DispatchGroup()
+				
+				for document in snapshot.documents {
+					let courseData = document.data()
+					guard let courseID = courseData["courseID"] as? String else { return }
+					group.enter()
+					fetchCourse(courseID: courseID) { result in
+						switch result {
+						case .success(let course):
+							courses.append(course)
+						case .failure(let error):
+							print(error)
+						}
+						group.leave()
+					}
+					
 				}
-				completion(.success(courses))
+				
+				group.notify(queue: DispatchQueue.main) {
+					completion(.success(courses))
+				}
+				
 			}
 		}
 	}
@@ -77,12 +95,27 @@ struct CourseServie {
 				completion(.failure(error))
 			} else {
 				guard let snapshot = snapshot else { return }
+				let group = DispatchGroup()
+				
 				for document in snapshot.documents {
-					let data = document.data()
-					let course = Course(dictionary: data)
-					courses.append(course)
+					let courseData = document.data()
+					guard let courseID = courseData["courseID"] as? String else { return }
+					group.enter()
+					fetchCourse(courseID: courseID) { result in
+						switch result {
+						case .success(let course):
+							courses.append(course)
+						case .failure(let error):
+							print(error)
+						}
+						group.leave()
+					}
+					
 				}
-				completion(.success(courses))
+				
+				group.notify(queue: DispatchQueue.main) {
+					completion(.success(courses))
+				}
 			}
 		}
 	}
@@ -93,8 +126,16 @@ struct CourseServie {
 				completion(.failure(error))
 			} else {
 				guard let snapshot = snapshot, let courseData = snapshot.data() else { return }
-				let course = Course(dictionary: courseData)
-				completion(.success(course))
+				guard let userID = courseData["userID"] as? String else { return }
+				UserServie.shared.getUserData(uid: userID) { result in
+					switch result {
+					case .success(let user):
+						let course = Course(tutor: user, dictionary: courseData)
+						completion(.success(course))
+					case .failure(let error):
+						print(error)
+					}
+				}
 			}
 		}
 	}

@@ -7,27 +7,31 @@
 
 import Foundation
 
-struct Posts {
-	let posts: [Post]
-}
-
 struct Post {
 	let userID: String
 	var postID: String?
 	let contentText: String
 	let likes: Int
 	let timestamp: Double
-//	let reply: [Reply]
+	let User: User
 }
 
 extension Post {
-	init(dictionary: [String: Any]) {
+	init(user: User, dictionary: [String: Any]) {
+		self.User = user
 		userID = dictionary["userID"] as? String ?? ""
 		postID = dictionary["postID"] as? String ?? ""
 		contentText = dictionary["contentText"] as? String ?? ""
 		likes = dictionary["likes"] as? Int ?? 0
 		timestamp = dictionary["timestamp"] as? Double ?? 0
 	}
+}
+
+struct FirebasePosts {
+	let userID: String
+	let contentText: String
+	let likes: Int
+	let timestamp: Double
 }
 
 struct Reply {

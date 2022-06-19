@@ -282,11 +282,10 @@ class CreateCourseViewController: UIViewController {
 			  let feetextDouble = Double(feetext) else { return }
 		guard selectedButton.count > 0 else { return }
 		guard let selectedSubject = selectedButton.first?.titleLabel?.text else { return }
-		let course = Course(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText,
-							subject: selectedSubject, location: addressText, fee: feetextDouble, briefIntro: briefText,
-							detailIntro: introText, hours: 1)
+		let firebaseCourse = FirebaseCourse(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText, subject: selectedSubject, location: addressText,
+									fee: feetextDouble, briefIntro: briefText, detailIntro: introText, hours: 1)
 		
-		CourseServie.shared.uploadNewCourse(course: course, user: user)
+		CourseServie.shared.uploadNewCourse(fireBasecourse: firebaseCourse)
 		navigationController?.popViewController(animated: true)
 	}
 	

@@ -97,10 +97,10 @@ class SelectClassBottomSheetViewController: UIViewController {
 	}
 	
 	@objc func confirmBookingCourse() {
-		guard let courseID = course.courseID else { return }
+
 		let timeInterval = datePicker.date.timeIntervalSince1970
-		print(courseID, user.userID, timeInterval)
-		UserServie.shared.uploadScheduledCourse(user: user, tutor: tutor, courseID: courseID, time: timeInterval)
+		print(course.courseID, user.userID, timeInterval)
+		UserServie.shared.uploadScheduledCourse(user: user, tutor: tutor, courseID: course.courseID, time: timeInterval)
 		dismiss(animated: true)
 	}
 	
