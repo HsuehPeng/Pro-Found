@@ -71,6 +71,7 @@ class EventListTableViewCell: UITableViewCell {
 		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book")
 		button.addTarget(self, action: #selector(bookEvent), for: .touchUpInside)
 		button.setTitle("Booked", for: .disabled)
+		button.widthAnchor.constraint(equalToConstant: 96).isActive = true
 		return button
 	}()
 	
@@ -89,8 +90,7 @@ class EventListTableViewCell: UITableViewCell {
 	
 	private func setupUI() {
 		contentView.addSubview(eventImageView)
-		eventImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
-							  paddingTop: 16, paddingLeft: 16, paddingBottom: 16)
+		eventImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
 		contentView.addSubview(eventTitleLabel)
 		eventTitleLabel.anchor(top: eventImageView.topAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
@@ -104,15 +104,16 @@ class EventListTableViewCell: UITableViewCell {
 		addressLabel.anchor(top: timeLabel.bottomAnchor, left: eventImageView.rightAnchor,
 							right: contentView.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingRight: 16)
 		
-		contentView.addSubview(bookEventButton)
-		bookEventButton.anchor(top: addressLabel.bottomAnchor, left: eventImageView.rightAnchor,
-							right: contentView.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingRight: 16)
-
 		contentView.addSubview(organizerImageView)
-		organizerImageView.anchor(left: eventImageView.rightAnchor, bottom: contentView.bottomAnchor, paddingLeft: 12, paddingBottom: 16)
+		organizerImageView.anchor(top: addressLabel.bottomAnchor, left: eventImageView.rightAnchor,
+								  bottom: contentView.bottomAnchor, paddingTop: 8, paddingLeft: 12, paddingBottom: 16)
 
 		contentView.addSubview(organizerNameLabel)
 		organizerNameLabel.centerY(inView: organizerImageView, leftAnchor: organizerImageView.rightAnchor, paddingLeft: 8)
+		
+		contentView.addSubview(bookEventButton)
+		bookEventButton.centerY(inView: organizerImageView)
+		bookEventButton.anchor(right: contentView.rightAnchor, paddingRight: 16)
 	}
 	
 	// MARK: - Actions

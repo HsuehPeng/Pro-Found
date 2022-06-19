@@ -216,7 +216,7 @@ class InteractionViewController: UIViewController {
 		}
 		var filteredPosts = [Post]()
 		for post in posts {
-			if user.followings.contains(post.userID) {
+			if user.followings.contains(post.userID) || post.userID == user.userID {
 				filteredPosts.append(post)
 			}
 		}

@@ -44,6 +44,12 @@ class HomeViewController: UIViewController {
 		return label
 	}()
 	
+	private var logoutButton: UIButton = {
+		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Log out")
+		button.widthAnchor.constraint(equalToConstant: 60).isActive = true
+		return button
+	}()
+	
 	private lazy var messageButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.chat)?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -91,6 +97,9 @@ class HomeViewController: UIViewController {
 		topBarLabelVStack.axis = .vertical
 		topBarView.addSubview(topBarLabelVStack)
 		topBarLabelVStack.centerY(inView: topBarView, leftAnchor: profilePhotoImageView.rightAnchor, paddingLeft: 12)
+		
+		topBarView.addSubview(logoutButton)
+		logoutButton.centerX(inView: topBarView, topAnchor: topBarView.topAnchor, paddingTop: 10)
 		
 		topBarView.addSubview(messageButton)
 		messageButton.centerY(inView: topBarView)
