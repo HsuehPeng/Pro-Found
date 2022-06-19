@@ -54,7 +54,7 @@ class TutorProfileViewController: UIViewController {
 		tableView.contentInsetAdjustmentBehavior = .never
 		tableView.separatorStyle = .none
 		tableView.translatesAutoresizingMaskIntoConstraints = false
-		tableView.sectionHeaderTopPadding = 0
+//		tableView.sectionHeaderTopPadding = 0
 		return tableView
 	}()
 	
