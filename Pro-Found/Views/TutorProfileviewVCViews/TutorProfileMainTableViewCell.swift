@@ -29,11 +29,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	var user: User?
 	
-	var isFollowed: Bool = false {
-		didSet {
-			print(isFollowed)
-		}
-	}
+	var isFollowed: Bool = false
 	
 	private let backImageView: UIImageView = {
 		let imageView = UIImageView()
@@ -214,11 +210,11 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	@objc func handleProfileAction() {
 		guard let user = user, let tutor = tutor else { return }
 		if isFollowed {
-			UserServie.shared.unfollow(sender: user, receiver: tutor)
+			UserServie.shared.unfollow(senderID: user.userID, receiverID: tutor.userID)
 			profileActionButton.setTitle("Follow", for: .normal)
 			isFollowed = false
 		} else {
-			UserServie.shared.follow(sender: user, receiver: tutor)
+			UserServie.shared.follow(senderID: user.userID, receiverID: tutor.userID)
 			profileActionButton.setTitle("Unfollow", for: .normal)
 			isFollowed = true
 		}

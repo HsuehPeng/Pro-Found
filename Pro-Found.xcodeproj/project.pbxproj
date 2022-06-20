@@ -26,6 +26,7 @@
 		B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD404285ED2A700CCE027 /* EventViewController.swift */; };
 		B89AD407285EDEC400CCE027 /* EventListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD406285EDEC400CCE027 /* EventListTableViewCell.swift */; };
 		B89AD40A285EEBE600CCE027 /* CreateEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD409285EEBE600CCE027 /* CreateEventViewController.swift */; };
+		B89AD412286003DA00CCE027 /* CourseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */; };
 		B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */; };
 		B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */; };
 		B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */; };
@@ -74,6 +75,8 @@
 		B8CC5EB028588BD0004C5D7A /* GeneralTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */; };
 		B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */; };
 		B8CC5EB528598D7C004C5D7A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */; };
+		B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */; };
+		B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +103,7 @@
 		B89AD406285EDEC400CCE027 /* EventListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListTableViewCell.swift; sourceTree = "<group>"; };
 		B89AD409285EEBE600CCE027 /* CreateEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventViewController.swift; sourceTree = "<group>"; };
 		B89AD410285F8FF400CCE027 /* Pro-Found.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pro-Found.entitlements"; sourceTree = "<group>"; };
+		B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailViewController.swift; sourceTree = "<group>"; };
 		B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAsset+UIImageExtension.swift"; sourceTree = "<group>"; };
 		B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -148,6 +152,8 @@
 		B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTableViewHeader.swift; sourceTree = "<group>"; };
 		B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPageFeedCell.swift; sourceTree = "<group>"; };
 		B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailListTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
 		DCCA7A9A952A4B666B6667CE /* Pods-Pro-Found.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-Found.release.xcconfig"; path = "Target Support Files/Pods-Pro-Found/Pods-Pro-Found.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -232,6 +238,8 @@
 				B8AB0612285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift */,
 				B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */,
 				B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */,
+				B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */,
+				B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */,
 			);
 			path = TutorProfileviewVCViews;
 			sourceTree = "<group>";
@@ -411,6 +419,7 @@
 				B89AD40D285EF8D000CCE027 /* Schedule */,
 				B89AD40C285EF8BB00CCE027 /* TutorProfile */,
 				B89AD40E285EF8D600CCE027 /* UserProfile */,
+				B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -567,8 +576,10 @@
 				B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */,
 				B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */,
 				B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */,
+				B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */,
 				B89AD401285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift in Sources */,
 				B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */,
+				B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor+Extension.swift in Sources */,
 				B89AD403285ED15900CCE027 /* PostViewController.swift in Sources */,
 				B89AD407285EDEC400CCE027 /* EventListTableViewCell.swift in Sources */,
@@ -592,6 +603,7 @@
 				B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */,
 				B8AB0645285B2658002110A4 /* CalendarCollectionViewCell.swift in Sources */,
 				B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */,
+				B89AD412286003DA00CCE027 /* CourseDetailViewController.swift in Sources */,
 				B8AB0656285CCAB0002110A4 /* WritePostViewController.swift in Sources */,
 				B8AB061A285A2977002110A4 /* Subject.swift in Sources */,
 				B8AB065A285D7D15002110A4 /* PostService.swift in Sources */,
