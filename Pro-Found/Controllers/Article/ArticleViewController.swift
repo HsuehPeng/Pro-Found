@@ -124,7 +124,7 @@ class ArticleViewController: UIViewController {
 			case .success(let user):
 				self.user = user
 			case .failure(let error):
-				print(error)
+				print("asdfasdf \(error)")
 			}
 		}
 	}

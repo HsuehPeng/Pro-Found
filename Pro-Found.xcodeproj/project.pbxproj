@@ -38,13 +38,11 @@
 		B8AB060C2859FA13002110A4 /* Posts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB06062859FA13002110A4 /* Posts.swift */; };
 		B8AB060D2859FA13002110A4 /* Articles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB06072859FA13002110A4 /* Articles.swift */; };
 		B8AB060E2859FA13002110A4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB06082859FA13002110A4 /* User.swift */; };
-		B8AB060F2859FA13002110A4 /* Schedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB06092859FA13002110A4 /* Schedules.swift */; };
 		B8AB06102859FA13002110A4 /* Courses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB060A2859FA13002110A4 /* Courses.swift */; };
 		B8AB06112859FA13002110A4 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB060B2859FA13002110A4 /* Events.swift */; };
 		B8AB0613285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0612285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift */; };
 		B8AB0615285A0AC4002110A4 /* CreateCourseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0614285A0AC4002110A4 /* CreateCourseViewController.swift */; };
 		B8AB061A285A2977002110A4 /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0619285A2977002110A4 /* Subject.swift */; };
-		B8AB063D285B0264002110A4 /* Tutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB063C285B0264002110A4 /* Tutor.swift */; };
 		B8AB063F285B088E002110A4 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB063E285B088E002110A4 /* LoginViewController.swift */; };
 		B8AB0642285B0B3F002110A4 /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0641285B0B3F002110A4 /* LoginService.swift */; };
 		B8AB0645285B2658002110A4 /* CalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */; };
@@ -123,13 +121,11 @@
 		B8AB06062859FA13002110A4 /* Posts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Posts.swift; sourceTree = "<group>"; };
 		B8AB06072859FA13002110A4 /* Articles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Articles.swift; sourceTree = "<group>"; };
 		B8AB06082859FA13002110A4 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		B8AB06092859FA13002110A4 /* Schedules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Schedules.swift; sourceTree = "<group>"; };
 		B8AB060A2859FA13002110A4 /* Courses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Courses.swift; sourceTree = "<group>"; };
 		B8AB060B2859FA13002110A4 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		B8AB0612285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileClassTableViewHeader.swift; sourceTree = "<group>"; };
 		B8AB0614285A0AC4002110A4 /* CreateCourseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCourseViewController.swift; sourceTree = "<group>"; };
 		B8AB0619285A2977002110A4 /* Subject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
-		B8AB063C285B0264002110A4 /* Tutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutor.swift; sourceTree = "<group>"; };
 		B8AB063E285B088E002110A4 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		B8AB0641285B0B3F002110A4 /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
 		B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -269,9 +265,7 @@
 				B8AB060B2859FA13002110A4 /* Events.swift */,
 				B8AB060A2859FA13002110A4 /* Courses.swift */,
 				B8AB06062859FA13002110A4 /* Posts.swift */,
-				B8AB06092859FA13002110A4 /* Schedules.swift */,
 				B8AB06082859FA13002110A4 /* User.swift */,
-				B8AB063C285B0264002110A4 /* Tutor.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -431,6 +425,7 @@
 			isa = PBXGroup;
 			children = (
 				B811E40128531135009C0838 /* MainTabController.swift */,
+				B8F99C2A286063D900B88244 /* MapViewController.swift */,
 				B8AB0640285B08A7002110A4 /* Authentication */,
 				B89AD40F285EF8E200CCE027 /* Home */,
 				B89AD408285EDF0B00CCE027 /* Interaction */,
@@ -440,7 +435,6 @@
 				B89AD40E285EF8D600CCE027 /* UserProfile */,
 				B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */,
 				B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */,
-				B8F99C2A286063D900B88244 /* MapViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -587,7 +581,6 @@
 			files = (
 				B8AB0663285DAD7E002110A4 /* WriteArticleViewController.swift in Sources */,
 				B8AB060E2859FA13002110A4 /* User.swift in Sources */,
-				B8AB063D285B0264002110A4 /* Tutor.swift in Sources */,
 				B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */,
 				B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */,
 				B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */,
@@ -613,7 +606,6 @@
 				B89AD407285EDEC400CCE027 /* EventListTableViewCell.swift in Sources */,
 				B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */,
 				B8AB065E285DA567002110A4 /* ArticlePageTableViewCell.swift in Sources */,
-				B8AB060F2859FA13002110A4 /* Schedules.swift in Sources */,
 				B8AB060C2859FA13002110A4 /* Posts.swift in Sources */,
 				B8F99C372860A0C900B88244 /* EventDetailTableViewHeader.swift in Sources */,
 				B8AB0658285CD05E002110A4 /* CaptionTextView.swift in Sources */,

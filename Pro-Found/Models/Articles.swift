@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Article {
+struct Article: Codable {
 	let userID: String
 	let articleID: String
 	let articleTitle: String
@@ -35,7 +35,7 @@ extension Article {
 	}
 }
 
-struct FirebaseArticle {
+struct FirebaseArticle: Codable {
 	let userID: String
 	let articleTitle: String
 	let authorName: String

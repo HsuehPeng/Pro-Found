@@ -7,42 +7,49 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 struct UserServie {
 	
 	static let shared = UserServie()
 	
-	func uploadUserData(firebaseUser: FirebaseUser, completion: @escaping () -> Void) {
-		let userRef = dbUsers.document(firebaseUser.userID)
-		let userData: [String: Any] = [
-			"articles": firebaseUser.articles ?? [],
-			"backgroundImageURL": firebaseUser.backgroundImageURL ?? "",
-			"blockedUsers": firebaseUser.blockedUsers ?? [],
-			"courses": firebaseUser.courses ?? [],
-			"email": firebaseUser.email,
-			"events": firebaseUser.events ?? [],
-			"followings": firebaseUser.followings ?? [],
-			"followers": firebaseUser.followers ?? [],
-			"introContenText": firebaseUser.introContentText ?? "",
-			"isTutor": firebaseUser.isTutor,
-			"name": firebaseUser.name,
-			"posts": firebaseUser.posts ?? [],
-			"profileImageURL": firebaseUser.profileImageURL ?? "",
-			"rating": firebaseUser.rating ?? 0,
-			"school": firebaseUser.school ?? "",
-			"schoolMajor": firebaseUser.schoolMajor ?? "",
-			"subject": firebaseUser.subject ?? "",
-			"userID": firebaseUser.userID,
-			"courseBooked": firebaseUser.courseBooked ?? 0
-		]
+	func uploadUserData(user: User, completion: @escaping () -> Void) {
+		let userRef = dbUsers.document(user.userID)
+//		let userData: [String: Any] = [
+//			"articles": firebaseUser.articles ?? [],
+//			"backgroundImageURL": firebaseUser.backgroundImageURL ?? "",
+//			"blockedUsers": firebaseUser.blockedUsers ?? [],
+//			"courses": firebaseUser.courses ?? [],
+//			"email": firebaseUser.email,
+//			"events": firebaseUser.events ?? [],
+//			"followings": firebaseUser.followings ?? [],
+//			"followers": firebaseUser.followers ?? [],
+//			"introContenText": firebaseUser.introContentText ?? "",
+//			"isTutor": firebaseUser.isTutor,
+//			"name": firebaseUser.name,
+//			"posts": firebaseUser.posts ?? [],
+//			"profileImageURL": firebaseUser.profileImageURL ?? "",
+//			"ratings": firebaseUser.ratings ?? Rating(rating: [], userID: []),
+//			"school": firebaseUser.school ?? "",
+//			"schoolMajor": firebaseUser.schoolMajor ?? "",
+//			"subject": firebaseUser.subject ?? "",
+//			"userID": firebaseUser.userID,
+//			"courseBooked": firebaseUser.courseBooked ?? 0
+//		]
+//
+//		userRef.setData(userData) { error in
+//			if let error = error {
+//				print("Error writing userdata: \(error)")
+//			} else {
+//				print("User successfully uploaded")
+//				completion()
+//			}
+//		}
 		
-		userRef.setData(userData) { error in
-			if let error = error {
-				print("Error writing userdata: \(error)")
-			} else {
-				print("User successfully uploaded")
-				completion()
-			}
+		do {
+			try userRef.setData(from: user)
+		} catch let error {
+			print("Error uploading user to Firestore: \(error)")
 		}
 		
 	}
@@ -156,6 +163,18 @@ struct UserServie {
 			let user = User(dictionary: userData)
 			completion(.success(user))
 		}
+		
+//		dbUsers.document(uid).getDocument(as: User.self) { result in
+//			switch result {
+//			case .success(let user):
+//				print(user)
+//				completion(.success(user))
+//			case .failure(let error):
+//				print(error)
+//				completion(.failure(error))
+//			}
+//		}
+		
 	}
 	
 	func getTutors(completion: @escaping (Result<[User], Error>) -> Void) {

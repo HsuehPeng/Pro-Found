@@ -90,9 +90,12 @@ class SignUpViewController: UIViewController {
 			}
 			
 			guard let uid = authResult?.user.uid else { return }
-			let firebaseUser = FirebaseUser(name: name, userID: uid, email: email, isTutor: false)
+			let user = User(name: name, userID: uid, email: email, introContentText: "", school: "", schoolMajor: "",
+							ratings: Rating(rating: [], userID: []), courseBooked: 0, profileImageURL: "",
+							backgroundImageURL: "", courses: [], articles: [], events: [], posts: [], blockedUsers: [],
+							followers: [], followings: [], subject: "", isTutor: false)
 			
-			UserServie.shared.uploadUserData(firebaseUser: firebaseUser) { [weak self] in
+			UserServie.shared.uploadUserData(user: user) { [weak self] in
 				guard let self = self else { return }
 				guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
 				

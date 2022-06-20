@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Post {
+struct Post: Codable {
 	let userID: String
 	var postID: String?
 	let contentText: String
@@ -27,14 +27,14 @@ extension Post {
 	}
 }
 
-struct FirebasePosts {
+struct FirebasePosts: Codable {
 	let userID: String
 	let contentText: String
 	let likes: Int
 	let timestamp: Double
 }
 
-struct Reply {
+struct Reply: Codable {
 	let userID: String
 	let postID: String
 	let contentText: String
