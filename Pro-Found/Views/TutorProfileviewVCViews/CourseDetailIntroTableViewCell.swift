@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class CourseDetailIntroTableViewCell: UITableViewCell {
 	
@@ -26,6 +27,7 @@ class CourseDetailIntroTableViewCell: UITableViewCell {
 
 	private let introContentLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14), textColor: .dark40, text: "Intro")
+		label.numberOfLines = 0
 		return label
 	}()
 	
@@ -36,13 +38,22 @@ class CourseDetailIntroTableViewCell: UITableViewCell {
 
 	private let detailContentLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14), textColor: .dark40, text: "Detail")
+		label.numberOfLines = 0
 		return label
+	}()
+	
+	private let underlineView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .dark20
+		
+		return view
 	}()
 	
 	// MARK: - Lifecycle
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
+		contentView.backgroundColor = .orange10
 		setupUI()
 	}
 	
@@ -53,20 +64,25 @@ class CourseDetailIntroTableViewCell: UITableViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
+		
+		contentView.addSubview(underlineView)
+		underlineView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 1)
+		
 		contentView.addSubview(introTitleLabel)
-		introTitleLabel.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingLeft: 16)
+		introTitleLabel.anchor(top: underlineView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor,
+							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
 		contentView.addSubview(introContentLabel)
 		introContentLabel.anchor(top: introTitleLabel.bottomAnchor, left: contentView.leftAnchor,
-								 right: contentView.rightAnchor, paddingTop: 8, paddingLeft: 16)
+								 right: contentView.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 		contentView.addSubview(detailTitleLabel)
 		detailTitleLabel.anchor(top: introContentLabel.bottomAnchor, left: contentView.leftAnchor,
-								right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 16)
+								right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
 		contentView.addSubview(detailContentLabel)
-		detailContentLabel.anchor(top: detailTitleLabel.bottomAnchor, left: contentView.leftAnchor,
-								 right: contentView.rightAnchor, paddingTop: 8, paddingLeft: 16)
+		detailContentLabel.anchor(top: detailTitleLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, 
+								 right: contentView.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 	}
 	

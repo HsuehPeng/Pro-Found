@@ -29,9 +29,9 @@ class ScheduleViewController: UIViewController {
 		}
 	}
 	
-	var scheduledEventIdWithTimes = [ScheduledEventTime]()
-	
 	var scheduledEvents = [Event]()
+	
+	var scheduledEventIdWithTimes = [ScheduledEventTime]()
 	
 	var filteredScheduledEvents = [Event]() {
 		didSet {
@@ -173,6 +173,8 @@ class ScheduleViewController: UIViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
+		navigationController?.navigationBar.isHidden = true
+		tabBarController?.tabBar.isHidden = false
 		fetchUserData()
 	}
 	
@@ -432,6 +434,11 @@ extension ScheduleViewController: UICollectionViewDelegate, UICollectionViewDele
 			guard let monthAndYear = monthLabel.text, let day = cell.dateLabel.text, let year = yearLabel.text else { return }
 			let date = "\(day) \(monthAndYear) \(year)"
 			filterCourseAndEventByDate(dateString: date)
+		} else if indexPath.section == 1 {
+			guard let user = user else { return }
+			let course = filteredScheduledCourses[indexPath.item]
+			let courseDetailVC = CourseDetailViewController(course: course, user: user)
+			navigationController?.pushViewController(courseDetailVC, animated: true)
 		}
 	}
 	

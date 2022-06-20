@@ -108,7 +108,12 @@ extension EventViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 
 extension EventViewController: UITableViewDelegate {
-	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard let user = user else { return }
+		let event = events[indexPath.row]
+		let eventDetailVC = EventDetailViewController(event: event, user: user)
+		navigationController?.pushViewController(eventDetailVC, animated: true)
+	}
 }
 
 // MARK: - EventListTableViewCellDelegate

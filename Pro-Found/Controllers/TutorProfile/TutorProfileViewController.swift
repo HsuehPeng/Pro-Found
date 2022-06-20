@@ -83,6 +83,8 @@ class TutorProfileViewController: UIViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		navigationController?.navigationBar.isHidden = true
+		tabBarController?.tabBar.isHidden = false
 		fetchTutorCourses()
 		checkIfFollowed()
 	}
@@ -171,7 +173,7 @@ extension TutorProfileViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 1 {
-			let courseDetailVC = CourseDetailViewController(course: tutorCourses[indexPath.item], user: user, isFollow: isFollowed)
+			let courseDetailVC = CourseDetailViewController(course: tutorCourses[indexPath.item], user: user)
 			navigationController?.pushViewController(courseDetailVC, animated: true)
 		}
 	}

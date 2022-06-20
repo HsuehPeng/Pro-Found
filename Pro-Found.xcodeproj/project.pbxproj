@@ -77,6 +77,12 @@
 		B8CC5EB528598D7C004C5D7A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */; };
 		B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */; };
 		B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */; };
+		B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C282860625200B88244 /* MKMapView + Extension.swift */; };
+		B8F99C2B286063D900B88244 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C2A286063D900B88244 /* MapViewController.swift */; };
+		B8F99C2D2860750D00B88244 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */; };
+		B8F99C2F2860760F00B88244 /* EventDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C2E2860760F00B88244 /* EventDetailListTableViewCell.swift */; };
+		B8F99C312860766B00B88244 /* EventDetailContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C302860766B00B88244 /* EventDetailContentTableViewCell.swift */; };
+		B8F99C3328607BA600B88244 /* CourseDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C3228607BA600B88244 /* CourseDetailTableViewHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -154,6 +160,12 @@
 		B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailListTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C282860625200B88244 /* MKMapView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView + Extension.swift"; sourceTree = "<group>"; };
+		B8F99C2A286063D900B88244 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
+		B8F99C2E2860760F00B88244 /* EventDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailListTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C302860766B00B88244 /* EventDetailContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailContentTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C3228607BA600B88244 /* CourseDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailTableViewHeader.swift; sourceTree = "<group>"; };
 		DCCA7A9A952A4B666B6667CE /* Pods-Pro-Found.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-Found.release.xcconfig"; path = "Target Support Files/Pods-Pro-Found/Pods-Pro-Found.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -238,6 +250,7 @@
 				B8AB0612285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift */,
 				B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */,
 				B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */,
+				B8F99C3228607BA600B88244 /* CourseDetailTableViewHeader.swift */,
 				B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */,
 				B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */,
 			);
@@ -333,6 +346,7 @@
 				B8A8FDF32855E4EE00F98326 /* UIColor+Extension.swift */,
 				B83666E728578E1B00772375 /* CustomUIElements.swift */,
 				B8AB0619285A2977002110A4 /* Subject.swift */,
+				B8F99C282860625200B88244 /* MKMapView + Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -420,6 +434,8 @@
 				B89AD40C285EF8BB00CCE027 /* TutorProfile */,
 				B89AD40E285EF8D600CCE027 /* UserProfile */,
 				B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */,
+				B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */,
+				B8F99C2A286063D900B88244 /* MapViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -430,6 +446,8 @@
 				B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */,
 				B8AB0657285CD05E002110A4 /* CaptionTextView.swift */,
 				B89AD406285EDEC400CCE027 /* EventListTableViewCell.swift */,
+				B8F99C2E2860760F00B88244 /* EventDetailListTableViewCell.swift */,
+				B8F99C302860766B00B88244 /* EventDetailContentTableViewCell.swift */,
 			);
 			path = InteractionVCViews;
 			sourceTree = "<group>";
@@ -569,6 +587,7 @@
 				B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */,
 				B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */,
 				B8AB060D2859FA13002110A4 /* Articles.swift in Sources */,
+				B8F99C312860766B00B88244 /* EventDetailContentTableViewCell.swift in Sources */,
 				B8AB0613285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift in Sources */,
 				B8C7B393285725E200CA7370 /* InteractionViewController.swift in Sources */,
 				B89AD40A285EEBE600CCE027 /* CreateEventViewController.swift in Sources */,
@@ -576,8 +595,11 @@
 				B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */,
 				B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */,
 				B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */,
+				B8F99C2B286063D900B88244 /* MapViewController.swift in Sources */,
+				B8F99C2D2860750D00B88244 /* EventDetailViewController.swift in Sources */,
 				B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */,
 				B89AD401285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift in Sources */,
+				B8F99C2F2860760F00B88244 /* EventDetailListTableViewCell.swift in Sources */,
 				B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */,
 				B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor+Extension.swift in Sources */,
@@ -597,6 +619,8 @@
 				B8AB06102859FA13002110A4 /* Courses.swift in Sources */,
 				B8AB0615285A0AC4002110A4 /* CreateCourseViewController.swift in Sources */,
 				B8AB066B285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift in Sources */,
+				B8F99C3328607BA600B88244 /* CourseDetailTableViewHeader.swift in Sources */,
+				B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */,
 				B8CC5EAE285872F4004C5D7A /* HomePageTutorCollectionViewCell.swift in Sources */,
 				B83D19BF285608770049846E /* UIFont+Extension.swift in Sources */,
 				B8C7B3992857260D00CA7370 /* TutorProfileViewController.swift in Sources */,

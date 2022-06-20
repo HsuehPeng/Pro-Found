@@ -7,6 +7,8 @@
 
 import UIKit
 import FirebaseAuth
+import CoreLocation
+import MapKit
 
 class CourseDetailViewController: UIViewController {
 	
@@ -16,13 +18,20 @@ class CourseDetailViewController: UIViewController {
 	
 	let user: User
 	
-	var isFollow: Bool
+	var isFollow: Bool? {
+		didSet {
+			tableView.reloadData()
+		}
+	}
+	
+	var courseLocation: CLLocation?
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.separatorStyle = .none
 		tableView.register(CourseDetailListTableViewCell.self, forCellReuseIdentifier: CourseDetailListTableViewCell.reuseIdentifier)
 		tableView.register(CourseDetailIntroTableViewCell.self, forCellReuseIdentifier: CourseDetailIntroTableViewCell.reuseIdentifier)
+		tableView.register(CourseDetailTableViewHeader.self, forHeaderFooterViewReuseIdentifier: CourseDetailTableViewHeader.reuseIdentifier)
 		return tableView
 	}()
 	
@@ -47,9 +56,8 @@ class CourseDetailViewController: UIViewController {
 	
 	// MARK: - Lifecycle
 	
-	init(course: Course, user: User, isFollow: Bool) {
+	init(course: Course, user: User) {
 		self.course = course
-		self.isFollow = isFollow
 		self.user = user
 		super.init(nibName: nil, bundle: nil)
 	}
@@ -60,19 +68,18 @@ class CourseDetailViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
 		view.backgroundColor = .white
 		
 		tableView.dataSource = self
+		tableView.delegate = self
 		
 		setupUI()
-		setupNavBar()
+		convertAdressToCLLocation()
+		checkIfFollowed()
 	}
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		navigationController?.navigationBar.isHidden = true
-		tabBarController?.tabBar.isHidden = false
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		setupNavBar()
 	}
 	
 	// MARK: - UI
@@ -122,6 +129,29 @@ class CourseDetailViewController: UIViewController {
 		slideVC.transitioningDelegate = self
 		present(slideVC, animated: true)
 	}
+	
+	func checkIfFollowed() {
+		UserServie.shared.checkIfFollow(senderID: user.userID, receiveriD: course.tutor.userID) { [weak self] bool in
+			guard let self = self else { return }
+			self.isFollow = bool
+		}
+	}
+	
+	func convertAdressToCLLocation() {
+		let address = course.location
+		let geoCoder = CLGeocoder()
+		
+		geoCoder.geocodeAddressString(address) { (placemarks, error) in
+			guard
+				let placemarks = placemarks,
+				let location = placemarks.first?.location
+			else {
+				print("No location found: \(String(describing: error))")
+				return
+			}
+			self.courseLocation = location
+		}
+	}
 
 }
 
@@ -144,8 +174,10 @@ extension CourseDetailViewController: UITableViewDataSource {
 				as? CourseDetailIntroTableViewCell else { fatalError("Can not dequeue CourseDetailListTableViewCell") }
 		if indexPath.section == 0 {
 			listCell.delegate = self
+			listCell.courseLocation = courseLocation
 			listCell.isFollow = isFollow
 			listCell.course = course
+			
 			return listCell
 		} else {
 			introCell.course = course
@@ -155,9 +187,37 @@ extension CourseDetailViewController: UITableViewDataSource {
 	}
 }
 
+// MARK: - UITableViewDelegate
+
+extension CourseDetailViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if indexPath.section == 0 && indexPath.row == 0 {
+			guard let courseLocation = courseLocation else { return }
+			let mapVC = MapViewController(courseLocation: courseLocation)
+			navigationController?.pushViewController(mapVC, animated: true)
+		}
+	}
+	
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: CourseDetailTableViewHeader.reuseIdentifier)
+				as? CourseDetailTableViewHeader else { return nil }
+		if section == 0 {
+			header.course = course
+			return header
+		} else {
+			return nil
+		}
+	}
+	
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return section == 0 ? 50 : 0
+	}
+}
+
 // MARK: - CourseDetailListTableViewCellDelegate
 
 extension CourseDetailViewController: CourseDetailListTableViewCellDelegate {
+	
 	func handleFollowing(_ cell: CourseDetailListTableViewCell) {
 		guard let isFollow = cell.isFollow, let uid = Auth.auth().currentUser?.uid else { return }
 		if isFollow {
@@ -180,4 +240,3 @@ extension CourseDetailViewController: UIViewControllerTransitioningDelegate {
 		return SelectClassPresentationVController(presentedViewController: presented, presenting: presenting)
 	}
 }
-
