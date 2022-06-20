@@ -13,7 +13,7 @@ class MapViewController: UIViewController {
 	
 	// MARK: - Properties
 	
-	let courseLocation: CLLocation
+	let location: CLLocation
 	
 	private lazy var backButton: UIButton = {
 		let button = UIButton()
@@ -37,8 +37,8 @@ class MapViewController: UIViewController {
 	
 	// MARK: - Lifecycle
 	
-	init(courseLocation: CLLocation) {
-		self.courseLocation = courseLocation
+	init(location: CLLocation) {
+		self.location = location
 		super.init(nibName: nil, bundle: nil)
 	}
 	
@@ -74,11 +74,11 @@ class MapViewController: UIViewController {
 	
 	func pinCourseLocation() {
 		
-		locationMapView.centerCoordinate = courseLocation.coordinate
-		locationMapView.centerToLocation(courseLocation)
+		locationMapView.centerCoordinate = location.coordinate
+		locationMapView.centerToLocation(location)
 		
 		let annotation1 = MKPointAnnotation()
-		annotation1.coordinate = courseLocation.coordinate
+		annotation1.coordinate = location.coordinate
 		locationMapView.addAnnotation(annotation1)
 	}
 	

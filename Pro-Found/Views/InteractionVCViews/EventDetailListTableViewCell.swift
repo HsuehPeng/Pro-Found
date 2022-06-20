@@ -8,7 +8,6 @@
 import UIKit
 import FirebaseAuth
 import Kingfisher
-import MapKit
 
 protocol EventDetailListTableViewCellDelegate: AnyObject {
 	func handleFollowing(_ cell: EventDetailListTableViewCell)
@@ -18,7 +17,7 @@ class EventDetailListTableViewCell: UITableViewCell {
 	
 	static let reuseIdentifier = "\(EventDetailListTableViewCell.self)"
 	
-	weak var delegate: CourseDetailListTableViewCellDelegate?
+	weak var delegate: EventDetailListTableViewCellDelegate?
 		
 	// MARK: - Properties
 		
@@ -28,17 +27,13 @@ class EventDetailListTableViewCell: UITableViewCell {
 		}
 	}
 	
-	var courseLocation: CLLocation? {
+	var isFollow: Bool? {
 		didSet {
-			guard let courseLocation = courseLocation else { return }
-			locationMapView.centerCoordinate = courseLocation.coordinate
-			locationMapView.centerToLocation(courseLocation)
+			configureUI()
 		}
 	}
 	
-	var isFollow: Bool?
-	
-	private let tutorImageView: UIImageView = {
+	private let eventImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 48, height: 48)
 		imageView.layer.cornerRadius = 48 / 2
@@ -46,13 +41,13 @@ class EventDetailListTableViewCell: UITableViewCell {
 		return imageView
 	}()
 	
-	private let tutorNameLabel: UILabel = {
+	private let eventNameLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 14), textColor: .dark60, text: "Test Name")
 		return label
 	}()
 	
 	lazy var followButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .white, buttonTextColor: .orange, borderColor: .orange, buttonText: " Follow", borderWidth: 1)
+		let button = CustomUIElements().makeSmallButton(buttonColor: .white, buttonTextColor: .orange, borderColor: .orange, buttonText: "Follow", borderWidth: 1)
 		button.widthAnchor.constraint(equalToConstant: 76).isActive = true
 		button.addTarget(self, action: #selector(handleFollowingAction), for: .touchUpInside)
 		return button
@@ -64,25 +59,22 @@ class EventDetailListTableViewCell: UITableViewCell {
 		return view
 	}()
 	
-	let locationMapView: MKMapView = {
-		let mapView = MKMapView()
-		mapView.setDimensions(width: 48, height: 48)
-		mapView.layer.cornerRadius = 8
-		mapView.backgroundColor = .gray
-		
-		return mapView
+	private let dateImageView: UIImageView = {
+		let imageView = UIImageView()
+		imageView.setDimensions(width: 48, height: 48)
+		imageView.layer.cornerRadius = 48 / 2
+		imageView.image = UIImage.asset(.account_circle)
+		return imageView
 	}()
 	
-	private let addressLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12), textColor: .dark40, text: "Test Address")
-		label.numberOfLines = 0
+	private let dateLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 14), textColor: .dark60, text: "Test Date")
 		return label
 	}()
 	
-	private let dividerLine2: UIView = {
-		let view = UIView()
-		view.backgroundColor = .dark10
-		return view
+	private let timeLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 14), textColor: .dark60, text: "Test Time")
+		return label
 	}()
 	
 	// MARK: - Lifecycle
@@ -99,40 +91,54 @@ class EventDetailListTableViewCell: UITableViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
-		contentView.addSubview(tutorImageView)
-		tutorImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		contentView.addSubview(eventImageView)
+		eventImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 16)
 		
-		contentView.addSubview(tutorNameLabel)
-		tutorNameLabel.centerY(inView: tutorImageView, leftAnchor: tutorImageView.rightAnchor, paddingLeft: 8)
+		contentView.addSubview(eventNameLabel)
+		eventNameLabel.centerY(inView: eventImageView, leftAnchor: eventImageView.rightAnchor, paddingLeft: 8)
 		
 		contentView.addSubview(followButton)
-		followButton.centerY(inView: tutorImageView)
-		followButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
-
+		followButton.anchor(right: contentView.rightAnchor, paddingRight: 16)
+		followButton.centerY(inView: eventImageView)
+		
 		contentView.addSubview(dividerLine1)
-		dividerLine1.anchor(top: tutorImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 8, height: 1)
+		dividerLine1.anchor(top: eventImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 1)
 		
-		contentView.addSubview(locationMapView)
-		locationMapView.anchor(top: dividerLine1.bottomAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		contentView.addSubview(dateImageView)
+		dateImageView.anchor(top: dividerLine1.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
+							 paddingTop: 8, paddingLeft: 16, paddingBottom: 8)
 		
-		contentView.addSubview(addressLabel)
-		addressLabel.centerY(inView: locationMapView, leftAnchor: locationMapView.rightAnchor, paddingLeft: 8)
-		addressLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
+		contentView.addSubview(dateLabel)
+		dateLabel.centerY(inView: dateImageView, leftAnchor: dateImageView.rightAnchor, paddingLeft: 8)
 		
-		contentView.addSubview(dividerLine2)
-		dividerLine2.anchor(top: locationMapView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 8, height: 1)
 	}
 	
 	// MARK: - Actions
 	
 	@objc func handleFollowingAction() {
-//		delegate?.handleFollowing(self)
+		delegate?.handleFollowing(self)
 	}
 	
 	// MARK: - Helpers
 	
 	func configureUI() {
+		guard let event = event, let isFollow = isFollow else { return }
+		let eventImageUrl = URL(string: event.organizer.profileImageURL)
+		eventImageView.kf.setImage(with: eventImageUrl)
+		eventNameLabel.text = event.organizerName
 		
+		let dateformatter = DateFormatter()
+		dateformatter.dateFormat = "MMMM dd, yyyy∙HH:mm"
+		let eventDate = Date(timeIntervalSince1970: event.timestamp)
+		let date = dateformatter.string(from: eventDate)
+
+		dateLabel.text = date
+		
+		if isFollow {
+			followButton.setTitle("Unfollow", for: .normal)
+		} else {
+			followButton.setTitle("Follow", for: .normal)
+		}
 	}
 
 }

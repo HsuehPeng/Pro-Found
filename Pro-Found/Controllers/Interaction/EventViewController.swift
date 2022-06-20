@@ -62,6 +62,11 @@ class EventViewController: UIViewController {
 		setupUI()
     }
 	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		setupNavBar()
+	}
+	
 	// MARK: - UI
 	
 	private func setupUI() {
@@ -70,6 +75,11 @@ class EventViewController: UIViewController {
 						 right: view.rightAnchor)
 		view.addSubview(writePostButton)
 		writePostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 24, paddingRight: 16)
+	}
+	
+	private func setupNavBar() {
+		tabBarController?.tabBar.isHidden = false
+		navigationController?.navigationBar.isHidden = true
 	}
 	
 	// MARK: - Actions

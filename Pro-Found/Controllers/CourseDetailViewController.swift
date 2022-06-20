@@ -193,7 +193,7 @@ extension CourseDetailViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 0 && indexPath.row == 0 {
 			guard let courseLocation = courseLocation else { return }
-			let mapVC = MapViewController(courseLocation: courseLocation)
+			let mapVC = MapViewController(location: courseLocation)
 			navigationController?.pushViewController(mapVC, animated: true)
 		}
 	}

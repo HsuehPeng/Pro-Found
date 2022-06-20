@@ -24,12 +24,15 @@ class EventDetailViewController: UIViewController {
 		}
 	}
 	
-	var courseLocation: CLLocation?
+	var eventLocation: CLLocation?
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.separatorStyle = .none
 		tableView.register(EventDetailListTableViewCell.self, forCellReuseIdentifier: EventDetailListTableViewCell.reuseIdentifier)
+		tableView.register(GeneralMapCellTableViewCell.self, forCellReuseIdentifier: GeneralMapCellTableViewCell.reuseIdentifier)
+		tableView.register(EventDetailContentTableViewCell.self, forCellReuseIdentifier: EventDetailContentTableViewCell.reuseIdentifier)
+		tableView.register(EventDetailTableViewHeader.self, forHeaderFooterViewReuseIdentifier: EventDetailTableViewHeader.reuseIdentifier)
 		return tableView
 	}()
 	
@@ -63,11 +66,12 @@ class EventDetailViewController: UIViewController {
 		view.backgroundColor = .white
 		
 		tableView.dataSource = self
-//		tableView.delegate = self
+		tableView.delegate = self
 		
 		setupUI()
 		convertAdressToCLLocation()
 		checkIfFollowed()
+		checkIfEventBooked()
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -105,14 +109,25 @@ class EventDetailViewController: UIViewController {
 	
 	// MARK: - Actions
 	
+	@objc func handleBookEvent() {
+		UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp) { [weak self] in
+			guard let self = self else { return }
+			self.scheduleEventButton.isEnabled = false
+			self.scheduleEventButton.backgroundColor = .dark20
+		}
+	}
+	
 	@objc func popVC() {
 		navigationController?.popViewController(animated: true)
 	}
 	
 	// MARK: - Helpers
 	
-	@objc func handleBookEvent() {
-		
+	func checkIfEventBooked() {
+		if event.participants.contains(user.userID) {
+			scheduleEventButton.backgroundColor = .dark20
+			scheduleEventButton.isEnabled = false
+		}
 	}
 	
 	func checkIfFollowed() {
@@ -134,7 +149,7 @@ class EventDetailViewController: UIViewController {
 				print("No location found: \(String(describing: error))")
 				return
 			}
-			self.courseLocation = location
+			self.eventLocation = location
 		}
 	}
 }
@@ -143,7 +158,7 @@ class EventDetailViewController: UIViewController {
 
 extension EventDetailViewController: UITableViewDataSource {
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return 2
+		return 3
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -154,18 +169,72 @@ extension EventDetailViewController: UITableViewDataSource {
 		guard let listCell = tableView.dequeueReusableCell(withIdentifier: EventDetailListTableViewCell.reuseIdentifier, for: indexPath)
 				as? EventDetailListTableViewCell else { fatalError("Can not dequeue CourseDetailListTableViewCell") }
 		
-//		guard let introCell = tableView.dequeueReusableCell(withIdentifier: CourseDetailIntroTableViewCell.reuseIdentifier, for: indexPath)
-//				as? CourseDetailIntroTableViewCell else { fatalError("Can not dequeue CourseDetailListTableViewCell") }
-//		if indexPath.section == 0 {
-//			listCell.delegate = self
-			listCell.courseLocation = courseLocation
+		guard let mapCell = tableView.dequeueReusableCell(withIdentifier: GeneralMapCellTableViewCell.reuseIdentifier, for: indexPath)
+				as? GeneralMapCellTableViewCell else { fatalError("Can not dequeue GeneralMapCellTableViewCell") }
+		
+		guard let detailCell = tableView.dequeueReusableCell(withIdentifier: EventDetailContentTableViewCell.reuseIdentifier, for: indexPath)
+				as? EventDetailContentTableViewCell else { fatalError("Can not dequeue EventDetailContentTableViewCell") }
+		
+		if indexPath.section == 0 {
+			listCell.delegate = self
 			listCell.isFollow = isFollow
 			listCell.event = event
 			return listCell
-//		} else {
-//			introCell.course = course
-//			return introCell
-//		}
-
+		} else if indexPath.section == 1 {
+			mapCell.eventLocation = eventLocation
+			return mapCell
+		} else {
+			return detailCell
+		}
 	}
+}
+
+// MARK: - UITableViewDelegate
+
+extension EventDetailViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if indexPath.section == 1 {
+			guard let eventLocation = eventLocation else { return }
+			let mapVC = MapViewController(location: eventLocation)
+			navigationController?.pushViewController(mapVC, animated: true)
+		}
+	}
+	
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: EventDetailTableViewHeader.reuseIdentifier)
+				as? EventDetailTableViewHeader else { return nil }
+		
+		if section == 0 {
+			header.event = event
+			return header
+		}
+		
+		return nil
+	}
+	
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		if section == 0 {
+			return 50
+		} else {
+			return 0
+		}
+	}
+}
+
+// MARK: - EventDetailListTableViewCellDelegate
+
+extension EventDetailViewController: EventDetailListTableViewCellDelegate {
+	func handleFollowing(_ cell: EventDetailListTableViewCell) {
+		guard let isFollow = cell.isFollow, let uid = Auth.auth().currentUser?.uid else { return }
+		if isFollow {
+			UserServie.shared.unfollow(senderID: uid, receiverID: event.organizer.userID)
+			cell.followButton.setTitle("Follow", for: .normal)
+			self.isFollow = false
+		} else {
+			UserServie.shared.follow(senderID: uid, receiverID: event.organizer.userID)
+			cell.followButton.setTitle("Unfollow", for: .normal)
+			self.isFollow = true
+		}
+	}
+	
 }
