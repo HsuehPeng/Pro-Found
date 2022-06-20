@@ -79,12 +79,14 @@ class TutorProfileViewController: UIViewController {
 		
 		setupNavBar()
 		setupUI()
-		checkIfFollowed()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		navigationController?.navigationBar.isHidden = true
+		tabBarController?.tabBar.isHidden = false
 		fetchTutorCourses()
+		checkIfFollowed()
 	}
 	
 	// MARK: - UI
@@ -122,7 +124,7 @@ class TutorProfileViewController: UIViewController {
 	}
 	
 	func checkIfFollowed() {
-		UserServie.shared.checkIfFollow(sender: user, receiver: tutor) { [weak self] bool in
+		UserServie.shared.checkIfFollow(senderID: user.userID, receiveriD: tutor.userID) { [weak self] bool in
 			guard let self = self else { return }
 			self.isFollowed = bool
 		}
@@ -170,7 +172,10 @@ extension TutorProfileViewController: UITableViewDataSource {
 extension TutorProfileViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		
+		if indexPath.section == 1 {
+			let courseDetailVC = CourseDetailViewController(course: tutorCourses[indexPath.item], user: user)
+			navigationController?.pushViewController(courseDetailVC, animated: true)
+		}
 	}
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

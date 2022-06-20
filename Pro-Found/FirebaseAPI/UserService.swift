@@ -174,15 +174,15 @@ struct UserServie {
 		}
 	}
 	
-	func follow(sender: User, receiver: User) {
-		dbUsers.document(sender.userID).updateData([
-			"followings": FieldValue.arrayUnion([receiver.userID])
+	func follow(senderID: String, receiverID: String) {
+		dbUsers.document(senderID).updateData([
+			"followings": FieldValue.arrayUnion([receiverID])
 		]) { error in
 			if let error = error {
 				print("Error updating followings: \(error)")
 			} else {
-				dbUsers.document(receiver.userID).updateData([
-					"followers": FieldValue.arrayUnion([sender.userID])
+				dbUsers.document(receiverID).updateData([
+					"followers": FieldValue.arrayUnion([senderID])
 				]) { error in
 					if let error = error {
 						print("Error getting followers: \(error)")
@@ -194,15 +194,15 @@ struct UserServie {
 		}
 	}
 	
-	func unfollow(sender: User, receiver: User) {
-		dbUsers.document(sender.userID).updateData([
-			"followings": FieldValue.arrayRemove([receiver.userID])
+	func unfollow(senderID: String, receiverID: String) {
+		dbUsers.document(senderID).updateData([
+			"followings": FieldValue.arrayRemove([receiverID])
 		]) { error in
 			if let error = error {
 				print("Error updating followings: \(error)")
 			} else {
-				dbUsers.document(receiver.userID).updateData([
-					"followers": FieldValue.arrayRemove([sender.userID])
+				dbUsers.document(receiverID).updateData([
+					"followers": FieldValue.arrayRemove([senderID])
 				]) { error in
 					if let error = error {
 						print("Error getting followers: \(error)")
@@ -214,9 +214,9 @@ struct UserServie {
 		}
 	}
 	
-	func checkIfFollow(sender: User, receiver: User, completion: @escaping (Bool) -> Void) {
+	func checkIfFollow(senderID: String, receiveriD: String, completion: @escaping (Bool) -> Void) {
 		
-		dbUsers.whereField("userID", isEqualTo: sender.userID).whereField("followings", arrayContains: receiver.userID).getDocuments { snapshot, error in
+		dbUsers.whereField("userID", isEqualTo: senderID).whereField("followings", arrayContains: receiveriD).getDocuments { snapshot, error in
 			if let _ = error {
 				completion(false)
 			} else {
