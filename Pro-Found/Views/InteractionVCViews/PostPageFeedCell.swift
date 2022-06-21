@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol PostPageFeedCellDelegate: AnyObject {
+	func goToCommentVC(_ cell: PostPageFeedCell)
+}
+
 class PostPageFeedCell: UITableViewCell {
 	
 	static let reuseIdentifier = "\(PostPageFeedCell.self)"
+	
+	weak var delegate: PostPageFeedCellDelegate?
 	
 	// MARK: - Properties
 	
@@ -83,6 +89,7 @@ class PostPageFeedCell: UITableViewCell {
 		button.setTitleColor(UIColor.dark, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.manropeRegular, size: 14)
 		button.setImage(UIImage.asset(.chat), for: .normal)
+		button.addTarget(self, action: #selector(goToCommentVC), for: .touchUpInside)
 		return button
 	}()
 	
@@ -128,6 +135,12 @@ class PostPageFeedCell: UITableViewCell {
 		feedHStack.anchor(top: likeCountLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 						  right: contentView.rightAnchor, paddingTop: 20, paddingBottom: 12)
 
+	}
+	
+	// MARK: - Actions
+	
+	@objc func goToCommentVC() {
+		delegate?.goToCommentVC(self)
 	}
 	
 	// MARK: - Helpers

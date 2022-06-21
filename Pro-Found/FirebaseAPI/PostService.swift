@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseFirestoreSwift
 
 struct PostService {
 	
@@ -16,14 +17,15 @@ struct PostService {
 	func uploadPost(firebasePost: FirebasePosts, completion: @escaping () -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let postRef = dbPosts.document()
+		
 		let postData: [String: Any] = [
 			"postID": postRef.documentID,
 			"userID": firebasePost.userID,
 			"contentText": firebasePost.contentText,
 			"likes": firebasePost.likes,
-			"timestamp": firebasePost.timestamp
+			"timestamp": firebasePost.timestamp,
 		]
-		
+
 		postRef.setData(postData) { error in
 			if let error = error {
 				print("Error writing post: \(error)")
@@ -32,6 +34,35 @@ struct PostService {
 					"posts": FieldValue.arrayUnion([postRef.documentID])
 				])
 				print("New post successfully created")
+				completion()
+			}
+		}
+		
+//		do {
+//			try postRef.setData(from: firebasePost)
+//			dbUsers.document(uid).updateData([
+//				"posts": FieldValue.arrayUnion([postRef.documentID])
+//			])
+//		} catch let error {
+//			print("Error writing post to Firestore: \(error)")
+//		}
+//
+	}
+	
+	func uploadComment(firebaseReply: FirebaseReply, completion: @escaping () -> Void) {
+		let replyRef = dbReplies.document()
+		
+		replyRef.setData([
+			"userID": firebaseReply.userID,
+			"contentText": firebaseReply.contentText,
+			"replyID": replyRef.documentID,
+			"timestamp": firebaseReply.timestamp,
+			"postID": firebaseReply.postID
+		]) { error in
+			if let error = error {
+				print("Error uploading comment: \(error)")
+			} else {
+				print("Successfully upload comment")
 				completion()
 			}
 		}
@@ -68,6 +99,37 @@ struct PostService {
 		}
 	}
 	
+	func getReplies(completion: @escaping (Result<[Reply], Error>) -> Void) {
+		
+		dbReplies.getDocuments { snapshot, error in
+			var replies = [Reply]()
+			
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot else { return }
+				let group = DispatchGroup()
+				for document in snapshot.documents {
+					let replyData = document.data()
+					group.enter()
+					UserServie.shared.getUserData(uid: replyData["userID"] as? String ?? "") { result in
+						switch result {
+						case .success(let user):
+							let reply = Reply(user: user, dictionary: replyData)
+							replies.append(reply)
+						case .failure(let error):
+							print(error)
+						}
+						group.leave()
+					}
+				}
+				group.notify(queue: DispatchQueue.main) {
+					completion(.success(replies))
+				}
+			}
+		}
+	}
 	
+
 	
 }

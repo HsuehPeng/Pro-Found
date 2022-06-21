@@ -101,6 +101,7 @@ extension PostViewController: UITableViewDataSource {
 		UserServie.shared.getUserData(uid: post.userID) { result in
 			switch result {
 			case .success(let user):
+				feedCell.delegate = self
 				feedCell.user = user
 			case .failure(let error):
 				print(error)
@@ -114,5 +115,19 @@ extension PostViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 
 extension PostViewController: UITableViewDelegate {
-	
+
 }
+
+// MARK: - PostPageFeedCellDelegate
+
+extension PostViewController: PostPageFeedCellDelegate {
+	func goToCommentVC(_ cell: PostPageFeedCell) {
+		guard let indexPath = tableView.indexPath(for: cell), let user = user else { return }
+		let post = filteredPosts[indexPath.row]
+		let postCommentVC = PostCommentViewController(post: post, user: user)
+		navigationController?.pushViewController(postCommentVC, animated: true)
+	}
+
+}
+
+

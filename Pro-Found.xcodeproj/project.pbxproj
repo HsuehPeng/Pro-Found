@@ -74,6 +74,9 @@
 		B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */; };
 		B8CC5EB528598D7C004C5D7A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */; };
 		B8F352D02861A61F0068E87D /* ArticleListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */; };
+		B8F352D22861B9CF0068E87D /* PostCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */; };
+		B8F352D42861CA0F0068E87D /* PostCommentTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */; };
+		B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */; };
 		B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */; };
 		B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */; };
 		B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C282860625200B88244 /* MKMapView + Extension.swift */; };
@@ -158,6 +161,9 @@
 		B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPageFeedCell.swift; sourceTree = "<group>"; };
 		B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListTableViewCell.swift; sourceTree = "<group>"; };
+		B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentViewController.swift; sourceTree = "<group>"; };
+		B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableHeader.swift; sourceTree = "<group>"; };
+		B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableCellTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailListTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C282860625200B88244 /* MKMapView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView + Extension.swift"; sourceTree = "<group>"; };
@@ -287,6 +293,7 @@
 			children = (
 				B8C7B392285725E200CA7370 /* InteractionViewController.swift */,
 				B89AD402285ED15900CCE027 /* PostViewController.swift */,
+				B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */,
 				B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */,
 				B89AD404285ED2A700CCE027 /* EventViewController.swift */,
 				B89AD409285EEBE600CCE027 /* CreateEventViewController.swift */,
@@ -445,8 +452,10 @@
 		B8CC5EB3285979D2004C5D7A /* InteractionVCViews */ = {
 			isa = PBXGroup;
 			children = (
-				B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */,
 				B8AB0657285CD05E002110A4 /* CaptionTextView.swift */,
+				B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */,
+				B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */,
+				B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */,
 				B89AD406285EDEC400CCE027 /* EventListTableViewCell.swift */,
 				B8F99C362860A0C900B88244 /* EventDetailTableViewHeader.swift */,
 				B8F99C2E2860760F00B88244 /* EventDetailListTableViewCell.swift */,
@@ -588,12 +597,14 @@
 				B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */,
 				B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */,
 				B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */,
+				B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */,
 				B8AB060D2859FA13002110A4 /* Articles.swift in Sources */,
 				B8F99C312860766B00B88244 /* EventDetailContentTableViewCell.swift in Sources */,
 				B8AB0613285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift in Sources */,
 				B8C7B393285725E200CA7370 /* InteractionViewController.swift in Sources */,
 				B89AD40A285EEBE600CCE027 /* CreateEventViewController.swift in Sources */,
 				B86943D32858673C008021C9 /* HomePageTutorListTableViewCell.swift in Sources */,
+				B8F352D22861B9CF0068E87D /* PostCommentViewController.swift in Sources */,
 				B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */,
 				B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */,
 				B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */,
@@ -620,6 +631,7 @@
 				B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */,
 				B8AB06102859FA13002110A4 /* Courses.swift in Sources */,
 				B8AB0615285A0AC4002110A4 /* CreateCourseViewController.swift in Sources */,
+				B8F352D42861CA0F0068E87D /* PostCommentTableHeader.swift in Sources */,
 				B8AB066B285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift in Sources */,
 				B8F99C3328607BA600B88244 /* CourseDetailTableViewHeader.swift in Sources */,
 				B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */,
