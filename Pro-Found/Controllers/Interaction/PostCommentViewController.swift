@@ -20,9 +20,7 @@ class PostCommentViewController: UIViewController {
 			tableView.reloadData()
 		}
 	}
-	
-//	var replyUsers = [User]()
-	
+		
 	private let tableView: UITableView = {
 		let tableView = UITableView(frame: .zero, style: .grouped)
 		tableView.backgroundColor = .light60
@@ -136,7 +134,7 @@ class PostCommentViewController: UIViewController {
 		PostService.shared.uploadComment(firebaseReply: reply) { [weak self] in
 			guard let self = self else { return }
 			self.commentTextView.text = ""
-			self.tableView.reloadData()
+			self.fetchReplies()
 		}
 	}
 	

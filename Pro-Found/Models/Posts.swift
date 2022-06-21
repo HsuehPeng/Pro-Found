@@ -13,6 +13,7 @@ struct Post: Codable {
 	let contentText: String
 	let likes: Int
 	let timestamp: Double
+	let likedBy: [String]
 	let user: User
 }
 
@@ -24,6 +25,7 @@ extension Post {
 		contentText = dictionary["contentText"] as? String ?? ""
 		likes = dictionary["likes"] as? Int ?? 0
 		timestamp = dictionary["timestamp"] as? Double ?? 0
+		likedBy = dictionary["likedBy"] as? [String] ?? []
 	}
 }
 
@@ -32,6 +34,7 @@ struct FirebasePosts: Codable {
 	let contentText: String
 	let likes: Int
 	let timestamp: Double
+	let likedBy: [String]
 }
 
 struct Reply: Codable {

@@ -65,7 +65,7 @@ class PostViewController: UIViewController {
 	
 	private func setupUI() {
 		view.addSubview(tableView)
-		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
+		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
 						 right: view.rightAnchor)
 		
 		view.addSubview(writePostButton)
@@ -121,6 +121,29 @@ extension PostViewController: UITableViewDelegate {
 // MARK: - PostPageFeedCellDelegate
 
 extension PostViewController: PostPageFeedCellDelegate {
+	func checkIfLikedByUser(_ cell: PostPageFeedCell) {
+		guard let post = cell.post, let userID = cell.user?.userID else { return }
+		
+		if post.likedBy.contains(userID) {
+			cell.likeButton.isSelected = true
+		} else {
+			cell.likeButton.isSelected = false
+		}
+	}
+	
+	func likePost(_ cell: PostPageFeedCell) {
+		
+		guard let post = cell.post, let userID = cell.user?.userID else { return }
+		
+		if cell.likeButton.isSelected {
+			PostService.shared.unlikePost(post: post, userID: userID)
+			cell.likeButton.isSelected = false
+		} else {
+			PostService.shared.likePost(post: post, userID: userID)
+			cell.likeButton.isSelected = true
+		}
+	}
+	
 	func goToCommentVC(_ cell: PostPageFeedCell) {
 		guard let indexPath = tableView.indexPath(for: cell), let user = user else { return }
 		let post = filteredPosts[indexPath.row]

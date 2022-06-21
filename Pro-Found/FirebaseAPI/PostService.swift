@@ -24,6 +24,7 @@ struct PostService {
 			"contentText": firebasePost.contentText,
 			"likes": firebasePost.likes,
 			"timestamp": firebasePost.timestamp,
+			"likedBy": firebasePost.likedBy
 		]
 
 		postRef.setData(postData) { error in
@@ -47,25 +48,6 @@ struct PostService {
 //			print("Error writing post to Firestore: \(error)")
 //		}
 //
-	}
-	
-	func uploadComment(firebaseReply: FirebaseReply, completion: @escaping () -> Void) {
-		let replyRef = dbReplies.document()
-		
-		replyRef.setData([
-			"userID": firebaseReply.userID,
-			"contentText": firebaseReply.contentText,
-			"replyID": replyRef.documentID,
-			"timestamp": firebaseReply.timestamp,
-			"postID": firebaseReply.postID
-		]) { error in
-			if let error = error {
-				print("Error uploading comment: \(error)")
-			} else {
-				print("Successfully upload comment")
-				completion()
-			}
-		}
 	}
 	
 	func getPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
@@ -95,6 +77,25 @@ struct PostService {
 				group.notify(queue: DispatchQueue.main) {
 					completion(.success(posts))
 				}
+			}
+		}
+	}
+	
+	func uploadComment(firebaseReply: FirebaseReply, completion: @escaping () -> Void) {
+		let replyRef = dbReplies.document()
+		
+		replyRef.setData([
+			"userID": firebaseReply.userID,
+			"contentText": firebaseReply.contentText,
+			"replyID": replyRef.documentID,
+			"timestamp": firebaseReply.timestamp,
+			"postID": firebaseReply.postID
+		]) { error in
+			if let error = error {
+				print("Error uploading comment: \(error)")
+			} else {
+				print("Successfully upload comment")
+				completion()
 			}
 		}
 	}
@@ -130,6 +131,32 @@ struct PostService {
 		}
 	}
 	
-
+	func likePost(post: Post, userID: String) {
+		
+		dbPosts.document(post.postID).updateData([
+			"likedBy": FieldValue.arrayUnion([userID]),
+			"likes": FieldValue.increment(Int64(1))
+		]) { error in
+			if let error = error {
+				print("Error liking post: \(error)")
+			} else {
+				print("Successfully liked post")
+			}
+		}
+	}
+	
+	func unlikePost(post: Post, userID: String) {
+		
+		dbPosts.document(post.postID).updateData([
+			"likedBy": FieldValue.arrayRemove([userID]),
+			"likes": FieldValue.increment(Int64(-1))
+		]) { error in
+			if let error = error {
+				print("Error unliking post: \(error)")
+			} else {
+				print("Successfully unliked post")
+			}
+		}
+	}
 	
 }

@@ -77,6 +77,7 @@
 		B8F352D22861B9CF0068E87D /* PostCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */; };
 		B8F352D42861CA0F0068E87D /* PostCommentTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */; };
 		B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */; };
+		B8F352D828622B800068E87D /* EventScheduleListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D728622B800068E87D /* EventScheduleListCollectionViewCell.swift */; };
 		B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */; };
 		B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */; };
 		B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C282860625200B88244 /* MKMapView + Extension.swift */; };
@@ -164,6 +165,7 @@
 		B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentViewController.swift; sourceTree = "<group>"; };
 		B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableHeader.swift; sourceTree = "<group>"; };
 		B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableCellTableViewCell.swift; sourceTree = "<group>"; };
+		B8F352D728622B800068E87D /* EventScheduleListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventScheduleListCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailListTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C282860625200B88244 /* MKMapView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView + Extension.swift"; sourceTree = "<group>"; };
@@ -405,6 +407,7 @@
 			isa = PBXGroup;
 			children = (
 				B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */,
+				B8F352D728622B800068E87D /* EventScheduleListCollectionViewCell.swift */,
 				B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */,
 			);
 			path = SchedulePageVCViews;
@@ -597,6 +600,7 @@
 				B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */,
 				B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */,
 				B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */,
+				B8F352D828622B800068E87D /* EventScheduleListCollectionViewCell.swift in Sources */,
 				B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */,
 				B8AB060D2859FA13002110A4 /* Articles.swift in Sources */,
 				B8F99C312860766B00B88244 /* EventDetailContentTableViewCell.swift in Sources */,
