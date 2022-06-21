@@ -154,6 +154,7 @@ class ScheduleViewController: UIViewController {
 								withReuseIdentifier: GeneralHeaderCollectionReusableView.reuseIdentifier)
 		collectionView.register(ScheduleActivityListCollectionViewCell.self,
 								forCellWithReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier)
+		collectionView.register(EventScheduleListCollectionViewCell.self, forCellWithReuseIdentifier: EventScheduleListCollectionViewCell.reuseIdentifier)
 		return collectionView
 	}()
 	
@@ -402,9 +403,11 @@ extension ScheduleViewController: UICollectionViewDataSource {
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let calendarCell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier, for: indexPath)
-		as? CalendarCollectionViewCell else { return UICollectionViewCell() }
-		guard let activityCell = collectionView.dequeueReusableCell(withReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier,
-																	for: indexPath) as? ScheduleActivityListCollectionViewCell else { return UICollectionViewCell() }
+				as? CalendarCollectionViewCell else { fatalError("Can not dequeue CalendarCollectionViewCell") }
+		guard let activityCell = collectionView.dequeueReusableCell(withReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier, for: indexPath)
+				as? ScheduleActivityListCollectionViewCell else { fatalError("Can not dequeue ScheduleActivityListCollectionViewCell") }
+		guard let eventCell = collectionView.dequeueReusableCell(withReuseIdentifier: EventScheduleListCollectionViewCell.reuseIdentifier, for: indexPath)
+				as? EventScheduleListCollectionViewCell else { fatalError("Can not dequeue EventScheduleListCollectionViewCell") }
 		
 		calendarCell.dateLabel.text = totalSquares[indexPath.item]
 		
@@ -416,8 +419,8 @@ extension ScheduleViewController: UICollectionViewDataSource {
 			return activityCell
 		} else {
 			let event = filteredScheduledEvents[indexPath.item]
-			activityCell.event = event
-			return activityCell
+			eventCell.event = event
+			return eventCell
 		}
 
 	}

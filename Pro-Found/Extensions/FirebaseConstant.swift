@@ -16,6 +16,7 @@ let dbPosts =  db.collection("Posts")
 let dbEvents = db.collection("Events")
 let dbArticles = db.collection("Articles")
 let dbTutors = db.collection("Tutors")
+let dbReplies = db.collection("Reply")
 
 let storage = Storage.storage().reference()
 let storageArticleImages = storage.child("ArticleImages")

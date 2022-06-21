@@ -7,9 +7,17 @@
 
 import UIKit
 
+protocol PostPageFeedCellDelegate: AnyObject {
+	func goToCommentVC(_ cell: PostPageFeedCell)
+	func likePost(_ cell: PostPageFeedCell)
+	func checkIfLikedByUser(_ cell: PostPageFeedCell)
+}
+
 class PostPageFeedCell: UITableViewCell {
 	
 	static let reuseIdentifier = "\(PostPageFeedCell.self)"
+	
+	weak var delegate: PostPageFeedCellDelegate?
 	
 	// MARK: - Properties
 	
@@ -68,12 +76,15 @@ class PostPageFeedCell: UITableViewCell {
 		return label
 	}()
 	
-	private lazy var likeButton: UIButton = {
+	lazy var likeButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("   Like", for: .normal)
 		button.setTitleColor(UIColor.dark, for: .normal)
+		button.setTitleColor(UIColor.red40, for: .selected)
 		button.titleLabel?.font = UIFont.customFont(.manropeRegular, size: 14)
 		button.setImage(UIImage.asset(.favorite), for: .normal)
+		button.setImage(UIImage.asset(.favorite)?.withTintColor(.red40), for: .selected)
+		button.addTarget(self, action: #selector(likePost), for: .touchUpInside)
 		return button
 	}()
 	
@@ -83,6 +94,7 @@ class PostPageFeedCell: UITableViewCell {
 		button.setTitleColor(UIColor.dark, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.manropeRegular, size: 14)
 		button.setImage(UIImage.asset(.chat), for: .normal)
+		button.addTarget(self, action: #selector(goToCommentVC), for: .touchUpInside)
 		return button
 	}()
 	
@@ -118,8 +130,8 @@ class PostPageFeedCell: UITableViewCell {
 								right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 16, paddingRight: 16)
 		
 		contentView.addSubview(likeCountLabel)
-		likeCountLabel.anchor(top: contentTextLabel.bottomAnchor, left: contentView.leftAnchor,
-							  paddingTop: 15, paddingLeft: 16)
+		likeCountLabel.anchor(top: contentTextLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor,
+							  paddingTop: 15, paddingLeft: 16, paddingRight: 16)
 		
 		let feedHStack = UIStackView(arrangedSubviews: [likeButton, commentButton])
 		feedHStack.axis = .horizontal
@@ -130,6 +142,16 @@ class PostPageFeedCell: UITableViewCell {
 
 	}
 	
+	// MARK: - Actions
+	
+	@objc func goToCommentVC() {
+		delegate?.goToCommentVC(self)
+	}
+	
+	@objc func likePost() {
+		delegate?.likePost(self)
+	}
+	
 	// MARK: - Helpers
 	
 	func configure() {
@@ -137,10 +159,11 @@ class PostPageFeedCell: UITableViewCell {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "h:mm a ∙ MM/dd/yyyy"
 		let postDate = Date(timeIntervalSince1970: post.timestamp)
-		
 		feedNameLabel.text = user.name
 		feedTimeLabel.text = dateFormatter.string(from: postDate)
 		contentTextLabel.text = post.contentText
-		likeCountLabel.text = String(post.likes)
+		likeCountLabel.text = "\(post.likes) likes"
+		
+		delegate?.checkIfLikedByUser(self)
 	}
 }
