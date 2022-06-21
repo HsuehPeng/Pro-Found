@@ -76,6 +76,7 @@ class CourseDetailViewController: UIViewController {
 		setupUI()
 		convertAdressToCLLocation()
 		checkIfFollowed()
+		checkIfSamePerson()
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -134,6 +135,13 @@ class CourseDetailViewController: UIViewController {
 		UserServie.shared.checkIfFollow(senderID: user.userID, receiveriD: course.tutor.userID) { [weak self] bool in
 			guard let self = self else { return }
 			self.isFollow = bool
+		}
+	}
+	
+	func checkIfSamePerson() {
+		if user.userID == course.userID {
+			scheduleCourseButton.isEnabled = false
+			scheduleCourseButton.backgroundColor = .dark10
 		}
 	}
 	

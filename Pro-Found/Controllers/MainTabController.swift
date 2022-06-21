@@ -17,6 +17,19 @@ class MainTabController: UITabBarController {
 			guard let homeNav = viewControllers?[0] as? UINavigationController else { return }
 			guard let homevc = homeNav.viewControllers.first as? HomeViewController else { return }
 			homevc.user = user
+			
+			
+//			guard let user = user else { return }
+//			UserServie.shared.getUserData(uid: user.userID) { result in
+//				switch result {
+//				case .success(let user):
+//					print(user)
+//				case .failure(let error):
+//					print(error)
+//				}
+//			}
+			
+			
 		}
 	}
 	
@@ -25,6 +38,7 @@ class MainTabController: UITabBarController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		authenticateUserAndConfigureUI()
+				
 	}
 	
 	// MARK: - UI

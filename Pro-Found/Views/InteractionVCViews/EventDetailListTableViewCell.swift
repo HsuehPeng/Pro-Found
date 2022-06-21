@@ -122,7 +122,7 @@ class EventDetailListTableViewCell: UITableViewCell {
 	// MARK: - Helpers
 	
 	func configureUI() {
-		guard let event = event, let isFollow = isFollow else { return }
+		guard let event = event, let isFollow = isFollow, let uid = Auth.auth().currentUser?.uid else { return }
 		let eventImageUrl = URL(string: event.organizer.profileImageURL)
 		eventImageView.kf.setImage(with: eventImageUrl)
 		eventNameLabel.text = event.organizerName
@@ -133,6 +133,11 @@ class EventDetailListTableViewCell: UITableViewCell {
 		let date = dateformatter.string(from: eventDate)
 
 		dateLabel.text = date
+		
+		if event.userID == uid {
+			followButton.isEnabled = false
+			followButton.backgroundColor = .dark10
+		}
 		
 		if isFollow {
 			followButton.setTitle("Unfollow", for: .normal)

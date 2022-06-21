@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Cosmos
 
 enum ProfileActions: String {
 	case follow = "Follow"
@@ -31,6 +32,8 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	var isFollowed: Bool = false
 	
+	var rateViewIsUp: Bool = false
+	
 	private let backImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFill
@@ -40,7 +43,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	private let profileView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .ocean20
+		view.backgroundColor = .white
 		view.layer.cornerRadius = 24
 		return view
 	}()
@@ -58,9 +61,10 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private let usernameLabel: UILabel = {
+	private let subjectLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14),
-											   textColor: UIColor.dark40, text: "TestUsername")
+											   textColor: UIColor.dark40, text: "Subject")
+				
 		return label
 	}()
 	
@@ -76,7 +80,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	private let followerNumber: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 16),
-											   textColor: UIColor.dark60, text: "100")
+												 textColor: UIColor.orange40, text: "100")
 		return label
 	}()
 	
@@ -88,7 +92,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	private let classBookedNumber: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 16),
-											   textColor: UIColor.dark60, text: "50")
+											   textColor: UIColor.orange40, text: "50")
 		return label
 	}()
 	
@@ -98,10 +102,15 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private let ratingNumber: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 16),
-											   textColor: UIColor.dark60, text: "5/5")
-		return label
+	private lazy var ratingButtonNumber: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.star)?.withTintColor(.orange40)
+		button.setImage(image, for: .normal)
+		button.setTitle("5", for: .normal)
+		button.setTitleColor(UIColor.orange40, for: .normal)
+		button.addTarget(self, action: #selector(handleRateTutor), for: .touchUpInside)
+		
+		return button
 	}()
 	
 	private let ratingLabel: UILabel = {
@@ -136,6 +145,31 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		return label
 	}()
 	
+	private let ratingView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .dark40
+		view.setDimensions(width: 170, height: 40)
+		view.layer.cornerRadius = 20
+
+		return view
+	}()
+	
+	private let starView: CosmosView = {
+		let starView = CosmosView()
+		starView.settings.filledColor = .orange40
+		starView.settings.fillMode = .full
+		starView.rating = 0
+		return starView
+	}()
+	
+	private lazy var sendButton: UIButton = {
+		lazy var sentButton = UIButton()
+		let image = UIImage.asset(.send)?.withTintColor(.orange40)
+		sentButton.setImage(image, for: .normal)
+		sentButton.addTarget(self, action: #selector(handleSendRating), for: .touchUpInside)
+		return sentButton
+	}()
+	
 	// MARK: - Lifecycle
 	
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -165,8 +199,8 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		profileView.addSubview(nameLabel)
 		nameLabel.anchor(top: profileView.topAnchor, left: profileView.leftAnchor, paddingTop: 61, paddingLeft: 24)
 		
-		profileView.addSubview(usernameLabel)
-		usernameLabel.anchor(top: nameLabel.bottomAnchor, left: profileView.leftAnchor, paddingTop: 4, paddingLeft: 24)
+		profileView.addSubview(subjectLabel)
+		subjectLabel.anchor(top: nameLabel.bottomAnchor, left: profileView.leftAnchor, paddingTop: 4, paddingLeft: 24)
 		
 		profileView.addSubview(profileActionButton)
 		profileActionButton.centerY(inView: nameLabel)
@@ -182,7 +216,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		classBookedVStack.alignment = .center
 		classBookedVStack.spacing = 2
 		
-		let ratingVStack = UIStackView(arrangedSubviews: [ratingNumber, ratingLabel])
+		let ratingVStack = UIStackView(arrangedSubviews: [ratingButtonNumber, ratingLabel])
 		ratingVStack.axis = .vertical
 		ratingVStack.alignment = .center
 		ratingVStack.spacing = 2
@@ -190,7 +224,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		let profileViewHStack = UIStackView(arrangedSubviews: [followersVStack, classBookedVStack, ratingVStack])
 		profileViewHStack.distribution = .fillEqually
 		profileView.addSubview(profileViewHStack)
-		profileViewHStack.anchor(top: usernameLabel.bottomAnchor, left: profileView.leftAnchor, right: profileView.rightAnchor, paddingTop: 36)
+		profileViewHStack.anchor(top: subjectLabel.bottomAnchor, left: profileView.leftAnchor, right: profileView.rightAnchor, paddingTop: 36)
 		
 		profileView.addSubview(introTextLabel)
 		introTextLabel.anchor(top: profileViewHStack.bottomAnchor, left: profileView.leftAnchor,
@@ -203,12 +237,53 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		profileView.addSubview(majorSubjectLabel)
 		majorSubjectLabel.anchor(top: schoolLabel.bottomAnchor, left: profileView.leftAnchor, bottom: profileView.bottomAnchor,
 							  right: profileView.rightAnchor, paddingLeft: 24, paddingBottom: 36, paddingRight: 24)
+		
+		ratingView.addSubview(starView)
+		starView.centerY(inView: ratingView, leftAnchor: ratingView.leftAnchor, paddingLeft: 12)
+		
+		ratingView.addSubview(sendButton)
+		sendButton.centerY(inView: ratingView, leftAnchor: starView.rightAnchor, paddingLeft: 8)
 	}
 	
 	// MARK: - Actions
 	
+	@objc func handleRateTutor() {
+		guard let user = user, let tutor = tutor, user.userID != tutor.userID else { return }
+		
+		if !rateViewIsUp {
+			contentView.addSubview(ratingView)
+			ratingView.anchor(bottom: ratingButtonNumber.topAnchor, right: contentView.rightAnchor, paddingBottom: 8, paddingRight: 8)
+			ratingView.alpha = 0
+			ratingView.transform = CGAffineTransform(translationX: 10, y: 10)
+			rateViewIsUp = true
+			UIView.animate(withDuration: 0.4) {
+				self.ratingView.alpha = 1
+				self.ratingView.transform = CGAffineTransform.identity
+			}
+		} else {
+			rateViewIsUp = false
+			UIView.animate(withDuration: 0.4, animations: {
+				self.ratingView.alpha = 0
+			}) { status in
+				self.ratingView.removeFromSuperview()
+			}
+		}
+	}
+	
+	@objc func handleSendRating() {
+		guard let user = user, let tutor = tutor else { return }
+		UserServie.shared.rateTutor(senderID: user.userID, receiverID: tutor.userID, rating: starView.rating)
+		rateViewIsUp = false
+		UIView.animate(withDuration: 0.4, animations: {
+			self.ratingView.alpha = 0
+		}) { status in
+			self.ratingView.removeFromSuperview()
+		}
+	}
+	
 	@objc func handleProfileAction() {
 		guard let user = user, let tutor = tutor else { return }
+		
 		if isFollowed {
 			UserServie.shared.unfollow(senderID: user.userID, receiverID: tutor.userID)
 			profileActionButton.setTitle("Follow", for: .normal)
@@ -225,11 +300,17 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	func configure() {
 		guard let tutor = tutor, let user = user else { return }
 		nameLabel.text = tutor.name
+		subjectLabel.text = tutor.subject
+		followerNumber.text = String(tutor.followers.count)
 		classBookedNumber.text = "\(tutor.courseBooked)"
+		ratingButtonNumber.setTitle(calculateAverageRating(tutor: tutor), for: .normal)
+		introTextLabel.text = tutor.introContentText
+		schoolLabel.text = tutor.school
+		majorSubjectLabel.text = tutor.schoolMajor
 		
 		if tutor.userID == user.userID {
 			profileActionButton.isEnabled = false
-			profileActionButton.backgroundColor = .black
+			profileActionButton.backgroundColor = .dark10
 		}
 		
 		if isFollowed {
@@ -237,6 +318,15 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		} else {
 			profileActionButton.setTitle("Follow", for: .normal)
 		}
-		
+	}
+	
+	func calculateAverageRating(tutor: User) -> String {
+		var ratingSum = 0.0
+		for rating in tutor.ratings {
+			ratingSum += rating.first?.value ?? 0
+		}
+		let averageRating = ratingSum / Double(tutor.ratings.count)
+		let roudedAverageRating = round(averageRating * 10) / 10
+		return String(roudedAverageRating)
 	}
 }

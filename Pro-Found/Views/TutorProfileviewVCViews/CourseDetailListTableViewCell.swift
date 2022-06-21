@@ -172,13 +172,19 @@ class CourseDetailListTableViewCell: UITableViewCell {
 	// MARK: - Helpers
 	
 	func configureUI() {
-		guard let course = course, let isFollow = isFollow else { return }
+		guard let course = course, let isFollow = isFollow, let uid = Auth.auth().currentUser?.uid else { return }
 		let tutorImageUrl = URL(string: course.tutor.profileImageURL)
 		tutorImageView.kf.setImage(with: tutorImageUrl)
 		tutorNameLabel.text = course.tutorName
 		addressLabel.text = course.location
 		subjectLabel.text = course.subject
 		durationLabel.text = "\(course.hours) hour"
+		
+		if course.userID == uid {
+			followButton.isEnabled = false
+			followButton.backgroundColor = .dark10
+		}
+		
 		if isFollow {
 			followButton.setTitle("Unfollow", for: .normal)
 		} else {

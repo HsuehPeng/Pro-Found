@@ -249,4 +249,18 @@ struct UserServie {
 		}
 	}
 	
+	func rateTutor(senderID: String, receiverID: String, rating: Double) {
+		
+		dbUsers.document(receiverID).updateData([
+			"ratings": FieldValue.arrayUnion([[senderID: rating]]),
+		]) { error in
+			if let error = error {
+				print("Error rating tutor: \(error)")
+			} else {
+				print("Rate tutor successfully")
+			}
+
+		}
+	}
+	
 }

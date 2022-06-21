@@ -43,7 +43,8 @@ class EventDetailViewController: UIViewController {
 	}()
 	
 	private lazy var scheduleEventButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book Course")
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book Event")
+		button.setTitle("Booked", for: .disabled)
 		button.addTarget(self, action: #selector(handleBookEvent), for: .touchUpInside)
 		button.widthAnchor.constraint(equalToConstant: 200).isActive = true
 		return button
