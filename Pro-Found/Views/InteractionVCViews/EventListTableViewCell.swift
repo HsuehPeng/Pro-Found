@@ -64,6 +64,7 @@ class EventListTableViewCell: UITableViewCell {
 	private let addressLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: .dark40, text: "Event address")
+		label.numberOfLines = 0
 		return label
 	}()
 	

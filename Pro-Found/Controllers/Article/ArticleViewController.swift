@@ -225,7 +225,7 @@ extension ArticleViewController: UITableViewDataSource {
 
 extension ArticleViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 236
+		return 250
 	}
 	
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

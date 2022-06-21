@@ -16,7 +16,7 @@ struct Article: Codable {
 	let timestamp: Double
 	let contentText: String
 	let imageURL: String
-	let ratings: [Double]
+	let ratings: [[String: Double]]
 	var user: User
 }
 
@@ -31,7 +31,7 @@ extension Article {
 		contentText = dictionary["contentText"] as? String ?? ""
 		authorName = dictionary["authorName"] as? String ?? ""
 		imageURL = dictionary["imageURL"] as? String ?? ""
-		ratings = dictionary["ratings"] as? [Double] ?? []
+		ratings = dictionary["ratings"] as? [[String: Double]] ?? []
 	}
 }
 
@@ -43,5 +43,5 @@ struct FirebaseArticle: Codable {
 	let timestamp: Double
 	let contentText: String
 	let imageURL: String
-	let ratings: [Double]
+	let ratings: [[String: Double]]
 }

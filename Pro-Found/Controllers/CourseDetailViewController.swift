@@ -27,7 +27,7 @@ class CourseDetailViewController: UIViewController {
 	var courseLocation: CLLocation?
 	
 	private let tableView: UITableView = {
-		let tableView = UITableView()
+		let tableView = UITableView(frame: .zero, style: .grouped)
 		tableView.separatorStyle = .none
 		tableView.register(CourseDetailListTableViewCell.self, forCellReuseIdentifier: CourseDetailListTableViewCell.reuseIdentifier)
 		tableView.register(CourseDetailIntroTableViewCell.self, forCellReuseIdentifier: CourseDetailIntroTableViewCell.reuseIdentifier)

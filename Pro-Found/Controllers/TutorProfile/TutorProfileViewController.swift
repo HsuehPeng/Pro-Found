@@ -23,6 +23,13 @@ class TutorProfileViewController: UIViewController {
 			tableView.reloadData()
 		}
 	}
+	
+	var tutorArticles = [Article]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
+	
 	var isFollowed: Bool = false {
 		didSet {
 			tableView.reloadData()
@@ -42,19 +49,21 @@ class TutorProfileViewController: UIViewController {
 		button.addTarget(self, action: #selector(popVC), for: .touchUpInside)
 		button.setDimensions(width: 36, height: 36)
 		button.layer.cornerRadius = 36 / 2
-		button.backgroundColor = .dark.withAlphaComponent(0.2)
+		button.backgroundColor = .dark.withAlphaComponent(0.3)
 		return button
 	}()
 	
 	private let tableView: UITableView = {
-		let tableView = UITableView()
+		let tableView = UITableView(frame: .zero, style: .grouped)
 		tableView.register(TutorProfileMainTableViewCell.self, forCellReuseIdentifier: TutorProfileMainTableViewCell.reuseIdentifier)
 		tableView.register(TutorProfileClassTableViewCell.self, forCellReuseIdentifier: TutorProfileClassTableViewCell.reuseIdentifier)
+		tableView.register(ArticleListTableViewCell.self, forCellReuseIdentifier: ArticleListTableViewCell.reuseIdentifier)
 		tableView.register(TutorProfileClassTableViewHeader.self, forHeaderFooterViewReuseIdentifier: TutorProfileClassTableViewHeader.reuseIdentifier)
+		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
 		tableView.contentInsetAdjustmentBehavior = .never
 		tableView.separatorStyle = .none
 		tableView.translatesAutoresizingMaskIntoConstraints = false
-//		tableView.sectionHeaderTopPadding = 0
+		tableView.sectionHeaderTopPadding = 0
 		return tableView
 	}()
 	
@@ -86,6 +95,7 @@ class TutorProfileViewController: UIViewController {
 		navigationController?.navigationBar.isHidden = true
 		tabBarController?.tabBar.isHidden = false
 		fetchTutorCourses()
+		fetchTutorArticles()
 		checkIfFollowed()
 	}
 	
@@ -115,9 +125,21 @@ class TutorProfileViewController: UIViewController {
 		CourseServie.shared.fetchUserCourses(userID: tutor.userID) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
-			case.success(let courses):
+			case .success(let courses):
 				self.tutorCourses = courses
-			case.failure(let error):
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func fetchTutorArticles() {
+		ArticleService.shared.fetchArticles { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let articles):
+				self.tutorArticles = articles
+			case . failure(let error):
 				print(error)
 			}
 		}
@@ -136,33 +158,41 @@ class TutorProfileViewController: UIViewController {
 
 extension TutorProfileViewController: UITableViewDataSource {
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return 2
+		return 3
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
 			return 1
-		} else {
+		} else if section == 1 {
 			return tutorCourses.count
+		} else {
+			return tutorArticles.count
 		}
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let mainCell = tableView.dequeueReusableCell(withIdentifier: TutorProfileMainTableViewCell.reuseIdentifier)
-				as? TutorProfileMainTableViewCell else { return UITableViewCell() }
+				as? TutorProfileMainTableViewCell else { fatalError("Can not dequeue TutorProfileMainTableViewCell") }
 		guard let courseCell = tableView.dequeueReusableCell(withIdentifier: TutorProfileClassTableViewCell.reuseIdentifier)
-				as? TutorProfileClassTableViewCell else { return UITableViewCell()}
+				as? TutorProfileClassTableViewCell else { fatalError("Can not dequeue TutorProfileClassTableViewCell")}
+		guard let articleCell = tableView.dequeueReusableCell(withIdentifier: ArticleListTableViewCell.reuseIdentifier)
+				as? ArticleListTableViewCell else { fatalError("Can not dequeue ArticleListTableViewCell") }
 		
 		if indexPath.section == 0 {
 			mainCell.isFollowed = isFollowed
 			mainCell.tutor = tutor
 			mainCell.user = user
 			return mainCell
-		} else {
+		} else if indexPath.section == 1{
 			courseCell.delegate = self
 			courseCell.course = tutorCourses[indexPath.row]
 			return courseCell
+		} else {
+			articleCell.article = tutorArticles[indexPath.row]
+			return articleCell
 		}
+		
 	}
 	
 }
@@ -173,8 +203,11 @@ extension TutorProfileViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		if indexPath.section == 1 {
-			let courseDetailVC = CourseDetailViewController(course: tutorCourses[indexPath.item], user: user)
+			let courseDetailVC = CourseDetailViewController(course: tutorCourses[indexPath.row], user: user)
 			navigationController?.pushViewController(courseDetailVC, animated: true)
+		} else if indexPath.section == 2 {
+			let articleDetailVC = ArticleDetailViewController(article: tutorArticles[indexPath.row])
+			navigationController?.pushViewController(articleDetailVC, animated: true)
 		}
 	}
 	
@@ -183,20 +216,27 @@ extension TutorProfileViewController: UITableViewDelegate {
 	}
 	
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: TutorProfileClassTableViewHeader.reuseIdentifier)
+		guard let courseHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: TutorProfileClassTableViewHeader.reuseIdentifier)
 				as? TutorProfileClassTableViewHeader else { return UITableViewHeaderFooterView() }
+		guard let articleHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
+				as? GeneralTableViewHeader else { fatalError("Can not dequeue GeneralTableViewHeader") }
+		
 		
 		if section == 1 {
-			header.delegate = self
-			header.tutor = tutor
-			return header
+			courseHeader.delegate = self
+			courseHeader.tutor = tutor
+			return courseHeader
+		} else if section == 2 {
+			articleHeader.titleLabel.text = "Articles"
+			articleHeader.seeAllButton.isHidden = true
+			return articleHeader
 		}
 		
 		return nil
 	}
 	
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		if section == 1 {
+		if section == 1 || section == 2 {
 			return 50
 		}
 		

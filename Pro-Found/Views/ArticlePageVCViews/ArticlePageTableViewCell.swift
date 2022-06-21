@@ -45,9 +45,7 @@ class ArticlePageTableViewCell: UITableViewCell {
 		
 		collectionView.dataSource = self
 		collectionView.delegate = self
-		
-		contentView.backgroundColor = .red
-		
+				
 		setupUI()
 	}
 	

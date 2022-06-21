@@ -43,7 +43,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	private let profileView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		view.layer.cornerRadius = 24
 		return view
 	}()
@@ -106,7 +106,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		let button = UIButton()
 		let image = UIImage.asset(.star)?.withTintColor(.orange40)
 		button.setImage(image, for: .normal)
-		button.setTitle("5", for: .normal)
+		button.setTitle("0", for: .normal)
 		button.setTitleColor(UIColor.orange40, for: .normal)
 		button.addTarget(self, action: #selector(handleRateTutor), for: .touchUpInside)
 		
@@ -256,13 +256,13 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 			ratingView.alpha = 0
 			ratingView.transform = CGAffineTransform(translationX: 10, y: 10)
 			rateViewIsUp = true
-			UIView.animate(withDuration: 0.4) {
+			UIView.animate(withDuration: 0.3) {
 				self.ratingView.alpha = 1
 				self.ratingView.transform = CGAffineTransform.identity
 			}
 		} else {
 			rateViewIsUp = false
-			UIView.animate(withDuration: 0.4, animations: {
+			UIView.animate(withDuration: 0.3, animations: {
 				self.ratingView.alpha = 0
 			}) { status in
 				self.ratingView.removeFromSuperview()

@@ -73,6 +73,7 @@
 		B8CC5EB028588BD0004C5D7A /* GeneralTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */; };
 		B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */; };
 		B8CC5EB528598D7C004C5D7A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */; };
+		B8F352D02861A61F0068E87D /* ArticleListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */; };
 		B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */; };
 		B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */; };
 		B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C282860625200B88244 /* MKMapView + Extension.swift */; };
@@ -156,6 +157,7 @@
 		B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTableViewHeader.swift; sourceTree = "<group>"; };
 		B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPageFeedCell.swift; sourceTree = "<group>"; };
 		B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailListTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C282860625200B88244 /* MKMapView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView + Extension.swift"; sourceTree = "<group>"; };
@@ -254,6 +256,7 @@
 				B8F99C3228607BA600B88244 /* CourseDetailTableViewHeader.swift */,
 				B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */,
 				B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */,
+				B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */,
 			);
 			path = TutorProfileviewVCViews;
 			sourceTree = "<group>";
@@ -638,6 +641,7 @@
 				B8AB06112859FA13002110A4 /* Events.swift in Sources */,
 				B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */,
 				B8AB0669285DFBB8002110A4 /* ArticleDetailViewController.swift in Sources */,
+				B8F352D02861A61F0068E87D /* ArticleListTableViewCell.swift in Sources */,
 				B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */,
 				B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */,
 				B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */,

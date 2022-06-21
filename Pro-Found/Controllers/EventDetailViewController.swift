@@ -27,7 +27,7 @@ class EventDetailViewController: UIViewController {
 	var eventLocation: CLLocation?
 	
 	private let tableView: UITableView = {
-		let tableView = UITableView()
+		let tableView = UITableView(frame: .zero, style: .grouped)
 		tableView.separatorStyle = .none
 		tableView.register(EventDetailListTableViewCell.self, forCellReuseIdentifier: EventDetailListTableViewCell.reuseIdentifier)
 		tableView.register(GeneralMapCellTableViewCell.self, forCellReuseIdentifier: GeneralMapCellTableViewCell.reuseIdentifier)

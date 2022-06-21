@@ -92,4 +92,18 @@ struct ArticleService {
 		
 	}
 	
+	func rateArticle(senderID: String, articleID: String, rating: Double) {
+		
+		dbArticles.document(articleID).updateData([
+			"ratings": FieldValue.arrayUnion([[senderID: rating]]),
+		]) { error in
+			if let error = error {
+				print("Error rating article: \(error)")
+			} else {
+				print("Rate article successfully")
+			}
+
+		}
+	}
+	
 }

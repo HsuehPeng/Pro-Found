@@ -18,6 +18,7 @@ class ArticleDetailViewController: UIViewController {
 		tableView.register(ArticleDetailIntroTableViewCell.self, forCellReuseIdentifier: ArticleDetailIntroTableViewCell.reuseIdentifier)
 		tableView.register(ArticleDetailContentTableViewCell.self, forCellReuseIdentifier: ArticleDetailContentTableViewCell.reuseIdentifier)
 		tableView.separatorStyle = .none
+		tableView.allowsSelection = false
 		return tableView
 	}()
 	
