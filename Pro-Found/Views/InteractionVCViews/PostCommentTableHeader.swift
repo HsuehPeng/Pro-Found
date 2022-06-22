@@ -28,7 +28,8 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		imageView.layer.cornerRadius = 36 / 2
 		imageView.backgroundColor = .gray
 		imageView.translatesAutoresizingMaskIntoConstraints = false
-		
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 //		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
 //		imageView.addGestureRecognizer(tap)
 //		imageView.isUserInteractionEnabled = true

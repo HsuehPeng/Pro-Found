@@ -7,12 +7,18 @@
 
 import UIKit
 import FirebaseAuth
+import Kingfisher
+import PhotosUI
 
 class ProfileViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var user: User?
+	var user: User? {
+		didSet {
+			configureUI()
+		}
+	}
 	
 	private let topView: UIView = {
 		let view = UIView()
@@ -21,11 +27,13 @@ class ProfileViewController: UIViewController {
 		return view
 	}()
 	
-	private let profileImageView: UIView = {
+	private let profileImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 64, height: 64)
 		imageView.layer.cornerRadius = 64 / 2
 		imageView.backgroundColor = .dark20
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -62,6 +70,7 @@ class ProfileViewController: UIViewController {
 	private lazy var changePhotoButton: UIButton = {
 		let button = CustomUIElements().makeSmallButton(buttonColor: .light60, buttonTextColor: .orange,
 														borderColor: .clear, buttonText: "Change Photo")
+		button.addTarget(self, action: #selector(handlePickingPhoto), for: .touchUpInside)
 		button.widthAnchor.constraint(equalToConstant: 116).isActive = true
 		return button
 	}()
@@ -149,6 +158,14 @@ class ProfileViewController: UIViewController {
 		navigationController?.pushViewController(editProfileVC, animated: true)
 	}
 	
+	@objc func handlePickingPhoto() {
+		var configuration = PHPickerConfiguration()
+		configuration.selectionLimit = 1
+		let picker = PHPickerViewController(configuration: configuration)
+		picker.delegate = self
+		self.present(picker, animated: true, completion: nil)
+	}
+	
 	@objc func handleLogout() {
 		do {
 			try Auth.auth().signOut()
@@ -178,5 +195,41 @@ class ProfileViewController: UIViewController {
 			}
 		}
 	}
+	
+	func configureUI() {
+		guard let user = user else { return }
+		let imageUrl = URL(string: user.profileImageURL)
+		profileImageView.kf.setImage(with: imageUrl)
+		nameLabel.text = user.name
+		tutorBadgeImageView.isHidden = !user.isTutor
+		universityLabel.text = user.school
+	}
 
+}
+
+// MARK: - PHPickerViewControllerDelegate
+
+extension ProfileViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		guard let user = user else { return }
+		picker.dismiss(animated: true)
+		let itemProviders = results.map(\.itemProvider)
+		for item in itemProviders {
+			if item.canLoadObject(ofClass: UIImage.self) {
+				item.loadObject(ofClass: UIImage.self) { [weak self](image, error) in
+					guard let self = self else { return }
+					DispatchQueue.main.async {
+						if let image = image as? UIImage {
+							
+							self.profileImageView.image = nil
+							self.profileImageView.image = image
+							UserServie.shared.uploadUserImageAndDownloadImageURL(userProfileImage: image, user: user) { result in
+								print("Photo uploaded")
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

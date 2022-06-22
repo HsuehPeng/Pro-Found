@@ -25,6 +25,8 @@ class ArticleListTableViewCell: UITableViewCell {
 		imageView.layer.cornerRadius = 10
 		imageView.setDimensions(width: 100, height: 128)
 		imageView.backgroundColor = .dark20
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	

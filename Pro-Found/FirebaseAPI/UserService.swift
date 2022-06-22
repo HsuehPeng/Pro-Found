@@ -13,6 +13,60 @@ struct UserServie {
 	
 	static let shared = UserServie()
 	
+	func uploadUserImageAndDownloadImageURL(userProfileImage: UIImage, user: User, completion: @escaping (Result<String, Error>) -> Void) {
+		guard let imageData = userProfileImage.jpegData(compressionQuality: 0.3) else { return }
+		let imageFileName = user.userID
+		let storageRef = storageUserProfileImages.child(imageFileName)
+		
+		storageRef.putData(imageData, metadata: nil) { metadata, error in
+			
+			if let error = error {
+				print(error)
+			}
+
+			storageRef.downloadURL { url, error in
+				guard let url = url?.absoluteString else { return }
+				
+				dbUsers.document(user.userID).updateData([
+					"profileImageURL": url
+				]) { error in
+					if let error = error {
+						completion(.failure(error))
+					} else {
+						completion(.success(url))
+					}
+				}
+			}
+		}
+	}
+	
+	func uploadUserBackgroundImageAndDownloadImageURL(userProfileImage: UIImage, user: User, completion: @escaping (Result<String, Error>) -> Void) {
+		guard let imageData = userProfileImage.jpegData(compressionQuality: 0.3) else { return }
+		let imageFileName = user.userID
+		let storageRef = storageUserBackgroundImages.child(imageFileName)
+		
+		storageRef.putData(imageData, metadata: nil) { metadata, error in
+			
+			if let error = error {
+				print(error)
+			}
+
+			storageRef.downloadURL { url, error in
+				guard let url = url?.absoluteString else { return }
+				
+				dbUsers.document(user.userID).updateData([
+					"profileImageURL": url
+				]) { error in
+					if let error = error {
+						completion(.failure(error))
+					} else {
+						completion(.success(url))
+					}
+				}
+			}
+		}
+	}
+	
 	func uploadUserData(user: User, completion: @escaping () -> Void) {
 		let userRef = dbUsers.document(user.userID)
 //		let userData: [String: Any] = [
@@ -52,6 +106,10 @@ struct UserServie {
 		} catch let error {
 			print("Error uploading user to Firestore: \(error)")
 		}
+		
+	}
+	
+	func uploadUserPhoto() {
 		
 	}
 	

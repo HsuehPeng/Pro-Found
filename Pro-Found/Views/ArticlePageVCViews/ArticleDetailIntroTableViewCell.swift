@@ -26,9 +26,10 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	
 	private let articleImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.setDimensions(width: 132, height: 200)
+		imageView.setDimensions(width: 160, height: 200)
 		imageView.layer.cornerRadius = 12
-		imageView.contentMode = .scaleAspectFit
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	

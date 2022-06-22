@@ -8,6 +8,8 @@
 import UIKit
 import FirebaseAuth
 import Cosmos
+import Kingfisher
+import PhotosUI
 
 enum ProfileActions: String {
 	case follow = "Follow"
@@ -34,10 +36,13 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	var rateViewIsUp: Bool = false
 	
-	private let backImageView: UIImageView = {
+	lazy var backImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.contentMode = .scaleAspectFill
 		imageView.backgroundColor = .systemYellow
+		let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleBackgroudImageTap))
+		imageView.isUserInteractionEnabled = true
+		imageView.addGestureRecognizer(tapGestureRecognizer)
 		return imageView
 	}()
 	
@@ -52,6 +57,8 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		let imageView = UIImageView()
 		imageView.layer.cornerRadius = 24
 		imageView.backgroundColor = .gray
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -247,6 +254,10 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	// MARK: - Actions
 	
+	@objc func handleBackgroudImageTap() {
+		
+	}
+	
 	@objc func handleRateTutor() {
 		guard let user = user, let tutor = tutor, user.userID != tutor.userID else { return }
 		
@@ -299,7 +310,9 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	func configure() {
 		guard let tutor = tutor, let user = user else { return }
+		let imageUrl = URL(string: user.profileImageURL)
 		nameLabel.text = tutor.name
+		profilePhotoImageView.kf.setImage(with: imageUrl)
 		subjectLabel.text = tutor.subject
 		followerNumber.text = String(tutor.followers.count)
 		classBookedNumber.text = "\(tutor.courseBooked)"

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 protocol PostPageFeedCellDelegate: AnyObject {
 	func goToCommentVC(_ cell: PostPageFeedCell)
@@ -37,6 +38,8 @@ class PostPageFeedCell: UITableViewCell {
 		imageView.layer.cornerRadius = 36 / 2
 		imageView.backgroundColor = .gray
 		imageView.translatesAutoresizingMaskIntoConstraints = false
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		
 //		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
 //		imageView.addGestureRecognizer(tap)
@@ -156,9 +159,11 @@ class PostPageFeedCell: UITableViewCell {
 	
 	func configure() {
 		guard let post = post, let user = user else { return }
+		let imageUrl = URL(string: post.user.profileImageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "h:mm a ∙ MM/dd/yyyy"
 		let postDate = Date(timeIntervalSince1970: post.timestamp)
+		profileImageView.kf.setImage(with: imageUrl)
 		feedNameLabel.text = user.name
 		feedTimeLabel.text = dateFormatter.string(from: postDate)
 		contentTextLabel.text = post.contentText

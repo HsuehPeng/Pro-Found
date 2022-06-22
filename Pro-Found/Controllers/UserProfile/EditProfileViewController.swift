@@ -13,20 +13,20 @@ class EditProfileViewController: UIViewController {
 	
 	let user: User
 	
-	private let firstnameTitleLabel: UILabel = {
+	private let nameTitleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 12),
-												 textColor: UIColor.dark, text: "First Name")
+												 textColor: UIColor.dark, text: "Name")
 		return label
 	}()
 	
-	private let firstnameTitleTextField: UITextField = {
+	private let nameTitleTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = UIFont.customFont(.manropeRegular, size: 12)
-		textField.placeholder = "First Name"
+		textField.placeholder = ""
 		return textField
 	}()
 	
-	private let firstnameDividerView: UIView = {
+	private let nameDividerView: UIView = {
 		let dividerView = UIView()
 		dividerView.backgroundColor = .dark20
 		dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
@@ -42,7 +42,7 @@ class EditProfileViewController: UIViewController {
 	private let lastnameTitleTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = UIFont.customFont(.manropeRegular, size: 12)
-		textField.placeholder = "Last Name"
+		textField.placeholder = ""
 		return textField
 	}()
 	
@@ -152,20 +152,12 @@ class EditProfileViewController: UIViewController {
 	
 	private func setupUI() {
 		
-		let firstNameVStack = UIStackView(arrangedSubviews: [firstnameTitleLabel, firstnameTitleTextField, firstnameDividerView])
-		firstNameVStack.axis = .vertical
-		firstNameVStack.spacing = 12
+		let nameVStack = UIStackView(arrangedSubviews: [nameTitleLabel, nameTitleTextField, nameDividerView])
+		nameVStack.axis = .vertical
+		nameVStack.spacing = 12
 		
-		view.addSubview(firstNameVStack)
-		firstNameVStack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor,
-							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
-		
-		let lastNameVStack = UIStackView(arrangedSubviews: [lastnameTitleLabel, lastnameTitleTextField, lastnameDividerView])
-		lastNameVStack.axis = .vertical
-		lastNameVStack.spacing = 12
-		
-		view.addSubview(lastNameVStack)
-		lastNameVStack.anchor(top: firstNameVStack.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+		view.addSubview(nameVStack)
+		nameVStack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor,
 							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
 		let emailVStack = UIStackView(arrangedSubviews: [emailTitleLabel, emailTitleTextField, emailDividerView])
@@ -173,7 +165,7 @@ class EditProfileViewController: UIViewController {
 		emailVStack.spacing = 12
 		
 		view.addSubview(emailVStack)
-		emailVStack.anchor(top: lastNameVStack.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+		emailVStack.anchor(top: nameVStack.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
 							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
 		let schoolVStack = UIStackView(arrangedSubviews: [schoolTitleLabel, schoolTitleTextField, schoolDividerView])
@@ -222,7 +214,7 @@ class EditProfileViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func handleDoneEditting() {
-		guard let firstname = firstnameTitleTextField.text, let lastname = lastnameTitleTextField.text, let email = emailTitleTextField.text,
+		guard let firstname = nameTitleTextField.text, let lastname = lastnameTitleTextField.text, let email = emailTitleTextField.text,
 			  let school = schoolTitleTextField.text, let major = majorTitleTextField.text, let introduction = introTextView.text else { return }
 		let name = "\(lastname) \(firstname)"
 		let user = User(name: name, userID: user.userID, email: email, introContentText: introduction, school: school, schoolMajor: major,
@@ -243,9 +235,8 @@ class EditProfileViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func configureUI() {
-		let name = user.name.split(separator: " ")
-		firstnameTitleTextField.text = String(name[1])
-		lastnameTitleTextField.text = String(name[0])
+
+		nameTitleTextField.text = user.name
 		emailTitleTextField.text = user.email
 		schoolTitleTextField.text = user.school
 		majorTitleTextField.text = user.schoolMajor

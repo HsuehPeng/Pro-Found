@@ -52,6 +52,8 @@ class EventListTableViewCell: UITableViewCell {
 		imageView.setDimensions(width: 32, height: 32)
 		imageView.layer.cornerRadius = 16
 		imageView.backgroundColor = .dark40
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		return imageView
 	}()
 	
@@ -129,12 +131,13 @@ class EventListTableViewCell: UITableViewCell {
 		guard let event = event else { return }
 		
 		checkIfBooked(event: event)
-		
-		let imageUrl = URL(string: event.imageURL)
+		let organizerImageUrl = URL(string: event.organizer.profileImageURL)
+		let eventImageUrl = URL(string: event.imageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMMM dd, yyyy ∙ h:mm a"
 		let eventDate = Date(timeIntervalSince1970: event.timestamp)
-		eventImageView.kf.setImage(with: imageUrl)
+		eventImageView.kf.setImage(with: eventImageUrl)
+		organizerImageView.kf.setImage(with: organizerImageUrl)
 		eventTitleLabel.text = event.eventTitle
 		timeLabel.text = dateFormatter.string(from: eventDate)
 		addressLabel.text = event.location
