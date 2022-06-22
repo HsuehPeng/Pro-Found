@@ -48,6 +48,7 @@ struct UserServie {
 		
 		do {
 			try userRef.setData(from: user)
+			completion()
 		} catch let error {
 			print("Error uploading user to Firestore: \(error)")
 		}
