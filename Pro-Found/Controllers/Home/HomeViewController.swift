@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class HomeViewController: UIViewController {
 
@@ -33,6 +34,8 @@ class HomeViewController: UIViewController {
 		imageView.backgroundColor = .gray
 		imageView.setDimensions(width: 36, height: 36)
 		imageView.layer.cornerRadius = 36 / 2
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -127,7 +130,9 @@ class HomeViewController: UIViewController {
 	
 	func configure() {
 		guard let user = user else { return }
+		let imageUrl = URL(string: user.profileImageURL)
 		nameLabel.text = user.name
+		profilePhotoImageView.kf.setImage(with: imageUrl)
 	}
 	
 }

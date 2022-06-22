@@ -43,6 +43,8 @@ class CourseDetailListTableViewCell: UITableViewCell {
 		imageView.setDimensions(width: 48, height: 48)
 		imageView.layer.cornerRadius = 48 / 2
 		imageView.image = UIImage.asset(.account_circle)
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	

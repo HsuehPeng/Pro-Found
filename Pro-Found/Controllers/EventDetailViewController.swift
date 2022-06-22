@@ -237,5 +237,4 @@ extension EventDetailViewController: EventDetailListTableViewCellDelegate {
 			self.isFollow = true
 		}
 	}
-	
 }

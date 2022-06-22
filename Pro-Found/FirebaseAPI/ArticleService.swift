@@ -13,9 +13,9 @@ struct ArticleService {
 	
 	static let shared = ArticleService()
 	
-	func createAndDownloadImageURL(articleImage: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
+	func createAndDownloadImageURL(articleImage: UIImage, author: User, completion: @escaping (Result<String, Error>) -> Void) {
 		guard let imageData = articleImage.jpegData(compressionQuality: 0.3) else { return }
-		let imageFileName = NSUUID().uuidString
+		let imageFileName = author.userID
 		let storageRef = storageArticleImages.child(imageFileName)
 		
 		storageRef.putData(imageData, metadata: nil) { metadata, error in

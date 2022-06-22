@@ -78,6 +78,7 @@
 		B8F352D42861CA0F0068E87D /* PostCommentTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */; };
 		B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */; };
 		B8F352DA2862DD0A0068E87D /* ScheduleEventListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D92862DD0A0068E87D /* ScheduleEventListTableViewCell.swift */; };
+		B8F352DC28631C080068E87D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352DB28631C080068E87D /* EditProfileViewController.swift */; };
 		B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */; };
 		B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */; };
 		B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C282860625200B88244 /* MKMapView + Extension.swift */; };
@@ -166,6 +167,7 @@
 		B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableHeader.swift; sourceTree = "<group>"; };
 		B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableCellTableViewCell.swift; sourceTree = "<group>"; };
 		B8F352D92862DD0A0068E87D /* ScheduleEventListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventListTableViewCell.swift; sourceTree = "<group>"; };
+		B8F352DB28631C080068E87D /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailListTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C282860625200B88244 /* MKMapView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView + Extension.swift"; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 			isa = PBXGroup;
 			children = (
 				B8AB0653285CB4FB002110A4 /* ProfileViewController.swift */,
+				B8F352DB28631C080068E87D /* EditProfileViewController.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -622,6 +625,7 @@
 				B89AD403285ED15900CCE027 /* PostViewController.swift in Sources */,
 				B89AD407285EDEC400CCE027 /* EventListTableViewCell.swift in Sources */,
 				B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */,
+				B8F352DC28631C080068E87D /* EditProfileViewController.swift in Sources */,
 				B8AB065E285DA567002110A4 /* ArticlePageTableViewCell.swift in Sources */,
 				B8AB060C2859FA13002110A4 /* Posts.swift in Sources */,
 				B8F99C372860A0C900B88244 /* EventDetailTableViewHeader.swift in Sources */,
@@ -818,6 +822,7 @@
 				DEVELOPMENT_TEAM = 4JAU88YC33;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pro-Found/Info.plist";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -849,6 +854,7 @@
 				DEVELOPMENT_TEAM = 4JAU88YC33;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pro-Found/Info.plist";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

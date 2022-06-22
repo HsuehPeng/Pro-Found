@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import PhotosUI
+import Kingfisher
 
 class WriteArticleViewController: UIViewController {
 	
@@ -42,6 +44,8 @@ class WriteArticleViewController: UIViewController {
 		imageView.image = UIImage.asset(.article)
 		imageView.contentMode = .scaleAspectFit
 		imageView.setDimensions(width: 132, height: 200)
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -81,7 +85,11 @@ class WriteArticleViewController: UIViewController {
 		return dividerView
 	}()
 	
-	private let articleTextView = ArticleTextView()
+	private let articleTextView: ArticleTextView = {
+		let textView = ArticleTextView()
+		textView.isScrollEnabled = true
+		return textView
+	}()
 	
 	private let bottomBarView: UIView = {
 		let view = UIView()
@@ -99,6 +107,7 @@ class WriteArticleViewController: UIViewController {
 		let button = UIButton()
 		button.setDimensions(width: 24, height: 24)
 		button.setImage(UIImage.asset(.photo), for: .normal)
+		button.addTarget(self, action: #selector(handlePickingImage), for: .touchUpInside)
 		return button
 	}()
 	
@@ -187,13 +196,21 @@ class WriteArticleViewController: UIViewController {
 	
 	// MARK: - Actions
 	
+	@objc func handlePickingImage() {
+		var configuration = PHPickerConfiguration()
+		configuration.selectionLimit = 1
+		let picker = PHPickerViewController(configuration: configuration)
+		picker.delegate = self
+		self.present(picker, animated: true, completion: nil)
+	}
+	
 	@objc func sendOutArticle() {
 		guard let articleTitle = articleTitleTextField.text, let subjectText = subjectTextField.text, let contentText = articleTextView.text,
 			  let articleImage = articleImageView.image else { return }
 		
 		let currentDate = Date()
 		let interval = currentDate.timeIntervalSince1970
-		ArticleService.shared.createAndDownloadImageURL(articleImage: articleImage) { [weak self] result in
+		ArticleService.shared.createAndDownloadImageURL(articleImage: articleImage, author: user) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let url):
@@ -214,4 +231,29 @@ class WriteArticleViewController: UIViewController {
 	}
 	
 	// MARK: - Helpers
+	
+	
+}
+
+// MARK: - PHPickerViewControllerDelegate
+
+extension WriteArticleViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		let itemProviders = results.map(\.itemProvider)
+		for item in itemProviders {
+			if item.canLoadObject(ofClass: UIImage.self) {
+				item.loadObject(ofClass: UIImage.self) { [weak self](image, error) in
+					guard let self = self else { return }
+					DispatchQueue.main.async {
+						if let image = image as? UIImage {
+							
+							self.articleImageView.image = nil
+							self.articleImageView.image = image
+						}
+					}
+				}
+			}
+		}
+	}
 }

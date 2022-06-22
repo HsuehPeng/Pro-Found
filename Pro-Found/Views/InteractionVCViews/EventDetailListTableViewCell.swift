@@ -33,15 +33,17 @@ class EventDetailListTableViewCell: UITableViewCell {
 		}
 	}
 	
-	private let eventImageView: UIImageView = {
+	private let eventOrganizerImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 48, height: 48)
 		imageView.layer.cornerRadius = 48 / 2
 		imageView.image = UIImage.asset(.account_circle)
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		return imageView
 	}()
 	
-	private let eventNameLabel: UILabel = {
+	private let eventOrganizerNameLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 14), textColor: .dark60, text: "Test Name")
 		return label
 	}()
@@ -91,18 +93,18 @@ class EventDetailListTableViewCell: UITableViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
-		contentView.addSubview(eventImageView)
-		eventImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 16)
+		contentView.addSubview(eventOrganizerImageView)
+		eventOrganizerImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 16)
 		
-		contentView.addSubview(eventNameLabel)
-		eventNameLabel.centerY(inView: eventImageView, leftAnchor: eventImageView.rightAnchor, paddingLeft: 8)
+		contentView.addSubview(eventOrganizerNameLabel)
+		eventOrganizerNameLabel.centerY(inView: eventOrganizerImageView, leftAnchor: eventOrganizerImageView.rightAnchor, paddingLeft: 8)
 		
 		contentView.addSubview(followButton)
 		followButton.anchor(right: contentView.rightAnchor, paddingRight: 16)
-		followButton.centerY(inView: eventImageView)
+		followButton.centerY(inView: eventOrganizerImageView)
 		
 		contentView.addSubview(dividerLine1)
-		dividerLine1.anchor(top: eventImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 1)
+		dividerLine1.anchor(top: eventOrganizerImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 1)
 		
 		contentView.addSubview(dateImageView)
 		dateImageView.anchor(top: dividerLine1.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
@@ -124,8 +126,8 @@ class EventDetailListTableViewCell: UITableViewCell {
 	func configureUI() {
 		guard let event = event, let isFollow = isFollow, let uid = Auth.auth().currentUser?.uid else { return }
 		let eventImageUrl = URL(string: event.organizer.profileImageURL)
-		eventImageView.kf.setImage(with: eventImageUrl)
-		eventNameLabel.text = event.organizerName
+		eventOrganizerImageView.kf.setImage(with: eventImageUrl)
+		eventOrganizerNameLabel.text = event.organizerName
 		
 		let dateformatter = DateFormatter()
 		dateformatter.dateFormat = "MMMM dd, yyyy∙HH:mm"

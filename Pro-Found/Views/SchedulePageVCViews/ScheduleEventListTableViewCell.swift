@@ -24,7 +24,8 @@ class ScheduleEventListTableViewCell: UITableViewCell {
 		let imageView = UIImageView()
 		imageView.image = UIImage.asset(.event)
 		imageView.setDimensions(width: 100, height: 128)
-//		imageView.contentMode = .scaleAspectFit
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		return imageView
 	}()
 	
@@ -45,6 +46,8 @@ class ScheduleEventListTableViewCell: UITableViewCell {
 		imageView.setDimensions(width: 32, height: 32)
 		imageView.layer.cornerRadius = 16
 		imageView.backgroundColor = .dark40
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		return imageView
 	}()
 	
@@ -105,12 +108,13 @@ class ScheduleEventListTableViewCell: UITableViewCell {
 	
 	private func configure() {
 		guard let event = event else { return }
-				
+		let organizerImageUrl = URL(string: event.organizer.profileImageURL)
 		let imageUrl = URL(string: event.imageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMMM dd, yyyy ∙ h:mm a"
 		let eventDate = Date(timeIntervalSince1970: event.timestamp)
 		eventImageView.kf.setImage(with: imageUrl)
+		organizerImageView.kf.setImage(with: organizerImageUrl)
 		eventTitleLabel.text = event.eventTitle
 		timeLabel.text = dateFormatter.string(from: eventDate)
 		addressLabel.text = event.location

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class HomePageTutorCollectionViewCell: UICollectionViewCell {
 	
@@ -23,6 +24,8 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 		let imageView = UIImageView()
 		imageView.backgroundColor = .gray
 		imageView.layer.cornerRadius = 10
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		return imageView
 	}()
 	
@@ -79,7 +82,9 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 	
 	func configure() {
 		guard let tutor = tutor else { return }
+		let imageUrl = URL(string: tutor.profileImageURL)
 		nameLabel.text = tutor.name
+		tutorImageView.kf.setImage(with: imageUrl)
 		followersLabel.text = String(tutor.followers.count)
 		subjectButton.setTitle(tutor.subject, for: .normal)
 	}

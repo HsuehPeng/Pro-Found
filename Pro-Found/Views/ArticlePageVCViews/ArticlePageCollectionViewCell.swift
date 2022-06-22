@@ -24,6 +24,8 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 		let imageView = UIImageView()
 		imageView.backgroundColor = .gray
 		imageView.layer.cornerRadius = 10
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	

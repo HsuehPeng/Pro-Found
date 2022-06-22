@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import PhotosUI
 
 class TutorProfileViewController: UIViewController {
 
