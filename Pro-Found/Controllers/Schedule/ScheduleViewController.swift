@@ -20,25 +20,30 @@ class ScheduleViewController: UIViewController {
 	}
 	
 	var scheduledCourses = [Course]()
-	
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
-	
 	var filteredScheduledCourses = [Course]() {
 		didSet {
-			collectionView.reloadData()
+			tableView.reloadData()
 		}
 	}
 	
 	var scheduledEvents = [Event]()
-	
 	var scheduledEventIdWithTimes = [ScheduledEventTime]()
-	
 	var filteredScheduledEvents = [Event]() {
 		didSet {
-			collectionView.reloadData()
+			tableView.reloadData()
 		}
 	}
 
+	var seletedTableCellIndexPath: IndexPath = IndexPath(item: 0, section: 0) {
+		didSet {
+			guard let selectedCell = collectionView.cellForItem(at: seletedTableCellIndexPath) as? CalendarCollectionViewCell else { return }
+			guard let previousCell = collectionView.cellForItem(at: oldValue) as? CalendarCollectionViewCell else { return }
+			previousCell.backGroundView.backgroundColor = .clear
+			selectedCell.backGroundView.backgroundColor = .orange
+		}
+	}
+	
 	var selectedDate = Date()
 	var totalSquares = [String]()
 	
@@ -149,13 +154,16 @@ class ScheduleViewController: UIViewController {
 		flowLayout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 0, right: 16)
 		flowLayout.minimumInteritemSpacing = 2
 		collectionView.register(CalendarCollectionViewCell.self, forCellWithReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier)
-		collectionView.register(GeneralHeaderCollectionReusableView.self,
-								forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-								withReuseIdentifier: GeneralHeaderCollectionReusableView.reuseIdentifier)
-		collectionView.register(ScheduleActivityListCollectionViewCell.self,
-								forCellWithReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier)
-		collectionView.register(EventScheduleListCollectionViewCell.self, forCellWithReuseIdentifier: EventScheduleListCollectionViewCell.reuseIdentifier)
+
 		return collectionView
+	}()
+	
+	private let tableView: UITableView = {
+		let tableView = UITableView()
+		tableView.register(ScheduleCourseListTableCell.self, forCellReuseIdentifier: ScheduleCourseListTableCell .reuseIdentifier)
+		tableView.register(ScheduleEventListTableViewCell.self, forCellReuseIdentifier: ScheduleEventListTableViewCell.reuseIdentifier)
+		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
+		return tableView
 	}()
 	
 	// MARK: - Lifecycle
@@ -166,6 +174,8 @@ class ScheduleViewController: UIViewController {
 		
 		collectionView.dataSource = self
 		collectionView.delegate = self
+		tableView.dataSource = self
+		tableView.delegate = self
 		
 		setupNavBar()
 		setupUI()
@@ -214,8 +224,11 @@ class ScheduleViewController: UIViewController {
 							 paddingTop: 24, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(collectionView)
-		collectionView.anchor(top: weekdayHStack.bottomAnchor, left: view.leftAnchor,
-							  bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
+		collectionView.anchor(top: weekdayHStack.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 250)
+		
+		view.addSubview(tableView)
+		tableView.anchor(top: collectionView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+						 right: view.rightAnchor)
 		
 	}
 	
@@ -280,6 +293,9 @@ class ScheduleViewController: UIViewController {
 		
 		group.notify(queue: DispatchQueue.global()) {
 			self.fetchScheduledCoursesAndEvents(user: user)
+			DispatchQueue.main.async {
+				self.collectionView.reloadData()
+			}
 		}
 		
 	}
@@ -360,22 +376,21 @@ class ScheduleViewController: UIViewController {
 	
 	func setMonthView() {
 		totalSquares.removeAll()
+		
 		let daysInMonth = CalendarHelper().daysInMonth(date: selectedDate)
 		let firstDayOfMonth = CalendarHelper().firstOfMonth(date: selectedDate)
 		let startingSpaces = CalendarHelper().weekDay(date: firstDayOfMonth)
 		
 		var count: Int = 1
 		
-		while count <= 42 {
-			if count <= startingSpaces || count - startingSpaces > daysInMonth {
+		while(count <= 42) {
+			if(count <= startingSpaces || count - startingSpaces > daysInMonth) {
 				totalSquares.append("")
-				count += 1
 			} else {
 				totalSquares.append(String(count - startingSpaces))
-				count += 1
 			}
+			count += 1
 		}
-		
 		monthLabel.text = CalendarHelper().monthString(date: selectedDate)
 		yearLabel.text = CalendarHelper().yearString(date: selectedDate)
 		collectionView.reloadData()
@@ -388,41 +403,43 @@ class ScheduleViewController: UIViewController {
 extension ScheduleViewController: UICollectionViewDataSource {
 	
 	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		3
+		return 1
 	}
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if section == 0 {
-			return totalSquares.count
-		} else if section == 1 {
-			return filteredScheduledCourses.count
-		} else {
-			return filteredScheduledEvents.count
-		}
+		return totalSquares.count
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let calendarCell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier, for: indexPath)
 				as? CalendarCollectionViewCell else { fatalError("Can not dequeue CalendarCollectionViewCell") }
-		guard let activityCell = collectionView.dequeueReusableCell(withReuseIdentifier: ScheduleActivityListCollectionViewCell.reuseIdentifier, for: indexPath)
-				as? ScheduleActivityListCollectionViewCell else { fatalError("Can not dequeue ScheduleActivityListCollectionViewCell") }
-		guard let eventCell = collectionView.dequeueReusableCell(withReuseIdentifier: EventScheduleListCollectionViewCell.reuseIdentifier, for: indexPath)
-				as? EventScheduleListCollectionViewCell else { fatalError("Can not dequeue EventScheduleListCollectionViewCell") }
 		
+		guard let monthAndYear = monthLabel.text, let year = yearLabel.text else { fatalError("Can not dequeue CalendarCollectionViewCell") }
+		calendarCell.backGroundView.backgroundColor = .clear
+		calendarCell.badgeDot.isHidden = true
 		calendarCell.dateLabel.text = totalSquares[indexPath.item]
 		
-		if indexPath.section == 0 {
-			return calendarCell
-		} else if indexPath.section == 1 {
-			let course = filteredScheduledCourses[indexPath.item]
-			activityCell.course = course
-			return activityCell
-		} else {
-			let event = filteredScheduledEvents[indexPath.item]
-			eventCell.event = event
-			return eventCell
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "dd MMMM yyyy"
+		let dateString = "\(totalSquares[indexPath.item]) \(monthAndYear) \(year)"
+		
+		for scheduleEvent in scheduledEventIdWithTimes {
+			let date = Date(timeIntervalSince1970: scheduleEvent.time)
+			let eventDateString = dateFormatter.string(from: date)
+			if eventDateString == dateString {
+				calendarCell.badgeDot.isHidden = false
+			}
+		}
+		
+		for scheduleCourse in scheduledCoursesIdWithTimes {
+			let date = Date(timeIntervalSince1970: scheduleCourse.time)
+			let courseDateString = dateFormatter.string(from: date)
+			if courseDateString == dateString {
+				calendarCell.badgeDot.isHidden = false
+			}
 		}
 
+		return calendarCell
 	}
 
 }
@@ -432,48 +449,16 @@ extension ScheduleViewController: UICollectionViewDataSource {
 extension ScheduleViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 	
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		if indexPath.section == 0 {
-			guard let cell = collectionView.cellForItem(at: indexPath) as? CalendarCollectionViewCell else { return }
-			guard let monthAndYear = monthLabel.text, let day = cell.dateLabel.text, let year = yearLabel.text else { return }
-			let date = "\(day) \(monthAndYear) \(year)"
-			filterCourseAndEventByDate(dateString: date)
-		} else if indexPath.section == 1 {
-			guard let user = user else { return }
-			let course = filteredScheduledCourses[indexPath.item]
-			let courseDetailVC = CourseDetailViewController(course: course, user: user)
-			navigationController?.pushViewController(courseDetailVC, animated: true)
-		}
-	}
-	
-	func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String,
-						at indexPath: IndexPath) -> UICollectionReusableView {
-		guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader,
-																		   withReuseIdentifier: GeneralHeaderCollectionReusableView.reuseIdentifier,
-																		   for: indexPath)
-				as? GeneralHeaderCollectionReusableView else { return UICollectionReusableView() }
+		guard let cell = collectionView.cellForItem(at: indexPath) as? CalendarCollectionViewCell else { return }
+		guard let monthAndYear = monthLabel.text, let day = cell.dateLabel.text, let year = yearLabel.text else { return }
 		
-		if indexPath.section == 1 {
-			header.titleLabel.text = "Courses"
-			return header
-		} else if indexPath.section == 2 {
-			header.titleLabel.text = "Events"
-			return header
-		}
-		return header
+		seletedTableCellIndexPath = indexPath
+
+		let dateString = "\(day) \(monthAndYear) \(year)"
+		filterCourseAndEventByDate(dateString: dateString)
 
 	}
-	
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
-						referenceSizeForHeaderInSection section: Int) -> CGSize {
-		
-		if section == 0 {
-			return CGSize(width: 0, height: 0)
-		} else {
-			return CGSize(width: view.frame.size.width, height: 30)
-		}
-		
-	}
-	
+
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
 						sizeForItemAt indexPath: IndexPath) -> CGSize {
 		if indexPath.section == 0 {
@@ -481,7 +466,77 @@ extension ScheduleViewController: UICollectionViewDelegate, UICollectionViewDele
 			let height = 30
 			return CGSize(width: Int(width), height: height)
 		}
-		
 		return CGSize(width: UIScreen.main.bounds.width, height: 128)
+	}
+}
+
+// MARK: - UITableViewDataSource
+
+extension ScheduleViewController: UITableViewDataSource {
+	
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return 2
+	}
+	
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if section == 0 {
+			return filteredScheduledCourses.count
+		} else {
+			return filteredScheduledEvents.count
+		}
+	}
+
+
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let eventCell = tableView.dequeueReusableCell(withIdentifier: ScheduleEventListTableViewCell.reuseIdentifier, for: indexPath)
+				as? ScheduleEventListTableViewCell else { fatalError("Can not dequeue EventListTableViewCell") }
+		guard let courseCell = tableView.dequeueReusableCell(withIdentifier: ScheduleCourseListTableCell.reuseIdentifier, for: indexPath)
+				as? ScheduleCourseListTableCell else { fatalError("Can not dequeue ScheduleCourseListTableCell") }
+		
+		if indexPath.section == 0 {
+			courseCell.course = filteredScheduledCourses[indexPath.row]
+			return courseCell
+		} else {
+			eventCell.event = filteredScheduledEvents[indexPath.row]
+			return eventCell
+		}
+
+	}
+
+}
+
+// MARK: - UITableViewDelegate
+
+extension ScheduleViewController: UITableViewDelegate {
+	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard let user = user else { return }
+		
+		if indexPath.section == 0 {
+			let course = filteredScheduledCourses[indexPath.row]
+			let courseDetailVC = CourseDetailViewController(course: course, user: user)
+			navigationController?.pushViewController(courseDetailVC, animated: true)
+		} else {
+			let event = filteredScheduledEvents[indexPath.row]
+			let eventDetailVC = EventDetailViewController(event: event, user: user)
+			navigationController?.pushViewController(eventDetailVC, animated: true)
+		}
+	}
+	
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
+				as? GeneralTableViewHeader else { fatalError("Can not dequeue GeneralTableViewHeader") }
+		header.seeAllButton.isHidden = true
+		
+		if section == 0 {
+			header.titleLabel.text = "Courses"
+		} else {
+			header.titleLabel.text = "Events"
+		}
+		return header
+	}
+	
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return 50
 	}
 }

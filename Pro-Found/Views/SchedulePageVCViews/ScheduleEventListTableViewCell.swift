@@ -1,5 +1,5 @@
 //
-//  EventScheduleListCollectionViewCell.swift
+//  ScheduleEventTableViewCell.swift
 //  Pro-Found
 //
 //  Created by Hsueh Peng Tseng on 2022/6/22.
@@ -8,15 +8,15 @@
 import UIKit
 import FirebaseAuth
 
-class EventScheduleListCollectionViewCell: UICollectionViewCell {
+class ScheduleEventListTableViewCell: UITableViewCell {
 	
-	static let reuseIdentifier = "\(EventScheduleListCollectionViewCell.self)"
+	static let reuseIdentifier = "\(ScheduleEventListTableViewCell.self)"
 	
 	// MARK: - Properties
 	
 	var event: Event? {
 		didSet {
-			configureUI()
+			configure()
 		}
 	}
 	
@@ -63,8 +63,8 @@ class EventScheduleListCollectionViewCell: UICollectionViewCell {
 	
 	// MARK: - Lifecycle
 	
-	override init(frame: CGRect) {
-		super.init(frame: frame)
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		setupUI()
 	}
 	
@@ -76,33 +76,34 @@ class EventScheduleListCollectionViewCell: UICollectionViewCell {
 	
 	private func setupUI() {
 		contentView.addSubview(eventImageView)
-		eventImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, paddingTop: 16, paddingLeft: 16, paddingBottom: 16)
+		eventImageView.centerY(inView: contentView, leftAnchor: contentView.leftAnchor, paddingLeft: 16)
 		
 		contentView.addSubview(eventTitleLabel)
-		eventTitleLabel.anchor(top: eventImageView.topAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
-							   paddingTop: 4, paddingLeft: 12, paddingRight: 16)
+		eventTitleLabel.anchor(top: contentView.topAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
+							   paddingTop: 16, paddingLeft: 12, paddingRight: 16)
 
 		contentView.addSubview(timeLabel)
 		timeLabel.anchor(top: eventTitleLabel.bottomAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
 						 paddingTop: 4, paddingLeft: 12, paddingRight: 16)
-
+		
 		contentView.addSubview(addressLabel)
 		addressLabel.anchor(top: timeLabel.bottomAnchor, left: eventImageView.rightAnchor,
 							right: contentView.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingRight: 16)
-
+		
 		contentView.addSubview(organizerImageView)
 		organizerImageView.anchor(top: addressLabel.bottomAnchor, left: eventImageView.rightAnchor,
-								  paddingTop: 8, paddingLeft: 12, paddingBottom: 16)
+								  bottom: contentView.bottomAnchor, paddingTop: 8, paddingLeft: 12, paddingBottom: 24)
 
 		contentView.addSubview(organizerNameLabel)
 		organizerNameLabel.centerY(inView: organizerImageView, leftAnchor: organizerImageView.rightAnchor, paddingLeft: 8)
+
 	}
 	
 	// MARK: - Actions
-	
+
 	// MARK: - Helpers
 	
-	private func configureUI() {
+	private func configure() {
 		guard let event = event else { return }
 				
 		let imageUrl = URL(string: event.imageURL)
@@ -115,4 +116,5 @@ class EventScheduleListCollectionViewCell: UICollectionViewCell {
 		addressLabel.text = event.location
 		organizerNameLabel.text = event.organizerName
 	}
+	
 }

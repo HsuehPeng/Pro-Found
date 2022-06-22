@@ -91,11 +91,11 @@ class EventListTableViewCell: UITableViewCell {
 	
 	private func setupUI() {
 		contentView.addSubview(eventImageView)
-		eventImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		eventImageView.centerY(inView: contentView, leftAnchor: contentView.leftAnchor, paddingLeft: 16)
 		
 		contentView.addSubview(eventTitleLabel)
-		eventTitleLabel.anchor(top: eventImageView.topAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
-							   paddingTop: 4, paddingLeft: 12, paddingRight: 16)
+		eventTitleLabel.anchor(top: contentView.topAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
+							   paddingTop: 16, paddingLeft: 12, paddingRight: 16)
 
 		contentView.addSubview(timeLabel)
 		timeLabel.anchor(top: eventTitleLabel.bottomAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
@@ -107,7 +107,7 @@ class EventListTableViewCell: UITableViewCell {
 		
 		contentView.addSubview(organizerImageView)
 		organizerImageView.anchor(top: addressLabel.bottomAnchor, left: eventImageView.rightAnchor,
-								  bottom: contentView.bottomAnchor, paddingTop: 8, paddingLeft: 12, paddingBottom: 16)
+								  bottom: contentView.bottomAnchor, paddingTop: 8, paddingLeft: 12, paddingBottom: 24)
 
 		contentView.addSubview(organizerNameLabel)
 		organizerNameLabel.centerY(inView: organizerImageView, leftAnchor: organizerImageView.rightAnchor, paddingLeft: 8)
