@@ -169,7 +169,8 @@ extension HomeViewController: UITableViewDelegate {
 		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
 				as? GeneralTableViewHeader else { return  UITableViewHeaderFooterView() }
 		if section == 0 {
-			header.titleLabel.text = "Tutors"
+			header.titleLabel.text = "Explore Tutors..."
+			header.seeAllButton.setTitle("Subject", for: .normal)
 			return header
 		}
 		return header

@@ -15,7 +15,7 @@ struct ArticleService {
 	
 	func createAndDownloadImageURL(articleImage: UIImage, author: User, completion: @escaping (Result<String, Error>) -> Void) {
 		guard let imageData = articleImage.jpegData(compressionQuality: 0.3) else { return }
-		let imageFileName = author.userID
+		let imageFileName = NSUUID().uuidString
 		let storageRef = storageArticleImages.child(imageFileName)
 		
 		storageRef.putData(imageData, metadata: nil) { metadata, error in

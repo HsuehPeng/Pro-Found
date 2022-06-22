@@ -105,7 +105,7 @@ class WritePostViewController: UIViewController {
 		view.addSubview(postTextView)
 		postTextView.anchor(top: topBarView.bottomAnchor, left: profileImageView.rightAnchor, right: view.rightAnchor,
 							paddingTop: 12, paddingLeft: 12, paddingRight: 16)
-		postTextView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+		postTextView.heightAnchor.constraint(equalToConstant: 400).isActive = true
 		
 		view.addSubview(bottomBarView)
 		bottomBarView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: 64)

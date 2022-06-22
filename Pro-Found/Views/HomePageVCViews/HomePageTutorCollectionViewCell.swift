@@ -45,6 +45,8 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 		button.setTitle("Subject", for: .normal)
 		button.setTitleColor(UIColor.white, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 9)
+		button.widthAnchor.constraint(equalToConstant: 50).isActive = true
+		button.layer.cornerRadius = 5
 		button.backgroundColor = .orange
 		return button
 	}()
@@ -85,7 +87,7 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 		let imageUrl = URL(string: tutor.profileImageURL)
 		nameLabel.text = tutor.name
 		tutorImageView.kf.setImage(with: imageUrl)
-		followersLabel.text = String(tutor.followers.count)
+		followersLabel.text = "\(tutor.followers.count)  Followers"
 		subjectButton.setTitle(tutor.subject, for: .normal)
 	}
 	
