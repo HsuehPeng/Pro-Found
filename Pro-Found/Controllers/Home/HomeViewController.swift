@@ -113,7 +113,7 @@ class HomeViewController: UIViewController {
 	private lazy var collectionView: UICollectionView = {
 		let flowLayout = UICollectionViewFlowLayout()
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-		flowLayout.itemSize = CGSize(width: view.frame.size.width, height: 300)
+		flowLayout.itemSize = CGSize(width: view.frame.size.width, height: 280)
 		flowLayout.minimumInteritemSpacing = 20
 		flowLayout.minimumLineSpacing = 20
 //		flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -157,7 +157,7 @@ class HomeViewController: UIViewController {
 		oneHundred?.isActive = false
 		
 		topBarView.addSubview(profilePhotoImageView)
-		profilePhotoImageView.anchor(top: topBarView.topAnchor, left: topBarView.leftAnchor, paddingTop: 8, paddingLeft: 12)
+		profilePhotoImageView.anchor(top: topBarView.topAnchor, left: topBarView.leftAnchor, paddingTop: 8, paddingLeft: 16)
 		
 		let topBarLabelVStack = UIStackView(arrangedSubviews: [greetingLabel, nameLabel])
 		topBarLabelVStack.spacing = 0

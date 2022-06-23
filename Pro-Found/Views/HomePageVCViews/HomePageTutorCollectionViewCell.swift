@@ -88,8 +88,7 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 							  right: contentView.rightAnchor, paddingLeft: 16, paddingRight: 16, height: 200)
 		
 		contentView.addSubview(nameLabel)
-		nameLabel.anchor(top: tutorImageView.bottomAnchor, left: tutorImageView.leftAnchor,
-						 right: contentView.rightAnchor, paddingTop: 12, paddingRight: 16)
+		nameLabel.anchor(top: tutorImageView.bottomAnchor, left: tutorImageView.leftAnchor, paddingTop: 12)
 		nameLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.7).isActive = true
 		
 		contentView.addSubview(schoolLabel)

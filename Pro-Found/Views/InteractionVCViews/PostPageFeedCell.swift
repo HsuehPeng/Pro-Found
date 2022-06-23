@@ -22,7 +22,11 @@ class PostPageFeedCell: UITableViewCell {
 	
 	// MARK: - Properties
 	
-	var post: Post?
+	var post: Post? {
+		didSet {
+			configure()
+		}
+	}
 	
 	var user: User? {
 		didSet {

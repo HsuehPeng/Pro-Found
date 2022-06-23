@@ -10,17 +10,16 @@ import FirebaseAuth
 import Cosmos
 import Kingfisher
 import PhotosUI
-
-enum ProfileActions: String {
-	case follow = "Follow"
-	case following = "Following"
-	case becomeTutor = "Become Tutor"
-	case resignTutor = "Resign Tutor"
+ 
+protocol TutorProfileMainTableViewCellDelegate: AnyObject {
+	func chooseBackgroundImage(_ cell: TutorProfileMainTableViewCell)
 }
 
 class TutorProfileMainTableViewCell: UITableViewCell {
 
 	static let reuseIdentifier = "\(TutorProfileMainTableViewCell.self)"
+	
+	weak var delegate: TutorProfileMainTableViewCellDelegate?
 	
 	// MARK: - Properties
 	
@@ -30,7 +29,11 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		}
 	}
 	
-	var user: User?
+	var user: User? {
+		didSet {
+			configure()
+		}
+	}
 	
 	var isFollowed: Bool = false
 	
@@ -48,7 +51,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	private let profileView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .light60
+		view.backgroundColor = .light50
 		view.layer.cornerRadius = 24
 		return view
 	}()
@@ -255,7 +258,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	// MARK: - Actions
 	
 	@objc func handleBackgroudImageTap() {
-		
+		delegate?.chooseBackgroundImage(self)
 	}
 	
 	@objc func handleRateTutor() {
@@ -310,9 +313,12 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	func configure() {
 		guard let tutor = tutor, let user = user else { return }
-		let imageUrl = URL(string: tutor.profileImageURL)
+		let profileImageUrl = URL(string: tutor.profileImageURL)
+		let backgroundImageUrl = URL(string: tutor.backgroundImageURL)
+		
 		nameLabel.text = tutor.name
-		profilePhotoImageView.kf.setImage(with: imageUrl)
+		profilePhotoImageView.kf.setImage(with: profileImageUrl)
+		backImageView.kf.setImage(with: backgroundImageUrl)
 		subjectLabel.text = tutor.subject
 		followerNumber.text = String(tutor.followers.count)
 		classBookedNumber.text = "\(tutor.courseBooked)"

@@ -13,7 +13,7 @@ class TutorProfileViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var isTutor = false
+//	var isTutor = false
 	
 	let user: User
 	
@@ -25,7 +25,13 @@ class TutorProfileViewController: UIViewController {
 		}
 	}
 	
-	var tutorArticles = [Article]() {
+	var tutorArticles = [Article]()
+	
+	var tutorEvents = [Event]()
+	
+	var tutorPosts = [Post]()
+	
+	var currentContent = "Articles" {
 		didSet {
 			tableView.reloadData()
 		}
@@ -56,11 +62,14 @@ class TutorProfileViewController: UIViewController {
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView(frame: .zero, style: .grouped)
+		tableView.backgroundColor = .light60
 		tableView.register(TutorProfileMainTableViewCell.self, forCellReuseIdentifier: TutorProfileMainTableViewCell.reuseIdentifier)
 		tableView.register(TutorProfileClassTableViewCell.self, forCellReuseIdentifier: TutorProfileClassTableViewCell.reuseIdentifier)
 		tableView.register(ArticleListTableViewCell.self, forCellReuseIdentifier: ArticleListTableViewCell.reuseIdentifier)
+		tableView.register(EventListTableViewCell.self, forCellReuseIdentifier: EventListTableViewCell.reuseIdentifier)
+		tableView.register(PostPageFeedCell.self, forCellReuseIdentifier: PostPageFeedCell.reuseIdentifier)
 		tableView.register(TutorProfileClassTableViewHeader.self, forHeaderFooterViewReuseIdentifier: TutorProfileClassTableViewHeader.reuseIdentifier)
-		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
+		tableView.register(TutorProfileContentHeader.self, forHeaderFooterViewReuseIdentifier: TutorProfileContentHeader.reuseIdentifier)
 		tableView.contentInsetAdjustmentBehavior = .never
 		tableView.separatorStyle = .none
 		tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -97,6 +106,8 @@ class TutorProfileViewController: UIViewController {
 		tabBarController?.tabBar.isHidden = false
 		fetchTutorCourses()
 		fetchTutorArticles()
+		fetchTutorEvents()
+		fetchTutorPosts()
 		checkIfFollowed()
 	}
 	
@@ -152,11 +163,54 @@ class TutorProfileViewController: UIViewController {
 		}
 	}
 	
+	func fetchTutorEvents() {
+		EventService.shared.fetchEvents { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let events):
+				let filteredEvents = events.filter { event in
+					if event.organizer.userID == self.tutor.userID {
+						return true
+					}
+					return false
+				}
+				self.tutorEvents = filteredEvents
+			case . failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func fetchTutorPosts() {
+		PostService.shared.getPosts { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let posts):
+				let filteredPosts = posts.filter { post in
+					if post.userID == self.tutor.userID {
+						return true
+					}
+					return false
+				}
+				self.tutorPosts = filteredPosts
+			case . failure(let error):
+				print(error)
+			}
+		}
+	}
+	
 	func checkIfFollowed() {
 		UserServie.shared.checkIfFollow(senderID: user.userID, receiveriD: tutor.userID) { [weak self] bool in
 			guard let self = self else { return }
 			self.isFollowed = bool
 		}
+	}
+	
+	func toggleSelectedSubjectButton(buttons: [UIButton], selectedButton: UIButton) {
+		for i in 0...buttons.count - 1 {
+			buttons[i].isSelected = false
+		}
+		selectedButton.isSelected = true
 	}
 
 }
@@ -174,7 +228,16 @@ extension TutorProfileViewController: UITableViewDataSource {
 		} else if section == 1 {
 			return tutorCourses.count
 		} else {
-			return tutorArticles.count
+			switch currentContent {
+			case "Articles":
+				return tutorArticles.count
+			case "Events":
+				return tutorEvents.count
+			case "Posts":
+				return tutorPosts.count
+			default:
+				return 0
+			}
 		}
 	}
 	
@@ -185,21 +248,38 @@ extension TutorProfileViewController: UITableViewDataSource {
 				as? TutorProfileClassTableViewCell else { fatalError("Can not dequeue TutorProfileClassTableViewCell")}
 		guard let articleCell = tableView.dequeueReusableCell(withIdentifier: ArticleListTableViewCell.reuseIdentifier)
 				as? ArticleListTableViewCell else { fatalError("Can not dequeue ArticleListTableViewCell") }
+		guard let eventCell = tableView.dequeueReusableCell(withIdentifier: EventListTableViewCell.reuseIdentifier)
+				as? EventListTableViewCell else { fatalError("Can not dequeue TutorProfileClassTableViewCell")}
+		guard let postCell = tableView.dequeueReusableCell(withIdentifier: PostPageFeedCell.reuseIdentifier)
+				as? PostPageFeedCell else { fatalError("Can not dequeue ArticleListTableViewCell") }
 		
 		if indexPath.section == 0 {
+			mainCell.delegate = self
 			mainCell.isFollowed = isFollowed
 			mainCell.tutor = tutor
 			mainCell.user = user
 			return mainCell
-		} else if indexPath.section == 1{
+		} else if indexPath.section == 1 {
 			courseCell.delegate = self
 			courseCell.course = tutorCourses[indexPath.row]
 			return courseCell
 		} else {
-			articleCell.article = tutorArticles[indexPath.row]
-			return articleCell
+			switch currentContent {
+			case "Articles":
+				articleCell.article = tutorArticles[indexPath.row]
+				return articleCell
+			case "Events":
+				eventCell.event = tutorEvents[indexPath.row]
+				return eventCell
+			case "Posts":
+				postCell.delegate = self
+				postCell.post = tutorPosts[indexPath.row]
+				postCell.user = tutor
+				return postCell
+			default:
+				return articleCell
+			}
 		}
-		
 	}
 	
 }
@@ -213,8 +293,21 @@ extension TutorProfileViewController: UITableViewDelegate {
 			let courseDetailVC = CourseDetailViewController(course: tutorCourses[indexPath.row], user: user)
 			navigationController?.pushViewController(courseDetailVC, animated: true)
 		} else if indexPath.section == 2 {
-			let articleDetailVC = ArticleDetailViewController(article: tutorArticles[indexPath.row])
-			navigationController?.pushViewController(articleDetailVC, animated: true)
+			
+			switch currentContent {
+			case "Articles":
+				let articleDetailVC = ArticleDetailViewController(article: tutorArticles[indexPath.row])
+				navigationController?.pushViewController(articleDetailVC, animated: true)
+			case "Events":
+				let eventDetailVC = EventDetailViewController(event: tutorEvents[indexPath.row], user: user)
+				navigationController?.pushViewController(eventDetailVC, animated: true)
+			case "Posts":
+				break
+			default:
+				break
+			}
+			
+
 		}
 	}
 	
@@ -225,20 +318,17 @@ extension TutorProfileViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		guard let courseHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: TutorProfileClassTableViewHeader.reuseIdentifier)
 				as? TutorProfileClassTableViewHeader else { return UITableViewHeaderFooterView() }
-		guard let articleHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
-				as? GeneralTableViewHeader else { fatalError("Can not dequeue GeneralTableViewHeader") }
-		
+		guard let contentHeader = tableView.dequeueReusableHeaderFooterView(withIdentifier: TutorProfileContentHeader.reuseIdentifier)
+				as? TutorProfileContentHeader else { fatalError("Can not dequeue GeneralTableViewHeader") }
 		
 		if section == 1 {
 			courseHeader.delegate = self
 			courseHeader.tutor = tutor
 			return courseHeader
 		} else if section == 2 {
-			articleHeader.titleLabel.text = "Articles"
-			articleHeader.seeAllButton.isHidden = true
-			return articleHeader
+			contentHeader.delegate = self
+			return contentHeader
 		}
-		
 		return nil
 	}
 	
@@ -271,6 +361,106 @@ extension TutorProfileViewController: ProfileClassTableViewCellDelegate {
 		slideVC.modalPresentationStyle = .custom
 		slideVC.transitioningDelegate = self
 		present(slideVC, animated: true)
+	}
+}
+
+extension TutorProfileViewController: TutorProfileContentHeaderDelegate {
+	func changeContent(_ cell: TutorProfileContentHeader, pressedButton type: UIButton) {
+		let buttonCollections = [cell.articleButton, cell.eventButton, cell.postButton]
+		
+		switch type.titleLabel?.text {
+		case "Articles":
+			currentContent = "Articles"
+			toggleSelectedSubjectButton(buttons: buttonCollections, selectedButton: type)
+		case "Events":
+			currentContent = "Events"
+			toggleSelectedSubjectButton(buttons: buttonCollections, selectedButton: type)
+		case "Posts":
+			currentContent = "Posts"
+			toggleSelectedSubjectButton(buttons: buttonCollections, selectedButton: type)
+		default:
+			break
+		}
+	}
+	
+}
+
+// MARK: - PostPageFeedCellDelegate
+
+extension TutorProfileViewController: PostPageFeedCellDelegate {
+	func checkIfLikedByUser(_ cell: PostPageFeedCell) {
+		guard let post = cell.post  else { return }
+		
+		if post.likedBy.contains(user.userID) {
+			cell.likeButton.isSelected = true
+		} else {
+			cell.likeButton.isSelected = false
+		}
+	}
+	
+	func likePost(_ cell: PostPageFeedCell) {
+		
+		guard let post = cell.post else { return }
+		
+		if cell.likeButton.isSelected {
+			PostService.shared.unlikePost(post: post, userID: user.userID)
+			cell.likeButton.isSelected = false
+		} else {
+			PostService.shared.likePost(post: post, userID: user.userID)
+			cell.likeButton.isSelected = true
+		}
+	}
+	
+	func goToCommentVC(_ cell: PostPageFeedCell) {
+		guard let indexPath = tableView.indexPath(for: cell) else { return }
+		let post = tutorPosts[indexPath.row]
+		let postCommentVC = PostCommentViewController(post: post, user: user)
+		navigationController?.pushViewController(postCommentVC, animated: true)
+	}
+}
+
+// MARK: - TutorProfileMainTableViewCellDelegate
+
+extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
+	func chooseBackgroundImage(_ cell: TutorProfileMainTableViewCell) {
+		if user.userID == tutor.userID {
+			var configuration = PHPickerConfiguration()
+			configuration.selectionLimit = 1
+			let picker = PHPickerViewController(configuration: configuration)
+			picker.delegate = self
+			self.present(picker, animated: true, completion: nil)
+		} else {
+			return
+		}
+	}
+	
+}
+
+// MARK: - PHPickerViewControllerDelegate
+
+extension TutorProfileViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		let itemProviders = results.map(\.itemProvider)
+		for item in itemProviders {
+			if item.canLoadObject(ofClass: UIImage.self) {
+				item.loadObject(ofClass: UIImage.self) { [weak self](image, error) in
+					guard let self = self else { return }
+					DispatchQueue.main.async {
+						if let image = image as? UIImage {
+							guard let cell = self.tableView.cellForRow(at: IndexPath(row: 0, section: 0))
+									as? TutorProfileMainTableViewCell else { return }
+							cell.backImageView.image = nil
+							cell.backImageView.image = image
+							UserServie.shared.uploadUserBackgroundImageAndDownloadImageURL(userBackgroundImage: image,
+																						   user: self.tutor) { result in
+								print("Photo uploaded")
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 

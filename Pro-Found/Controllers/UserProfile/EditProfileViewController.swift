@@ -235,7 +235,6 @@ class EditProfileViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func configureUI() {
-
 		nameTitleTextField.text = user.name
 		emailTitleTextField.text = user.email
 		schoolTitleTextField.text = user.school

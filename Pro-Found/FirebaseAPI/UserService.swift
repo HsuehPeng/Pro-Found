@@ -40,8 +40,8 @@ struct UserServie {
 		}
 	}
 	
-	func uploadUserBackgroundImageAndDownloadImageURL(userProfileImage: UIImage, user: User, completion: @escaping (Result<String, Error>) -> Void) {
-		guard let imageData = userProfileImage.jpegData(compressionQuality: 0.3) else { return }
+	func uploadUserBackgroundImageAndDownloadImageURL(userBackgroundImage: UIImage, user: User, completion: @escaping (Result<String, Error>) -> Void) {
+		guard let imageData = userBackgroundImage.jpegData(compressionQuality: 0.3) else { return }
 		let imageFileName = user.userID
 		let storageRef = storageUserBackgroundImages.child(imageFileName)
 		
@@ -55,7 +55,7 @@ struct UserServie {
 				guard let url = url?.absoluteString else { return }
 				
 				dbUsers.document(user.userID).updateData([
-					"profileImageURL": url
+					"backgroundImageURL": url
 				]) { error in
 					if let error = error {
 						completion(.failure(error))
