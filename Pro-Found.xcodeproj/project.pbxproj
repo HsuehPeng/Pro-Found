@@ -20,7 +20,6 @@
 		B83D19BF285608770049846E /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83D19BE285608770049846E /* UIFont+Extension.swift */; };
 		B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */; };
 		B86943D028586079008021C9 /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CF28586079008021C9 /* PrivateKey.swift */; };
-		B86943D32858673C008021C9 /* HomePageTutorListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943D22858673C008021C9 /* HomePageTutorListTableViewCell.swift */; };
 		B89AD401285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */; };
 		B89AD403285ED15900CCE027 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD402285ED15900CCE027 /* PostViewController.swift */; };
 		B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD404285ED2A700CCE027 /* EventViewController.swift */; };
@@ -79,6 +78,7 @@
 		B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */; };
 		B8F352DA2862DD0A0068E87D /* ScheduleEventListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D92862DD0A0068E87D /* ScheduleEventListTableViewCell.swift */; };
 		B8F352DC28631C080068E87D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352DB28631C080068E87D /* EditProfileViewController.swift */; };
+		B8F352DE2863FED10068E87D /* MyAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352DD2863FED10068E87D /* MyAlert.swift */; };
 		B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */; };
 		B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */; };
 		B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C282860625200B88244 /* MKMapView + Extension.swift */; };
@@ -108,7 +108,6 @@
 		B83D19BE285608770049846E /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileClassTableViewCell.swift; sourceTree = "<group>"; };
 		B86943CF28586079008021C9 /* PrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKey.swift; sourceTree = "<group>"; };
-		B86943D22858673C008021C9 /* HomePageTutorListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageTutorListTableViewCell.swift; sourceTree = "<group>"; };
 		B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailContentTableViewCell.swift; sourceTree = "<group>"; };
 		B89AD402285ED15900CCE027 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		B89AD404285ED2A700CCE027 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
@@ -168,6 +167,7 @@
 		B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableCellTableViewCell.swift; sourceTree = "<group>"; };
 		B8F352D92862DD0A0068E87D /* ScheduleEventListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventListTableViewCell.swift; sourceTree = "<group>"; };
 		B8F352DB28631C080068E87D /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		B8F352DD2863FED10068E87D /* MyAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAlert.swift; sourceTree = "<group>"; };
 		B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailListTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
 		B8F99C282860625200B88244 /* MKMapView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView + Extension.swift"; sourceTree = "<group>"; };
@@ -287,7 +287,6 @@
 			isa = PBXGroup;
 			children = (
 				B8CC5EAD285872F4004C5D7A /* HomePageTutorCollectionViewCell.swift */,
-				B86943D22858673C008021C9 /* HomePageTutorListTableViewCell.swift */,
 			);
 			path = HomePageVCViews;
 			sourceTree = "<group>";
@@ -421,6 +420,7 @@
 			children = (
 				B8AB0646285B2B49002110A4 /* CalendarHelper.swift */,
 				B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */,
+				B8F352DD2863FED10068E87D /* MyAlert.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -608,8 +608,8 @@
 				B8F99C312860766B00B88244 /* EventDetailContentTableViewCell.swift in Sources */,
 				B8AB0613285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift in Sources */,
 				B8C7B393285725E200CA7370 /* InteractionViewController.swift in Sources */,
+				B8F352DE2863FED10068E87D /* MyAlert.swift in Sources */,
 				B89AD40A285EEBE600CCE027 /* CreateEventViewController.swift in Sources */,
-				B86943D32858673C008021C9 /* HomePageTutorListTableViewCell.swift in Sources */,
 				B8F352D22861B9CF0068E87D /* PostCommentViewController.swift in Sources */,
 				B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */,
 				B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */,

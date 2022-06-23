@@ -310,7 +310,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	func configure() {
 		guard let tutor = tutor, let user = user else { return }
-		let imageUrl = URL(string: user.profileImageURL)
+		let imageUrl = URL(string: tutor.profileImageURL)
 		nameLabel.text = tutor.name
 		profilePhotoImageView.kf.setImage(with: imageUrl)
 		subjectLabel.text = tutor.subject
@@ -340,6 +340,11 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		}
 		let averageRating = ratingSum / Double(tutor.ratings.count)
 		let roudedAverageRating = round(averageRating * 10) / 10
-		return String(roudedAverageRating)
+		if roudedAverageRating == 0 {
+			return "0"
+		} else {
+			return String(roudedAverageRating)
+		}
+		
 	}
 }

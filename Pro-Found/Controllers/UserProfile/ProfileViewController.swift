@@ -20,6 +20,8 @@ class ProfileViewController: UIViewController {
 		}
 	}
 	
+	let customAlert = MyAlert()
+	
 	private let topView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
@@ -88,9 +90,18 @@ class ProfileViewController: UIViewController {
 	}()
 	
 	private lazy var logoutButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Log out")
+		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear,
+														buttonText: "Log out")
 		button.widthAnchor.constraint(equalToConstant: 60).isActive = true
 		button.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var beTutorButton: UIButton = {
+		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear,
+														buttonText: "Become Tutor")
+		button.widthAnchor.constraint(equalToConstant: 120).isActive = true
+		button.addTarget(self, action: #selector(handleBecomeTutor), for: .touchUpInside)
 		return button
 	}()
 	
@@ -142,8 +153,12 @@ class ProfileViewController: UIViewController {
 		dividerView.anchor(top: editButton.bottomAnchor, left: topView.leftAnchor,
 						   bottom: topView.bottomAnchor, right: topView.rightAnchor, paddingTop: 36, height: 1)
 		
+		view.addSubview(beTutorButton)
+		beTutorButton.centerX(inView: view, topAnchor: topView.bottomAnchor, paddingTop: 24)
+		
 		view.addSubview(logoutButton)
 		logoutButton.center(inView: view)
+		
 	}
 	
 	func setupNavBar() {
@@ -164,6 +179,18 @@ class ProfileViewController: UIViewController {
 		let picker = PHPickerViewController(configuration: configuration)
 		picker.delegate = self
 		self.present(picker, animated: true, completion: nil)
+	}
+	
+	@objc func handleBecomeTutor() {
+		customAlert.showAlert(with: "Become a Tutor", message: "Choose a subject", on: self)
+	}
+	
+	@objc func dismissAlert() {
+		customAlert.dismissAlert()
+	}
+	
+	@objc func finishBecomeTutor() {
+		customAlert.finishBecomeTutor()
 	}
 	
 	@objc func handleLogout() {

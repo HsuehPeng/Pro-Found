@@ -35,6 +35,15 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 		return label
 	}()
 	
+	private lazy var ratingButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.star)?.withTintColor(.systemYellow)
+		button.setImage(image, for: .normal)
+		button.setTitle("0", for: .normal)
+		button.setTitleColor(UIColor.systemYellow, for: .normal)
+		return button
+	}()
+	
 	private let followersLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 10), textColor: UIColor.dark40, text: "Followers: 100")
 		return label
@@ -46,6 +55,7 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 		button.setTitleColor(UIColor.white, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 9)
 		button.widthAnchor.constraint(equalToConstant: 50).isActive = true
+		button.heightAnchor.constraint(equalToConstant: 25).isActive = true
 		button.layer.cornerRadius = 5
 		button.backgroundColor = .orange
 		return button
@@ -66,17 +76,22 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(tutorImageView)
-		tutorImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 148)
+		tutorImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor,
+							  right: contentView.rightAnchor, paddingLeft: 16, paddingRight: 24, height: 200)
 		
 		contentView.addSubview(nameLabel)
-		nameLabel.anchor(top: tutorImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 12)
+		nameLabel.anchor(top: tutorImageView.bottomAnchor, left: contentView.leftAnchor,
+						 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 16, paddingRight: 16)
+		
+		contentView.addSubview(ratingButton)
+		ratingButton.anchor(top: tutorImageView.bottomAnchor, right: tutorImageView.rightAnchor, paddingTop: 4)
 		
 		contentView.addSubview(followersLabel)
-		followersLabel.anchor(top: nameLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 4)
+		followersLabel.anchor(top: nameLabel.bottomAnchor, left: tutorImageView.leftAnchor, paddingTop: 16)
 		
 		contentView.addSubview(subjectButton)
 		subjectButton.centerYAnchor.constraint(equalTo: followersLabel.centerYAnchor).isActive = true
-		subjectButton.anchor(left: followersLabel.rightAnchor, right: contentView.rightAnchor, paddingLeft: 2)
+		subjectButton.anchor(right: tutorImageView.rightAnchor)
 		
 	}
 	

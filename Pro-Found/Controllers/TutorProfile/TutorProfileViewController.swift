@@ -139,7 +139,13 @@ class TutorProfileViewController: UIViewController {
 			guard let self = self else { return }
 			switch result {
 			case .success(let articles):
-				self.tutorArticles = articles
+				let filteredArticles = articles.filter { article in
+					if article.userID == self.tutor.userID {
+						return true
+					}
+					return false
+				}
+				self.tutorArticles = filteredArticles
 			case . failure(let error):
 				print(error)
 			}

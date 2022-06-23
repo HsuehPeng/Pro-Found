@@ -109,8 +109,17 @@ struct UserServie {
 		
 	}
 	
-	func uploadUserPhoto() {
-		
+	func updateTutorState(user: User, isTutor: Bool, subject: String, completion: @escaping () -> Void) {
+		dbUsers.document(user.userID).updateData([
+			"isTutor": isTutor,
+			"subject": subject
+		]) { error in
+			if let error = error {
+				print("Error updating tutor state: \(error)")
+			} else {
+				completion()
+			}
+		}
 	}
 	
 	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double) {
