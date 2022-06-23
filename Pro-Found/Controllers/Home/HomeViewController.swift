@@ -65,7 +65,6 @@ class HomeViewController: UIViewController {
 	
 	private lazy var languageButton: UIButton = {
 		let button = CustomUIElements().subjectSelectionButton(subject: Subject.music)
-
 		button.setTitle("Language", for: .normal)
 		button.addTarget(self, action: #selector(subjectButtonPressed), for: .touchUpInside)
 		return button
@@ -154,7 +153,7 @@ class HomeViewController: UIViewController {
 		topBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
 		sixtyFour = topBarView.heightAnchor.constraint(equalToConstant: 55)
 		sixtyFour?.isActive = true
-		oneHundred = topBarView.heightAnchor.constraint(equalToConstant: 100)
+		oneHundred = topBarView.heightAnchor.constraint(equalToConstant: 80)
 		oneHundred?.isActive = false
 		
 		topBarView.addSubview(profilePhotoImageView)
@@ -177,9 +176,9 @@ class HomeViewController: UIViewController {
 		subjectButtonVStack.axis = .horizontal
 		subjectButtonVStack.spacing = 6
 		subjectButtonVStack.distribution = .fillEqually
-		view.addSubview(subjectButtonVStack)
+		topBarView.addSubview(subjectButtonVStack)
 		subjectButtonVStack.anchor(top: profilePhotoImageView.bottomAnchor, left: topBarView.leftAnchor,
-								   right: topBarView.rightAnchor, paddingTop: 8)
+								   right: topBarView.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingRight: 8)
 		
 		view.addSubview(collectionView)
 		collectionView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
@@ -201,6 +200,8 @@ class HomeViewController: UIViewController {
 			subjectButtonColletions.forEach { button in
 				UIView.animate(withDuration: 0.4) {
 					button.isHidden = !button.isHidden
+					button.isSelected = false
+					button.backgroundColor = .dark10
 					button.alpha = 0
 					button.layoutIfNeeded()
 				}
@@ -223,22 +224,27 @@ class HomeViewController: UIViewController {
 		guard let titleLabel = sender.titleLabel, let tutors = tutors else { return }
 		switch titleLabel.text {
 		case Subject.language.rawValue:
+			toggleSelectedSubjectButton(buttons: subjectButtonColletions, selectedButton: languageButton)
 			filteredTutors = tutors.filter({ tutor in
 				tutor.subject == Subject.language.rawValue
 			})
 		case Subject.technology.rawValue:
+			toggleSelectedSubjectButton(buttons: subjectButtonColletions, selectedButton: techButton)
 			filteredTutors = tutors.filter({ tutor in
 				tutor.subject == Subject.technology.rawValue
 			})
 		case Subject.art.rawValue:
+			toggleSelectedSubjectButton(buttons: subjectButtonColletions, selectedButton: artButton)
 			filteredTutors = tutors.filter({ tutor in
 				tutor.subject == Subject.art.rawValue
 			})
 		case Subject.sport.rawValue:
+			toggleSelectedSubjectButton(buttons: subjectButtonColletions, selectedButton: sportButton)
 			filteredTutors = tutors.filter({ tutor in
 				tutor.subject == Subject.sport.rawValue
 			})
 		case Subject.music.rawValue:
+			toggleSelectedSubjectButton(buttons: subjectButtonColletions, selectedButton: musicButton)
 			filteredTutors = tutors.filter({ tutor in
 				tutor.subject == Subject.music.rawValue
 			})
@@ -267,6 +273,15 @@ class HomeViewController: UIViewController {
 		let imageUrl = URL(string: user.profileImageURL)
 		nameLabel.text = user.name
 		profilePhotoImageView.kf.setImage(with: imageUrl)
+	}
+	
+	func toggleSelectedSubjectButton(buttons: [UIButton], selectedButton: UIButton) {
+		for i in 0...buttons.count - 1 {
+			buttons[i].isSelected = false
+			buttons[i].backgroundColor = .dark10
+		}
+		selectedButton.isSelected = true
+		selectedButton.backgroundColor = .orange
 	}
 }
 
@@ -302,7 +317,8 @@ extension HomeViewController: UICollectionViewDelegate {
 		guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: GeneralHeaderCollectionReusableView.reuseIdentifier, for: indexPath)
 				as? GeneralHeaderCollectionReusableView else { fatalError("Can not dequeue GeneralHeaderCollectionReusableView") }
 		header.articleListDelagate = self
-		header.titleLabel.text = "Explore tutors..."
+		header.actionButton.isHidden = true
+		header.titleLabel.text = "Explore Tutors..."
 		return header
 	}
 }

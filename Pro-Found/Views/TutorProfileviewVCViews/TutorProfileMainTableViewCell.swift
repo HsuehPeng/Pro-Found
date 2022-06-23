@@ -345,6 +345,5 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		} else {
 			return String(roudedAverageRating)
 		}
-		
 	}
 }
