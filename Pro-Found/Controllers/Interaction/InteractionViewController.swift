@@ -54,14 +54,16 @@ class InteractionViewController: UIViewController {
 	
 	private lazy var postOptionButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.intern), for: .normal)
+		let image = UIImage.asset(.intern)
+		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
 		return button
 	}()
 	
 	private lazy var eventOptionButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.event), for: .normal)
+		let image = UIImage.asset(.event)
+		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
 		return button
 	}()

@@ -99,19 +99,19 @@ class ArticleListTableViewCell: UITableViewCell {
 		contentView.addSubview(articleTitleLabel)
 		articleTitleLabel.anchor(top: articleImageView.topAnchor, left: articleImageView.rightAnchor,
 								 right: contentView.rightAnchor, paddingLeft: 12)
-		
+
 		contentView.addSubview(editButton)
 		editButton.centerY(inView: articleTitleLabel)
 		editButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
-		
+
 		contentView.addSubview(dateLabel)
 		dateLabel.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
 								 right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 12)
-		
+
 		contentView.addSubview(authorLabel)
 		authorLabel.anchor(top: dateLabel.bottomAnchor, left: articleImageView.rightAnchor,
 								 right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 12)
-		
+
 		contentView.addSubview(subjectButton)
 		subjectButton.anchor(top: authorLabel.bottomAnchor, left: articleImageView.rightAnchor,
 							 paddingTop: 16, paddingLeft: 12)

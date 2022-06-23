@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		23206CC249DEE39ADAB6F49E /* Pods_Pro_Found.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D15E286ACD9EED7E94C5765 /* Pods_Pro_Found.framework */; };
+		B801886F2864AB8E009A6472 /* UserProfileListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -96,6 +97,7 @@
 /* Begin PBXFileReference section */
 		2D15E286ACD9EED7E94C5765 /* Pods_Pro_Found.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pro_Found.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB6B7E430449E4FF00D9FA9B /* Pods-Pro-Found.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-Found.debug.xcconfig"; path = "Target Support Files/Pods-Pro-Found/Pods-Pro-Found.debug.xcconfig"; sourceTree = "<group>"; };
+		B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileListTableViewCell.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -206,6 +208,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		B801886D2864AB72009A6472 /* UserProfileVCViews */ = {
+			isa = PBXGroup;
+			children = (
+				B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */,
+			);
+			path = UserProfileVCViews;
+			sourceTree = "<group>";
+		};
 		B811E3F128531135009C0838 = {
 			isa = PBXGroup;
 			children = (
@@ -272,6 +282,7 @@
 				B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */,
 				B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */,
 				B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */,
+				B801886D2864AB72009A6472 /* UserProfileVCViews */,
 			);
 			path = TutorProfileviewVCViews;
 			sourceTree = "<group>";
@@ -609,6 +620,7 @@
 				B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */,
 				B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */,
 				B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */,
+				B801886F2864AB8E009A6472 /* UserProfileListTableViewCell.swift in Sources */,
 				B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */,
 				B8F352E2286446D90068E87D /* TutorProfileContentHeader.swift in Sources */,
 				B8AB060D2859FA13002110A4 /* Articles.swift in Sources */,
