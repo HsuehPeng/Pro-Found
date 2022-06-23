@@ -122,9 +122,9 @@ extension PostViewController: UITableViewDelegate {
 
 extension PostViewController: PostPageFeedCellDelegate {
 	func checkIfLikedByUser(_ cell: PostPageFeedCell) {
-		guard let post = cell.post, let userID = cell.user?.userID else { return }
+		guard let post = cell.post, let user = user else { return }
 		
-		if post.likedBy.contains(userID) {
+		if post.likedBy.contains(user.userID) {
 			cell.likeButton.isSelected = true
 		} else {
 			cell.likeButton.isSelected = false
@@ -133,13 +133,13 @@ extension PostViewController: PostPageFeedCellDelegate {
 	
 	func likePost(_ cell: PostPageFeedCell) {
 		
-		guard let post = cell.post, let userID = cell.user?.userID else { return }
+		guard let post = cell.post, let user = user else { return }
 		
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: userID)
+			PostService.shared.unlikePost(post: post, userID: user.userID)
 			cell.likeButton.isSelected = false
 		} else {
-			PostService.shared.likePost(post: post, userID: userID)
+			PostService.shared.likePost(post: post, userID: user.userID)
 			cell.likeButton.isSelected = true
 		}
 	}

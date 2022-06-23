@@ -57,7 +57,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private let subjectButton: UIButton = {
+	private lazy var subjectButton: UIButton = {
 		let button = UIButton()
 		button.layer.cornerRadius = 5
 		button.setTitle("Subject", for: .normal)
@@ -118,6 +118,8 @@ class ArticleListTableViewCell: UITableViewCell {
 		contentView.addSubview(ratingButtonNumber)
 		ratingButtonNumber.centerY(inView: subjectButton, leftAnchor: subjectButton.rightAnchor, paddingLeft: 60)
 	}
+	
+	// MARK: - Actions
 	
 	// MARK: - Helpers
 	

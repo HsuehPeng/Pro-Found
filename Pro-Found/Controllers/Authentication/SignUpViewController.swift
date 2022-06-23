@@ -12,6 +12,16 @@ class SignUpViewController: UIViewController {
 
 	// MARK: - Properties
 	
+	private let profileImageView: UIImageView = {
+		let imageView = UIImageView()
+		imageView.image = UIImage.asset(.account_circle)
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
+		imageView.layer.cornerRadius = 32
+		imageView.setDimensions(width: 128, height: 128)
+		return imageView
+	}()
+	
 	private lazy var emailTextField: UITextField = {
 		let textField = UITextField()
 		textField.borderStyle = .roundedRect
@@ -54,27 +64,31 @@ class SignUpViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = "Sign up"
-		view.backgroundColor = .orange
+		view.backgroundColor = .orange30
 		setupUI()
 	}
 	
 	// MARK: - UI
 	
 	func setupUI() {
+		
+		view.addSubview(profileImageView)
+		profileImageView.centerX(inView: view, topAnchor: view.safeAreaLayoutGuide.topAnchor, paddingTop: 24)
+		
 		view.addSubview(emailTextField)
-		emailTextField.anchor(top: view.topAnchor, left: view.leftAnchor, right: view.rightAnchor,
-							  paddingTop: 100, paddingLeft: 16, paddingRight: 16)
+		emailTextField.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+							  paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(passwordTextField)
-		passwordTextField.anchor(top: emailTextField.topAnchor, left: view.leftAnchor,
+		passwordTextField.anchor(top: emailTextField.bottomAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(nameTextField)
-		nameTextField.anchor(top: passwordTextField.topAnchor, left: view.leftAnchor,
+		nameTextField.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(signUpButton)
-		signUpButton.anchor(top: nameTextField.topAnchor, left: view.leftAnchor,
+		signUpButton.anchor(top: nameTextField.bottomAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
 	}
 	
