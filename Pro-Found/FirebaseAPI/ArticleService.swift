@@ -8,6 +8,7 @@
 import FirebaseAuth
 import FirebaseFirestore
 import UIKit
+import SwiftUI
 
 struct ArticleService {
 	
@@ -58,6 +59,26 @@ struct ArticleService {
 		}
 	}
 	
+	func fetchArticle(articleID: String, completion: @escaping (Result<Article, Error>) -> Void) {
+		dbArticles.document(articleID).getDocument { snapshot, error in
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot, let articleData = snapshot.data() else { return }
+				UserServie.shared.getUserData(uid: articleData["userID"] as? String ?? "") { result in
+					switch result {
+					case .success(let user):
+						let article = Article(user: user, dictionary: articleData, articleID: snapshot.documentID)
+						completion(.success(article))
+					case .failure(let error):
+						print(error)
+					}
+				}
+			}
+		}
+	}
+	
+	
 	func fetchArticles(completion: @escaping (Result<[Article], Error>) -> Void) {
 		dbArticles.getDocuments { snapshot, error in
 			var articles = [Article]()
@@ -88,8 +109,77 @@ struct ArticleService {
 		}
 	}
 	
-	func fetchArticle() {
-		
+	func checkIfBookMarked(articleID: String, userID: String, completion: @escaping (Bool) -> Void) {
+		dbUsers.whereField("userID", isEqualTo: userID).whereField("favoriteArticles", arrayContains: articleID).getDocuments {
+			snapshot, error in
+			if let _ = error {
+				completion(false)
+			} else {
+				guard let snapshot = snapshot else {
+					completion(false)
+					return
+				}
+				
+				completion(!snapshot.isEmpty)
+			}
+		}
+	}
+	
+	func addFavoriteArticles(articleID: String, userID: String, completion: @escaping () -> Void) {
+		dbUsers.document(userID).updateData([
+			"favoriteArticles": FieldValue.arrayUnion([articleID])
+		]) { error in
+			if let error = error {
+				print("Error adding favorite article: \(error)")
+			} else {
+				print("Add article successfully")
+				completion()
+			}
+		}
+	}
+	
+	func cancelFavoriteArticles(articleID: String, userID: String, completion: @escaping () -> Void) {
+		dbUsers.document(userID).updateData([
+			"favoriteArticles": FieldValue.arrayRemove([articleID])
+		]) { error in
+			if let error = error {
+				print("Error removing favorite article: \(error)")
+			} else {
+				print("Remove article successfully")
+				completion()
+			}
+		}
+	}
+	
+	func fetchFavoriteArticles(userID: String, completion: @escaping (Result<[Article], Error>) -> Void) {
+		var articles = [Article]()
+		dbUsers.document(userID).getDocument { snapshot, error in
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot, let userData = snapshot.data(),
+				let favoriteArticleIDs = userData["favoriteArticles"] as? [String] else { return }
+				let group = DispatchGroup()
+				
+				for id in favoriteArticleIDs {
+					group.enter()
+					fetchArticle(articleID: id) { result in
+						switch result {
+						case .success(let article):
+							articles.append(article)
+						case .failure(let error):
+							completion(.failure(error))
+						}
+						group.leave()
+					}
+				}
+				group.notify(queue: DispatchQueue.global()) {
+					completion(.success(articles))
+				}
+			}
+			
+
+		}
 	}
 	
 	func rateArticle(senderID: String, articleID: String, rating: Double) {
@@ -102,8 +192,32 @@ struct ArticleService {
 			} else {
 				print("Rate article successfully")
 			}
-
 		}
 	}
 	
+	func deleteArticle(articleID: String, userID: String, completion: @escaping () -> Void) {
+		dbArticles.document(articleID).delete() { error in
+			if let error = error {
+				print("Error removing article: \(error)")
+			} else {
+				dbUsers.document(userID).updateData([
+					"articles": FieldValue.arrayRemove([articleID])
+				])
+				dbUsers.whereField("favoriteArticles", arrayContains: articleID).getDocuments { snapshot, error in
+					guard let snapshot = snapshot else { return }
+					
+					for document in snapshot.documents {
+						let userData = document.data()
+						let favoriteUserID = userData["userID"] as? String ?? ""
+						dbUsers.document(favoriteUserID).updateData([
+							"favoriteArticles": FieldValue.arrayRemove([articleID])
+						])
+					}
+				}
+				DispatchQueue.main.async {
+					completion()
+				}
+			}
+		}
+	}
 }

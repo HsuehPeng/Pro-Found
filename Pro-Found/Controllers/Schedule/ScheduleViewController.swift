@@ -159,7 +159,8 @@ class ScheduleViewController: UIViewController {
 	}()
 	
 	private let tableView: UITableView = {
-		let tableView = UITableView()
+		let tableView = UITableView(frame: .zero, style: .grouped)
+		tableView.backgroundColor = .light60
 		tableView.register(ScheduleCourseListTableCell.self, forCellReuseIdentifier: ScheduleCourseListTableCell .reuseIdentifier)
 		tableView.register(ScheduleEventListTableViewCell.self, forCellReuseIdentifier: ScheduleEventListTableViewCell.reuseIdentifier)
 		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
@@ -414,14 +415,14 @@ extension ScheduleViewController: UICollectionViewDataSource {
 		guard let calendarCell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier, for: indexPath)
 				as? CalendarCollectionViewCell else { fatalError("Can not dequeue CalendarCollectionViewCell") }
 		
-		guard let monthAndYear = monthLabel.text, let year = yearLabel.text else { fatalError("Can not dequeue CalendarCollectionViewCell") }
+//		guard let monthAndYear = monthLabel.text, let year = yearLabel.text else { fatalError("Can not dequeue CalendarCollectionViewCell") }
 		calendarCell.backGroundView.backgroundColor = .clear
 		calendarCell.badgeDot.isHidden = true
 		calendarCell.dateLabel.text = totalSquares[indexPath.item]
 		
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "dd MMMM yyyy"
-		let dateString = "\(totalSquares[indexPath.item]) \(monthAndYear) \(year)"
+		let dateString = "\(totalSquares[indexPath.item]) \(monthLabel.text ?? "") \(yearLabel.text ?? "")"
 		
 		for scheduleEvent in scheduledEventIdWithTimes {
 			let date = Date(timeIntervalSince1970: scheduleEvent.time)

@@ -68,7 +68,9 @@ class ArticleListViewController: UIViewController {
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftBarItemImage, style: .done,
 														   target: self, action: #selector(popVC))
 		title = "Articles"
-		setupSearchController()	}
+		setupSearchController()
+		
+	}
 	
 	func setupSearchController() {
 		UISearchBar.appearance().barTintColor = .orange

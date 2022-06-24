@@ -20,8 +20,28 @@ class ProfileViewController: UIViewController {
 		}
 	}
 	
-	let customAlert = MyAlert()
+	var favoriteArticles = [Article]()
 	
+	var followingTutors = [User]()
+	
+	let profileListIcon: [UIImage?] = [UIImage.asset(.verified_user)?.withTintColor(.green),
+									   UIImage.asset(.account_pin)?.withTintColor(.dark40),
+									  UIImage.asset(.favorite)?.withTintColor(.dark40),
+									  UIImage.asset(.bookmark)?.withTintColor(.dark40),
+									  UIImage.asset(.doc)?.withTintColor(.dark40),
+									  UIImage.asset(.alert_info)?.withTintColor(.dark40),
+									  UIImage.asset(.logout)?.withTintColor(.dark40),
+									   UIImage.asset(.delete)?.withTintColor(.red)]
+	
+	let profileListText: [String] = ["Become a Tutor",
+									 "My Public Profile",
+									 "Following Tutors",
+									 "Saved Articles",
+									 "Term of Usage",
+									 "About App",
+									 "Logout",
+									 "Delete Account"]
+		
 	private let topView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
@@ -85,33 +105,20 @@ class ProfileViewController: UIViewController {
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
-		
+		tableView.isScrollEnabled = false
+		tableView.separatorStyle = .none
+		tableView.register(UserProfileListTableViewCell.self, forCellReuseIdentifier: UserProfileListTableViewCell.reuserIdentifier)
 		return tableView
 	}()
-	
-	private lazy var logoutButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear,
-														buttonText: "Log out")
-		button.widthAnchor.constraint(equalToConstant: 60).isActive = true
-		button.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
-		return button
-	}()
-	
-	private lazy var beTutorButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear,
-														buttonText: "Become Tutor")
-		button.widthAnchor.constraint(equalToConstant: 120).isActive = true
-		button.addTarget(self, action: #selector(handleBecomeTutor), for: .touchUpInside)
-		return button
-	}()
-	
-	
 	
 	// MARK: - Lifecycle
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
+		
+		tableView.dataSource = self
+		tableView.delegate = self
 		
 		setupNavBar()
 		setupUI()
@@ -120,6 +127,9 @@ class ProfileViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
 		fetchUserData()
+		fetchFavoriteArticles()
+		fetchFollowingTutors()
+		
 		navigationController?.navigationBar.isHidden = true
 		tabBarController?.tabBar.isHidden = false
 	}
@@ -155,11 +165,14 @@ class ProfileViewController: UIViewController {
 		dividerView.anchor(top: editButton.bottomAnchor, left: topView.leftAnchor,
 						   bottom: topView.bottomAnchor, right: topView.rightAnchor, paddingTop: 36, height: 1)
 		
-		view.addSubview(beTutorButton)
-		beTutorButton.centerX(inView: view, topAnchor: topView.bottomAnchor, paddingTop: 24)
+		view.addSubview(tableView)
+		tableView.anchor(top: topView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 		
-		view.addSubview(logoutButton)
-		logoutButton.center(inView: view)
+//		view.addSubview(beTutorButton)
+//		beTutorButton.centerX(inView: view, topAnchor: topView.bottomAnchor, paddingTop: 24)
+//
+//		view.addSubview(logoutButton)
+//		logoutButton.center(inView: view)
 		
 	}
 	
@@ -183,19 +196,7 @@ class ProfileViewController: UIViewController {
 		self.present(picker, animated: true, completion: nil)
 	}
 	
-	@objc func handleBecomeTutor() {
-		customAlert.showAlert(with: "Become a Tutor", message: "Choose a subject", on: self)
-	}
-	
-	@objc func dismissAlert() {
-		customAlert.dismissAlert()
-	}
-	
-	@objc func finishBecomeTutor() {
-		customAlert.finishBecomeTutor()
-	}
-	
-	@objc func handleLogout() {
+	func handleLogout() {
 		do {
 			try Auth.auth().signOut()
 		} catch let signOutError as NSError {
@@ -213,12 +214,38 @@ class ProfileViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func fetchUserData() {
-		guard let userID = Auth.auth().currentUser?.uid else { return }
-		UserServie.shared.getUserData(uid: userID) { [weak self] result in
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		UserServie.shared.getUserData(uid: uid) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let user):
 				self.user = user
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func fetchFavoriteArticles() {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		ArticleService.shared.fetchFavoriteArticles(userID: uid) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let articles):
+				self.favoriteArticles = articles
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func fetchFollowingTutors() {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		UserServie.shared.getFollowingTutors(userID: uid) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let users):
+				self.followingTutors = users
 			case .failure(let error):
 				print(error)
 			}
@@ -233,7 +260,59 @@ class ProfileViewController: UIViewController {
 		tutorBadgeImageView.isHidden = !user.isTutor
 		universityLabel.text = user.school
 	}
+}
 
+// MARK: - UITableViewDataSource
+
+extension ProfileViewController: UITableViewDataSource {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 8
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let cell = tableView.dequeueReusableCell(withIdentifier: UserProfileListTableViewCell.reuserIdentifier, for: indexPath)
+				as? UserProfileListTableViewCell else { fatalError("Can not dequeue UserProfileListTableViewCell") }
+		
+		if indexPath.row == 7 {
+			cell.titleLabel.textColor = .red
+		} else if indexPath.row == 0 {
+			cell.titleLabel.textColor = .green
+		}
+		cell.titleLabel.text = profileListText[indexPath.row]
+		cell.iconImageView.image = profileListIcon[indexPath.row]
+		return cell
+	}
+}
+
+// MARK: - UITableViewDelegate
+
+extension ProfileViewController: UITableViewDelegate {
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard let user = user else { return }
+		switch indexPath.row {
+		case 0:
+			print("Choose to become tutor")
+		case 1:
+			let publicProfilePage = TutorProfileViewController(user: user, tutor: user)
+			navigationController?.pushViewController(publicProfilePage, animated: true)
+		case 2:
+			let followingTutorVC = FollowingTutorViewController(followingTutors: followingTutors, user: user)
+			navigationController?.pushViewController(followingTutorVC, animated: true)
+		case 3:
+			let savedArticleVC = ArticleListViewController(articles: favoriteArticles)
+			navigationController?.pushViewController(savedArticleVC, animated: true)
+		case 4:
+			print("Term of usage")
+		case 5:
+			print("About app")
+		case 6:
+			handleLogout()
+		case 7:
+			print("Delete Account")
+		default:
+			break
+		}
+	}
 }
 
 // MARK: - PHPickerViewControllerDelegate

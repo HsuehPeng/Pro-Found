@@ -219,9 +219,7 @@ class EditProfileViewController: UIViewController {
 		let name = "\(lastname) \(firstname)"
 		let user = User(name: name, userID: user.userID, email: email, introContentText: introduction, school: school, schoolMajor: major,
 						ratings: user.ratings, courseBooked: user.courseBooked, profileImageURL: user.profileImageURL,
-						backgroundImageURL: user.backgroundImageURL, courses: user.courses, articles: user.articles,
-						events: user.events, posts: user.posts, blockedUsers: user.blockedUsers, followers: user.followers,
-						followings: user.followings, subject: user.subject, isTutor: user.isTutor)
+						backgroundImageURL: user.backgroundImageURL, courses: user.courses, articles: user.articles, favoriteArticles: user.favoriteArticles, events: user.events, posts: user.posts, blockedUsers: user.blockedUsers, followers: user.followers, followings: user.followings, subject: user.subject, isTutor: user.isTutor)
 		UserServie.shared.uploadUserData(user: user) { [weak self] in
 			guard let self = self else { return }
 			self.navigationController?.popViewController(animated: true)

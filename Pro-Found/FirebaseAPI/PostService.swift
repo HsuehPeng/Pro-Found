@@ -159,4 +159,29 @@ struct PostService {
 		}
 	}
 	
+	func deletePost(postID: String, userID: String, completion: @escaping () -> Void) {
+		dbPosts.document(postID).delete() { error in
+			if let error = error {
+				print("Error removing post: \(error)")
+			} else {
+				dbUsers.document(userID).updateData([
+					"posts": FieldValue.arrayRemove([postID])
+				])
+				
+				dbReplies.whereField("postID", isEqualTo: postID).getDocuments { snapshot, error in
+					guard let snapshot = snapshot else { return }
+					
+					for document in snapshot.documents {
+						let replyID = document.documentID
+						dbReplies.document(replyID).delete()
+					}
+				}
+
+				DispatchQueue.main.async {
+					completion()
+				}
+			}
+		}
+	}
+	
 }

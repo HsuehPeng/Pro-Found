@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ArticleDetailViewController: UIViewController {
 	
 	// MARK: - Properties
 	
 	let article: Article
+	
+	var isBookMarked: Bool = false
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
@@ -38,7 +41,7 @@ class ArticleDetailViewController: UIViewController {
 		view.backgroundColor = .white
 		
 		tableView.dataSource = self
-		
+		checkIfBookMarded()
 		setupNavBar()
 		setupUI()
     }
@@ -54,13 +57,48 @@ class ArticleDetailViewController: UIViewController {
 		navigationController?.navigationBar.isHidden = false
 		tabBarController?.tabBar.isHidden = true
 		let leftBarItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
+		let rightBarItemImage = UIImage.asset(.bookmark)?.withTintColor(.dark40)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftBarItemImage, style: .done, target: self, action: #selector(popVC))
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: rightBarItemImage, style: .done, target: self, action: #selector(bookmarkArticle))
 	}
 	
 	// MARK: - Actions
 	
+	@objc func bookmarkArticle() {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
+		if isBookMarked {
+			ArticleService.shared.cancelFavoriteArticles(articleID: article.articleID, userID: uid) { [weak self] in
+				guard let self = self else { return }
+				self.navigationItem.rightBarButtonItem?.tintColor = UIColor.dark40
+				self.isBookMarked = false
+			}
+		} else {
+			ArticleService.shared.addFavoriteArticles(articleID: article.articleID, userID: uid) { [weak self] in
+				guard let self = self else { return }
+				self.navigationItem.rightBarButtonItem?.tintColor = UIColor.orange
+				self.isBookMarked = true
+			}
+		}
+	}
+	
 	@objc func popVC() {
 		navigationController?.popViewController(animated: true)
+	}
+	
+	// MARK: Helpers
+	
+	func checkIfBookMarded() {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		ArticleService.shared.checkIfBookMarked(articleID: article.articleID, userID: uid) { [weak self] isBookMarked in
+			guard let self = self else { return }
+			self.isBookMarked = isBookMarked
+			if isBookMarked {
+				self.navigationItem.rightBarButtonItem?.tintColor = .orange
+			} else {
+				self.navigationItem.rightBarButtonItem?.tintColor = .dark40
+			}
+		}
 	}
 
 }

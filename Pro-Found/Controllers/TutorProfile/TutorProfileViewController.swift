@@ -95,8 +95,6 @@ class TutorProfileViewController: UIViewController {
 		
 		tableView.dataSource = self
 		tableView.delegate = self
-		
-		setupNavBar()
 		setupUI()
 	}
 	
@@ -109,13 +107,14 @@ class TutorProfileViewController: UIViewController {
 		fetchTutorEvents()
 		fetchTutorPosts()
 		checkIfFollowed()
+		setupNavBar()
 	}
 	
 	// MARK: - UI
 	
 	func setupUI() {
 		view.addSubview(tableView)
-		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
+		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 		
 		view.addSubview(backButton)
 		backButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 12, paddingLeft: 18)
@@ -123,6 +122,7 @@ class TutorProfileViewController: UIViewController {
 	
 	func setupNavBar() {
 		navigationController?.navigationBar.isHidden = true
+		tabBarController?.tabBar.isHidden = true
 	}
 	
 	// MARK: - Actions
@@ -212,6 +212,10 @@ class TutorProfileViewController: UIViewController {
 		}
 		selectedButton.isSelected = true
 	}
+	
+	func handleDeletingContent() {
+		
+	}
 
 }
 
@@ -266,6 +270,7 @@ extension TutorProfileViewController: UITableViewDataSource {
 		} else {
 			switch currentContent {
 			case "Articles":
+				articleCell.delegate = self
 				articleCell.article = tutorArticles[indexPath.row]
 				return articleCell
 			case "Events":
@@ -388,6 +393,7 @@ extension TutorProfileViewController: TutorProfileContentHeaderDelegate {
 // MARK: - PostPageFeedCellDelegate
 
 extension TutorProfileViewController: PostPageFeedCellDelegate {
+	
 	func checkIfLikedByUser(_ cell: PostPageFeedCell) {
 		guard let post = cell.post  else { return }
 		
@@ -417,6 +423,24 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 		let postCommentVC = PostCommentViewController(post: post, user: user)
 		navigationController?.pushViewController(postCommentVC, animated: true)
 	}
+	
+	func askToDelete(_ cell: PostPageFeedCell) {
+		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell) else { return }
+		
+		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			PostService.shared.deletePost(postID: post.postID, userID: self.tutor.userID) { [weak self] in
+				guard let self = self else { return }
+				self.tutorPosts.remove(at: indexPath.row)
+				self.tableView.deleteRows(at: [indexPath], with: .fade)
+			}
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
+	}
 }
 
 // MARK: - TutorProfileMainTableViewCellDelegate
@@ -434,6 +458,26 @@ extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 		}
 	}
 	
+}
+
+extension TutorProfileViewController: ArticleListTableViewCellDelegate {
+	func askToDelete(_ cell: ArticleListTableViewCell) {
+		guard let article = cell.article, let indexPath = tableView.indexPath(for: cell) else { return }
+		
+		let controller = UIAlertController(title: "Are you sure to delete this article?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			ArticleService.shared.deleteArticle(articleID: article.articleID, userID: self.tutor.userID) { [weak self] in
+				guard let self = self else { return }
+				self.tutorArticles.remove(at: indexPath.row)
+				self.tableView.deleteRows(at: [indexPath], with: .fade)
+			}
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
+	}
 }
 
 // MARK: - PHPickerViewControllerDelegate
