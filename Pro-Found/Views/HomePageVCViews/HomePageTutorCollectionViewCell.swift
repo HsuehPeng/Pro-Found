@@ -118,6 +118,24 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 		subjectButton.setTitle(tutor.subject, for: .normal)
 		ratingButton.setTitle(calculateAverageRating(tutor: tutor), for: .normal)
 		schoolLabel.text = tutor.school
+		
+		setSubjectColor(subject: tutor.subject, targetView: subjectButton)
+		
+//		switch tutor.subject {
+//		case Subject.language.rawValue:
+//			subjectButton.backgroundColor = Subject.language.color
+//		case Subject.technology.rawValue:
+//			subjectButton.backgroundColor = Subject.technology.color
+//		case Subject.music.rawValue:
+//			subjectButton.backgroundColor = Subject.music.color
+//		case Subject.art.rawValue:
+//			subjectButton.backgroundColor = Subject.art.color
+//		case Subject.sport.rawValue:
+//			subjectButton.backgroundColor = Subject.sport.color
+//		default:
+//			break
+//		}
+		
 	}
 	
 	func calculateAverageRating(tutor: User) -> String {

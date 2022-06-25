@@ -15,7 +15,12 @@ class GeneralMapCellTableViewCell: UITableViewCell {
 	
 	// MARK: - Properties
 	
-	var event: Event?
+	var event: Event? {
+		didSet {
+			guard let event = event else { return }
+			addressLabel.text = event.location
+		}
+	}
 	
 	var location: CLLocation?
 	

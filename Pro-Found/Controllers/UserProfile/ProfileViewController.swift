@@ -105,7 +105,6 @@ class ProfileViewController: UIViewController {
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
-		tableView.isScrollEnabled = false
 		tableView.separatorStyle = .none
 		tableView.register(UserProfileListTableViewCell.self, forCellReuseIdentifier: UserProfileListTableViewCell.reuserIdentifier)
 		return tableView
@@ -166,14 +165,7 @@ class ProfileViewController: UIViewController {
 						   bottom: topView.bottomAnchor, right: topView.rightAnchor, paddingTop: 36, height: 1)
 		
 		view.addSubview(tableView)
-		tableView.anchor(top: topView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
-		
-//		view.addSubview(beTutorButton)
-//		beTutorButton.centerX(inView: view, topAnchor: topView.bottomAnchor, paddingTop: 24)
-//
-//		view.addSubview(logoutButton)
-//		logoutButton.center(inView: view)
-		
+		tableView.anchor(top: topView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
 	}
 	
 	func setupNavBar() {
@@ -192,6 +184,12 @@ class ProfileViewController: UIViewController {
 		var configuration = PHPickerConfiguration()
 		configuration.selectionLimit = 1
 		let picker = PHPickerViewController(configuration: configuration)
+		
+		if let sheet = picker.presentationController as? UISheetPresentationController {
+			sheet.detents = [.medium(), .large()]
+			sheet.preferredCornerRadius = 25
+		}
+		
 		picker.delegate = self
 		self.present(picker, animated: true, completion: nil)
 	}
@@ -220,6 +218,7 @@ class ProfileViewController: UIViewController {
 			switch result {
 			case .success(let user):
 				self.user = user
+				self.tutorBadgeImageView.isHidden = !user.isTutor
 			case .failure(let error):
 				print(error)
 			}
@@ -257,7 +256,6 @@ class ProfileViewController: UIViewController {
 		let imageUrl = URL(string: user.profileImageURL)
 		profileImageView.kf.setImage(with: imageUrl)
 		nameLabel.text = user.name
-		tutorBadgeImageView.isHidden = !user.isTutor
 		universityLabel.text = user.school
 	}
 }
@@ -266,7 +264,7 @@ class ProfileViewController: UIViewController {
 
 extension ProfileViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 8
+		return profileListIcon.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -291,7 +289,12 @@ extension ProfileViewController: UITableViewDelegate {
 		guard let user = user else { return }
 		switch indexPath.row {
 		case 0:
-			print("Choose to become tutor")
+			let becomeTutorVC = BecomeTutorViewController(user: user)
+			if let sheet = becomeTutorVC.presentationController as? UISheetPresentationController {
+				sheet.detents = [.medium()]
+				sheet.preferredCornerRadius = 25
+			}
+			present(becomeTutorVC, animated: true)
 		case 1:
 			let publicProfilePage = TutorProfileViewController(user: user, tutor: user)
 			navigationController?.pushViewController(publicProfilePage, animated: true)

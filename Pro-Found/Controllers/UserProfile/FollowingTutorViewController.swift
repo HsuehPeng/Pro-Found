@@ -108,3 +108,7 @@ extension FollowingTutorViewController: UICollectionViewDelegate {
 		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}
 }
+
+extension FollowingTutorViewController: UIScrollViewDelegate {
+	
+}

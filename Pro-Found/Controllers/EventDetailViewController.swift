@@ -24,11 +24,14 @@ class EventDetailViewController: UIViewController {
 		}
 	}
 	
+	var participants = [User]()
+	
 	var eventLocation: CLLocation?
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView(frame: .zero, style: .grouped)
 		tableView.separatorStyle = .none
+		tableView.backgroundColor = .light60
 		tableView.register(EventDetailListTableViewCell.self, forCellReuseIdentifier: EventDetailListTableViewCell.reuseIdentifier)
 		tableView.register(GeneralMapCellTableViewCell.self, forCellReuseIdentifier: GeneralMapCellTableViewCell.reuseIdentifier)
 		tableView.register(EventDetailContentTableViewCell.self, forCellReuseIdentifier: EventDetailContentTableViewCell.reuseIdentifier)
@@ -73,6 +76,7 @@ class EventDetailViewController: UIViewController {
 		convertAdressToCLLocation()
 		checkIfFollowed()
 		checkIfEventBooked()
+		fetchParticipants()
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -153,6 +157,28 @@ class EventDetailViewController: UIViewController {
 			self.eventLocation = location
 		}
 	}
+	
+	func fetchParticipants() {
+		let group = DispatchGroup()
+		
+		for participantID in event.participants {
+			group.enter()
+			UserServie.shared.getUserData(uid: participantID) { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let user):
+					self.participants.append(user)
+				case .failure(let error):
+					print(error)
+				}
+				group.leave()
+			}
+		}
+		
+		group.notify(queue: DispatchQueue.main) {
+			self.tableView.reloadData()
+		}
+	}
 }
 
 // MARK: - UITableViewDataSource
@@ -182,9 +208,12 @@ extension EventDetailViewController: UITableViewDataSource {
 			listCell.event = event
 			return listCell
 		} else if indexPath.section == 1 {
+			mapCell.event = event
 			mapCell.eventLocation = eventLocation
 			return mapCell
 		} else {
+			detailCell.event = event
+			detailCell.participants = participants
 			return detailCell
 		}
 	}

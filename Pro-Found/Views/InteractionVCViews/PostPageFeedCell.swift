@@ -10,9 +10,14 @@ import Kingfisher
 
 protocol PostPageFeedCellDelegate: AnyObject {
 	func goToCommentVC(_ cell: PostPageFeedCell)
+	func goToPostUserProfile(_ cell: PostPageFeedCell)
 	func likePost(_ cell: PostPageFeedCell)
 	func checkIfLikedByUser(_ cell: PostPageFeedCell)
 	func askToDelete(_ cell: PostPageFeedCell)
+}
+
+extension PostPageFeedCellDelegate {
+	func goToPostUserProfile(_ cell: PostPageFeedCell) {}
 }
 
 class PostPageFeedCell: UITableViewCell {
@@ -46,9 +51,9 @@ class PostPageFeedCell: UITableViewCell {
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
 		
-//		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
-//		imageView.addGestureRecognizer(tap)
-//		imageView.isUserInteractionEnabled = true
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
 		
 		return imageView
 	}()
@@ -68,6 +73,7 @@ class PostPageFeedCell: UITableViewCell {
 	private lazy var feedEditButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.more), for: .normal)
+		button.isHidden = true
 		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
 		return button
 	}()
@@ -170,6 +176,10 @@ class PostPageFeedCell: UITableViewCell {
 	
 	// MARK: - Actions
 	
+	@objc func handleProfileImageTapped() {
+		delegate?.goToPostUserProfile(self)
+	}
+	
 	@objc func goToCommentVC() {
 		delegate?.goToCommentVC(self)
 	}
@@ -207,12 +217,18 @@ class PostPageFeedCell: UITableViewCell {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "h:mm a ∙ MM/dd/yyyy"
 		let postDate = Date(timeIntervalSince1970: post.timestamp)
+		
 		profileImageView.kf.setImage(with: imageUrl)
-		feedNameLabel.text = user.name
+		feedNameLabel.text = post.user.name
 		feedTimeLabel.text = dateFormatter.string(from: postDate)
 		contentTextLabel.text = post.contentText
 		likeCountLabel.text = "\(post.likes) likes"
 		
 		delegate?.checkIfLikedByUser(self)
+		
+		if post.user.userID == user.userID {
+			feedEditButton.isHidden = false
+		}
 	}
+	
 }

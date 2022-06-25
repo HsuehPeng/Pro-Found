@@ -360,4 +360,30 @@ struct UserServie {
 		}
 	}
 	
+	func toggleTutorStatus(userID: String, subject: String, isTutor: Bool, completion: @escaping () -> Void) {
+		if isTutor {
+			dbUsers.document(userID).updateData([
+				"subject": "",
+				"isTutor": !isTutor
+			]) { error in
+				if let error = error {
+					print("Error cancelling Tutor: \(error)")
+				} else {
+					completion()
+				}
+			}
+		} else {
+			dbUsers.document(userID).updateData([
+				"subject": subject,
+				"isTutor": !isTutor
+			]) { error in
+				if let error = error {
+					print("Error becoming Tutor: \(error)")
+				} else {
+					completion()
+				}
+			}
+		}
+	}
+	
 }

@@ -10,6 +10,7 @@
 		23206CC249DEE39ADAB6F49E /* Pods_Pro_Found.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D15E286ACD9EED7E94C5765 /* Pods_Pro_Found.framework */; };
 		B801886F2864AB8E009A6472 /* UserProfileListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */; };
 		B801887128657C5D009A6472 /* FollowingTutorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B801887028657C5D009A6472 /* FollowingTutorViewController.swift */; };
+		B80188752866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80188742866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -100,6 +101,7 @@
 		AB6B7E430449E4FF00D9FA9B /* Pods-Pro-Found.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-Found.debug.xcconfig"; path = "Target Support Files/Pods-Pro-Found/Pods-Pro-Found.debug.xcconfig"; sourceTree = "<group>"; };
 		B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileListTableViewCell.swift; sourceTree = "<group>"; };
 		B801887028657C5D009A6472 /* FollowingTutorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingTutorViewController.swift; sourceTree = "<group>"; };
+		B80188742866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSubjectUICollectionViewCell.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */,
+				B80188742866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift */,
 			);
 			path = UserProfileVCViews;
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 				B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */,
 				B8F352DA2862DD0A0068E87D /* ScheduleEventListTableViewCell.swift in Sources */,
 				B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */,
+				B80188752866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift in Sources */,
 				B8AB063F285B088E002110A4 /* LoginViewController.swift in Sources */,
 				B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */,
 				B8AB0654285CB4FB002110A4 /* ProfileViewController.swift in Sources */,

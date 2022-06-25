@@ -97,16 +97,9 @@ extension PostViewController: UITableViewDataSource {
 		guard let feedCell = tableView.dequeueReusableCell(withIdentifier: PostPageFeedCell.reuseIdentifier, for: indexPath)
 				as? PostPageFeedCell else { return UITableViewCell() }
 		let post = filteredPosts[indexPath.row]
-		UserServie.shared.getUserData(uid: post.userID) { result in
-			switch result {
-			case .success(let user):
-				feedCell.delegate = self
-				feedCell.user = user
-			case .failure(let error):
-				print(error)
-			}
-		}
+		feedCell.user = user
 		feedCell.post = post
+		feedCell.delegate = self
 		return feedCell
 	}
 }
@@ -148,6 +141,12 @@ extension PostViewController: PostPageFeedCellDelegate {
 		let post = filteredPosts[indexPath.row]
 		let postCommentVC = PostCommentViewController(post: post, user: user)
 		navigationController?.pushViewController(postCommentVC, animated: true)
+	}
+	
+	func goToPostUserProfile(_ cell: PostPageFeedCell) {
+		guard let post = cell.post, let user = user else { return }
+		let publicProfilePage = TutorProfileViewController(user: user, tutor: post.user)
+		navigationController?.pushViewController(publicProfilePage, animated: true)
 	}
 	
 	func askToDelete(_ cell: PostPageFeedCell) {

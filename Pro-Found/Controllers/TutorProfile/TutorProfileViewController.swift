@@ -452,6 +452,12 @@ extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 			configuration.selectionLimit = 1
 			let picker = PHPickerViewController(configuration: configuration)
 			picker.delegate = self
+			
+			if let sheet = picker.presentationController as? UISheetPresentationController {
+				sheet.detents = [.medium(), .large()]
+				sheet.preferredCornerRadius = 25
+			}
+			
 			self.present(picker, animated: true, completion: nil)
 		} else {
 			return
