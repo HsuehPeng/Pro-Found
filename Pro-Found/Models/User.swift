@@ -20,6 +20,7 @@ struct User: Codable {
 	var backgroundImageURL: String
 	var courses: [String]
 	var articles: [String]
+	var favoriteArticles: [String]
 	var events: [String]
 	var posts: [String]
 	var blockedUsers: [String]
@@ -50,6 +51,7 @@ extension User {
 		subject = dictionary["subject"] as? String ?? ""
 		isTutor = dictionary["isTutor"] as? Bool ?? false
 		courseBooked = dictionary["courseBooked"] as? Int ?? 0
+		favoriteArticles = dictionary["favoriteArticles"] as? [String] ?? []
 	}
 }
 

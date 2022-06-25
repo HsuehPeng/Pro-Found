@@ -64,6 +64,26 @@ private enum STColor: String {
 	case green50
 	case green60
 	
+	// YellowColor
+	
+	case yellow
+	case yellow10
+	case yellow20
+	case yellow30
+	case yellow40
+	case yellow50
+	case yellow60
+	
+	// SkyBlueColor
+	
+	case skyBlue
+	case skyBlue10
+	case skyBlue20
+	case skyBlue30
+	case skyBlue40
+	case skyBlue50
+	case skyBlue60
+	
 }
 
 extension UIColor {
@@ -111,6 +131,22 @@ extension UIColor {
 	static let green40 = STColor(.green40)
 	static let green50 = STColor(.green50)
 	static let green60 = STColor(.green60)
+	
+	static let yellow = STColor(.yellow)
+	static let yellow10 = STColor(.yellow10)
+	static let yellow20 = STColor(.yellow20)
+	static let yellow30 = STColor(.yellow30)
+	static let yellow40 = STColor(.yellow40)
+	static let yellow50 = STColor(.yellow50)
+	static let yellow60 = STColor(.yellow60)
+	
+	static let skyBlue = STColor(.skyBlue)
+	static let skyBlue10 = STColor(.skyBlue10)
+	static let skyBlue20 = STColor(.skyBlue20)
+	static let skyBlue30 = STColor(.skyBlue30)
+	static let skyBlue40 = STColor(.skyBlue40)
+	static let skyBlue50 = STColor(.skyBlue50)
+	static let skyBlue60 = STColor(.skyBlue60)
 	
 	private static func STColor(_ color: STColor) -> UIColor {
 

@@ -33,26 +33,6 @@ class EditProfileViewController: UIViewController {
 		return dividerView
 	}()
 	
-	private let lastnameTitleLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 12),
-												 textColor: UIColor.dark, text: "Last Name")
-		return label
-	}()
-	
-	private let lastnameTitleTextField: UITextField = {
-		let textField = UITextField()
-		textField.font = UIFont.customFont(.manropeRegular, size: 12)
-		textField.placeholder = ""
-		return textField
-	}()
-	
-	private let lastnameDividerView: UIView = {
-		let dividerView = UIView()
-		dividerView.backgroundColor = .dark20
-		dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-		return dividerView
-	}()
-	
 	private let emailTitleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 12),
 												 textColor: UIColor.dark, text: "Email")
@@ -214,14 +194,12 @@ class EditProfileViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func handleDoneEditting() {
-		guard let firstname = nameTitleTextField.text, let lastname = lastnameTitleTextField.text, let email = emailTitleTextField.text,
-			  let school = schoolTitleTextField.text, let major = majorTitleTextField.text, let introduction = introTextView.text else { return }
-		let name = "\(lastname) \(firstname)"
+		guard let firstname = nameTitleTextField.text, let email = emailTitleTextField.text, let school = schoolTitleTextField.text,
+			  let major = majorTitleTextField.text, let introduction = introTextView.text else { return }
+		let name = "\(firstname)"
 		let user = User(name: name, userID: user.userID, email: email, introContentText: introduction, school: school, schoolMajor: major,
 						ratings: user.ratings, courseBooked: user.courseBooked, profileImageURL: user.profileImageURL,
-						backgroundImageURL: user.backgroundImageURL, courses: user.courses, articles: user.articles,
-						events: user.events, posts: user.posts, blockedUsers: user.blockedUsers, followers: user.followers,
-						followings: user.followings, subject: user.subject, isTutor: user.isTutor)
+						backgroundImageURL: user.backgroundImageURL, courses: user.courses, articles: user.articles, favoriteArticles: user.favoriteArticles, events: user.events, posts: user.posts, blockedUsers: user.blockedUsers, followers: user.followers, followings: user.followings, subject: user.subject, isTutor: user.isTutor)
 		UserServie.shared.uploadUserData(user: user) { [weak self] in
 			guard let self = self else { return }
 			self.navigationController?.popViewController(animated: true)

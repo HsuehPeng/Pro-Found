@@ -125,6 +125,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
+		
 		contentView.addSubview(articleImageView)
 		articleImageView.centerX(inView: contentView, topAnchor: contentView.topAnchor, paddingTop: 8)
 		

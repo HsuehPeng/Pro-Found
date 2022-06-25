@@ -80,7 +80,6 @@ class PostViewController: UIViewController {
 		writePostVC.modalPresentationStyle = .fullScreen
 		present(writePostVC, animated: true)
 	}
-	
 }
 
 // MARK: - UITableViewDataSource
@@ -98,16 +97,9 @@ extension PostViewController: UITableViewDataSource {
 		guard let feedCell = tableView.dequeueReusableCell(withIdentifier: PostPageFeedCell.reuseIdentifier, for: indexPath)
 				as? PostPageFeedCell else { return UITableViewCell() }
 		let post = filteredPosts[indexPath.row]
-		UserServie.shared.getUserData(uid: post.userID) { result in
-			switch result {
-			case .success(let user):
-				feedCell.delegate = self
-				feedCell.user = user
-			case .failure(let error):
-				print(error)
-			}
-		}
+		feedCell.user = user
 		feedCell.post = post
+		feedCell.delegate = self
 		return feedCell
 	}
 }
@@ -121,6 +113,7 @@ extension PostViewController: UITableViewDelegate {
 // MARK: - PostPageFeedCellDelegate
 
 extension PostViewController: PostPageFeedCellDelegate {
+	
 	func checkIfLikedByUser(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let user = user else { return }
 		
@@ -132,7 +125,6 @@ extension PostViewController: PostPageFeedCellDelegate {
 	}
 	
 	func likePost(_ cell: PostPageFeedCell) {
-		
 		guard let post = cell.post, let user = user else { return }
 		
 		if cell.likeButton.isSelected {
@@ -149,6 +141,29 @@ extension PostViewController: PostPageFeedCellDelegate {
 		let post = filteredPosts[indexPath.row]
 		let postCommentVC = PostCommentViewController(post: post, user: user)
 		navigationController?.pushViewController(postCommentVC, animated: true)
+	}
+	
+	func goToPostUserProfile(_ cell: PostPageFeedCell) {
+		guard let post = cell.post, let user = user else { return }
+		let publicProfilePage = TutorProfileViewController(user: user, tutor: post.user)
+		navigationController?.pushViewController(publicProfilePage, animated: true)
+	}
+	
+	func askToDelete(_ cell: PostPageFeedCell) {
+		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell), let user = user else { return }
+		
+		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			PostService.shared.deletePost(postID: post.postID, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				self.filteredPosts.remove(at: indexPath.row)
+			}
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
 	}
 
 }

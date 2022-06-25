@@ -134,11 +134,11 @@ class HomeViewController: UIViewController {
 		collectionView.delegate = self
 		
 		setupUI()
-		setupNavBar()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+		setupNavBar()
 		fetchTutors()
 	}
 	
@@ -187,6 +187,7 @@ class HomeViewController: UIViewController {
 	
 	func setupNavBar() {
 		navigationController?.navigationBar.isHidden = true
+		tabBarController?.tabBar.isHidden = false
 	}
 	
 	// MARK: - Actions

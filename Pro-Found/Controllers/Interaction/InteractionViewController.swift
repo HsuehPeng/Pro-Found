@@ -173,14 +173,6 @@ class InteractionViewController: UIViewController {
 				self.indicatorView.layoutIfNeeded()
 			}
 		}
-		
-	}
-	
-	@objc func handleWritePost() {
-		guard let user = user else { return }
-		let writePostVC = WritePostViewController(user: user)
-		writePostVC.modalPresentationStyle = .fullScreen
-		present(writePostVC, animated: true)
 	}
 	
 	// MARK: - Helpers
@@ -222,7 +214,7 @@ class InteractionViewController: UIViewController {
 				filteredPosts.append(post)
 			}
 		}
-		return filteredPosts
+		return filteredPosts.sorted(by: { $0.timestamp > $1.timestamp })
 	}
 	
 	func fetchEvents() {

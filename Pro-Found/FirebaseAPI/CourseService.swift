@@ -140,4 +140,16 @@ struct CourseServie {
 		}
 	}
 	
+	func deleteCourse(courseID: String, userID: String, completion: @escaping () -> Void) {
+		dbCourses.document(courseID).delete() { error in
+			if let error = error {
+				print("Error removing course: \(error)")
+			} else {
+				dbUsers.document(userID).updateData([
+					"courses": FieldValue.arrayRemove([courseID])
+				])
+			}
+		}
+	}
+	
 }

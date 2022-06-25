@@ -55,27 +55,16 @@ class EventDetailListTableViewCell: UITableViewCell {
 		return button
 	}()
 	
-	private let dividerLine1: UIView = {
-		let view = UIView()
-		view.backgroundColor = .dark10
-		return view
-	}()
-	
 	private let dateImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 48, height: 48)
 		imageView.layer.cornerRadius = 48 / 2
-		imageView.image = UIImage.asset(.account_circle)
+		imageView.image = UIImage.asset(.calendar_selected)?.withTintColor(.orange)
 		return imageView
 	}()
 	
 	private let dateLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 14), textColor: .dark60, text: "Test Date")
-		return label
-	}()
-	
-	private let timeLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 14), textColor: .dark60, text: "Test Time")
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12), textColor: .dark40, text: "Test Date")
 		return label
 	}()
 	
@@ -103,12 +92,9 @@ class EventDetailListTableViewCell: UITableViewCell {
 		followButton.anchor(right: contentView.rightAnchor, paddingRight: 16)
 		followButton.centerY(inView: eventOrganizerImageView)
 		
-		contentView.addSubview(dividerLine1)
-		dividerLine1.anchor(top: eventOrganizerImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 1)
-		
 		contentView.addSubview(dateImageView)
-		dateImageView.anchor(top: dividerLine1.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
-							 paddingTop: 8, paddingLeft: 16, paddingBottom: 8)
+		dateImageView.anchor(top: eventOrganizerImageView.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
+							 paddingTop: 16, paddingLeft: 16, paddingBottom: 8)
 		
 		contentView.addSubview(dateLabel)
 		dateLabel.centerY(inView: dateImageView, leftAnchor: dateImageView.rightAnchor, paddingLeft: 8)

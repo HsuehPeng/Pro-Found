@@ -7,10 +7,17 @@
 
 import UIKit
 import Kingfisher
+import FirebaseAuth
+
+protocol ArticleListTableViewCellDelegate: AnyObject {
+	func askToDelete(_ cell: ArticleListTableViewCell)
+}
 
 class ArticleListTableViewCell: UITableViewCell {
 	
 	static let reuseIdentifier = "\(ArticleListTableViewCell.self)"
+	
+	weak var delegate: ArticleListTableViewCellDelegate?
 
 	// MARK: - Properties
 	
@@ -40,6 +47,21 @@ class ArticleListTableViewCell: UITableViewCell {
 	private lazy var editButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.more), for: .normal)
+		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var deleteButton: UIButton = {
+		let button = UIButton()
+		button.setTitle("Delete", for: .normal)
+		button.setTitleColor(.red, for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 12)
+		button.backgroundColor = .orange20
+		button.layer.cornerRadius = 5
+		button.setDimensions(width: 50, height: 20)
+		button.addTarget(self, action: #selector(deleteArticle), for: .touchUpInside)
+		button.isHidden = true
+		button.alpha = 0
 		return button
 	}()
 	
@@ -103,6 +125,9 @@ class ArticleListTableViewCell: UITableViewCell {
 		contentView.addSubview(editButton)
 		editButton.centerY(inView: articleTitleLabel)
 		editButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
+		
+		contentView.addSubview(deleteButton)
+		deleteButton.anchor(top: editButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 16)
 
 		contentView.addSubview(dateLabel)
 		dateLabel.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
@@ -121,6 +146,29 @@ class ArticleListTableViewCell: UITableViewCell {
 	
 	// MARK: - Actions
 	
+	@objc func handleAskToDelete() {
+		if deleteButton.isHidden {
+			UIView.animate(withDuration: 0.3) {
+				self.deleteButton.alpha = 1
+				self.deleteButton.isHidden = !self.deleteButton.isHidden
+			}
+		} else {
+			UIView.animate(withDuration: 0.3) {
+				self.deleteButton.alpha = 0
+//				self.deleteButton.isHidden = !self.deleteButton.isHidden
+			} completion: { done in
+				if done {
+					self.deleteButton.isHidden = !self.deleteButton.isHidden
+				}
+			}
+		}
+
+	}
+	
+	@objc func deleteArticle() {
+		delegate?.askToDelete(self)
+	}
+	
 	// MARK: - Helpers
 	
 	func configureUI() {
@@ -137,6 +185,8 @@ class ArticleListTableViewCell: UITableViewCell {
 		dateLabel.text = articleDate
 		authorLabel.text = article.authorName
 		subjectButton.setTitle(article.subject, for: .normal)
+		
+		checkIfAuthorIsUser()
 		
 		if article.ratings.count == 0 {
 			ratingButtonNumber.setTitle("0", for: .normal)
@@ -155,6 +205,13 @@ class ArticleListTableViewCell: UITableViewCell {
 		let averageRating = ratingSum / Double(article.ratings.count)
 		let roudedAverageRating = round(averageRating * 10) / 10
 		return String(roudedAverageRating)
+	}
+	
+	func checkIfAuthorIsUser() {
+		guard let uid = Auth.auth().currentUser?.uid, let article = article else { return }
+		if article.userID != uid {
+			editButton.isHidden = true
+		}
 	}
 
 }

@@ -14,9 +14,14 @@ class EventDetailContentTableViewCell: UITableViewCell {
 	
 	// MARK: - Properties
 	
-	var course: Course?
+	var event: Event?
 	
-	var participants = [User]()
+	var participants = [User]() {
+		didSet {
+			setupUI()
+			configureUI()
+		}
+	}
 	
 	private let detailTitleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 14),
@@ -41,8 +46,8 @@ class EventDetailContentTableViewCell: UITableViewCell {
 	
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
-		contentView.backgroundColor = .orange10
-		setupUI()
+//		contentView.backgroundColor = .orange10
+		
 	}
 	
 	required init?(coder: NSCoder) {
@@ -70,17 +75,29 @@ class EventDetailContentTableViewCell: UITableViewCell {
 		for i in 0..<participants.count {
 			let participant = participants[i]
 			let imageView = makeParticipantImageView(participant: participant, imageURL: participant.profileImageURL)
+			imageView.setDimensions(width: 32, height: 32)
+			let imageUrl = URL(string: participant.profileImageURL)
+			imageView.kf.setImage(with: imageUrl)
+			imageView.layer.cornerRadius = 32 / 2
+			imageView.clipsToBounds = true
+			imageView.contentMode = .scaleAspectFill
 			participantHStack.addArrangedSubview(imageView)
 		}
+		participantHStack.spacing = 8
 		
 		contentView.addSubview(participantHStack)
 		participantHStack.anchor(top: participantTitleLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
-								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 16, paddingBottom: 12, paddingRight: 16)
+								 paddingTop: 12, paddingLeft: 16, paddingBottom: 12)
 	}
 	
 	// MARK: - Actions
 	
 	// MARK: - Helpers
+	
+	func configureUI() {
+		guard let event = event else { return }
+		detailContentLabel.text = event.introText
+	}
 	
 	func makeParticipantImageView(participant: User, imageURL: String) -> UIImageView {
 		let imageView = UIImageView()

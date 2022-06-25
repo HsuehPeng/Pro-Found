@@ -29,6 +29,7 @@ class CourseDetailViewController: UIViewController {
 	private let tableView: UITableView = {
 		let tableView = UITableView(frame: .zero, style: .grouped)
 		tableView.separatorStyle = .none
+		tableView.backgroundColor = .light60
 		tableView.register(CourseDetailListTableViewCell.self, forCellReuseIdentifier: CourseDetailListTableViewCell.reuseIdentifier)
 		tableView.register(CourseDetailIntroTableViewCell.self, forCellReuseIdentifier: CourseDetailIntroTableViewCell.reuseIdentifier)
 		tableView.register(CourseDetailTableViewHeader.self, forHeaderFooterViewReuseIdentifier: CourseDetailTableViewHeader.reuseIdentifier)

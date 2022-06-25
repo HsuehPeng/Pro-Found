@@ -261,6 +261,35 @@ struct UserServie {
 		}
 	}
 	
+	func getFollowingTutors(userID: String, completion: @escaping (Result<[User], Error>) -> Void) {
+		var users = [User]()
+		dbUsers.document(userID).getDocument { snapshot, error in
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot, let userData = snapshot.data(),
+				let followingTutorIDs = userData["followings"] as? [String] else { return }
+				let group = DispatchGroup()
+				
+				for id in followingTutorIDs {
+					group.enter()
+					getUserData(uid: id) { result in
+						switch result {
+						case .success(let user):
+							users.append(user)
+						case .failure(let error):
+							completion(.failure(error))
+						}
+						group.leave()
+					}
+				}
+				group.notify(queue: DispatchQueue.global()) {
+					completion(.success(users))
+				}
+			}
+		}
+	}
+	
 	func follow(senderID: String, receiverID: String) {
 		dbUsers.document(senderID).updateData([
 			"followings": FieldValue.arrayUnion([receiverID])
@@ -328,6 +357,32 @@ struct UserServie {
 				print("Rate tutor successfully")
 			}
 
+		}
+	}
+	
+	func toggleTutorStatus(userID: String, subject: String, isTutor: Bool, completion: @escaping () -> Void) {
+		if isTutor {
+			dbUsers.document(userID).updateData([
+				"subject": "",
+				"isTutor": !isTutor
+			]) { error in
+				if let error = error {
+					print("Error cancelling Tutor: \(error)")
+				} else {
+					completion()
+				}
+			}
+		} else {
+			dbUsers.document(userID).updateData([
+				"subject": subject,
+				"isTutor": !isTutor
+			]) { error in
+				if let error = error {
+					print("Error becoming Tutor: \(error)")
+				} else {
+					completion()
+				}
+			}
 		}
 	}
 	

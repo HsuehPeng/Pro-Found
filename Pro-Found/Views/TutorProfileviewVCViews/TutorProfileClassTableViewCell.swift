@@ -122,6 +122,21 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 			chooseCourseButton.isHidden = true
 		}
 		
+		switch course.subject {
+		case Subject.language.rawValue:
+			classView.backgroundColor = Subject.language.color
+		case Subject.technology.rawValue:
+			classView.backgroundColor = Subject.technology.color
+		case Subject.music.rawValue:
+			classView.backgroundColor = Subject.music.color
+		case Subject.art.rawValue:
+			classView.backgroundColor = Subject.art.color
+		case Subject.sport.rawValue:
+			classView.backgroundColor = Subject.sport.color
+		default:
+			break
+		}
+		
 		classTitleLabel.text = course.courseTitle
 		summaryLabel.text = course.briefIntro
 		let courseFeeInt = Int(course.fee)

@@ -106,7 +106,7 @@ class SignUpViewController: UIViewController {
 			guard let uid = authResult?.user.uid else { return }
 			let user = User(name: name, userID: uid, email: email, introContentText: "", school: "", schoolMajor: "",
 							ratings: [], courseBooked: 0, profileImageURL: "",
-							backgroundImageURL: "", courses: [], articles: [], events: [], posts: [], blockedUsers: [],
+							backgroundImageURL: "", courses: [], articles: [], favoriteArticles: [], events: [], posts: [], blockedUsers: [],
 							followers: [], followings: [], subject: "", isTutor: false)
 			
 			UserServie.shared.uploadUserData(user: user) { [weak self] in
