@@ -94,7 +94,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		let button = UIButton()
 		let image = UIImage.asset(.star)?.withTintColor(.orange40)
 		button.setImage(image, for: .normal)
-		button.setTitle("0", for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 14)
 		button.setTitleColor(UIColor.orange40, for: .normal)
 		
 		return button
@@ -198,6 +198,7 @@ class ArticleListTableViewCell: UITableViewCell {
 	}
 	
 	func calculateAverageRating(article: Article) -> String {
+		guard !article.ratings.isEmpty else { return "Non" }
 		var ratingSum = 0.0
 		for rating in article.ratings {
 			ratingSum += rating.first?.value ?? 0

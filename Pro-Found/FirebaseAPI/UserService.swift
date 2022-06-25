@@ -346,7 +346,7 @@ struct UserServie {
 		}
 	}
 	
-	func rateTutor(senderID: String, receiverID: String, rating: Double) {
+	func rateTutor(senderID: String, receiverID: String, rating: Double, completion: @escaping () -> Void) {
 		
 		dbUsers.document(receiverID).updateData([
 			"ratings": FieldValue.arrayUnion([[senderID: rating]]),
@@ -354,6 +354,9 @@ struct UserServie {
 			if let error = error {
 				print("Error rating tutor: \(error)")
 			} else {
+				DispatchQueue.main.async {
+					completion()
+				}
 				print("Rate tutor successfully")
 			}
 

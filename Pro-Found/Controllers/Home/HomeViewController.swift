@@ -272,7 +272,7 @@ class HomeViewController: UIViewController {
 	func configure() {
 		guard let user = user else { return }
 		let imageUrl = URL(string: user.profileImageURL)
-		nameLabel.text = user.name
+		nameLabel.text = "\(user.name)"
 		profilePhotoImageView.kf.setImage(with: imageUrl)
 	}
 	

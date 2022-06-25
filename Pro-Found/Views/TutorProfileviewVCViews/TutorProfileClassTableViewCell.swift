@@ -14,6 +14,7 @@ enum CourseColor {
 
 protocol ProfileClassTableViewCellDelegate: AnyObject {
 	func showBottomSheet(_ cell: TutorProfileClassTableViewCell)
+	func goCourseDetail(_ cell: TutorProfileClassTableViewCell)
 }
 
 class TutorProfileClassTableViewCell: UITableViewCell {
@@ -65,11 +66,13 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private lazy var chooseCourseButton: UIButton = {
-		let button = CustomUIElements().makeMediumButton(buttonColor: .white, buttonTextColor: .orange,
-														 borderColor: .clear, buttonText: "Select")
-		button.widthAnchor.constraint(equalToConstant: 120).isActive = true
-		button.addTarget(self, action: #selector(showBottomSheet), for: .touchUpInside)
+	private lazy var goToCourseDetailButton: UIButton = {
+		let button = UIButton()
+		button.backgroundColor = .light60
+		button.layer.cornerRadius = 36 / 2
+		button.setImage(UIImage.asset(.arrow_right)?.withTintColor(.orange), for: .normal)
+		button.setDimensions(width: 36, height: 36)
+		button.addTarget(self, action: #selector(goCourseDetail), for: .touchUpInside)
 		return button
 	}()
 	
@@ -98,16 +101,20 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 		feeLabel.anchor(top: classView.topAnchor, right: classView.rightAnchor, paddingTop: 20, paddingRight: 20)
 		
 		classView.addSubview(summaryLabel)
-		summaryLabel.anchor(top: classTitleLabel.bottomAnchor, left: classView.leftAnchor, right: classView.rightAnchor, paddingTop: 9, paddingLeft: 20, paddingRight: 20)
+		summaryLabel.anchor(top: classTitleLabel.bottomAnchor, left: classView.leftAnchor, right: classView.rightAnchor, paddingTop: 8, paddingLeft: 20, paddingRight: 20)
 
-		classView.addSubview(chooseCourseButton)
-		chooseCourseButton.anchor(bottom: classView.bottomAnchor, right: classView.rightAnchor, paddingBottom: 20, paddingRight: 20)
+		classView.addSubview(goToCourseDetailButton)
+		goToCourseDetailButton.anchor(bottom: classView.bottomAnchor, right: classView.rightAnchor, paddingBottom: 20, paddingRight: 20)
 		
 		classView.addSubview(locationLabel)
-		locationLabel.anchor(top: chooseCourseButton.topAnchor, left: classView.leftAnchor, right: chooseCourseButton.leftAnchor, paddingLeft: 20, paddingRight: 8)
+		locationLabel.anchor(top: goToCourseDetailButton.topAnchor, left: classView.leftAnchor, right: goToCourseDetailButton.leftAnchor, paddingTop: 8, paddingLeft: 20, paddingRight: 16)
 	}
 	
 	// MARK: - Actions
+	
+	@objc func goCourseDetail() {
+		delegate?.goCourseDetail(self)
+	}
 	
 	@objc func showBottomSheet() {
 		delegate?.showBottomSheet(self)
@@ -116,26 +123,9 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 	// MARK: - Helpers
 	
 	func configureUI() {
-		guard let course = course, let uid = Auth.auth().currentUser?.uid else { return }
+		guard let course = course else { return }
 		
-		if course.userID == uid {
-			chooseCourseButton.isHidden = true
-		}
-		
-		switch course.subject {
-		case Subject.language.rawValue:
-			classView.backgroundColor = Subject.language.color
-		case Subject.technology.rawValue:
-			classView.backgroundColor = Subject.technology.color
-		case Subject.music.rawValue:
-			classView.backgroundColor = Subject.music.color
-		case Subject.art.rawValue:
-			classView.backgroundColor = Subject.art.color
-		case Subject.sport.rawValue:
-			classView.backgroundColor = Subject.sport.color
-		default:
-			break
-		}
+		setSubjectButtonColor(subject: course.subject, targetView: classView)
 		
 		classTitleLabel.text = course.courseTitle
 		summaryLabel.text = course.briefIntro
