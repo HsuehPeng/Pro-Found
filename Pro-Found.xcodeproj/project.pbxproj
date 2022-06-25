@@ -382,7 +382,6 @@
 				B83D19BE285608770049846E /* UIFont+Extension.swift */,
 				B8A8FDF32855E4EE00F98326 /* UIColor+Extension.swift */,
 				B83666E728578E1B00772375 /* CustomUIElements.swift */,
-				B8AB0619285A2977002110A4 /* Subject.swift */,
 				B8F99C282860625200B88244 /* MKMapView + Extension.swift */,
 			);
 			path = Extensions;
@@ -442,6 +441,7 @@
 		B8AB0650285B91CE002110A4 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B8AB0619285A2977002110A4 /* Subject.swift */,
 				B8AB0646285B2B49002110A4 /* CalendarHelper.swift */,
 				B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */,
 			);
