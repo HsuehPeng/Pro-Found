@@ -21,6 +21,7 @@ class CreateCourseViewController: UIViewController {
 	
 	private let courseTitleTextField: UITextField = {
 		let textField = UITextField()
+		textField.font = UIFont.customFont(.manropeRegular, size: 14)
 		return textField
 	}()
 	
@@ -38,6 +39,7 @@ class CreateCourseViewController: UIViewController {
 	
 	private let addressTitleTextField: UITextField = {
 		let textField = UITextField()
+		textField.font = UIFont.customFont(.manropeRegular, size: 14)
 		return textField
 	}()
 	
@@ -87,6 +89,7 @@ class CreateCourseViewController: UIViewController {
 		textView.layer.borderColor = UIColor.dark20.cgColor
 		textView.layer.borderWidth = 1
 		textView.layer.cornerRadius = 8
+		textView.font = UIFont.customFont(.manropeRegular, size: 14)
 		return textView
 	}()
 	
@@ -100,6 +103,7 @@ class CreateCourseViewController: UIViewController {
 		textView.layer.borderColor = UIColor.dark20.cgColor
 		textView.layer.borderWidth = 1
 		textView.layer.cornerRadius = 8
+		textView.font = UIFont.customFont(.manropeRegular, size: 14)
 		return textView
 	}()
 	
@@ -114,7 +118,7 @@ class CreateCourseViewController: UIViewController {
 		let textField = UITextField()
 		textField.keyboardType = .numberPad
 		textField.placeholder = "$"
-		textField.font = UIFont.customFont(.interBold, size: 28)
+		textField.font = UIFont.customFont(.interSemiBold, size: 24)
 		return textField
 	}()
 	
@@ -285,8 +289,16 @@ class CreateCourseViewController: UIViewController {
 		let firebaseCourse = FirebaseCourse(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText, subject: selectedSubject, location: addressText,
 									fee: feetextDouble, briefIntro: briefText, detailIntro: introText, hours: 1)
 		
-		CourseServie.shared.uploadNewCourse(fireBasecourse: firebaseCourse)
-		navigationController?.popViewController(animated: true)
+		let hudView = HudView.hud(inView: self.navigationController!.view,
+								animated: true)
+		hudView.text = "Success"
+		
+		CourseServie.shared.uploadNewCourse(fireBasecourse: firebaseCourse) { [weak self] in
+			guard let self = self else { return }
+			hudView.hide()
+			self.navigationController?.popViewController(animated: true)
+		}
+		
 	}
 	
 	// MARK: - Helpers

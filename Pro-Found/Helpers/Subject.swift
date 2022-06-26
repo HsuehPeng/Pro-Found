@@ -29,7 +29,7 @@ enum Subject: String, CaseIterable {
 		}
 	}
 	
-	var color: UIColor? {
+	var subjectButtonColor: UIColor? {
 		switch self {
 		case .language:
 			return UIColor.orange
@@ -43,21 +43,53 @@ enum Subject: String, CaseIterable {
 			return UIColor.dark40
 		}
 	}
+	
+	var subjectTutorProfileColor: UIColor? {
+		switch self {
+		case .language:
+			return UIColor.orange10
+		case .technology:
+			return UIColor.skyBlue10
+		case .music:
+			return UIColor.green10
+		case .art:
+			return UIColor.yellow10
+		case .sport:
+			return UIColor.dark10
+		}
+	}
 
 }
 
-func setSubjectColor(subject: String, targetView: UIView) {
+func setSubjectButtonColor(subject: String, targetView: UIView) {
 	switch subject {
 	case Subject.language.rawValue:
-		targetView.backgroundColor = Subject.language.color
+		targetView.backgroundColor = Subject.language.subjectButtonColor
 	case Subject.technology.rawValue:
-		targetView.backgroundColor = Subject.technology.color
+		targetView.backgroundColor = Subject.technology.subjectButtonColor
 	case Subject.music.rawValue:
-		targetView.backgroundColor = Subject.music.color
+		targetView.backgroundColor = Subject.music.subjectButtonColor
 	case Subject.art.rawValue:
-		targetView.backgroundColor = Subject.art.color
+		targetView.backgroundColor = Subject.art.subjectButtonColor
 	case Subject.sport.rawValue:
-		targetView.backgroundColor = Subject.sport.color
+		targetView.backgroundColor = Subject.sport.subjectButtonColor
+	default:
+		break
+	}
+}
+
+func setTutorProfileColor(subject: String, targetView: UIView) {
+	switch subject {
+	case Subject.language.rawValue:
+		targetView.backgroundColor = Subject.language.subjectTutorProfileColor
+	case Subject.technology.rawValue:
+		targetView.backgroundColor = Subject.technology.subjectTutorProfileColor
+	case Subject.music.rawValue:
+		targetView.backgroundColor = Subject.music.subjectTutorProfileColor
+	case Subject.art.rawValue:
+		targetView.backgroundColor = Subject.art.subjectTutorProfileColor
+	case Subject.sport.rawValue:
+		targetView.backgroundColor = Subject.sport.subjectTutorProfileColor
 	default:
 		break
 	}

@@ -11,6 +11,7 @@
 		B801886F2864AB8E009A6472 /* UserProfileListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */; };
 		B801887128657C5D009A6472 /* FollowingTutorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B801887028657C5D009A6472 /* FollowingTutorViewController.swift */; };
 		B80188752866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80188742866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift */; };
+		B80188772867350B009A6472 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80188762867350B009A6472 /* HudView.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -102,6 +103,7 @@
 		B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileListTableViewCell.swift; sourceTree = "<group>"; };
 		B801887028657C5D009A6472 /* FollowingTutorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingTutorViewController.swift; sourceTree = "<group>"; };
 		B80188742866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSubjectUICollectionViewCell.swift; sourceTree = "<group>"; };
+		B80188762867350B009A6472 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -444,6 +446,7 @@
 				B8AB0619285A2977002110A4 /* Subject.swift */,
 				B8AB0646285B2B49002110A4 /* CalendarHelper.swift */,
 				B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */,
+				B80188762867350B009A6472 /* HudView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -656,6 +659,7 @@
 				B8AB060C2859FA13002110A4 /* Posts.swift in Sources */,
 				B8F99C372860A0C900B88244 /* EventDetailTableViewHeader.swift in Sources */,
 				B8AB0658285CD05E002110A4 /* CaptionTextView.swift in Sources */,
+				B80188772867350B009A6472 /* HudView.swift in Sources */,
 				B8AB06042859F9F8002110A4 /* UserService.swift in Sources */,
 				B8AB06052859F9F8002110A4 /* CourseService.swift in Sources */,
 				B86943D028586079008021C9 /* PrivateKey.swift in Sources */,
@@ -846,7 +850,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Pro-Found/Pro-Found.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 4JAU88YC33;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pro-Found/Info.plist";
@@ -878,7 +882,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Pro-Found/Pro-Found.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 4JAU88YC33;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pro-Found/Info.plist";

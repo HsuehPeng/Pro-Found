@@ -78,7 +78,7 @@ class PostCommentTableCellTableViewCell: UITableViewCell {
 		contentView.addSubview(feedNameLabel)
 		feedNameLabel.anchor(top: contentView.topAnchor, left: profileImageView.rightAnchor,
 							 right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 12, paddingRight: 16)
-		
+
 		contentView.addSubview(contentLabel)
 		contentLabel.anchor(top: feedNameLabel.bottomAnchor, left: profileImageView.rightAnchor,
 							right: contentView.rightAnchor, paddingTop: 8, paddingLeft: 12, paddingRight: 16)

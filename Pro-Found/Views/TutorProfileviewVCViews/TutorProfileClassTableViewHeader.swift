@@ -73,7 +73,7 @@ class TutorProfileClassTableViewHeader: UITableViewHeaderFooterView {
 	
 	func configure() {
 		guard let uid = Auth.auth().currentUser?.uid, let tutor = tutor else { return }
-		if tutor.userID == uid {
+		if tutor.userID == uid && tutor.isTutor {
 			createCourseButton.isHidden = false
 		}
 	}

@@ -156,6 +156,11 @@ enum ImageAsset: String {
 	case art
 	case music
 	case sport
+	
+	// Others
+	
+	case cross
+	case checkmarkHUD
 }
 
 // MARK: - Extension UIImage

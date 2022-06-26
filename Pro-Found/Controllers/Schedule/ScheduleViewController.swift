@@ -12,23 +12,19 @@ class ScheduleViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var user: User? {
-		didSet {
-			guard let user = user else { return }
-			fetchScheduledCourseAndEventIDs(user: user)
-		}
-	}
+	var user: User?
 	
-	var scheduledCourses = [Course]()
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
+	var filteredCoursesIdWithTimes = [ScheduledCourseTime]()
+	var scheduledCourses = [Course]()
 	var filteredScheduledCourses = [Course]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
 	
-	var scheduledEvents = [Event]()
 	var scheduledEventIdWithTimes = [ScheduledEventTime]()
+	var scheduledEvents = [Event]()
 	var filteredScheduledEvents = [Event]() {
 		didSet {
 			tableView.reloadData()
@@ -258,6 +254,7 @@ class ScheduleViewController: UIViewController {
 			switch result {
 			case .success(let user):
 				self.user = user
+				self.fetchScheduledCourseAndEventIDs(user: user)
 			case .failure(let error):
 				print(error)
 			}
@@ -316,7 +313,7 @@ class ScheduleViewController: UIViewController {
 		}
 		
 		for scheduledEventIdWithTime in scheduledEventIdWithTimes {
-			EventService.shared.fetchEvent(user: user, eventID: scheduledEventIdWithTime.eventID) { [weak self] result in
+			EventService.shared.fetchEvent(eventID: scheduledEventIdWithTime.eventID) { [weak self] result in
 				guard let self = self else { return }
 				switch result {
 				case .success(let event):
@@ -336,7 +333,7 @@ class ScheduleViewController: UIViewController {
 		let formatter = DateFormatter()
 		formatter.dateFormat = "dd MMMM yyyy"
 		
-		let filteredCoursesIdWithTimes = scheduledCoursesIdWithTimes.filter { scheduledCourseTime in
+		filteredCoursesIdWithTimes = scheduledCoursesIdWithTimes.filter { scheduledCourseTime in
 			let date = Date(timeIntervalSince1970: scheduledCourseTime.time)
 			let courseTimeString = formatter.string(from: date)
 			if courseTimeString == dateString {
@@ -416,6 +413,7 @@ extension ScheduleViewController: UICollectionViewDataSource {
 				as? CalendarCollectionViewCell else { fatalError("Can not dequeue CalendarCollectionViewCell") }
 		
 //		guard let monthAndYear = monthLabel.text, let year = yearLabel.text else { fatalError("Can not dequeue CalendarCollectionViewCell") }
+		calendarCell.dateLabel.textColor = .dark
 		calendarCell.backGroundView.backgroundColor = .clear
 		calendarCell.badgeDot.isHidden = true
 		calendarCell.dateLabel.text = totalSquares[indexPath.item]
@@ -423,6 +421,11 @@ extension ScheduleViewController: UICollectionViewDataSource {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "dd MMMM yyyy"
 		let dateString = "\(totalSquares[indexPath.item]) \(monthLabel.text ?? "") \(yearLabel.text ?? "")"
+		
+		let todayDateString = dateFormatter.string(from: Date())
+		if dateString == todayDateString {
+			calendarCell.dateLabel.textColor = .red40
+		}
 		
 		for scheduleEvent in scheduledEventIdWithTimes {
 			let date = Date(timeIntervalSince1970: scheduleEvent.time)
@@ -495,10 +498,13 @@ extension ScheduleViewController: UITableViewDataSource {
 				as? ScheduleCourseListTableCell else { fatalError("Can not dequeue ScheduleCourseListTableCell") }
 		
 		if indexPath.section == 0 {
+			courseCell.scheduledCourseWithTimeAndStudent = filteredCoursesIdWithTimes[indexPath.row]
 			courseCell.course = filteredScheduledCourses[indexPath.row]
+			courseCell.selectionStyle = .none
 			return courseCell
 		} else {
 			eventCell.event = filteredScheduledEvents[indexPath.row]
+			eventCell.selectionStyle = .none
 			return eventCell
 		}
 

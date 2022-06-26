@@ -55,7 +55,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		let button = UIButton()
 		let image = UIImage.asset(.star)?.withTintColor(.orange40)
 		button.setImage(image, for: .normal)
-		button.setTitle("0", for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 14)
 		button.setTitleColor(UIColor.orange40, for: .normal)
 		button.addTarget(self, action: #selector(handleRateArticle), for: .touchUpInside)
 		
@@ -138,7 +138,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		let infoOneVStack = UIStackView(arrangedSubviews: [ratingTitleLabel, ratingButtonNumber])
 		infoOneVStack.axis = .vertical
 		infoOneVStack.alignment = .center
-		infoOneVStack.spacing = 5
+		infoOneVStack.spacing = 2
 		let infoTwoVStack = UIStackView(arrangedSubviews: [dateTitleLabel, dateLabel])
 		infoTwoVStack.axis = .vertical
 		infoTwoVStack.alignment = .center
@@ -150,6 +150,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		let infoHStack = UIStackView(arrangedSubviews: [infoOneVStack, infoTwoVStack, infoThreeVStack])
 		infoHStack.axis = .horizontal
 		infoHStack.distribution = .fillEqually
+		infoHStack.alignment = .lastBaseline
 		contentView.addSubview(infoHStack)
 		infoHStack.anchor(top: authorNameLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 						  right: contentView.rightAnchor, paddingTop: 36, paddingBottom: 24)

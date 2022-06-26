@@ -29,9 +29,11 @@ class EventListTableViewCell: UITableViewCell {
 	
 	private let eventImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.image = UIImage.asset(.event)
+		imageView.backgroundColor = .orange10
 		imageView.setDimensions(width: 100, height: 128)
-//		imageView.contentMode = .scaleAspectFit
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
+		imageView.layer.cornerRadius = 12
 		return imageView
 	}()
 	

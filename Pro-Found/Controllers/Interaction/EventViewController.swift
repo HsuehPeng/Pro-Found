@@ -100,7 +100,6 @@ class EventViewController: UIViewController {
 extension EventViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//		return 5
 		return events.count
 	}
 	
@@ -109,10 +108,10 @@ extension EventViewController: UITableViewDataSource {
 				as? EventListTableViewCell else { fatalError("Can not dequeue EventListTableViewCell") }
 		let event = events[indexPath.row]
 		cell.event = event
+		cell.selectionStyle = .none
 		cell.delegate = self
 		return cell
 	}
-	
 }
 
 // MARK: - UITableViewDelegate

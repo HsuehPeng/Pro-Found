@@ -124,7 +124,8 @@ struct UserServie {
 	
 	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double) {
 		dbUsers.document(user.userID).collection("ScheduledCourse").document().setData([
-			"\(courseID)": time
+			"\(courseID)": time,
+			"student": user.userID
 		]) { error in
 			if let error = error {
 				print("Error writing ScheduledCourse: \(error)")
@@ -134,7 +135,8 @@ struct UserServie {
 		}
 		
 		dbUsers.document(tutor.userID).collection("ScheduledCourse").document().setData([
-			"\(courseID)": time
+			"\(courseID)": time,
+			"student": user.userID
 		]) { error in
 			if let error = error {
 				print("Error writing ScheduledCourse: \(error)")
@@ -161,13 +163,30 @@ struct UserServie {
 				completion(.failure(error))
 			} else {
 				guard let snapshot = snapshot else { return }
+				let group = DispatchGroup()
+				
 				for document in snapshot.documents {
+					group.enter()
+					
 					let courseTimeData = document.data()
-					guard let courseID = courseTimeData.keys.first, let time = courseTimeData["\(courseID)"] as? Double else { return }
-					let courseTime = ScheduledCourseTime(courseID: courseID, time: time)
-					courseTimes.append(courseTime)
+					guard let courseID = courseTimeData.keys.first, let time = courseTimeData["\(courseID)"] as? Double,
+						  let studentID = courseTimeData["student"] as? String else { return }
+					
+					getUserData(uid: studentID) { result in
+						switch result {
+						case .failure(let error):
+							completion(.failure(error))
+						case .success(let user):
+							let courseTime = ScheduledCourseTime(courseID: courseID, time: time, student: user)
+							courseTimes.append(courseTime)
+						}
+						group.leave()
+					}
 				}
-				completion(.success(courseTimes))
+				
+				group.notify(queue: DispatchQueue.main) {
+					completion(.success(courseTimes))
+				}
 			}
 		}
 	}
@@ -346,7 +365,7 @@ struct UserServie {
 		}
 	}
 	
-	func rateTutor(senderID: String, receiverID: String, rating: Double) {
+	func rateTutor(senderID: String, receiverID: String, rating: Double, completion: @escaping () -> Void) {
 		
 		dbUsers.document(receiverID).updateData([
 			"ratings": FieldValue.arrayUnion([[senderID: rating]]),
@@ -354,6 +373,9 @@ struct UserServie {
 			if let error = error {
 				print("Error rating tutor: \(error)")
 			} else {
+				DispatchQueue.main.async {
+					completion()
+				}
 				print("Rate tutor successfully")
 			}
 

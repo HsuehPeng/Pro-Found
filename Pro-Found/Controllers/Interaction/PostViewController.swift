@@ -99,7 +99,9 @@ extension PostViewController: UITableViewDataSource {
 		let post = filteredPosts[indexPath.row]
 		feedCell.user = user
 		feedCell.post = post
+		
 		feedCell.delegate = self
+		feedCell.selectionStyle = .none
 		return feedCell
 	}
 }

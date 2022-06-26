@@ -13,7 +13,7 @@ class ArticleTextView: UITextView {
 	
 	let placeholderLabel: UILabel = {
 		let label = UILabel()
-		label.font = UIFont.systemFont(ofSize: 16)
+		label.font = UIFont.customFont(.manropeRegular, size: 14)
 		label.textColor = .dark30
 		label.text = "Tell your story..."
 		return label
@@ -24,9 +24,8 @@ class ArticleTextView: UITextView {
 	override init(frame: CGRect, textContainer: NSTextContainer?) {
 		super.init(frame: frame, textContainer: textContainer)
 		
-		backgroundColor = .red
-		font = UIFont.systemFont(ofSize: 16)
-		isScrollEnabled = false
+		font = UIFont.customFont(.manropeRegular, size: 14)
+		isScrollEnabled = true
 		
 		addSubview(placeholderLabel)
 		placeholderLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 4)
@@ -43,5 +42,4 @@ class ArticleTextView: UITextView {
 	@objc func handleTextInputChange() {
 		placeholderLabel.isHidden = !text.isEmpty
 	}
-
 }
