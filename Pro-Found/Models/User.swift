@@ -7,19 +7,20 @@
 
 import Foundation
 
-struct User {
+struct User: Codable {
 	let name: String
 	let userID: String
 	let email: String
 	var introContentText: String
 	var school: String
 	var schoolMajor: String
-	var rating: Double
+	var ratings: [[String: Double]]
 	var courseBooked: Int
 	var profileImageURL: String
 	var backgroundImageURL: String
 	var courses: [String]
 	var articles: [String]
+	var favoriteArticles: [String]
 	var events: [String]
 	var posts: [String]
 	var blockedUsers: [String]
@@ -37,7 +38,7 @@ extension User {
 		introContentText = dictionary["introContentText"] as? String ?? "Test intro"
 		school = dictionary["school"] as? String ?? "Test School"
 		schoolMajor = dictionary["schoolMajor"] as? String ?? "Test Major"
-		rating = dictionary["rating"] as? Double ?? 0
+		ratings = dictionary["ratings"] as? [[String: Double]] ?? []
 		profileImageURL = dictionary["profileImageURL"] as? String ?? ""
 		backgroundImageURL = dictionary["backgroundImageURL"] as? String ?? ""
 		courses = dictionary["courses"] as? [String] ?? []
@@ -50,27 +51,10 @@ extension User {
 		subject = dictionary["subject"] as? String ?? ""
 		isTutor = dictionary["isTutor"] as? Bool ?? false
 		courseBooked = dictionary["courseBooked"] as? Int ?? 0
+		favoriteArticles = dictionary["favoriteArticles"] as? [String] ?? []
 	}
 }
 
-struct FirebaseUser {
-	let name: String
-	let userID: String
-	let email: String
-	var isTutor: Bool
-	var introContentText: String?
-	var school: String?
-	var schoolMajor: String?
-	var rating: Double?
-	var courseBooked: Int?
-	var profileImageURL: String?
-	var backgroundImageURL: String?
-	var courses: [String]?
-	var articles: [String]?
-	var events: [String]?
-	var posts: [String]?
-	var blockedUsers: [String]?
-	var followers: [String]?
-	var followings: [String]?
-	var subject: String?
+struct Rating: Codable {
+	var rating: [[String: Double]]
 }

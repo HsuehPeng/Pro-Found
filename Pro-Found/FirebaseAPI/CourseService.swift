@@ -13,7 +13,7 @@ struct CourseServie {
 	
 	static let shared = CourseServie()
 	
-	func uploadNewCourse(fireBasecourse: FirebaseCourse) {
+	func uploadNewCourse(fireBasecourse: FirebaseCourse, completion: @escaping () -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let courseRef = dbCourses.document()
 		let courseData: [String: Any] = [
@@ -36,7 +36,10 @@ struct CourseServie {
 				dbUsers.document(uid).updateData([
 					"courses": FieldValue.arrayUnion([courseRef.documentID])
 				])
-				print("NewCourse successfully created")
+				DispatchQueue.main.async {
+					completion()
+					print("NewCourse successfully created")
+				}
 			}
 		}
 	}
@@ -136,6 +139,18 @@ struct CourseServie {
 						print(error)
 					}
 				}
+			}
+		}
+	}
+	
+	func deleteCourse(courseID: String, userID: String, completion: @escaping () -> Void) {
+		dbCourses.document(courseID).delete() { error in
+			if let error = error {
+				print("Error removing course: \(error)")
+			} else {
+				dbUsers.document(userID).updateData([
+					"courses": FieldValue.arrayRemove([courseID])
+				])
 			}
 		}
 	}

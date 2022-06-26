@@ -52,4 +52,5 @@ struct FirebaseCourse {
 struct ScheduledCourseTime {
 	let courseID: String
 	let time: Double
+	let student: User
 }

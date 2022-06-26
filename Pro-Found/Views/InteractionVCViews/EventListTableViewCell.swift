@@ -29,9 +29,11 @@ class EventListTableViewCell: UITableViewCell {
 	
 	private let eventImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.image = UIImage.asset(.event)
+		imageView.backgroundColor = .orange10
 		imageView.setDimensions(width: 100, height: 128)
-//		imageView.contentMode = .scaleAspectFit
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
+		imageView.layer.cornerRadius = 12
 		return imageView
 	}()
 	
@@ -52,6 +54,8 @@ class EventListTableViewCell: UITableViewCell {
 		imageView.setDimensions(width: 32, height: 32)
 		imageView.layer.cornerRadius = 16
 		imageView.backgroundColor = .dark40
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		return imageView
 	}()
 	
@@ -64,6 +68,7 @@ class EventListTableViewCell: UITableViewCell {
 	private let addressLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: .dark40, text: "Event address")
+		label.numberOfLines = 0
 		return label
 	}()
 	
@@ -90,11 +95,11 @@ class EventListTableViewCell: UITableViewCell {
 	
 	private func setupUI() {
 		contentView.addSubview(eventImageView)
-		eventImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		eventImageView.centerY(inView: contentView, leftAnchor: contentView.leftAnchor, paddingLeft: 16)
 		
 		contentView.addSubview(eventTitleLabel)
-		eventTitleLabel.anchor(top: eventImageView.topAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
-							   paddingTop: 4, paddingLeft: 12, paddingRight: 16)
+		eventTitleLabel.anchor(top: contentView.topAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
+							   paddingTop: 16, paddingLeft: 12, paddingRight: 16)
 
 		contentView.addSubview(timeLabel)
 		timeLabel.anchor(top: eventTitleLabel.bottomAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
@@ -106,7 +111,7 @@ class EventListTableViewCell: UITableViewCell {
 		
 		contentView.addSubview(organizerImageView)
 		organizerImageView.anchor(top: addressLabel.bottomAnchor, left: eventImageView.rightAnchor,
-								  bottom: contentView.bottomAnchor, paddingTop: 8, paddingLeft: 12, paddingBottom: 16)
+								  bottom: contentView.bottomAnchor, paddingTop: 8, paddingLeft: 12, paddingBottom: 24)
 
 		contentView.addSubview(organizerNameLabel)
 		organizerNameLabel.centerY(inView: organizerImageView, leftAnchor: organizerImageView.rightAnchor, paddingLeft: 8)
@@ -128,12 +133,13 @@ class EventListTableViewCell: UITableViewCell {
 		guard let event = event else { return }
 		
 		checkIfBooked(event: event)
-		
-		let imageUrl = URL(string: event.imageURL)
+		let organizerImageUrl = URL(string: event.organizer.profileImageURL)
+		let eventImageUrl = URL(string: event.imageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMMM dd, yyyy ∙ h:mm a"
 		let eventDate = Date(timeIntervalSince1970: event.timestamp)
-		eventImageView.kf.setImage(with: imageUrl)
+		eventImageView.kf.setImage(with: eventImageUrl)
+		organizerImageView.kf.setImage(with: organizerImageUrl)
 		eventTitleLabel.text = event.eventTitle
 		timeLabel.text = dateFormatter.string(from: eventDate)
 		addressLabel.text = event.location

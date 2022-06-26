@@ -54,14 +54,16 @@ class InteractionViewController: UIViewController {
 	
 	private lazy var postOptionButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.intern), for: .normal)
+		let image = UIImage.asset(.intern)
+		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
 		return button
 	}()
 	
 	private lazy var eventOptionButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.event), for: .normal)
+		let image = UIImage.asset(.event)
+		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
 		return button
 	}()
@@ -171,14 +173,6 @@ class InteractionViewController: UIViewController {
 				self.indicatorView.layoutIfNeeded()
 			}
 		}
-		
-	}
-	
-	@objc func handleWritePost() {
-		guard let user = user else { return }
-		let writePostVC = WritePostViewController(user: user)
-		writePostVC.modalPresentationStyle = .fullScreen
-		present(writePostVC, animated: true)
 	}
 	
 	// MARK: - Helpers
@@ -220,7 +214,7 @@ class InteractionViewController: UIViewController {
 				filteredPosts.append(post)
 			}
 		}
-		return filteredPosts
+		return filteredPosts.sorted(by: { $0.timestamp > $1.timestamp })
 	}
 	
 	func fetchEvents() {

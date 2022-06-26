@@ -8,8 +8,13 @@
 import UIKit
 import FirebaseAuth
 
+enum CourseColor {
+	
+}
+
 protocol ProfileClassTableViewCellDelegate: AnyObject {
 	func showBottomSheet(_ cell: TutorProfileClassTableViewCell)
+	func goCourseDetail(_ cell: TutorProfileClassTableViewCell)
 }
 
 class TutorProfileClassTableViewCell: UITableViewCell {
@@ -22,7 +27,7 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 	
 	var course: Course? {
 		didSet {
-			configure()
+			configureUI()
 		}
 	}
 	
@@ -42,13 +47,14 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 	}()
 	
 	private let summaryLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 12),
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.white, text: "Test summary")
+		label.numberOfLines = 0
 		return label
 	}()
 	
 	private let locationLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 12),
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.white, text: "Test address")
 		label.numberOfLines = 0
 		return label
@@ -60,11 +66,13 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private lazy var chooseCourseButton: UIButton = {
-		let button = CustomUIElements().makeMediumButton(buttonColor: .white, buttonTextColor: .orange,
-														 borderColor: .clear, buttonText: "Choose Course")
-		button.widthAnchor.constraint(equalToConstant: 142).isActive = true
-		button.addTarget(self, action: #selector(showBottomSheet), for: .touchUpInside)
+	private lazy var goToCourseDetailButton: UIButton = {
+		let button = UIButton()
+		button.backgroundColor = .light60
+		button.layer.cornerRadius = 36 / 2
+		button.setImage(UIImage.asset(.arrow_right)?.withTintColor(.orange), for: .normal)
+		button.setDimensions(width: 36, height: 36)
+		button.addTarget(self, action: #selector(goCourseDetail), for: .touchUpInside)
 		return button
 	}()
 	
@@ -93,16 +101,20 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 		feeLabel.anchor(top: classView.topAnchor, right: classView.rightAnchor, paddingTop: 20, paddingRight: 20)
 		
 		classView.addSubview(summaryLabel)
-		summaryLabel.anchor(top: classTitleLabel.bottomAnchor, left: classView.leftAnchor, paddingTop: 9, paddingLeft: 20)
+		summaryLabel.anchor(top: classTitleLabel.bottomAnchor, left: classView.leftAnchor, right: classView.rightAnchor, paddingTop: 8, paddingLeft: 20, paddingRight: 20)
 
-		classView.addSubview(chooseCourseButton)
-		chooseCourseButton.anchor(bottom: classView.bottomAnchor, right: classView.rightAnchor, paddingBottom: 20, paddingRight: 20)
+		classView.addSubview(goToCourseDetailButton)
+		goToCourseDetailButton.anchor(bottom: classView.bottomAnchor, right: classView.rightAnchor, paddingBottom: 20, paddingRight: 20)
 		
 		classView.addSubview(locationLabel)
-		locationLabel.anchor(top: chooseCourseButton.topAnchor, left: classView.leftAnchor, right: chooseCourseButton.leftAnchor, paddingLeft: 20)
+		locationLabel.anchor(top: goToCourseDetailButton.topAnchor, left: classView.leftAnchor, right: goToCourseDetailButton.leftAnchor, paddingTop: 8, paddingLeft: 20, paddingRight: 16)
 	}
 	
 	// MARK: - Actions
+	
+	@objc func goCourseDetail() {
+		delegate?.goCourseDetail(self)
+	}
 	
 	@objc func showBottomSheet() {
 		delegate?.showBottomSheet(self)
@@ -110,11 +122,11 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 	
 	// MARK: - Helpers
 	
-	func configure() {
-		guard let course = course, let uid = Auth.auth().currentUser?.uid else { return }
-		if course.userID == uid {
-			chooseCourseButton.isHidden = true
-		}
+	func configureUI() {
+		guard let course = course else { return }
+		
+		setSubjectButtonColor(subject: course.subject, targetView: classView)
+		
 		classTitleLabel.text = course.courseTitle
 		summaryLabel.text = course.briefIntro
 		let courseFeeInt = Int(course.fee)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Event {
+struct Event: Codable {
 	let userID: String
 	let eventID: String
 	let eventTitle: String
@@ -35,7 +35,7 @@ extension Event {
 	}
 }
 
-struct FirebaseEvent {
+struct FirebaseEvent: Codable {
 	let userID: String
 	let eventTitle: String
 	let organizerName: String
@@ -46,7 +46,7 @@ struct FirebaseEvent {
 	var participants: [String]
 }
 
-struct ScheduledEventTime {
+struct ScheduledEventTime: Codable {
 	let eventID: String
 	let time: Double
 }

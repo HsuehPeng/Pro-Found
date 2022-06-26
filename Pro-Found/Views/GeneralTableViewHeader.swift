@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol GeneralTableViewHeaderDelegate: AnyObject {
+	func tappedSeeAll(_ cell: GeneralTableViewHeader)
+}
+
 class GeneralTableViewHeader: UITableViewHeaderFooterView {
 	
 	static let reuseIdentifier = "\(GeneralTableViewHeader.self)"
+	
+	weak var delegate: GeneralTableViewHeaderDelegate?
 	
 	// MARK: - Properties
 	
@@ -52,7 +58,7 @@ class GeneralTableViewHeader: UITableViewHeaderFooterView {
 	// MARK: - Actions
 	
 	@objc func tappedSeeAll() {
-
+		delegate?.tappedSeeAll(self)
 	}
 
 }

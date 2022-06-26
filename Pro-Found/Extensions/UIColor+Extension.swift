@@ -38,6 +38,52 @@ private enum STColor: String {
 	case orange50
 	case orange60
 	
+	// LightColor
+	
+	case light
+	case light50
+	case light60
+	
+	// RedColor
+	
+	case red
+	case red10
+	case red20
+	case red30
+	case red40
+	case red50
+	case red60
+	
+	// GreenColor
+	
+	case green
+	case green10
+	case green20
+	case green30
+	case green40
+	case green50
+	case green60
+	
+	// YellowColor
+	
+	case yellow
+	case yellow10
+	case yellow20
+	case yellow30
+	case yellow40
+	case yellow50
+	case yellow60
+	
+	// SkyBlueColor
+	
+	case skyBlue
+	case skyBlue10
+	case skyBlue20
+	case skyBlue30
+	case skyBlue40
+	case skyBlue50
+	case skyBlue60
+	
 }
 
 extension UIColor {
@@ -65,6 +111,42 @@ extension UIColor {
 	static let dark40 = STColor(.dark40)
 	static let dark50 = STColor(.dark50)
 	static let dark60 = STColor(.dark60)
+	
+	static let light = STColor(.light)
+	static let light50 = STColor(.light50)
+	static let light60 = STColor(.light60)
+	
+	static let red = STColor(.red)
+	static let red10 = STColor(.red10)
+	static let red20 = STColor(.red20)
+	static let red30 = STColor(.red30)
+	static let red40 = STColor(.red40)
+	static let red50 = STColor(.red50)
+	static let red60 = STColor(.red60)
+	
+	static let green = STColor(.green)
+	static let green10 = STColor(.green10)
+	static let green20 = STColor(.green20)
+	static let green30 = STColor(.green30)
+	static let green40 = STColor(.green40)
+	static let green50 = STColor(.green50)
+	static let green60 = STColor(.green60)
+	
+	static let yellow = STColor(.yellow)
+	static let yellow10 = STColor(.yellow10)
+	static let yellow20 = STColor(.yellow20)
+	static let yellow30 = STColor(.yellow30)
+	static let yellow40 = STColor(.yellow40)
+	static let yellow50 = STColor(.yellow50)
+	static let yellow60 = STColor(.yellow60)
+	
+	static let skyBlue = STColor(.skyBlue)
+	static let skyBlue10 = STColor(.skyBlue10)
+	static let skyBlue20 = STColor(.skyBlue20)
+	static let skyBlue30 = STColor(.skyBlue30)
+	static let skyBlue40 = STColor(.skyBlue40)
+	static let skyBlue50 = STColor(.skyBlue50)
+	static let skyBlue60 = STColor(.skyBlue60)
 	
 	private static func STColor(_ color: STColor) -> UIColor {
 

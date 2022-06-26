@@ -62,6 +62,11 @@ class EventViewController: UIViewController {
 		setupUI()
     }
 	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		setupNavBar()
+	}
+	
 	// MARK: - UI
 	
 	private func setupUI() {
@@ -70,6 +75,11 @@ class EventViewController: UIViewController {
 						 right: view.rightAnchor)
 		view.addSubview(writePostButton)
 		writePostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 24, paddingRight: 16)
+	}
+	
+	private func setupNavBar() {
+		tabBarController?.tabBar.isHidden = false
+		navigationController?.navigationBar.isHidden = true
 	}
 	
 	// MARK: - Actions
@@ -90,7 +100,6 @@ class EventViewController: UIViewController {
 extension EventViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//		return 5
 		return events.count
 	}
 	
@@ -99,16 +108,21 @@ extension EventViewController: UITableViewDataSource {
 				as? EventListTableViewCell else { fatalError("Can not dequeue EventListTableViewCell") }
 		let event = events[indexPath.row]
 		cell.event = event
+		cell.selectionStyle = .none
 		cell.delegate = self
 		return cell
 	}
-	
 }
 
 // MARK: - UITableViewDelegate
 
 extension EventViewController: UITableViewDelegate {
-	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard let user = user else { return }
+		let event = events[indexPath.row]
+		let eventDetailVC = EventDetailViewController(event: event, user: user)
+		navigationController?.pushViewController(eventDetailVC, animated: true)
+	}
 }
 
 // MARK: - EventListTableViewCellDelegate

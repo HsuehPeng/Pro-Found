@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class WritePostViewController: UIViewController {
 	
@@ -40,6 +41,8 @@ class WritePostViewController: UIViewController {
 		imageView.backgroundColor = .gray
 		imageView.setDimensions(width: 42, height: 42)
 		imageView.layer.cornerRadius = 42 / 2
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -88,6 +91,7 @@ class WritePostViewController: UIViewController {
 		view.backgroundColor = .white
 		
 		setupUI()
+		configureUI()
 	}
 	
 	// MARK: - UI
@@ -105,6 +109,7 @@ class WritePostViewController: UIViewController {
 		view.addSubview(postTextView)
 		postTextView.anchor(top: topBarView.bottomAnchor, left: profileImageView.rightAnchor, right: view.rightAnchor,
 							paddingTop: 12, paddingLeft: 12, paddingRight: 16)
+		postTextView.heightAnchor.constraint(equalToConstant: 400).isActive = true
 		
 		view.addSubview(bottomBarView)
 		bottomBarView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: 64)
@@ -128,14 +133,26 @@ class WritePostViewController: UIViewController {
 		guard let postText = postTextView.text else { return }
 		let date = Date()
 		let timestamp = date.timeIntervalSince1970
-		let firebasepost = FirebasePosts(userID: user.userID, contentText: postText, likes: 0, timestamp: timestamp)
+		let firebasepost = FirebasePosts(userID: user.userID, contentText: postText, likes: 0, timestamp: timestamp, likedBy: [])
+		
+		let hudView = HudView.hud(inView: self.view, animated: true)
+		hudView.text = "Done posting"
+		
 		PostService.shared.uploadPost(firebasePost: firebasepost) { [weak self] in
 			guard let self = self else { return }
+			hudView.hide()
 			self.dismiss(animated: true)
 		}
 	}
 	
 	@objc func dismissVC() {
 		dismiss(animated: true)
+	}
+	
+	// MARK: - Helpers
+	
+	func configureUI() {
+		guard let imageUrl = URL(string: user.profileImageURL) else { return }
+		profileImageView.kf.setImage(with: imageUrl)
 	}
 }

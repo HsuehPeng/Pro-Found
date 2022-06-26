@@ -7,37 +7,59 @@
 
 import Foundation
 
-struct Post {
+struct Post: Codable {
 	let userID: String
-	var postID: String?
+	var postID: String
 	let contentText: String
-	let likes: Int
+	var likes: Int
 	let timestamp: Double
-	let User: User
+	let likedBy: [String]
+	let user: User
 }
 
 extension Post {
 	init(user: User, dictionary: [String: Any]) {
-		self.User = user
+		self.user = user
 		userID = dictionary["userID"] as? String ?? ""
 		postID = dictionary["postID"] as? String ?? ""
 		contentText = dictionary["contentText"] as? String ?? ""
 		likes = dictionary["likes"] as? Int ?? 0
 		timestamp = dictionary["timestamp"] as? Double ?? 0
+		likedBy = dictionary["likedBy"] as? [String] ?? []
 	}
 }
 
-struct FirebasePosts {
+struct FirebasePosts: Codable {
 	let userID: String
 	let contentText: String
 	let likes: Int
 	let timestamp: Double
+	let likedBy: [String]
 }
 
-struct Reply {
+struct Reply: Codable {
+	let userID: String
+	let postID: String
+	let replyID: String
+	let contentText: String
+	let timestamp: Double
+	let user: User
+}
+
+extension Reply {
+	init(user: User, dictionary: [String: Any]) {
+		self.user = user
+		userID = dictionary["userID"] as? String ?? ""
+		postID = dictionary["postID"] as? String ?? ""
+		contentText = dictionary["contentText"] as? String ?? ""
+		timestamp = dictionary["timestamp"] as? Double ?? 0
+		replyID = dictionary["replyID"] as? String ?? ""
+	}
+}
+
+struct FirebaseReply: Codable {
 	let userID: String
 	let postID: String
 	let contentText: String
-	let likes: Int
 	let timestamp: Double
 }

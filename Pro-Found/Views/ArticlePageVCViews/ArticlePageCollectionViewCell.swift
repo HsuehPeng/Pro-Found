@@ -24,6 +24,8 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 		let imageView = UIImageView()
 		imageView.backgroundColor = .gray
 		imageView.layer.cornerRadius = 10
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -49,6 +51,16 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 		return button
 	}()
 	
+	private lazy var ratingButtonNumber: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.star)?.withTintColor(.orange40)
+		button.setImage(image, for: .normal)
+		button.setTitleColor(UIColor.orange40, for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 14)
+		
+		return button
+	}()
+	
 	// MARK: - Lifecycle
 	
 	override init(frame: CGRect) {
@@ -64,17 +76,20 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(articleImageView)
-		articleImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 168)
+		articleImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor,
+								right: contentView.rightAnchor, height: 168)
 		
 		contentView.addSubview(titleLabel)
-		titleLabel.anchor(top: articleImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 12)
+		titleLabel.anchor(top: articleImageView.bottomAnchor, left: contentView.leftAnchor,
+						  right: contentView.rightAnchor, paddingTop: 12)
+		
+		contentView.addSubview(ratingButtonNumber)
+		ratingButtonNumber.anchor(top: titleLabel.bottomAnchor, bottom: contentView.bottomAnchor,
+								  right: contentView.rightAnchor, paddingRight: 8)
 		
 		contentView.addSubview(authorLabel)
-		authorLabel.anchor(top: titleLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 4)
-		
-		contentView.addSubview(subjectButton)
-		subjectButton.centerYAnchor.constraint(equalTo: authorLabel.centerYAnchor).isActive = true
-		subjectButton.anchor(left: authorLabel.rightAnchor, right: contentView.rightAnchor, paddingLeft: 2)
+		authorLabel.centerY(inView: ratingButtonNumber)
+		authorLabel.anchor(left: contentView.leftAnchor)
 		
 	}
 	
@@ -83,10 +98,28 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 	func configure() {
 		guard let article = article else { return }
 		let imageUrl = URL(string: article.imageURL)
+		
 		articleImageView.kf.setImage(with: imageUrl)
 		titleLabel.text = article.articleTitle
 		authorLabel.text = article.authorName
 		subjectButton.setTitle(article.subject, for: .normal)
+		
+		if article.ratings.isEmpty {
+			ratingButtonNumber.setTitle("0", for: .normal)
+		} else {
+			ratingButtonNumber.setTitle(calculateAverageRating(article: article), for: .normal)
+		}
+		
+	}
+	
+	func calculateAverageRating(article: Article) -> String {
+		var ratingSum = 0.0
+		for rating in article.ratings {
+			ratingSum += rating.first?.value ?? 0
+		}
+		let averageRating = ratingSum / Double(article.ratings.count)
+		let roudedAverageRating = round(averageRating * 10) / 10
+		return String(roudedAverageRating)
 	}
 	
 }

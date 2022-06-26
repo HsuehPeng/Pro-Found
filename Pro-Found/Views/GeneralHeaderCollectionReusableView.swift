@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol GeneralHeaderCollectionReusableViewDelegate: AnyObject {
+	func filterByTutorSubject(_ cell: GeneralHeaderCollectionReusableView)
+}
+
 class GeneralHeaderCollectionReusableView: UICollectionReusableView {
-	
+
 	static let reuseIdentifier = "\(GeneralHeaderCollectionReusableView.self)"
+	
+	weak var articleListDelagate: GeneralHeaderCollectionReusableViewDelegate?
 	
 	// MARK: - Properties
 	
@@ -18,11 +24,21 @@ class GeneralHeaderCollectionReusableView: UICollectionReusableView {
 		return label
 	}()
 	
+	lazy var actionButton: UIButton = {
+		let button = UIButton()
+		button.setTitle("Subject", for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interBold, size: 14)
+		button.setTitleColor(UIColor.orange, for: .normal)
+
+		return button
+	}()
+	
 	// MARK: - Lifecycle
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setupUI()
+		
 	}
 	
 	required init?(coder: NSCoder) {
@@ -34,5 +50,11 @@ class GeneralHeaderCollectionReusableView: UICollectionReusableView {
 	func setupUI() {
 		self.addSubview(titleLabel)
 		titleLabel.centerY(inView: self, leftAnchor: self.leftAnchor, paddingLeft: 16)
+		
+		self.addSubview(actionButton)
+		actionButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+		actionButton.anchor(right: self.rightAnchor, paddingRight: 16)
+
 	}
+	
 }

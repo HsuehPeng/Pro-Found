@@ -9,7 +9,10 @@ target 'Pro-Found' do
 
 	pod 'FirebaseAuth'
 	pod 'FirebaseFirestore'
+	pod 'FirebaseFirestoreSwift'
 	pod 'FirebaseStorage'
 	pod 'Kingfisher', '~> 7.0'
+	pod 'Cosmos', '~> 23.0'
+	pod 'IQKeyboardManagerSwift'
 
 end

@@ -124,7 +124,7 @@ class ArticleViewController: UIViewController {
 			case .success(let user):
 				self.user = user
 			case .failure(let error):
-				print(error)
+				print("asdfasdf \(error)")
 			}
 		}
 	}
@@ -225,13 +225,13 @@ extension ArticleViewController: UITableViewDataSource {
 
 extension ArticleViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 236
+		return 250
 	}
 	
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
 				as? GeneralTableViewHeader else { return  UITableViewHeaderFooterView() }
-		
+		header.delegate = self
 		switch section {
 		case 0:
 			header.titleLabel.text = Subject.language.rawValue
@@ -266,5 +266,30 @@ extension ArticleViewController: ArticlePageTableViewCellDelegate {
 	func goArticleDetailVC(_ cell: ArticlePageTableViewCell, article: Article) {
 		let articleDetailVC = ArticleDetailViewController(article: article)
 		navigationController?.pushViewController(articleDetailVC, animated: true)
+	}
+}
+
+extension ArticleViewController: GeneralTableViewHeaderDelegate {
+	func tappedSeeAll(_ cell: GeneralTableViewHeader) {
+		switch cell.titleLabel.text {
+		case Subject.language.rawValue:
+			pushArticleListPage(subject: Subject.language.rawValue)
+		case Subject.technology.rawValue:
+			pushArticleListPage(subject: Subject.technology.rawValue)
+		case Subject.music.rawValue:
+			pushArticleListPage(subject: Subject.music.rawValue)
+		case Subject.art.rawValue:
+			pushArticleListPage(subject: Subject.art.rawValue)
+		case Subject.sport.rawValue:
+			pushArticleListPage(subject: Subject.sport.rawValue)
+		default:
+			break
+		}
+	}
+	
+	func pushArticleListPage(subject: String) {
+		let articles = subjectDict[subject] ?? []
+		let articleListVC = ArticleListViewController(articles: articles)
+		navigationController?.pushViewController(articleListVC, animated: true)
 	}
 }

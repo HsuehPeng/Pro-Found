@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import PhotosUI
+import Kingfisher
 
 class WriteArticleViewController: UIViewController {
 	
@@ -37,11 +39,11 @@ class WriteArticleViewController: UIViewController {
 	
 	private let articleImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.backgroundColor = .gray
-		imageView.layer.cornerRadius = 10
-		imageView.image = UIImage.asset(.article)
-		imageView.contentMode = .scaleAspectFit
+		imageView.backgroundColor = .orange10
+		imageView.layer.cornerRadius = 12
 		imageView.setDimensions(width: 132, height: 200)
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -69,19 +71,41 @@ class WriteArticleViewController: UIViewController {
 		return label
 	}()
 	
-	private let subjectTextField: UITextField = {
-		let textField = UITextField()
-		return textField
+	private lazy var languageButton: UIButton = {
+		let button = CustomUIElements().subjectSelectionButton(subject: Subject.language)
+		button.addTarget(self, action: #selector(selectedSubject), for: .touchUpInside)
+		return button
 	}()
 	
-	private let subjectTitleDividerView: UIView = {
-		let dividerView = UIView()
-		dividerView.backgroundColor = .dark20
-		dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-		return dividerView
+	private lazy var techButton: UIButton = {
+		let button = CustomUIElements().subjectSelectionButton(subject: Subject.technology)
+		button.addTarget(self, action: #selector(selectedSubject), for: .touchUpInside)
+		return button
 	}()
 	
-	private let articleTextView = ArticleTextView()
+	private lazy var artButton: UIButton = {
+		let button = CustomUIElements().subjectSelectionButton(subject: Subject.art)
+		button.addTarget(self, action: #selector(selectedSubject), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var musicButton: UIButton = {
+		let button = CustomUIElements().subjectSelectionButton(subject: Subject.music)
+		button.addTarget(self, action: #selector(selectedSubject), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var sportButton: UIButton = {
+		let button = CustomUIElements().subjectSelectionButton(subject: Subject.sport)
+		button.addTarget(self, action: #selector(selectedSubject), for: .touchUpInside)
+		return button
+	}()
+	
+	private let articleTextView: ArticleTextView = {
+		let textView = ArticleTextView()
+		textView.isScrollEnabled = true
+		return textView
+	}()
 	
 	private let bottomBarView: UIView = {
 		let view = UIView()
@@ -99,6 +123,7 @@ class WriteArticleViewController: UIViewController {
 		let button = UIButton()
 		button.setDimensions(width: 24, height: 24)
 		button.setImage(UIImage.asset(.photo), for: .normal)
+		button.addTarget(self, action: #selector(handlePickingImage), for: .touchUpInside)
 		return button
 	}()
 	
@@ -156,21 +181,27 @@ class WriteArticleViewController: UIViewController {
 		subjectTitleLabel.anchor(top: articleTitleDividerView.bottomAnchor, left: articleImageView.rightAnchor,
 									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(subjectTextField)
-		subjectTextField.anchor(top: subjectTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
-									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		let topSubjectHStack = UIStackView(arrangedSubviews: [languageButton, techButton])
+		topSubjectHStack.distribution = .fillEqually
+		topSubjectHStack.spacing = 5
+		view.addSubview(topSubjectHStack)
+		topSubjectHStack.anchor(top: subjectTitleLabel.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+								paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(subjectTitleDividerView)
-		subjectTitleDividerView.anchor(top: subjectTextField.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
-									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		let bottomSubjectHStack = UIStackView(arrangedSubviews: [musicButton, sportButton, artButton])
+		bottomSubjectHStack.distribution = .fillEqually
+		bottomSubjectHStack.spacing = 5
+		view.addSubview(bottomSubjectHStack)
+		bottomSubjectHStack.anchor(top: topSubjectHStack.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+								paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(articleTextView)
 		articleTextView.anchor(top: articleImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
-							   paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
+							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(bottomBarView)
 		bottomBarView.anchor(top: articleTextView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-							 right: view.rightAnchor, paddingTop: 16, height: 64)
+							 right: view.rightAnchor, height: 64)
 		
 		let actionButtonHStack = UIStackView(arrangedSubviews: [
 			pickImageButton
@@ -187,26 +218,57 @@ class WriteArticleViewController: UIViewController {
 	
 	// MARK: - Actions
 	
+	@objc func selectedSubject(_ sender: UIButton) {
+		let buttons = [languageButton, techButton, artButton, musicButton, sportButton]
+		
+		switch sender {
+		case languageButton:
+			toggleSelectedSubjectButton(buttons: buttons, selectedButton: languageButton)
+		case techButton:
+			toggleSelectedSubjectButton(buttons: buttons, selectedButton: techButton)
+		case artButton:
+			toggleSelectedSubjectButton(buttons: buttons, selectedButton: artButton)
+		case musicButton:
+			toggleSelectedSubjectButton(buttons: buttons, selectedButton: musicButton)
+		case sportButton:
+			toggleSelectedSubjectButton(buttons: buttons, selectedButton: sportButton)
+		default:
+			break
+		}
+	}
+	
+	@objc func handlePickingImage() {
+		var configuration = PHPickerConfiguration()
+		configuration.selectionLimit = 1
+		let picker = PHPickerViewController(configuration: configuration)
+		picker.delegate = self
+		self.present(picker, animated: true, completion: nil)
+	}
+	
 	@objc func sendOutArticle() {
-		guard let articleTitle = articleTitleTextField.text, let subjectText = subjectTextField.text, let contentText = articleTextView.text,
+		let buttons = [languageButton, techButton, artButton, musicButton, sportButton]
+		let selectedButton = buttons.filter({ $0.isSelected })
+		
+		guard let articleTitle = articleTitleTextField.text, !articleTitle.isEmpty,
+			  let contentText = articleTextView.text, !contentText.isEmpty,
+			  selectedButton.count > 0, let selectedSubject = selectedButton.first?.titleLabel?.text,
 			  let articleImage = articleImageView.image else { return }
 		
 		let currentDate = Date()
 		let interval = currentDate.timeIntervalSince1970
-		ArticleService.shared.createAndDownloadImageURL(articleImage: articleImage) { [weak self] result in
+		ArticleService.shared.createAndDownloadImageURL(articleImage: articleImage, author: user) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let url):
 				let imageURL = url
 				let firestoreArticle = FirebaseArticle(userID: self.user.userID, articleTitle: articleTitle, authorName: self.user.name,
-													   subject: subjectText, timestamp: interval, contentText: contentText, imageURL: imageURL, ratings: [])
+													   subject: selectedSubject, timestamp: interval, contentText: contentText, imageURL: imageURL, ratings: [])
 				ArticleService.shared.uploadArticle(article: firestoreArticle)
 				self.dismiss(animated: true)
 			case .failure(let error):
 				print(error)
 			}
 		}
-		
 	}
 	
 	@objc func dismissVC() {
@@ -214,4 +276,36 @@ class WriteArticleViewController: UIViewController {
 	}
 	
 	// MARK: - Helpers
+	
+	func toggleSelectedSubjectButton(buttons: [UIButton], selectedButton: UIButton) {
+		for i in 0...buttons.count - 1 {
+			buttons[i].isSelected = false
+			buttons[i].backgroundColor = .dark10
+		}
+		selectedButton.isSelected = true
+		selectedButton.backgroundColor = .orange
+	}
+}
+
+// MARK: - PHPickerViewControllerDelegate
+
+extension WriteArticleViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		let itemProviders = results.map(\.itemProvider)
+		for item in itemProviders {
+			if item.canLoadObject(ofClass: UIImage.self) {
+				item.loadObject(ofClass: UIImage.self) { [weak self](image, error) in
+					guard let self = self else { return }
+					DispatchQueue.main.async {
+						if let image = image as? UIImage {
+							
+							self.articleImageView.image = nil
+							self.articleImageView.image = image
+						}
+					}
+				}
+			}
+		}
+	}
 }

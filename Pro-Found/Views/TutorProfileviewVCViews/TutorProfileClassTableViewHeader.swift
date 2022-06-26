@@ -27,7 +27,7 @@ class TutorProfileClassTableViewHeader: UITableViewHeaderFooterView {
 	weak var delegate: ProfileClassTableViewHeaderDelegate?
 	
 	private let titleLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16), textColor: UIColor.dark60, text: "Header Title")
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16), textColor: UIColor.dark60, text: "Courses")
 		return label
 	}()
 	
@@ -73,7 +73,7 @@ class TutorProfileClassTableViewHeader: UITableViewHeaderFooterView {
 	
 	func configure() {
 		guard let uid = Auth.auth().currentUser?.uid, let tutor = tutor else { return }
-		if tutor.userID == uid {
+		if tutor.userID == uid && tutor.isTutor {
 			createCourseButton.isHidden = false
 		}
 	}

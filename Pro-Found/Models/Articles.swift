@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Article {
+struct Article: Codable {
 	let userID: String
 	let articleID: String
 	let articleTitle: String
@@ -16,7 +16,7 @@ struct Article {
 	let timestamp: Double
 	let contentText: String
 	let imageURL: String
-	let ratings: [Double]
+	let ratings: [[String: Double]]
 	var user: User
 }
 
@@ -31,11 +31,11 @@ extension Article {
 		contentText = dictionary["contentText"] as? String ?? ""
 		authorName = dictionary["authorName"] as? String ?? ""
 		imageURL = dictionary["imageURL"] as? String ?? ""
-		ratings = dictionary["ratings"] as? [Double] ?? []
+		ratings = dictionary["ratings"] as? [[String: Double]] ?? []
 	}
 }
 
-struct FirebaseArticle {
+struct FirebaseArticle: Codable {
 	let userID: String
 	let articleTitle: String
 	let authorName: String
@@ -43,5 +43,5 @@ struct FirebaseArticle {
 	let timestamp: Double
 	let contentText: String
 	let imageURL: String
-	let ratings: [Double]
+	let ratings: [[String: Double]]
 }

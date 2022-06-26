@@ -6,14 +6,33 @@
 //
 
 import UIKit
+import Kingfisher
+
+protocol PostPageFeedCellDelegate: AnyObject {
+	func goToCommentVC(_ cell: PostPageFeedCell)
+	func goToPostUserProfile(_ cell: PostPageFeedCell)
+	func likePost(_ cell: PostPageFeedCell)
+	func checkIfLikedByUser(_ cell: PostPageFeedCell)
+	func askToDelete(_ cell: PostPageFeedCell)
+}
+
+extension PostPageFeedCellDelegate {
+	func goToPostUserProfile(_ cell: PostPageFeedCell) {}
+}
 
 class PostPageFeedCell: UITableViewCell {
 	
 	static let reuseIdentifier = "\(PostPageFeedCell.self)"
 	
+	weak var delegate: PostPageFeedCellDelegate?
+	
 	// MARK: - Properties
 	
-	var post: Post?
+	var post: Post? {
+		didSet {
+			configure()
+		}
+	}
 	
 	var user: User? {
 		didSet {
@@ -29,10 +48,12 @@ class PostPageFeedCell: UITableViewCell {
 		imageView.layer.cornerRadius = 36 / 2
 		imageView.backgroundColor = .gray
 		imageView.translatesAutoresizingMaskIntoConstraints = false
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		
-//		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
-//		imageView.addGestureRecognizer(tap)
-//		imageView.isUserInteractionEnabled = true
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
 		
 		return imageView
 	}()
@@ -52,6 +73,22 @@ class PostPageFeedCell: UITableViewCell {
 	private lazy var feedEditButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.more), for: .normal)
+		button.isHidden = true
+		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var deleteButton: UIButton = {
+		let button = UIButton()
+		button.setTitle("Delete", for: .normal)
+		button.setTitleColor(.red, for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 12)
+		button.backgroundColor = .orange20
+		button.layer.cornerRadius = 5
+		button.setDimensions(width: 50, height: 20)
+		button.addTarget(self, action: #selector(deleteArticle), for: .touchUpInside)
+		button.isHidden = true
+		button.alpha = 0
 		return button
 	}()
 	
@@ -62,18 +99,21 @@ class PostPageFeedCell: UITableViewCell {
 		return label
 	}()
 	
-	private let likeCountLabel: UILabel = {
+	let likeCountLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.dark40, text: "Likes: 100")
 		return label
 	}()
 	
-	private lazy var likeButton: UIButton = {
+	lazy var likeButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("   Like", for: .normal)
 		button.setTitleColor(UIColor.dark, for: .normal)
+		button.setTitleColor(UIColor.red40, for: .selected)
 		button.titleLabel?.font = UIFont.customFont(.manropeRegular, size: 14)
 		button.setImage(UIImage.asset(.favorite), for: .normal)
+		button.setImage(UIImage.asset(.favorite)?.withTintColor(.red40), for: .selected)
+		button.addTarget(self, action: #selector(likePost), for: .touchUpInside)
 		return button
 	}()
 	
@@ -83,6 +123,7 @@ class PostPageFeedCell: UITableViewCell {
 		button.setTitleColor(UIColor.dark, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.manropeRegular, size: 14)
 		button.setImage(UIImage.asset(.chat), for: .normal)
+		button.addTarget(self, action: #selector(goToCommentVC), for: .touchUpInside)
 		return button
 	}()
 	
@@ -113,6 +154,9 @@ class PostPageFeedCell: UITableViewCell {
 		feedEditButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
 		feedEditButton.anchor(right: contentView.rightAnchor, paddingRight: 12)
 		
+		contentView.addSubview(deleteButton)
+		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
+		
 		contentView.addSubview(contentTextLabel)
 		contentTextLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor,
 								right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 16, paddingRight: 16)
@@ -130,17 +174,63 @@ class PostPageFeedCell: UITableViewCell {
 
 	}
 	
+	// MARK: - Actions
+	
+	@objc func handleProfileImageTapped() {
+		delegate?.goToPostUserProfile(self)
+	}
+	
+	@objc func goToCommentVC() {
+		delegate?.goToCommentVC(self)
+	}
+	
+	@objc func likePost() {
+		delegate?.likePost(self)
+	}
+	
+	@objc func handleAskToDelete() {
+		if deleteButton.isHidden {
+			UIView.animate(withDuration: 0.3) {
+				self.deleteButton.alpha = 1
+				self.deleteButton.isHidden = !self.deleteButton.isHidden
+			}
+		} else {
+			UIView.animate(withDuration: 0.3) {
+				self.deleteButton.alpha = 0
+			} completion: { done in
+				if done {
+					self.deleteButton.isHidden = !self.deleteButton.isHidden
+				}
+			}
+		}
+	}
+	
+	@objc func deleteArticle() {
+		delegate?.askToDelete(self)
+	}
+	
 	// MARK: - Helpers
 	
 	func configure() {
 		guard let post = post, let user = user else { return }
+		let imageUrl = URL(string: post.user.profileImageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "h:mm a ∙ MM/dd/yyyy"
 		let postDate = Date(timeIntervalSince1970: post.timestamp)
 		
-		feedNameLabel.text = user.name
+		profileImageView.kf.setImage(with: imageUrl)
+		feedNameLabel.text = post.user.name
 		feedTimeLabel.text = dateFormatter.string(from: postDate)
 		contentTextLabel.text = post.contentText
-		likeCountLabel.text = String(post.likes)
+		likeCountLabel.text = "\(post.likes) likes"
+		
+		delegate?.checkIfLikedByUser(self)
+				
+		if post.userID == user.userID {
+			feedEditButton.isHidden = false
+		} else {
+			feedEditButton.isHidden = true
+		}
 	}
+	
 }

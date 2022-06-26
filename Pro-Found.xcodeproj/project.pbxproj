@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		23206CC249DEE39ADAB6F49E /* Pods_Pro_Found.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D15E286ACD9EED7E94C5765 /* Pods_Pro_Found.framework */; };
+		B801886F2864AB8E009A6472 /* UserProfileListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */; };
+		B801887128657C5D009A6472 /* FollowingTutorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B801887028657C5D009A6472 /* FollowingTutorViewController.swift */; };
+		B80188752866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80188742866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift */; };
+		B80188772867350B009A6472 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80188762867350B009A6472 /* HudView.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -20,12 +24,12 @@
 		B83D19BF285608770049846E /* UIFont+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83D19BE285608770049846E /* UIFont+Extension.swift */; };
 		B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */; };
 		B86943D028586079008021C9 /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943CF28586079008021C9 /* PrivateKey.swift */; };
-		B86943D32858673C008021C9 /* HomePageTutorListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B86943D22858673C008021C9 /* HomePageTutorListTableViewCell.swift */; };
 		B89AD401285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */; };
 		B89AD403285ED15900CCE027 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD402285ED15900CCE027 /* PostViewController.swift */; };
 		B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD404285ED2A700CCE027 /* EventViewController.swift */; };
 		B89AD407285EDEC400CCE027 /* EventListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD406285EDEC400CCE027 /* EventListTableViewCell.swift */; };
 		B89AD40A285EEBE600CCE027 /* CreateEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD409285EEBE600CCE027 /* CreateEventViewController.swift */; };
+		B89AD412286003DA00CCE027 /* CourseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */; };
 		B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */; };
 		B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */; };
 		B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */; };
@@ -37,19 +41,17 @@
 		B8AB060C2859FA13002110A4 /* Posts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB06062859FA13002110A4 /* Posts.swift */; };
 		B8AB060D2859FA13002110A4 /* Articles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB06072859FA13002110A4 /* Articles.swift */; };
 		B8AB060E2859FA13002110A4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB06082859FA13002110A4 /* User.swift */; };
-		B8AB060F2859FA13002110A4 /* Schedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB06092859FA13002110A4 /* Schedules.swift */; };
 		B8AB06102859FA13002110A4 /* Courses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB060A2859FA13002110A4 /* Courses.swift */; };
 		B8AB06112859FA13002110A4 /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB060B2859FA13002110A4 /* Events.swift */; };
 		B8AB0613285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0612285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift */; };
 		B8AB0615285A0AC4002110A4 /* CreateCourseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0614285A0AC4002110A4 /* CreateCourseViewController.swift */; };
 		B8AB061A285A2977002110A4 /* Subject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0619285A2977002110A4 /* Subject.swift */; };
-		B8AB063D285B0264002110A4 /* Tutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB063C285B0264002110A4 /* Tutor.swift */; };
 		B8AB063F285B088E002110A4 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB063E285B088E002110A4 /* LoginViewController.swift */; };
 		B8AB0642285B0B3F002110A4 /* LoginService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0641285B0B3F002110A4 /* LoginService.swift */; };
 		B8AB0645285B2658002110A4 /* CalendarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */; };
 		B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0646285B2B49002110A4 /* CalendarHelper.swift */; };
 		B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */; };
-		B8AB064B285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */; };
+		B8AB064B285B5DE0002110A4 /* ScheduleCourseListTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064A285B5DE0002110A4 /* ScheduleCourseListTableCell.swift */; };
 		B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */; };
 		B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB064E285B88F2002110A4 /* SelectClassBottomSheetViewController.swift */; };
 		B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8AB0651285C8F36002110A4 /* SignUpViewController.swift */; };
@@ -74,11 +76,34 @@
 		B8CC5EB028588BD0004C5D7A /* GeneralTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */; };
 		B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */; };
 		B8CC5EB528598D7C004C5D7A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */; };
+		B8F352D02861A61F0068E87D /* ArticleListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */; };
+		B8F352D22861B9CF0068E87D /* PostCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */; };
+		B8F352D42861CA0F0068E87D /* PostCommentTableHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */; };
+		B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */; };
+		B8F352DA2862DD0A0068E87D /* ScheduleEventListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352D92862DD0A0068E87D /* ScheduleEventListTableViewCell.swift */; };
+		B8F352DC28631C080068E87D /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352DB28631C080068E87D /* EditProfileViewController.swift */; };
+		B8F352DE2863FED10068E87D /* BecomeTutorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352DD2863FED10068E87D /* BecomeTutorViewController.swift */; };
+		B8F352E2286446D90068E87D /* TutorProfileContentHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352E1286446D90068E87D /* TutorProfileContentHeader.swift */; };
+		B8F352E4286468720068E87D /* ArticleListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F352E3286468720068E87D /* ArticleListViewController.swift */; };
+		B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */; };
+		B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */; };
+		B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C282860625200B88244 /* MKMapView + Extension.swift */; };
+		B8F99C2B286063D900B88244 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C2A286063D900B88244 /* MapViewController.swift */; };
+		B8F99C2D2860750D00B88244 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */; };
+		B8F99C2F2860760F00B88244 /* EventDetailListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C2E2860760F00B88244 /* EventDetailListTableViewCell.swift */; };
+		B8F99C312860766B00B88244 /* EventDetailContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C302860766B00B88244 /* EventDetailContentTableViewCell.swift */; };
+		B8F99C3328607BA600B88244 /* CourseDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C3228607BA600B88244 /* CourseDetailTableViewHeader.swift */; };
+		B8F99C3528607F6D00B88244 /* GeneralMapCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C3428607F6D00B88244 /* GeneralMapCellTableViewCell.swift */; };
+		B8F99C372860A0C900B88244 /* EventDetailTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F99C362860A0C900B88244 /* EventDetailTableViewHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2D15E286ACD9EED7E94C5765 /* Pods_Pro_Found.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Pro_Found.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB6B7E430449E4FF00D9FA9B /* Pods-Pro-Found.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-Found.debug.xcconfig"; path = "Target Support Files/Pods-Pro-Found/Pods-Pro-Found.debug.xcconfig"; sourceTree = "<group>"; };
+		B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileListTableViewCell.swift; sourceTree = "<group>"; };
+		B801887028657C5D009A6472 /* FollowingTutorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingTutorViewController.swift; sourceTree = "<group>"; };
+		B80188742866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseSubjectUICollectionViewCell.swift; sourceTree = "<group>"; };
+		B80188762867350B009A6472 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -93,12 +118,13 @@
 		B83D19BE285608770049846E /* UIFont+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extension.swift"; sourceTree = "<group>"; };
 		B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileClassTableViewCell.swift; sourceTree = "<group>"; };
 		B86943CF28586079008021C9 /* PrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKey.swift; sourceTree = "<group>"; };
-		B86943D22858673C008021C9 /* HomePageTutorListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageTutorListTableViewCell.swift; sourceTree = "<group>"; };
 		B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailContentTableViewCell.swift; sourceTree = "<group>"; };
 		B89AD402285ED15900CCE027 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		B89AD404285ED2A700CCE027 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 		B89AD406285EDEC400CCE027 /* EventListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListTableViewCell.swift; sourceTree = "<group>"; };
 		B89AD409285EEBE600CCE027 /* CreateEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventViewController.swift; sourceTree = "<group>"; };
+		B89AD410285F8FF400CCE027 /* Pro-Found.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pro-Found.entitlements"; sourceTree = "<group>"; };
+		B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailViewController.swift; sourceTree = "<group>"; };
 		B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAsset+UIImageExtension.swift"; sourceTree = "<group>"; };
 		B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -110,19 +136,17 @@
 		B8AB06062859FA13002110A4 /* Posts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Posts.swift; sourceTree = "<group>"; };
 		B8AB06072859FA13002110A4 /* Articles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Articles.swift; sourceTree = "<group>"; };
 		B8AB06082859FA13002110A4 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		B8AB06092859FA13002110A4 /* Schedules.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Schedules.swift; sourceTree = "<group>"; };
 		B8AB060A2859FA13002110A4 /* Courses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Courses.swift; sourceTree = "<group>"; };
 		B8AB060B2859FA13002110A4 /* Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Events.swift; sourceTree = "<group>"; };
 		B8AB0612285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileClassTableViewHeader.swift; sourceTree = "<group>"; };
 		B8AB0614285A0AC4002110A4 /* CreateCourseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCourseViewController.swift; sourceTree = "<group>"; };
 		B8AB0619285A2977002110A4 /* Subject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subject.swift; sourceTree = "<group>"; };
-		B8AB063C285B0264002110A4 /* Tutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tutor.swift; sourceTree = "<group>"; };
 		B8AB063E285B088E002110A4 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		B8AB0641285B0B3F002110A4 /* LoginService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginService.swift; sourceTree = "<group>"; };
 		B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCollectionViewCell.swift; sourceTree = "<group>"; };
 		B8AB0646285B2B49002110A4 /* CalendarHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarHelper.swift; sourceTree = "<group>"; };
 		B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
-		B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleActivityListCollectionViewCell.swift; sourceTree = "<group>"; };
+		B8AB064A285B5DE0002110A4 /* ScheduleCourseListTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleCourseListTableCell.swift; sourceTree = "<group>"; };
 		B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectClassPresentationVController.swift; sourceTree = "<group>"; };
 		B8AB064E285B88F2002110A4 /* SelectClassBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectClassBottomSheetViewController.swift; sourceTree = "<group>"; };
 		B8AB0651285C8F36002110A4 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
@@ -147,6 +171,25 @@
 		B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralTableViewHeader.swift; sourceTree = "<group>"; };
 		B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPageFeedCell.swift; sourceTree = "<group>"; };
 		B8CC5EB428598D7C004C5D7A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListTableViewCell.swift; sourceTree = "<group>"; };
+		B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentViewController.swift; sourceTree = "<group>"; };
+		B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableHeader.swift; sourceTree = "<group>"; };
+		B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentTableCellTableViewCell.swift; sourceTree = "<group>"; };
+		B8F352D92862DD0A0068E87D /* ScheduleEventListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEventListTableViewCell.swift; sourceTree = "<group>"; };
+		B8F352DB28631C080068E87D /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		B8F352DD2863FED10068E87D /* BecomeTutorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BecomeTutorViewController.swift; sourceTree = "<group>"; };
+		B8F352E1286446D90068E87D /* TutorProfileContentHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileContentHeader.swift; sourceTree = "<group>"; };
+		B8F352E3286468720068E87D /* ArticleListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListViewController.swift; sourceTree = "<group>"; };
+		B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailListTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailIntroTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C282860625200B88244 /* MKMapView + Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MKMapView + Extension.swift"; sourceTree = "<group>"; };
+		B8F99C2A286063D900B88244 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
+		B8F99C2E2860760F00B88244 /* EventDetailListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailListTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C302860766B00B88244 /* EventDetailContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailContentTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C3228607BA600B88244 /* CourseDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailTableViewHeader.swift; sourceTree = "<group>"; };
+		B8F99C3428607F6D00B88244 /* GeneralMapCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralMapCellTableViewCell.swift; sourceTree = "<group>"; };
+		B8F99C362860A0C900B88244 /* EventDetailTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailTableViewHeader.swift; sourceTree = "<group>"; };
 		DCCA7A9A952A4B666B6667CE /* Pods-Pro-Found.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pro-Found.release.xcconfig"; path = "Target Support Files/Pods-Pro-Found/Pods-Pro-Found.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -171,6 +214,15 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		B801886D2864AB72009A6472 /* UserProfileVCViews */ = {
+			isa = PBXGroup;
+			children = (
+				B801886E2864AB8E009A6472 /* UserProfileListTableViewCell.swift */,
+				B80188742866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift */,
+			);
+			path = UserProfileVCViews;
+			sourceTree = "<group>";
+		};
 		B811E3F128531135009C0838 = {
 			isa = PBXGroup;
 			children = (
@@ -193,6 +245,7 @@
 		B811E3FC28531135009C0838 /* Pro-Found */ = {
 			isa = PBXGroup;
 			children = (
+				B89AD410285F8FF400CCE027 /* Pro-Found.entitlements */,
 				B811E40B28531136009C0838 /* Info.plist */,
 				B86943CF28586079008021C9 /* PrivateKey.swift */,
 				B811E3FD28531135009C0838 /* AppDelegate.swift */,
@@ -215,11 +268,13 @@
 				B811E40828531136009C0838 /* LaunchScreen.storyboard */,
 				B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */,
 				B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */,
+				B8F99C3428607F6D00B88244 /* GeneralMapCellTableViewCell.swift */,
 				B86943D12858670D008021C9 /* HomePageVCViews */,
 				B8CC5EB3285979D2004C5D7A /* InteractionVCViews */,
 				B8AB065F285DA56A002110A4 /* ArticlePageVCViews */,
 				B8AB0643285B2633002110A4 /* SchedulePageVCViews */,
 				B83666EE285841A400772375 /* TutorProfileviewVCViews */,
+				B801886D2864AB72009A6472 /* UserProfileVCViews */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -230,6 +285,11 @@
 				B8AB0612285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift */,
 				B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */,
 				B86943CA2858425B008021C9 /* TutorProfileClassTableViewCell.swift */,
+				B8F99C3228607BA600B88244 /* CourseDetailTableViewHeader.swift */,
+				B8F352E1286446D90068E87D /* TutorProfileContentHeader.swift */,
+				B8F99C242860129400B88244 /* CourseDetailListTableViewCell.swift */,
+				B8F99C26286030AE00B88244 /* CourseDetailIntroTableViewCell.swift */,
+				B8F352CF2861A61F0068E87D /* ArticleListTableViewCell.swift */,
 			);
 			path = TutorProfileviewVCViews;
 			sourceTree = "<group>";
@@ -241,9 +301,7 @@
 				B8AB060B2859FA13002110A4 /* Events.swift */,
 				B8AB060A2859FA13002110A4 /* Courses.swift */,
 				B8AB06062859FA13002110A4 /* Posts.swift */,
-				B8AB06092859FA13002110A4 /* Schedules.swift */,
 				B8AB06082859FA13002110A4 /* User.swift */,
-				B8AB063C285B0264002110A4 /* Tutor.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -252,7 +310,6 @@
 			isa = PBXGroup;
 			children = (
 				B8CC5EAD285872F4004C5D7A /* HomePageTutorCollectionViewCell.swift */,
-				B86943D22858673C008021C9 /* HomePageTutorListTableViewCell.swift */,
 			);
 			path = HomePageVCViews;
 			sourceTree = "<group>";
@@ -262,6 +319,7 @@
 			children = (
 				B8C7B392285725E200CA7370 /* InteractionViewController.swift */,
 				B89AD402285ED15900CCE027 /* PostViewController.swift */,
+				B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */,
 				B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */,
 				B89AD404285ED2A700CCE027 /* EventViewController.swift */,
 				B89AD409285EEBE600CCE027 /* CreateEventViewController.swift */,
@@ -273,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				B8C7B394285725F500CA7370 /* ArticleViewController.swift */,
+				B8F352E3286468720068E87D /* ArticleListViewController.swift */,
 				B8AB0668285DFBB8002110A4 /* ArticleDetailViewController.swift */,
 				B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */,
 			);
@@ -301,6 +360,9 @@
 			isa = PBXGroup;
 			children = (
 				B8AB0653285CB4FB002110A4 /* ProfileViewController.swift */,
+				B8F352DB28631C080068E87D /* EditProfileViewController.swift */,
+				B8F352DD2863FED10068E87D /* BecomeTutorViewController.swift */,
+				B801887028657C5D009A6472 /* FollowingTutorViewController.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -322,7 +384,7 @@
 				B83D19BE285608770049846E /* UIFont+Extension.swift */,
 				B8A8FDF32855E4EE00F98326 /* UIColor+Extension.swift */,
 				B83666E728578E1B00772375 /* CustomUIElements.swift */,
-				B8AB0619285A2977002110A4 /* Subject.swift */,
+				B8F99C282860625200B88244 /* MKMapView + Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -372,7 +434,8 @@
 			isa = PBXGroup;
 			children = (
 				B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */,
-				B8AB064A285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift */,
+				B8AB064A285B5DE0002110A4 /* ScheduleCourseListTableCell.swift */,
+				B8F352D92862DD0A0068E87D /* ScheduleEventListTableViewCell.swift */,
 			);
 			path = SchedulePageVCViews;
 			sourceTree = "<group>";
@@ -380,8 +443,10 @@
 		B8AB0650285B91CE002110A4 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B8AB0619285A2977002110A4 /* Subject.swift */,
 				B8AB0646285B2B49002110A4 /* CalendarHelper.swift */,
 				B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */,
+				B80188762867350B009A6472 /* HudView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -389,9 +454,9 @@
 		B8AB065F285DA56A002110A4 /* ArticlePageVCViews */ = {
 			isa = PBXGroup;
 			children = (
+				B8AB0664285DB54C002110A4 /* ArticleTextView.swift */,
 				B8AB065D285DA567002110A4 /* ArticlePageTableViewCell.swift */,
 				B8AB0660285DA60E002110A4 /* ArticlePageCollectionViewCell.swift */,
-				B8AB0664285DB54C002110A4 /* ArticleTextView.swift */,
 				B8AB066A285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift */,
 				B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */,
 			);
@@ -402,6 +467,7 @@
 			isa = PBXGroup;
 			children = (
 				B811E40128531135009C0838 /* MainTabController.swift */,
+				B8F99C2A286063D900B88244 /* MapViewController.swift */,
 				B8AB0640285B08A7002110A4 /* Authentication */,
 				B89AD40F285EF8E200CCE027 /* Home */,
 				B89AD408285EDF0B00CCE027 /* Interaction */,
@@ -409,6 +475,8 @@
 				B89AD40D285EF8D000CCE027 /* Schedule */,
 				B89AD40C285EF8BB00CCE027 /* TutorProfile */,
 				B89AD40E285EF8D600CCE027 /* UserProfile */,
+				B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */,
+				B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -416,9 +484,14 @@
 		B8CC5EB3285979D2004C5D7A /* InteractionVCViews */ = {
 			isa = PBXGroup;
 			children = (
-				B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */,
 				B8AB0657285CD05E002110A4 /* CaptionTextView.swift */,
+				B8CC5EB1285979CA004C5D7A /* PostPageFeedCell.swift */,
+				B8F352D32861CA0F0068E87D /* PostCommentTableHeader.swift */,
+				B8F352D52861D1500068E87D /* PostCommentTableCellTableViewCell.swift */,
 				B89AD406285EDEC400CCE027 /* EventListTableViewCell.swift */,
+				B8F99C362860A0C900B88244 /* EventDetailTableViewHeader.swift */,
+				B8F99C2E2860760F00B88244 /* EventDetailListTableViewCell.swift */,
+				B8F99C302860766B00B88244 /* EventDetailContentTableViewCell.swift */,
 			);
 			path = InteractionVCViews;
 			sourceTree = "<group>";
@@ -552,29 +625,41 @@
 			files = (
 				B8AB0663285DAD7E002110A4 /* WriteArticleViewController.swift in Sources */,
 				B8AB060E2859FA13002110A4 /* User.swift in Sources */,
-				B8AB063D285B0264002110A4 /* Tutor.swift in Sources */,
 				B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */,
 				B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */,
 				B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */,
 				B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */,
+				B801886F2864AB8E009A6472 /* UserProfileListTableViewCell.swift in Sources */,
+				B8F352D62861D1500068E87D /* PostCommentTableCellTableViewCell.swift in Sources */,
+				B8F352E2286446D90068E87D /* TutorProfileContentHeader.swift in Sources */,
 				B8AB060D2859FA13002110A4 /* Articles.swift in Sources */,
+				B8F99C312860766B00B88244 /* EventDetailContentTableViewCell.swift in Sources */,
 				B8AB0613285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift in Sources */,
 				B8C7B393285725E200CA7370 /* InteractionViewController.swift in Sources */,
+				B8F352DE2863FED10068E87D /* BecomeTutorViewController.swift in Sources */,
 				B89AD40A285EEBE600CCE027 /* CreateEventViewController.swift in Sources */,
-				B86943D32858673C008021C9 /* HomePageTutorListTableViewCell.swift in Sources */,
+				B8F352D22861B9CF0068E87D /* PostCommentViewController.swift in Sources */,
 				B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */,
 				B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */,
 				B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */,
+				B8F99C2B286063D900B88244 /* MapViewController.swift in Sources */,
+				B8F99C2D2860750D00B88244 /* EventDetailViewController.swift in Sources */,
+				B8F99C252860129400B88244 /* CourseDetailListTableViewCell.swift in Sources */,
+				B8F352E4286468720068E87D /* ArticleListViewController.swift in Sources */,
 				B89AD401285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift in Sources */,
+				B8F99C2F2860760F00B88244 /* EventDetailListTableViewCell.swift in Sources */,
 				B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */,
+				B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor+Extension.swift in Sources */,
 				B89AD403285ED15900CCE027 /* PostViewController.swift in Sources */,
 				B89AD407285EDEC400CCE027 /* EventListTableViewCell.swift in Sources */,
 				B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */,
+				B8F352DC28631C080068E87D /* EditProfileViewController.swift in Sources */,
 				B8AB065E285DA567002110A4 /* ArticlePageTableViewCell.swift in Sources */,
-				B8AB060F2859FA13002110A4 /* Schedules.swift in Sources */,
 				B8AB060C2859FA13002110A4 /* Posts.swift in Sources */,
+				B8F99C372860A0C900B88244 /* EventDetailTableViewHeader.swift in Sources */,
 				B8AB0658285CD05E002110A4 /* CaptionTextView.swift in Sources */,
+				B80188772867350B009A6472 /* HudView.swift in Sources */,
 				B8AB06042859F9F8002110A4 /* UserService.swift in Sources */,
 				B8AB06052859F9F8002110A4 /* CourseService.swift in Sources */,
 				B86943D028586079008021C9 /* PrivateKey.swift in Sources */,
@@ -582,27 +667,36 @@
 				B8AB0667285DF3B4002110A4 /* EventService.swift in Sources */,
 				B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */,
 				B8AB06102859FA13002110A4 /* Courses.swift in Sources */,
+				B801887128657C5D009A6472 /* FollowingTutorViewController.swift in Sources */,
 				B8AB0615285A0AC4002110A4 /* CreateCourseViewController.swift in Sources */,
+				B8F352D42861CA0F0068E87D /* PostCommentTableHeader.swift in Sources */,
 				B8AB066B285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift in Sources */,
+				B8F99C3328607BA600B88244 /* CourseDetailTableViewHeader.swift in Sources */,
+				B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */,
 				B8CC5EAE285872F4004C5D7A /* HomePageTutorCollectionViewCell.swift in Sources */,
 				B83D19BF285608770049846E /* UIFont+Extension.swift in Sources */,
 				B8C7B3992857260D00CA7370 /* TutorProfileViewController.swift in Sources */,
 				B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */,
 				B8AB0645285B2658002110A4 /* CalendarCollectionViewCell.swift in Sources */,
 				B8C7B395285725F500CA7370 /* ArticleViewController.swift in Sources */,
+				B8F99C3528607F6D00B88244 /* GeneralMapCellTableViewCell.swift in Sources */,
+				B89AD412286003DA00CCE027 /* CourseDetailViewController.swift in Sources */,
 				B8AB0656285CCAB0002110A4 /* WritePostViewController.swift in Sources */,
 				B8AB061A285A2977002110A4 /* Subject.swift in Sources */,
 				B8AB065A285D7D15002110A4 /* PostService.swift in Sources */,
 				B8A8FDF22855E4D200F98326 /* Constraint.swift in Sources */,
 				B8AB0642285B0B3F002110A4 /* LoginService.swift in Sources */,
-				B8AB064B285B5DE0002110A4 /* ScheduleActivityListCollectionViewCell.swift in Sources */,
+				B8AB064B285B5DE0002110A4 /* ScheduleCourseListTableCell.swift in Sources */,
 				B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */,
 				B8AB06112859FA13002110A4 /* Events.swift in Sources */,
 				B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */,
 				B8AB0669285DFBB8002110A4 /* ArticleDetailViewController.swift in Sources */,
+				B8F352D02861A61F0068E87D /* ArticleListTableViewCell.swift in Sources */,
 				B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */,
 				B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */,
+				B8F352DA2862DD0A0068E87D /* ScheduleEventListTableViewCell.swift in Sources */,
 				B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */,
+				B80188752866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift in Sources */,
 				B8AB063F285B088E002110A4 /* LoginViewController.swift in Sources */,
 				B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */,
 				B8AB0654285CB4FB002110A4 /* ProfileViewController.swift in Sources */,
@@ -684,7 +778,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -738,7 +832,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -754,21 +848,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Pro-Found/Pro-Found.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 4JAU88YC33;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pro-Found/Info.plist";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.HsuehPeng.Pro-Found";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -783,21 +880,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Pro-Found/Pro-Found.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 4JAU88YC33;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pro-Found/Info.plist";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.HsuehPeng.Pro-Found";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

@@ -7,6 +7,8 @@
 
 import UIKit
 import Kingfisher
+import Cosmos
+import FirebaseAuth
 
 class ArticleDetailIntroTableViewCell: UITableViewCell {
 	
@@ -20,11 +22,14 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		}
 	}
 	
+	var rateViewIsUp = false
+	
 	private let articleImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.setDimensions(width: 132, height: 200)
+		imageView.setDimensions(width: 160, height: 200)
 		imageView.layer.cornerRadius = 12
-		imageView.contentMode = .scaleAspectFit
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -46,10 +51,15 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private let ratingLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 14),
-												 textColor: UIColor.dark60, text: "0")
-		return label
+	private lazy var ratingButtonNumber: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.star)?.withTintColor(.orange40)
+		button.setImage(image, for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 14)
+		button.setTitleColor(UIColor.orange40, for: .normal)
+		button.addTarget(self, action: #selector(handleRateArticle), for: .touchUpInside)
+		
+		return button
 	}()
 	
 	private let dateTitleLabel: UILabel = {
@@ -76,6 +86,31 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		return label
 	}()
 	
+	private let ratingView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .dark40
+		view.setDimensions(width: 170, height: 40)
+		view.layer.cornerRadius = 20
+
+		return view
+	}()
+	
+	private let starView: CosmosView = {
+		let starView = CosmosView()
+		starView.settings.filledColor = .orange40
+		starView.settings.fillMode = .full
+		starView.rating = 0
+		return starView
+	}()
+	
+	private lazy var sendButton: UIButton = {
+		lazy var sentButton = UIButton()
+		let image = UIImage.asset(.send)?.withTintColor(.orange40)
+		sentButton.setImage(image, for: .normal)
+		sentButton.addTarget(self, action: #selector(handleSendRating), for: .touchUpInside)
+		return sentButton
+	}()
+	
 	// MARK: - Lifecycle
 	
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -90,6 +125,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
+		
 		contentView.addSubview(articleImageView)
 		articleImageView.centerX(inView: contentView, topAnchor: contentView.topAnchor, paddingTop: 8)
 		
@@ -99,10 +135,10 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		contentView.addSubview(authorNameLabel)
 		authorNameLabel.centerX(inView: contentView, topAnchor: articleTitleLabel.bottomAnchor, paddingTop: 14)
 		
-		let infoOneVStack = UIStackView(arrangedSubviews: [ratingTitleLabel, ratingLabel])
+		let infoOneVStack = UIStackView(arrangedSubviews: [ratingTitleLabel, ratingButtonNumber])
 		infoOneVStack.axis = .vertical
 		infoOneVStack.alignment = .center
-		infoOneVStack.spacing = 5
+		infoOneVStack.spacing = 2
 		let infoTwoVStack = UIStackView(arrangedSubviews: [dateTitleLabel, dateLabel])
 		infoTwoVStack.axis = .vertical
 		infoTwoVStack.alignment = .center
@@ -114,10 +150,52 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		let infoHStack = UIStackView(arrangedSubviews: [infoOneVStack, infoTwoVStack, infoThreeVStack])
 		infoHStack.axis = .horizontal
 		infoHStack.distribution = .fillEqually
+		infoHStack.alignment = .lastBaseline
 		contentView.addSubview(infoHStack)
 		infoHStack.anchor(top: authorNameLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 						  right: contentView.rightAnchor, paddingTop: 36, paddingBottom: 24)
 		
+		ratingView.addSubview(starView)
+		starView.centerY(inView: ratingView, leftAnchor: ratingView.leftAnchor, paddingLeft: 12)
+		
+		ratingView.addSubview(sendButton)
+		sendButton.centerY(inView: ratingView, leftAnchor: starView.rightAnchor, paddingLeft: 8)
+	}
+	
+	// MARK: - Actions
+	
+	@objc func handleRateArticle() {
+		
+		if !rateViewIsUp {
+			contentView.addSubview(ratingView)
+			ratingView.anchor(left: contentView.leftAnchor, bottom: ratingButtonNumber.topAnchor, paddingLeft: 8,
+							  paddingBottom: 8)
+			ratingView.alpha = 0
+			ratingView.transform = CGAffineTransform(translationX: 10, y: 10)
+			rateViewIsUp = true
+			UIView.animate(withDuration: 0.3) {
+				self.ratingView.alpha = 1
+				self.ratingView.transform = CGAffineTransform.identity
+			}
+		} else {
+			rateViewIsUp = false
+			UIView.animate(withDuration: 0.3, animations: {
+				self.ratingView.alpha = 0
+			}) { status in
+				self.ratingView.removeFromSuperview()
+			}
+		}
+	}
+	
+	@objc func handleSendRating() {
+		guard let article = article, let uid = Auth.auth().currentUser?.uid else { return }
+		ArticleService.shared.rateArticle(senderID: uid, articleID: article.articleID, rating: starView.rating)
+		rateViewIsUp = false
+		UIView.animate(withDuration: 0.4, animations: {
+			self.ratingView.alpha = 0
+		}) { status in
+			self.ratingView.removeFromSuperview()
+		}
 	}
 	
 	// MARK: - Helpers
@@ -128,18 +206,27 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMMM dd, yyyy"
 		let postDate = Date(timeIntervalSince1970: article.timestamp)
+		
 		articleImageView.kf.setImage(with: imageUrl)
 		articleTitleLabel.text = article.articleTitle
 		authorNameLabel.text = "By \(article.authorName)"
-
-		if article.ratings.isEmpty {
-			ratingLabel.text = "0"
-		} else {
-			let rating = article.ratings.reduce(0.0) { $0 + $1 } / Double(article.ratings.count)
-			ratingLabel.text = "\(rating)"
-		}
-		
 		dateLabel.text = dateFormatter.string(from: postDate)
 		subjectLabel.text = article.subject
+
+		if article.ratings.isEmpty {
+			ratingButtonNumber.setTitle("0", for: .normal)
+		} else {
+			ratingButtonNumber.setTitle(calculateAverageRating(article: article), for: .normal)
+		}
+	}
+	
+	func calculateAverageRating(article: Article) -> String {
+		var ratingSum = 0.0
+		for rating in article.ratings {
+			ratingSum += rating.first?.value ?? 0
+		}
+		let averageRating = ratingSum / Double(article.ratings.count)
+		let roudedAverageRating = round(averageRating * 10) / 10
+		return String(roudedAverageRating)
 	}
 }
