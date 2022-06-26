@@ -99,7 +99,7 @@ class PostPageFeedCell: UITableViewCell {
 		return label
 	}()
 	
-	private let likeCountLabel: UILabel = {
+	let likeCountLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.dark40, text: "Likes: 100")
 		return label
@@ -162,8 +162,8 @@ class PostPageFeedCell: UITableViewCell {
 								right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 16, paddingRight: 16)
 		
 		contentView.addSubview(likeCountLabel)
-		likeCountLabel.anchor(top: contentTextLabel.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor,
-							  paddingTop: 15, paddingLeft: 16, paddingRight: 16)
+		likeCountLabel.anchor(top: contentTextLabel.bottomAnchor, left: contentView.leftAnchor,
+							  paddingTop: 15, paddingLeft: 16)
 		
 		let feedHStack = UIStackView(arrangedSubviews: [likeButton, commentButton])
 		feedHStack.axis = .horizontal
@@ -225,9 +225,11 @@ class PostPageFeedCell: UITableViewCell {
 		likeCountLabel.text = "\(post.likes) likes"
 		
 		delegate?.checkIfLikedByUser(self)
-		
-		if post.user.userID == user.userID {
+				
+		if post.userID == user.userID {
 			feedEditButton.isHidden = false
+		} else {
+			feedEditButton.isHidden = true
 		}
 	}
 	

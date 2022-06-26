@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 class CreateEventViewController: UIViewController {
 	
@@ -37,10 +38,10 @@ class CreateEventViewController: UIViewController {
 	
 	private let eventImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.backgroundColor = .gray
-		imageView.layer.cornerRadius = 10
-		imageView.image = UIImage.asset(.event)
-		imageView.contentMode = .scaleAspectFit
+		imageView.backgroundColor = .orange10
+		imageView.layer.cornerRadius = 12
+		imageView.contentMode = .scaleAspectFill
+		imageView.clipsToBounds = true
 		imageView.setDimensions(width: 132, height: 200)
 		return imageView
 	}()
@@ -53,6 +54,7 @@ class CreateEventViewController: UIViewController {
 	
 	private let eventTitleTextField: UITextField = {
 		let textField = UITextField()
+		textField.font = UIFont.customFont(.manropeRegular, size: 14)
 		return textField
 	}()
 	
@@ -70,6 +72,7 @@ class CreateEventViewController: UIViewController {
 	
 	private let addressTitleTextField: UITextField = {
 		let textField = UITextField()
+		textField.font = UIFont.customFont(.manropeRegular, size: 14)
 		return textField
 	}()
 	
@@ -102,7 +105,16 @@ class CreateEventViewController: UIViewController {
 		textView.layer.borderColor = UIColor.dark20.cgColor
 		textView.layer.borderWidth = 1
 		textView.layer.cornerRadius = 8
+		textView.font = UIFont.customFont(.manropeRegular, size: 14)
 		return textView
+	}()
+	
+	private lazy var pickImageButton: UIButton = {
+		let button = UIButton()
+		button.setDimensions(width: 24, height: 24)
+		button.setImage(UIImage.asset(.photo), for: .normal)
+		button.addTarget(self, action: #selector(handlePickingImage), for: .touchUpInside)
+		return button
 	}()
 	
 	private lazy var createEventButton: UIButton = {
@@ -181,15 +193,32 @@ class CreateEventViewController: UIViewController {
 		
 		view.addSubview(createEventButton)
 		createEventButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 12, paddingRight: 16)
+		
+		view.addSubview(pickImageButton)
+		pickImageButton.centerY(inView: createEventButton, leftAnchor: view.leftAnchor, paddingLeft: 16)
 	}
 	
 	// MARK: - Actions
 	
+	@objc func handlePickingImage() {
+		var configuration = PHPickerConfiguration()
+		configuration.selectionLimit = 1
+		let picker = PHPickerViewController(configuration: configuration)
+		picker.delegate = self
+		self.present(picker, animated: true, completion: nil)
+	}
+	
 	@objc func createEvent() {
-		guard let eventTitle = eventTitleTextField.text, let addreddText = addressTitleTextField.text, let introText = briefTextView.text,
+		guard let eventTitle = eventTitleTextField.text, !eventTitle.isEmpty,
+			  let addreddText = addressTitleTextField.text, !addreddText.isEmpty,
+			  let introText = briefTextView.text, !introText.isEmpty,
 			  let eventImage = eventImageView.image else { return }
 		let eventDate = datePicker.date
 		let interval = eventDate.timeIntervalSince1970
+		
+		let hudView = HudView.hud(inView: self.view,
+								animated: true)
+		hudView.text = "Success"
 		
 		EventService.shared.createAndDownloadImageURL(eventImage: eventImage) { [weak self] result in
 			guard let self = self else { return }
@@ -197,8 +226,12 @@ class CreateEventViewController: UIViewController {
 			case .success(let url):
 				let firestoreEvent = FirebaseEvent(userID: self.user.userID, eventTitle: eventTitle, organizerName: self.user.name, timestamp: interval,
 												   location: addreddText, introText: introText, imageURL: url, participants: [self.user.userID])
-				EventService.shared.uploadEvent(event: firestoreEvent)
-				self.dismiss(animated: true)
+				EventService.shared.uploadEvent(event: firestoreEvent) { [weak self] in
+					guard let self = self else { return }
+					hudView.hide()
+					self.dismiss(animated: true)
+				}
+				
 			case .failure(let error):
 				print(error)
 			}
@@ -210,4 +243,26 @@ class CreateEventViewController: UIViewController {
 	}
 	
 	// MARK: - Helpers
+}
+
+// MARK: - PHPickerViewControllerDelegate
+
+extension CreateEventViewController: PHPickerViewControllerDelegate {
+	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		picker.dismiss(animated: true)
+		let itemProviders = results.map(\.itemProvider)
+		for item in itemProviders {
+			if item.canLoadObject(ofClass: UIImage.self) {
+				item.loadObject(ofClass: UIImage.self) { [weak self](image, error) in
+					guard let self = self else { return }
+					DispatchQueue.main.async {
+						if let image = image as? UIImage {
+							self.eventImageView.image = nil
+							self.eventImageView.image = image
+						}
+					}
+				}
+			}
+		}
+	}
 }

@@ -25,6 +25,7 @@ class ScheduleEventListTableViewCell: UITableViewCell {
 		imageView.image = UIImage.asset(.event)
 		imageView.setDimensions(width: 100, height: 128)
 		imageView.contentMode = .scaleAspectFill
+		imageView.layer.cornerRadius = 12
 		imageView.clipsToBounds = true
 		return imageView
 	}()

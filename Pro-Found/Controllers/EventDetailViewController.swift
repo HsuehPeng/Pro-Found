@@ -204,16 +204,19 @@ extension EventDetailViewController: UITableViewDataSource {
 		
 		if indexPath.section == 0 {
 			listCell.delegate = self
+			listCell.selectionStyle = .none
 			listCell.isFollow = isFollow
 			listCell.event = event
 			return listCell
 		} else if indexPath.section == 1 {
 			mapCell.event = event
 			mapCell.eventLocation = eventLocation
+			mapCell.selectionStyle = .none
 			return mapCell
 		} else {
 			detailCell.event = event
 			detailCell.participants = participants
+			detailCell.selectionStyle = .none
 			return detailCell
 		}
 	}

@@ -120,7 +120,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		
 		contentView.addSubview(articleTitleLabel)
 		articleTitleLabel.anchor(top: articleImageView.topAnchor, left: articleImageView.rightAnchor,
-								 right: contentView.rightAnchor, paddingLeft: 12)
+								 right: contentView.rightAnchor, paddingLeft: 12, paddingRight: 24)
 
 		contentView.addSubview(editButton)
 		editButton.centerY(inView: articleTitleLabel)

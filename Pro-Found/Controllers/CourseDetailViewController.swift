@@ -186,7 +186,7 @@ extension CourseDetailViewController: UITableViewDataSource {
 			listCell.courseLocation = courseLocation
 			listCell.isFollow = isFollow
 			listCell.course = course
-			
+			listCell.selectionStyle = .none
 			return listCell
 		} else {
 			introCell.course = course

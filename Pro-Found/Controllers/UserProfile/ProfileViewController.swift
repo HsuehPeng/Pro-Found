@@ -287,6 +287,7 @@ extension ProfileViewController: UITableViewDataSource {
 extension ProfileViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard let user = user else { return }
+		tableView.deselectRow(at: indexPath, animated: true)
 		switch indexPath.row {
 		case 0:
 			let becomeTutorVC = BecomeTutorViewController(user: user)

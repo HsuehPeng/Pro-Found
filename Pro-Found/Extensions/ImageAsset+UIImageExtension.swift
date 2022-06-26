@@ -159,6 +159,7 @@ enum ImageAsset: String {
 	
 	// Others
 	
+	case cross
 	case checkmarkHUD
 }
 

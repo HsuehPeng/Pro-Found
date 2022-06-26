@@ -55,8 +55,8 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 		let button = UIButton()
 		let image = UIImage.asset(.star)?.withTintColor(.orange40)
 		button.setImage(image, for: .normal)
-		button.setTitle("0", for: .normal)
 		button.setTitleColor(UIColor.orange40, for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 14)
 		
 		return button
 	}()

@@ -31,7 +31,7 @@ struct EventService {
 		}
 	}
 	
-	func uploadEvent(event: FirebaseEvent) {
+	func uploadEvent(event: FirebaseEvent, completion: @escaping () -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let eventRef = dbEvents.document()
 		let eventData: [String: Any] = [
@@ -54,6 +54,7 @@ struct EventService {
 					"events": FieldValue.arrayUnion([eventRef.documentID])
 				])
 				UserServie.shared.uploadScheduledEvent(organizerID: uid, eventID: eventRef.documentID, time: event.timestamp)
+				completion()
 				print("New event successfully created")
 			}
 		}
@@ -89,14 +90,21 @@ struct EventService {
 		}
 	}
 	
-	func fetchEvent(user: User, eventID: String, completion: @escaping (Result<Event, Error>) -> Void) {
+	func fetchEvent(eventID: String, completion: @escaping (Result<Event, Error>) -> Void) {
 		dbEvents.document(eventID).getDocument { snapshot, error in
 			if let error = error {
 				completion(.failure(error))
 			} else {
-				guard let snapshot = snapshot, let eventData = snapshot.data() else { return }
-				let event = Event(organizer: user, dictionary: eventData)
-				completion(.success(event))
+				guard let snapshot = snapshot, let eventData = snapshot.data(), let organizerID = eventData["userID"] as? String else { return }
+				UserServie.shared.getUserData(uid: organizerID) { result in
+					switch result {
+					case .failure(let error):
+						completion(.failure(error))
+					case .success(let organizer):
+						let event = Event(organizer: organizer, dictionary: eventData)
+						completion(.success(event))
+					}
+				}
 			}
 		}
 		

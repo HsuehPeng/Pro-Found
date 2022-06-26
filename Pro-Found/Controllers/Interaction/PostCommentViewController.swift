@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class PostCommentViewController: UIViewController {
 	
@@ -42,6 +43,8 @@ class PostCommentViewController: UIViewController {
 		imageView.setDimensions(width: 32, height: 32)
 		imageView.layer.cornerRadius = 32 / 2
 		imageView.backgroundColor = .dark20
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
@@ -84,6 +87,7 @@ class PostCommentViewController: UIViewController {
 		setupNavBar()
 		setupUI()
 		fetchReplies()
+		configureUI()
 
 	}
 	
@@ -140,6 +144,11 @@ class PostCommentViewController: UIViewController {
 	
 	// MARK: - Helpers
 	
+	func configureUI() {
+		guard let imageUrl = URL(string: user.profileImageURL) else { return }
+		commenterImageView.kf.setImage(with: imageUrl)
+	}
+	
 	func fetchReplies() {
 		
 		PostService.shared.getReplies { [weak self] result in
@@ -170,6 +179,7 @@ extension PostCommentViewController: UITableViewDataSource {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: PostCommentTableCellTableViewCell.reuseIdentifier, for: indexPath)
 				as? PostCommentTableCellTableViewCell else { fatalError("Can not dequeue PostCommentTableCellTableViewCell") }
 		cell.reply = replies[indexPath.row]
+		cell.selectionStyle = .none
 		return cell
 	}
 }
@@ -180,12 +190,28 @@ extension PostCommentViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: PostCommentTableHeader.reuserIdentifier)
 				as? PostCommentTableHeader else { fatalError("Can not dequeue PostCommentTableHeader") }
+		header.delegate = self
 		header.post = post
 		return header
 	}
-//
-//	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//		return 100
-//	}
+}
+
+extension PostCommentViewController: PostCommentTableHeaderDelegate {
+	func askToDelete(_ cell: PostCommentTableHeader) {
+				
+		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { [weak self] _ in
+			guard let self = self else { return }
+			PostService.shared.deletePost(postID: self.post.postID, userID: self.user.userID) { [weak self] in
+				guard let self = self else { return }
+				self.navigationController?.popViewController(animated: true)
+			}
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
+	}
 	
 }

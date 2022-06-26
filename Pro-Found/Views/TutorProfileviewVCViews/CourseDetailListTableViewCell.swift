@@ -38,7 +38,7 @@ class CourseDetailListTableViewCell: UITableViewCell {
 	
 	var isFollow: Bool?
 	
-	private let tutorImageView: UIImageView = {
+	private lazy var tutorImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 48, height: 48)
 		imageView.layer.cornerRadius = 48 / 2

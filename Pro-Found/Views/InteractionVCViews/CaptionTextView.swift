@@ -13,7 +13,7 @@ class CaptionTextView: UITextView {
 	
 	let placeholderLabel: UILabel = {
 		let label = UILabel()
-		label.font = UIFont.systemFont(ofSize: 16)
+		label.font = UIFont.customFont(.manropeRegular, size: 14)
 		label.textColor = .dark30
 		label.text = "what's happening?"
 		return label
@@ -27,7 +27,7 @@ class CaptionTextView: UITextView {
 		font = UIFont.systemFont(ofSize: 16)
 		isScrollEnabled = false
 //		heightAnchor.constraint(equalToConstant: 300).isActive = true
-		
+		font = UIFont.customFont(.manropeRegular, size: 14)
 		addSubview(placeholderLabel)
 		placeholderLabel.anchor(top: topAnchor, left: leftAnchor, paddingTop: 8, paddingLeft: 4)
 		

@@ -7,10 +7,17 @@
 
 import UIKit
 import Kingfisher
+import FirebaseAuth
+
+protocol PostCommentTableHeaderDelegate: AnyObject {
+	func askToDelete(_ cell: PostCommentTableHeader)
+}
 
 class PostCommentTableHeader: UITableViewHeaderFooterView {
 	
 	static let reuserIdentifier = "\(PostCommentTableHeader.self)"
+	
+	weak var delegate: PostCommentTableHeaderDelegate?
 
 	// MARK: - Properties
 	
@@ -52,6 +59,22 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 	private lazy var feedEditButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.more), for: .normal)
+		button.isHidden = true
+		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var deleteButton: UIButton = {
+		let button = UIButton()
+		button.setTitle("Delete", for: .normal)
+		button.setTitleColor(.red, for: .normal)
+		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 12)
+		button.backgroundColor = .orange20
+		button.layer.cornerRadius = 5
+		button.setDimensions(width: 50, height: 20)
+		button.addTarget(self, action: #selector(deleteArticle), for: .touchUpInside)
+		button.isHidden = true
+		button.alpha = 0
 		return button
 	}()
 	
@@ -97,22 +120,46 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		feedEditButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
 		feedEditButton.anchor(right: contentView.rightAnchor, paddingRight: 12)
 
+		contentView.addSubview(deleteButton)
+		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
+
 		contentView.addSubview(contentLabel)
 		contentLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor,
 							paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 
 		contentView.addSubview(dividerView)
 		dividerView.anchor(top: contentLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
-						   right: contentView.rightAnchor, paddingTop: 16, height: 1)
+						   right: contentView.rightAnchor, paddingTop: 16, paddingBottom: 1, height: 1)
 		
 	}
 	
 	// MARK: - Actions
 	
+	@objc func handleAskToDelete() {
+		if deleteButton.isHidden {
+			UIView.animate(withDuration: 0.3) {
+				self.deleteButton.alpha = 1
+				self.deleteButton.isHidden = !self.deleteButton.isHidden
+			}
+		} else {
+			UIView.animate(withDuration: 0.3) {
+				self.deleteButton.alpha = 0
+			} completion: { done in
+				if done {
+					self.deleteButton.isHidden = !self.deleteButton.isHidden
+				}
+			}
+		}
+	}
+	
+	@objc func deleteArticle() {
+		delegate?.askToDelete(self)
+	}
+	
 	// MARK: - Helpers
 	
 	func configureUI() {
-		guard let post = post else { return }
+		guard let post = post, let uid = Auth.auth().currentUser?.uid else { return }
 		let imageUrl = URL(string: post.user.profileImageURL)
 		profileImageView.kf.setImage(with: imageUrl)
 		
@@ -124,6 +171,10 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		feedNameLabel.text = post.user.name
 		feedTimeLabel.text = postDate
 		contentLabel.text = post.contentText
+		
+		if post.userID == uid{
+			feedEditButton.isHidden = false
+		}
 	}
 
 }

@@ -49,7 +49,9 @@ class EventDetailListTableViewCell: UITableViewCell {
 	}()
 	
 	lazy var followButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .white, buttonTextColor: .orange, borderColor: .orange, buttonText: "Follow", borderWidth: 1)
+		let button = CustomUIElements().makeSmallButton(buttonColor: UIColor.light60, buttonTextColor: UIColor.orange,
+														borderColor: .orange, buttonText: "Follow")
+		button.setTitleColor(UIColor.dark20, for: .disabled)
 		button.widthAnchor.constraint(equalToConstant: 76).isActive = true
 		button.addTarget(self, action: #selector(handleFollowingAction), for: .touchUpInside)
 		return button
@@ -124,7 +126,7 @@ class EventDetailListTableViewCell: UITableViewCell {
 		
 		if event.userID == uid {
 			followButton.isEnabled = false
-			followButton.backgroundColor = .dark10
+			followButton.layer.borderColor = UIColor.dark20.cgColor
 		}
 		
 		if isFollow {

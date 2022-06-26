@@ -21,7 +21,6 @@ class TutorProfileContentHeader: UITableViewHeaderFooterView {
 	
 	lazy var articleButton: UIButton = {
 		let button = makeButton(title: "Articles", titleColor: UIColor.dark60, selectedColor: UIColor.orange)
-		button.isSelected = true
 		return button
 	}()
 	

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ScheduleCourseListTableCell: UITableViewCell {
     
@@ -18,6 +19,8 @@ class ScheduleCourseListTableCell: UITableViewCell {
 			configureUI()
 		}
 	}
+	
+	var scheduledCourseWithTimeAndStudent: ScheduledCourseTime?
 	
 	private let classView: UIView = {
 		let view = UIView()
@@ -34,11 +37,40 @@ class ScheduleCourseListTableCell: UITableViewCell {
 		return label
 	}()
 	
-	private let summaryLabel: UILabel = {
+	private let timeLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.white, text: "Test summary")
 		label.numberOfLines = 0
 		return label
+	}()
+	
+	private let instructorImageView: UIImageView = {
+		let imageView = UIImageView()
+		imageView.setDimensions(width: 36, height: 36)
+		imageView.backgroundColor = .light50
+		imageView.layer.cornerRadius = 36 / 2
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
+		return imageView
+	}()
+	
+	private let crossImageView: UIImageView = {
+		let imageView = UIImageView()
+		imageView.image = UIImage.asset(.cross)?.withTintColor(.orange40)
+		imageView.clipsToBounds = true
+		imageView.backgroundColor = .clear
+		imageView.contentMode = .scaleAspectFill
+		return imageView
+	}()
+	
+	private let studentImageView: UIImageView = {
+		let imageView = UIImageView()
+		imageView.setDimensions(width: 36, height: 36)
+		imageView.backgroundColor = .light50
+		imageView.layer.cornerRadius = 36 / 2
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
+		return imageView
 	}()
 	
 	private let locationLabel: UILabel = {
@@ -78,12 +110,21 @@ class ScheduleCourseListTableCell: UITableViewCell {
 		classView.addSubview(feeLabel)
 		feeLabel.anchor(top: classView.topAnchor, right: classView.rightAnchor, paddingTop: 20, paddingRight: 20)
 		
-		classView.addSubview(summaryLabel)
-		summaryLabel.anchor(top: classTitleLabel.bottomAnchor, left: classView.leftAnchor, right: classView.rightAnchor, paddingTop: 9, paddingLeft: 20, paddingRight: 20)
+		classView.addSubview(timeLabel)
+		timeLabel.anchor(top: classTitleLabel.bottomAnchor, left: classView.leftAnchor, right: classView.rightAnchor, paddingTop: 9, paddingLeft: 20, paddingRight: 20)
+		
+		let profileImageHStack = UIStackView(arrangedSubviews: [instructorImageView, crossImageView, studentImageView])
+		profileImageHStack.axis = .horizontal
+		profileImageHStack.spacing = 20
+		profileImageHStack.distribution = .fillEqually
+		classView.addSubview(profileImageHStack)
+		profileImageHStack.centerX(inView: classView, topAnchor: timeLabel.bottomAnchor, paddingTop: 16)
+		
+		
 		
 		classView.addSubview(locationLabel)
-		locationLabel.anchor(top: summaryLabel.bottomAnchor, left: classView.leftAnchor, right: classView.rightAnchor,
-							 paddingTop: 20, paddingLeft: 20, paddingRight: 8)
+		locationLabel.anchor(left: classView.leftAnchor, bottom: classView.bottomAnchor, right: classView.rightAnchor,
+							paddingLeft: 20, paddingBottom: 20, paddingRight: 8)
 	}
 	
 	// MARK: - Actions
@@ -92,13 +133,25 @@ class ScheduleCourseListTableCell: UITableViewCell {
 	// MARK: - Helpers
 	
 	func configureUI() {
-		guard let course = course else { return }
+		guard let course = course, let scheduledCourseWithTimeAndStudent = scheduledCourseWithTimeAndStudent else { return }
+		
+		let dateFormatter = DateFormatter()
+		let date = Date(timeIntervalSince1970: scheduledCourseWithTimeAndStudent.time)
+		dateFormatter.dateFormat = "h:mm a"
+		let dateString = dateFormatter.string(from: date)
+		guard let tutorImageUrl = URL(string: course.tutor.profileImageURL),
+			  let studentImageUrl = URL(string: scheduledCourseWithTimeAndStudent.student.profileImageURL) else { return }
 		
 		classTitleLabel.text = course.courseTitle
-		summaryLabel.text = course.briefIntro
+		timeLabel.text = "\(dateString) ∙ \(course.hours) hours"
 		let courseFeeInt = Int(course.fee)
 		feeLabel.text = "$ \(courseFeeInt)"
+		instructorImageView.kf.setImage(with: tutorImageUrl)
+		studentImageView.kf.setImage(with: studentImageUrl)
 		locationLabel.text = course.location
+		
+		setSubjectButtonColor(subject: course.subject, targetView: classView)
+		
 	}
 	
 }

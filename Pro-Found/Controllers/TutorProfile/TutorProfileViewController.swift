@@ -210,6 +210,7 @@ class TutorProfileViewController: UIViewController {
 		for i in 0...buttons.count - 1 {
 			buttons[i].isSelected = false
 		}
+		
 		selectedButton.isSelected = true
 	}
 	
@@ -383,14 +384,14 @@ extension TutorProfileViewController: TutorProfileContentHeaderDelegate {
 		
 		switch type.titleLabel?.text {
 		case "Articles":
+			toggleSelectedSubjectButton(buttons: buttonCollections, selectedButton: type)
 			currentContent = "Articles"
-			toggleSelectedSubjectButton(buttons: buttonCollections, selectedButton: type)
 		case "Events":
+			toggleSelectedSubjectButton(buttons: buttonCollections, selectedButton: type)
 			currentContent = "Events"
-			toggleSelectedSubjectButton(buttons: buttonCollections, selectedButton: type)
 		case "Posts":
-			currentContent = "Posts"
 			toggleSelectedSubjectButton(buttons: buttonCollections, selectedButton: type)
+			currentContent = "Posts"
 		default:
 			break
 		}
