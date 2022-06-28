@@ -78,6 +78,7 @@ class CourseDetailViewController: UIViewController {
 		convertAdressToCLLocation()
 		checkIfFollowed()
 		checkIfSamePerson()
+		checkIfNotTutor()
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -141,6 +142,13 @@ class CourseDetailViewController: UIViewController {
 	
 	func checkIfSamePerson() {
 		if user.userID == course.userID {
+			scheduleCourseButton.isEnabled = false
+			scheduleCourseButton.backgroundColor = .dark10
+		}
+	}
+	
+	func checkIfNotTutor() {
+		if !user.isTutor {
 			scheduleCourseButton.isEnabled = false
 			scheduleCourseButton.backgroundColor = .dark10
 		}

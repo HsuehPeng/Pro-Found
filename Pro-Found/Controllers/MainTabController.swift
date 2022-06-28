@@ -38,6 +38,7 @@ class MainTabController: UITabBarController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		authenticateUserAndConfigureUI()
+		delegate = self
 	}
 	
 	// MARK: - UI
@@ -99,5 +100,23 @@ class MainTabController: UITabBarController {
 		nav.tabBarItem.image = image
 		nav.tabBarItem.selectedImage = image?.withTintColor(UIColor.orange, renderingMode: .alwaysOriginal)
 		return nav
+	}
+}
+
+// MARK: - UITabBarControllerDelegate
+
+extension MainTabController: UITabBarControllerDelegate {
+	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+		if let navigationController = viewController as? UINavigationController,
+		   navigationController.viewControllers.contains(where: { $0 is ProfileViewController }),
+		   Auth.auth().currentUser == nil {
+			let popUpAskToLoginVC = PopUpAskToLoginController()
+			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+			present(popUpAskToLoginVC, animated: true)
+			return false
+		} else {
+			return true
+		}
 	}
 }

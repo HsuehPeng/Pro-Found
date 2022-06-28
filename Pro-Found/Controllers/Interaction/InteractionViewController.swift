@@ -205,12 +205,10 @@ class InteractionViewController: UIViewController {
 	}
 	
 	func filterPosts() -> [Post] {
-		guard let user = user else {
-			return []
-		}
+		guard let user = user else { return [] }
 		var filteredPosts = [Post]()
 		for post in posts {
-			if user.followings.contains(post.userID) || post.userID == user.userID {
+			if (user.followings.contains(post.userID) || post.userID == user.userID) && !user.blockedUsers.contains(post.userID) {
 				filteredPosts.append(post)
 			}
 		}
@@ -230,10 +228,13 @@ class InteractionViewController: UIViewController {
 	}
 	
 	func filterAndSortEvents(events: [Event]) -> [Event] {
+		guard let user = user else { return [] }
 		let date = Date()
 		let currentTimeInterval = date.timeIntervalSince1970
-		let filteredEvents = events.filter({ $0.timestamp > currentTimeInterval })
-		let sortedFilteredEvents = filteredEvents.sorted(by: { $0.timestamp < $1.timestamp })
+		
+		let filterBlockingEvents = events.filter( { !user.blockedUsers.contains($0.organizer.userID) } )
+		let filteredOverdueEvents = filterBlockingEvents.filter({ $0.timestamp > currentTimeInterval })
+		let sortedFilteredEvents = filteredOverdueEvents.sorted(by: { $0.timestamp < $1.timestamp })
 		
 		return sortedFilteredEvents
 	}

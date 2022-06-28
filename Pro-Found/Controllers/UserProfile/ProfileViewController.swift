@@ -17,6 +17,7 @@ class ProfileViewController: UIViewController {
 	var user: User? {
 		didSet {
 			configureUI()
+			tableView.reloadData()
 		}
 	}
 	
@@ -24,19 +25,23 @@ class ProfileViewController: UIViewController {
 	
 	var followingTutors = [User]()
 	
+	var blockingTutors = [User]()
+	
 	let profileListIcon: [UIImage?] = [UIImage.asset(.verified_user)?.withTintColor(.green),
 									   UIImage.asset(.account_pin)?.withTintColor(.dark40),
-									  UIImage.asset(.favorite)?.withTintColor(.dark40),
-									  UIImage.asset(.bookmark)?.withTintColor(.dark40),
-									  UIImage.asset(.doc)?.withTintColor(.dark40),
-									  UIImage.asset(.alert_info)?.withTintColor(.dark40),
-									  UIImage.asset(.logout)?.withTintColor(.dark40),
+									   UIImage.asset(.favorite)?.withTintColor(.dark40),
+									   UIImage.asset(.bookmark)?.withTintColor(.dark40),
+									   UIImage.asset(.password_hide)?.withTintColor(.dark40),
+									   UIImage.asset(.doc)?.withTintColor(.dark40),
+									   UIImage.asset(.alert_info)?.withTintColor(.dark40),
+									   UIImage.asset(.logout)?.withTintColor(.dark40),
 									   UIImage.asset(.delete)?.withTintColor(.red)]
 	
 	let profileListText: [String] = ["Become a Tutor",
 									 "My Public Profile",
 									 "Following Tutors",
 									 "Saved Articles",
+									 "Blocked Users",
 									 "Term of Usage",
 									 "About App",
 									 "Logout",
@@ -128,6 +133,7 @@ class ProfileViewController: UIViewController {
 		fetchUserData()
 		fetchFavoriteArticles()
 		fetchFollowingTutors()
+		fetchBlockedTutors()
 		
 		navigationController?.navigationBar.isHidden = true
 		tabBarController?.tabBar.isHidden = false
@@ -195,18 +201,33 @@ class ProfileViewController: UIViewController {
 	}
 	
 	func handleLogout() {
-		do {
-			try Auth.auth().signOut()
-		} catch let signOutError as NSError {
-			print("Error signing out: %@", signOutError)
+		
+		// Check provider ID to verify that the user has signed in with Apple
+		if
+			let providerId = Auth.auth().currentUser?.providerData.first?.providerID,
+			providerId == "apple.com" {
+			// Clear saved user ID
+			UserDefaults.standard.set(nil, forKey: "appleAuthorizedUserIdKey")
 		}
 		
-		guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
+		// Perform sign out from Firebase
+		
+		if Auth.auth().currentUser?.uid != nil {
+			do {
+				try Auth.auth().signOut()
+			} catch let signOutError as NSError {
+				print("Error signing out: %@", signOutError)
+			}
+		}
+		
+		guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({
+			$0.windows }).first(where: { $0.isKeyWindow }) else { return }
 		
 		guard let tab = window.rootViewController as? MainTabController else { return }
 		
 		tab.authenticateUserAndConfigureUI()
 		self.dismiss(animated: true, completion: nil)
+
 	}
 	
 	// MARK: - Helpers
@@ -251,12 +272,52 @@ class ProfileViewController: UIViewController {
 		}
 	}
 	
+	func fetchBlockedTutors() {
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		UserServie.shared.getBlockedTutors(userID: uid) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let users):
+				print(users)
+				self.blockingTutors = users
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
 	func configureUI() {
 		guard let user = user else { return }
 		let imageUrl = URL(string: user.profileImageURL)
 		profileImageView.kf.setImage(with: imageUrl)
 		nameLabel.text = user.name
 		universityLabel.text = user.school
+	}
+	
+	func deleteAcount() {
+		let userAcount = Auth.auth().currentUser
+		
+		let controller = UIAlertController(title: "Are you sure to delete this account?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			userAcount?.delete(completion: { error in
+				if let error = error {
+					print("Error deleting account: \(error)")
+				} else {
+					guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({
+						$0.windows }).first(where: { $0.isKeyWindow }) else { return }
+					
+					guard let tab = window.rootViewController as? MainTabController else { return }
+					
+					tab.authenticateUserAndConfigureUI()
+					self.dismiss(animated: true, completion: nil)
+				}
+			})
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
 	}
 }
 
@@ -271,13 +332,21 @@ extension ProfileViewController: UITableViewDataSource {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: UserProfileListTableViewCell.reuserIdentifier, for: indexPath)
 				as? UserProfileListTableViewCell else { fatalError("Can not dequeue UserProfileListTableViewCell") }
 		
-		if indexPath.row == 7 {
-			cell.titleLabel.textColor = .red
-		} else if indexPath.row == 0 {
-			cell.titleLabel.textColor = .green
-		}
+		cell.titleLabel.textColor = .dark
 		cell.titleLabel.text = profileListText[indexPath.row]
 		cell.iconImageView.image = profileListIcon[indexPath.row]
+		
+		if indexPath.row == 8 {
+			cell.titleLabel.textColor = .red
+		} else if indexPath.row == 0 {
+			if user?.isTutor ?? false {
+				cell.titleLabel.textColor = .red
+				cell.titleLabel.text = "Cancel Tutor Role"
+			} else {
+				cell.titleLabel.textColor = .green
+			}
+		}
+
 		return cell
 	}
 }
@@ -290,29 +359,57 @@ extension ProfileViewController: UITableViewDelegate {
 		tableView.deselectRow(at: indexPath, animated: true)
 		switch indexPath.row {
 		case 0:
-			let becomeTutorVC = BecomeTutorViewController(user: user)
-			if let sheet = becomeTutorVC.presentationController as? UISheetPresentationController {
-				sheet.detents = [.medium()]
-				sheet.preferredCornerRadius = 25
+			
+			if user.isTutor {
+				let controller = UIAlertController(title: "Are you sure to cancel tutor role?", message: nil, preferredStyle: .alert)
+				let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+					UserServie.shared.toggleTutorStatus(userID: user.userID, subject: user.subject, isTutor: user.isTutor) { [weak self] in
+						guard let self = self else { return }
+						self.fetchUserData()
+						self.tableView.reloadData()
+					}
+				}
+				let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+				controller.addAction(okAction)
+				controller.addAction(cancelAction)
+				
+				present(controller, animated: true, completion: nil)
+			} else {
+				let becomeTutorVC = BecomeTutorViewController(user: user)
+				becomeTutorVC.updateProfilePage = { [weak self] in
+					guard let self = self else { return }
+					self.fetchUserData()
+					self.tableView.reloadData()
+				}
+				if let sheet = becomeTutorVC.presentationController as? UISheetPresentationController {
+					sheet.detents = [.medium()]
+					sheet.preferredCornerRadius = 25
+				}
+				present(becomeTutorVC, animated: true)
 			}
-			present(becomeTutorVC, animated: true)
+			
 		case 1:
 			let publicProfilePage = TutorProfileViewController(user: user, tutor: user)
 			navigationController?.pushViewController(publicProfilePage, animated: true)
 		case 2:
-			let followingTutorVC = FollowingTutorViewController(followingTutors: followingTutors, user: user)
+			let followingTutorVC = TutorListViewController(tutors: followingTutors, user: user)
 			navigationController?.pushViewController(followingTutorVC, animated: true)
 		case 3:
 			let savedArticleVC = ArticleListViewController(articles: favoriteArticles)
 			navigationController?.pushViewController(savedArticleVC, animated: true)
 		case 4:
-			print("Term of usage")
+			print(blockingTutors.count)
+			let blockingTutorVC = TutorListViewController(tutors: blockingTutors, user: user)
+			blockingTutorVC.forBlockingPage = true
+			navigationController?.pushViewController(blockingTutorVC, animated: true)
 		case 5:
-			print("About app")
+			print("Term of usage")
 		case 6:
-			handleLogout()
+			print("About app")
 		case 7:
-			print("Delete Account")
+			handleLogout()
+		case 8:
+			deleteAcount()
 		default:
 			break
 		}

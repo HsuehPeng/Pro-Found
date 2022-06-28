@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import FirebaseAuth
 
 class HomeViewController: UIViewController {
 
@@ -60,6 +61,7 @@ class HomeViewController: UIViewController {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.filter)?.withRenderingMode(.alwaysOriginal), for: .normal)
 		button.addTarget(self, action: #selector(subjectFilterPressed), for: .touchUpInside)
+		button.setDimensions(width: 32, height: 32)
 		return button
 	}()
 	
@@ -139,7 +141,8 @@ class HomeViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		setupNavBar()
-		fetchTutors()
+		
+		fetchUser()
 	}
 	
 	var sixtyFour: NSLayoutConstraint?
@@ -256,13 +259,33 @@ class HomeViewController: UIViewController {
 	
 	// MARK: - Helpers
 	
+	func fetchUser() {
+		guard let uid = Auth.auth().currentUser?.uid else {
+			configureForNoUser()
+			return
+		}
+		UserServie.shared.getUserData(uid: uid) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let user):
+				self.user = user
+				self.fetchTutors()
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
 	func fetchTutors() {
+		guard let user = user else { return }
 		UserServie.shared.getTutors { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let tutors):
-				self.tutors = tutors
-				self.filteredTutors = tutors
+				// Filter out blocked tutors
+				let filterOutBlockTutors = tutors.filter { !user.blockedUsers.contains($0.userID) }
+				self.tutors = filterOutBlockTutors
+				self.filteredTutors = self.tutors
 			case .failure(let error):
 				print("Error getting tutors: \(error)")
 			}
@@ -283,6 +306,21 @@ class HomeViewController: UIViewController {
 		}
 		selectedButton.isSelected = true
 		selectedButton.backgroundColor = .orange
+	}
+	
+	func configureForNoUser() {
+		UserServie.shared.getTutors { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let tutors):
+				self.tutors = tutors
+				self.filteredTutors = self.tutors
+			case .failure(let error):
+				print("Error getting tutors: \(error)")
+			}
+		}
+		
+		nameLabel.text = "My Guest"
 	}
 }
 
@@ -308,7 +346,13 @@ extension HomeViewController: UICollectionViewDataSource {
 
 extension HomeViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		guard let user = user, let filteredTutor = filteredTutors else { return }
+		guard let user = user, let filteredTutor = filteredTutors else {
+			let popUpAskToLoginVC = PopUpAskToLoginController()
+			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+			present(popUpAskToLoginVC, animated: true)
+			return
+		}
 		let tutor = filteredTutor[indexPath.item]
 		let tutorProfileVC = TutorProfileViewController(user: user, tutor: tutor)
 		navigationController?.pushViewController(tutorProfileVC, animated: true)

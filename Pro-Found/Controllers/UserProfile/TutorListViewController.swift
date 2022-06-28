@@ -7,13 +7,15 @@
 
 import UIKit
 
-class FollowingTutorViewController: UIViewController {
+class TutorListViewController: UIViewController {
 	
 	// MARK: - Properties
 	
-	var followingTutors: [User]
+	var tutors: [User]
 	
 	var user: User
+	
+	var forBlockingPage = false
 	
 	private lazy var collectionView: UICollectionView = {
 		let flowLayout = UICollectionViewFlowLayout()
@@ -30,8 +32,8 @@ class FollowingTutorViewController: UIViewController {
 	
 	// MARK: - Lifecycle
 	
-	init(followingTutors: [User], user: User) {
-		self.followingTutors = followingTutors
+	init(tutors: [User], user: User) {
+		self.tutors = tutors
 		self.user = user
 		super.init(nibName: nil, bundle: nil)
 	}
@@ -68,7 +70,8 @@ class FollowingTutorViewController: UIViewController {
 		let leftBarItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftBarItemImage, style: .done,
 														   target: self, action: #selector(popVC))
-		title = "Following"		
+		
+		title = forBlockingPage ? "Blocked Users" : "Following"
 	}
 
 	
@@ -85,30 +88,30 @@ class FollowingTutorViewController: UIViewController {
 
 // MARK: - UICollectionViewDataSource
 
-extension FollowingTutorViewController: UICollectionViewDataSource {
+extension TutorListViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return followingTutors.count
+		return tutors.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let tutorCell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageTutorCollectionViewCell.reuseIdentifier, for: indexPath)
 				as? HomePageTutorCollectionViewCell else { fatalError("Can not dequeue HomePageTutorCollectionViewCell") }
-		tutorCell.tutor = followingTutors[indexPath.item]
+		tutorCell.tutor = tutors[indexPath.item]
 		return tutorCell
 	}
 
 }
 
-// MARK: - UITableViewDataSource
+// MARK: - UICollectionViewDelegate
 
-extension FollowingTutorViewController: UICollectionViewDelegate {
+extension TutorListViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		let tutor = followingTutors[indexPath.item]
+		let tutor = tutors[indexPath.item]
 		let tutorProfileVC = TutorProfileViewController(user: user, tutor: tutor)
 		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}
 }
 
-extension FollowingTutorViewController: UIScrollViewDelegate {
+extension TutorListViewController: UIScrollViewDelegate {
 	
 }

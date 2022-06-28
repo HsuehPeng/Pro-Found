@@ -14,6 +14,7 @@ import PhotosUI
 protocol TutorProfileMainTableViewCellDelegate: AnyObject {
 	func chooseBackgroundImage(_ cell: TutorProfileMainTableViewCell)
 	func rateTutor(_ cell: TutorProfileMainTableViewCell)
+	func changeBlockingStatus(_ cell: TutorProfileMainTableViewCell)
 }
 
 class TutorProfileMainTableViewCell: UITableViewCell {
@@ -64,6 +65,14 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		imageView.clipsToBounds = true
 		imageView.contentMode = .scaleAspectFill
 		return imageView
+	}()
+	
+	lazy var blockUserButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.password_show)?.withRenderingMode(.alwaysOriginal)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleBlockUser), for: .touchUpInside)
+		return button
 	}()
 	
 	private let nameLabel: UILabel = {
@@ -211,6 +220,9 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		profilePhotoImageView.anchor(top: profileView.topAnchor, left: profileView.leftAnchor, paddingTop: -56, paddingLeft: 24)
 		profilePhotoImageView.setDimensions(width: 84, height: 92)
 		
+		profileView.addSubview(blockUserButton)
+		blockUserButton.anchor(top: profileView.topAnchor, right: profileView.rightAnchor, paddingTop: 16, paddingRight: 24)
+		
 		profileView.addSubview(nameLabel)
 		nameLabel.anchor(top: profileView.topAnchor, left: profileView.leftAnchor, paddingTop: 61, paddingLeft: 24)
 		
@@ -262,6 +274,10 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleBlockUser() {
+		delegate?.changeBlockingStatus(self)
+	}
 	
 	@objc func handleBackgroudImageTap() {
 		delegate?.chooseBackgroundImage(self)
@@ -330,7 +346,17 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		schoolLabel.text = tutor.school
 		majorSubjectLabel.text = tutor.schoolMajor
 		
+		
+		if user.blockedUsers.contains(tutor.userID) {
+			print("Ture")
+			blockUserButton.setImage(UIImage.asset(.password_hide), for: .normal)
+		} else {
+			print("false")
+			blockUserButton.setImage(UIImage.asset(.password_show), for: .normal)
+		}
+		
 		if tutor.userID == user.userID {
+			blockUserButton.isHidden = true
 			profileActionButton.isEnabled = false
 			profileActionButton.layer.borderColor = UIColor.dark20.cgColor
 		}

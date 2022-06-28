@@ -15,9 +15,9 @@ class TutorProfileViewController: UIViewController {
 	
 //	var isTutor = false
 	
-	let user: User
+	var user: User
 	
-	let tutor: User
+	var tutor: User
 	
 	var tutorCourses = [Course]() {
 		didSet {
@@ -33,7 +33,7 @@ class TutorProfileViewController: UIViewController {
 	
 	var currentContent = "Articles" {
 		didSet {
-			tableView.reloadData()
+			tableView.reloadSections([2], with: .fade)
 		}
 	}
 	
@@ -455,6 +455,32 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 // MARK: - TutorProfileMainTableViewCellDelegate
 
 extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
+	func changeBlockingStatus(_ cell: TutorProfileMainTableViewCell) {
+		print(user.blockedUsers, tutor.userID)
+		if user.blockedUsers.contains(tutor.userID) {
+			UserServie.shared.toggleBlockingStatus(senderID: user.userID, receiverID: tutor.userID) {
+				cell.blockUserButton.setImage(UIImage.asset(.password_show), for: .normal)
+				guard let index = self.user.blockedUsers.firstIndex(of: self.tutor.userID) else { return }
+				self.user.blockedUsers.remove(at: index)
+			}
+		} else {
+			let controller = UIAlertController(title: "Are you sure to block this person?", message: nil, preferredStyle: .alert)
+			let okAction = UIAlertAction(title: "Sure", style: .destructive) { [weak self] _ in
+				guard let self = self else { return }
+				UserServie.shared.toggleBlockingStatus(senderID: self.user.userID, receiverID: self.tutor.userID) {
+					cell.blockUserButton.setImage(UIImage.asset(.password_hide), for: .normal)
+					self.user.blockedUsers.append(self.tutor.userID)
+				}
+			}
+			let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+			controller.addAction(okAction)
+			controller.addAction(cancelAction)
+			
+			present(controller, animated: true, completion: nil)
+		}
+
+	}
+	
 	func rateTutor(_ cell: TutorProfileMainTableViewCell) {
 		guard let user = cell.user, let tutor = cell.tutor else { return }
 		

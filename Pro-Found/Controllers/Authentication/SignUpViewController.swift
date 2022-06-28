@@ -12,49 +12,95 @@ class SignUpViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	private let profileImageView: UIImageView = {
+	private let appImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.image = UIImage.asset(.account_circle)
-		imageView.clipsToBounds = true
-		imageView.contentMode = .scaleAspectFill
-		imageView.layer.cornerRadius = 32
-		imageView.setDimensions(width: 128, height: 128)
+		imageView.setDimensions(width: 32, height: 32)
+		imageView.layer.cornerRadius = 16
+		imageView.backgroundColor = .light50
 		return imageView
 	}()
 	
-	private lazy var emailTextField: UITextField = {
-		let textField = UITextField()
-		textField.borderStyle = .roundedRect
-		textField.autocapitalizationType = .none
-		textField.placeholder = "email"
-		return textField
+	private let appLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 16),
+												 textColor: .dark60, text: "Pro-Found")
+		return label
 	}()
 	
-	private lazy var passwordTextField: UITextField = {
-		let textField = UITextField()
-		textField.borderStyle = .roundedRect
-		textField.autocapitalizationType = .none
-		textField.placeholder = "password"
-		return textField
+	private let signUpLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 24),
+												 textColor: .dark, text: "Sign Up")
+		return label
+	}()
+	
+	private let askToSignUpLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14),
+												 textColor: .dark40, text: "Let's start the wonderful journey!")
+		return label
+	}()
+	
+	private let nameLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: .dark, text: "Name")
+		return label
 	}()
 	
 	private lazy var nameTextField: UITextField = {
 		let textField = UITextField()
-		textField.borderStyle = .roundedRect
 		textField.autocapitalizationType = .none
-		textField.placeholder = "Name"
+		textField.font = UIFont.customFont(.manropeRegular, size: 14)
+		textField.placeholder = "Input your name"
 		return textField
 	}()
-
+	
+	private let nameDividerView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .dark30
+		return view
+	}()
+	
+	private let emailLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: .dark, text: "Email")
+		return label
+	}()
+	
+	private lazy var emailTextField: UITextField = {
+		let textField = UITextField()
+		textField.autocapitalizationType = .none
+		textField.font = UIFont.customFont(.manropeRegular, size: 14)
+		textField.placeholder = "Input email"
+		return textField
+	}()
+	
+	private let emailDividerView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .dark30
+		return view
+	}()
+	
+	private let passwordLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: .dark, text: "Password")
+		return label
+	}()
+	
+	private lazy var passwordTextField: UITextField = {
+		let textField = UITextField()
+		textField.font = UIFont.customFont(.manropeRegular, size: 14)
+		textField.autocapitalizationType = .none
+		textField.placeholder = "Input password"
+		return textField
+	}()
+	
+	private let passwordDividerView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .dark30
+		return view
+	}()
+	
 	private lazy var signUpButton: UIButton = {
-		let button = UIButton(type: .system)
-		button.setTitle("Sign up", for: .normal)
-		button.setTitleColor(UIColor.orange, for: .normal)
-		button.backgroundColor = .white
-		button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-		button.layer.cornerRadius = 5
-		button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-		button.translatesAutoresizingMaskIntoConstraints = false
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white,
+														borderColor: .clear, buttonText: "Sign Up")
 		button.addTarget(self, action: #selector(handleSignup), for: .touchUpInside)
 		return button
 	}()
@@ -64,35 +110,80 @@ class SignUpViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = "Sign up"
-		view.backgroundColor = .orange30
+		view.backgroundColor = .white
+		setupNavBar()
 		setupUI()
 	}
 	
 	// MARK: - UI
 	
+	func setupNavBar() {
+		navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal),
+														   style: .done, target: self, action: #selector(dismissVC))
+	}
+	
 	func setupUI() {
 		
-		view.addSubview(profileImageView)
-		profileImageView.centerX(inView: view, topAnchor: view.safeAreaLayoutGuide.topAnchor, paddingTop: 24)
+		view.addSubview(appImageView)
+		appImageView.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 168, paddingLeft: 16)
 		
-		view.addSubview(emailTextField)
-		emailTextField.anchor(top: profileImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
-							  paddingTop: 50, paddingLeft: 16, paddingRight: 16)
+		view.addSubview(appLabel)
+		appLabel.centerY(inView: appImageView, leftAnchor: appImageView.rightAnchor, paddingLeft: 16)
 		
-		view.addSubview(passwordTextField)
-		passwordTextField.anchor(top: emailTextField.bottomAnchor, left: view.leftAnchor,
-								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
+		view.addSubview(signUpLabel)
+		signUpLabel.anchor(top: appImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+							paddingTop: 40, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(askToSignUpLabel)
+		askToSignUpLabel.anchor(top: signUpLabel.bottomAnchor, left: view.leftAnchor,
+							   right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(nameLabel)
+		nameLabel.anchor(top: askToSignUpLabel.bottomAnchor, left: view.leftAnchor,
+						  right: view.rightAnchor, paddingTop: 44, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(nameTextField)
-		nameTextField.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor,
-								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
+		nameTextField.anchor(top: nameLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+							  paddingTop: 4, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(nameDividerView)
+		nameDividerView.anchor(top: nameTextField.bottomAnchor, left: view.leftAnchor,
+								right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16, height: 1)
+		
+		view.addSubview(emailLabel)
+		emailLabel.anchor(top: nameDividerView.bottomAnchor, left: view.leftAnchor,
+						  right: view.rightAnchor, paddingTop: 26, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(emailTextField)
+		emailTextField.anchor(top: emailLabel.bottomAnchor, left: view.leftAnchor,
+								 right: view.rightAnchor, paddingTop: 4, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(emailDividerView)
+		emailDividerView.anchor(top: emailTextField.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+								paddingTop: 8, paddingLeft: 16, paddingRight: 16, height: 1)
+		
+		view.addSubview(passwordLabel)
+		passwordLabel.anchor(top: emailDividerView.bottomAnchor, left: view.leftAnchor,
+						  right: view.rightAnchor, paddingTop: 26, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(passwordTextField)
+		passwordTextField.anchor(top: passwordLabel.bottomAnchor, left: view.leftAnchor,
+								 right: view.rightAnchor, paddingTop: 4, paddingLeft: 16, paddingRight: 16)
+		
+		view.addSubview(passwordDividerView)
+		passwordDividerView.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
+								   paddingTop: 8, paddingLeft: 16, paddingRight: 16, height: 1)
 		
 		view.addSubview(signUpButton)
-		signUpButton.anchor(top: nameTextField.bottomAnchor, left: view.leftAnchor,
-								 right: view.rightAnchor, paddingTop: 50, paddingLeft: 16, paddingRight: 16)
+		signUpButton.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor,
+							paddingLeft: 25, paddingBottom: 50, paddingRight: 25)
 	}
 	
 	// MARK: - Selectors
+	
+	@objc func dismissVC() {
+		navigationController?.popViewController(animated: true)
+	}
 	
 	@objc func handleSignup() {
 		guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else { return }
@@ -111,12 +202,8 @@ class SignUpViewController: UIViewController {
 			
 			UserServie.shared.uploadUserData(user: user) { [weak self] in
 				guard let self = self else { return }
-				guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
-				
-				guard let tab = window.rootViewController as? MainTabController else { return }
-				
-				tab.authenticateUserAndConfigureUI()
-				self.dismiss(animated: true, completion: nil)
+				let initialEditVC = InitialEditProfileVC(user: user)
+				self.navigationController?.pushViewController(initialEditVC, animated: true)
 			}
 		}
 	}

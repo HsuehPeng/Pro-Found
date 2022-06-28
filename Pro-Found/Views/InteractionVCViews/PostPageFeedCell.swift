@@ -159,7 +159,7 @@ class PostPageFeedCell: UITableViewCell {
 		
 		contentView.addSubview(contentTextLabel)
 		contentTextLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor,
-								right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 16, paddingRight: 16)
+								right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 32, paddingRight: 32)
 		
 		contentView.addSubview(likeCountLabel)
 		likeCountLabel.anchor(top: contentTextLabel.bottomAnchor, left: contentView.leftAnchor,

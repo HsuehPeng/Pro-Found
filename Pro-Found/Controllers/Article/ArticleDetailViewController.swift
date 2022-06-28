@@ -65,7 +65,14 @@ class ArticleDetailViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func bookmarkArticle() {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
+		guard let uid = Auth.auth().currentUser?.uid else {
+			let popUpAskToLoginVC = PopUpAskToLoginController()
+			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+			present(popUpAskToLoginVC, animated: true)
+			
+			return
+		}
 		
 		if isBookMarked {
 			ArticleService.shared.cancelFavoriteArticles(articleID: article.articleID, userID: uid) { [weak self] in
@@ -120,6 +127,7 @@ extension ArticleDetailViewController: UITableViewDataSource {
 		guard let contentCell = tableView.dequeueReusableCell(withIdentifier: ArticleDetailContentTableViewCell.reuseIdentifier, for: indexPath)
 				as? ArticleDetailContentTableViewCell else { fatalError("Can not dequeue ArticleDetailContentTableViewCell") }
 		introCell.article = article
+		introCell.delegate = self
 		contentCell.article = article
 		
 		if indexPath.section == 0 {
@@ -128,4 +136,23 @@ extension ArticleDetailViewController: UITableViewDataSource {
 			return contentCell
 		}
 	}
+}
+
+extension ArticleDetailViewController: ArticleDetailIntroTableViewCellDelegate {
+	func handleRateArticlePopUp(_ cell: ArticleDetailIntroTableViewCell) {
+		
+	}
+	
+	func handleSendRating(_ cell: ArticleDetailIntroTableViewCell) {
+		guard Auth.auth().currentUser != nil else {
+			let popUpAskToLoginVC = PopUpAskToLoginController()
+			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+			present(popUpAskToLoginVC, animated: true)
+			return
+		}
+		return
+	}
+	
+	
 }

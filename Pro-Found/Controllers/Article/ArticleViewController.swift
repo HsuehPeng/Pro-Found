@@ -43,7 +43,6 @@ class ArticleViewController: UIViewController {
 		tableView.register(ArticlePageTableViewCell.self, forCellReuseIdentifier: ArticlePageTableViewCell.reuseidentifier)
 		tableView.register(GeneralTableViewHeader.self, forHeaderFooterViewReuseIdentifier: GeneralTableViewHeader.reuseIdentifier)
 		tableView.separatorStyle = .none
-		
 		return tableView
 	}()
 	
@@ -74,12 +73,11 @@ class ArticleViewController: UIViewController {
 		tableView.delegate = self
 		
 		setupUI()
-		loadUserData()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(true)
-		fetchArticles()
+		loadUserData()
 		setupNavBar()
 	}
 	
@@ -117,12 +115,16 @@ class ArticleViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func loadUserData() {
-		guard let uid = Auth.auth().currentUser?.uid  else { return }
+		guard let uid = Auth.auth().currentUser?.uid  else {
+			configureForNoUser()
+			return
+		}
 		UserServie.shared.getUserData(uid: uid) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let user):
 				self.user = user
+				self.fetchArticles()
 			case .failure(let error):
 				print("asdfasdf \(error)")
 			}
@@ -130,6 +132,20 @@ class ArticleViewController: UIViewController {
 	}
 	
 	func fetchArticles() {
+		ArticleService.shared.fetchArticles { [weak self] result in
+			guard let self = self, let user = self.user else { return }
+			switch result {
+			case.success(let articles):
+				let filterBlockedArticles = articles.filter { !user.blockedUsers.contains($0.user.userID) }
+				self.articles = filterBlockedArticles
+				self.filterArticles()
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
+	func configureForNoUser() {
 		ArticleService.shared.fetchArticles { [weak self] result in
 			guard let self = self else { return }
 			switch result {

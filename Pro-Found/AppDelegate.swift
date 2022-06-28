@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseCore
 import IQKeyboardManagerSwift
+import FirebaseAuth
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Override point for customization after application launch.
 		FirebaseApp.configure()
 		IQKeyboardManager.shared.enable = true
+		
+		if let user = Auth.auth().currentUser {
+			print("You are sign in as \(user.uid), email: \(String(describing: user.email))")
+		}
+		
 		return true
 	}
 
