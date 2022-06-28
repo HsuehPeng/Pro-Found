@@ -340,7 +340,6 @@
 				B8F352E3286468720068E87D /* ArticleListViewController.swift */,
 				B8AB0662285DAD7E002110A4 /* WriteArticleViewController.swift */,
 				B8AB0668285DFBB8002110A4 /* ArticleDetailViewController.swift */,
-				B801887E286A9AD0009A6472 /* PDFCreator.swift */,
 			);
 			path = Article;
 			sourceTree = "<group>";
@@ -455,6 +454,8 @@
 				B8AB0646285B2B49002110A4 /* CalendarHelper.swift */,
 				B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */,
 				B80188762867350B009A6472 /* HudView.swift */,
+				B801887E286A9AD0009A6472 /* PDFCreator.swift */,
+				B801887C2869FC23009A6472 /* PopUpAskToLoginController.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -485,7 +486,6 @@
 				B89AD40E285EF8D600CCE027 /* UserProfile */,
 				B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */,
 				B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */,
-				B801887C2869FC23009A6472 /* PopUpAskToLoginController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
