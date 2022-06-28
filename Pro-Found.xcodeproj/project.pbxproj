@@ -21,6 +21,7 @@
 		B811E40528531135009C0838 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B811E40328531135009C0838 /* Main.storyboard */; };
 		B811E40728531136009C0838 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B811E40628531136009C0838 /* Assets.xcassets */; };
 		B811E40A28531136009C0838 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B811E40828531136009C0838 /* LaunchScreen.storyboard */; };
+		B8296B38286B0D2900EAAB99 /* MissingInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */; };
 		B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E22857675A00772375 /* FirebaseConstant.swift */; };
 		B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */; };
 		B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E728578E1B00772375 /* CustomUIElements.swift */; };
@@ -118,6 +119,7 @@
 		B811E40628531136009C0838 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B811E40928531136009C0838 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B811E40B28531136009C0838 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingInputViewController.swift; sourceTree = "<group>"; };
 		B83666E22857675A00772375 /* FirebaseConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConstant.swift; sourceTree = "<group>"; };
 		B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileMainTableViewCell.swift; sourceTree = "<group>"; };
 		B83666E728578E1B00772375 /* CustomUIElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIElements.swift; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 				B80188762867350B009A6472 /* HudView.swift */,
 				B801887E286A9AD0009A6472 /* PDFCreator.swift */,
 				B801887C2869FC23009A6472 /* PopUpAskToLoginController.swift */,
+				B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -704,6 +707,7 @@
 				B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */,
 				B8AB0669285DFBB8002110A4 /* ArticleDetailViewController.swift in Sources */,
 				B8F352D02861A61F0068E87D /* ArticleListTableViewCell.swift in Sources */,
+				B8296B38286B0D2900EAAB99 /* MissingInputViewController.swift in Sources */,
 				B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */,
 				B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */,
 				B8F352DA2862DD0A0068E87D /* ScheduleEventListTableViewCell.swift in Sources */,

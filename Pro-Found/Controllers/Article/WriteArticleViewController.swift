@@ -127,6 +127,12 @@ class WriteArticleViewController: UIViewController {
 		return button
 	}()
 	
+	private let characterCountLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: .dark40, text: "")
+		return label
+	}()
+	
 	private lazy var postButton: UIButton = {
 		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Post")
 		button.widthAnchor.constraint(equalToConstant: 90).isActive = true
@@ -149,7 +155,7 @@ class WriteArticleViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
-		
+		articleTextView.delegate = self
 		setupUI()
 	}
 	
@@ -214,6 +220,10 @@ class WriteArticleViewController: UIViewController {
 		bottomBarView.addSubview(postButton)
 		postButton.centerY(inView: bottomBarView)
 		postButton.rightAnchor.constraint(equalTo: bottomBarView.rightAnchor, constant: -16).isActive = true
+		
+		bottomBarView.addSubview(characterCountLabel)
+		characterCountLabel.centerY(inView: bottomBarView)
+		characterCountLabel.rightAnchor.constraint(equalTo: postButton.leftAnchor, constant: -16).isActive = true
 	}
 	
 	// MARK: - Actions
@@ -268,7 +278,14 @@ class WriteArticleViewController: UIViewController {
 		guard let articleTitle = articleTitleTextField.text, !articleTitle.isEmpty,
 			  let contentText = articleTextView.text, !contentText.isEmpty,
 			  selectedButton.count > 0, let selectedSubject = selectedButton.first?.titleLabel?.text,
-			  let articleImage = articleImageView.image else { return }
+			  let articleImage = articleImageView.image else {
+			
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
 		
 		let currentDate = Date()
 		let interval = currentDate.timeIntervalSince1970
@@ -300,6 +317,14 @@ class WriteArticleViewController: UIViewController {
 		}
 		selectedButton.isSelected = true
 		selectedButton.backgroundColor = .orange
+	}
+}
+
+// MARK: -
+
+extension WriteArticleViewController: UITextViewDelegate {
+	func textViewDidChange(_ textView: UITextView) {
+		self.characterCountLabel.text = "\(textView.text.count) character"
 	}
 }
 

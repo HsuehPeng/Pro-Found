@@ -71,6 +71,7 @@ class LoginViewController: UIViewController {
 		textField.font = UIFont.customFont(.manropeRegular, size: 14)
 		textField.autocapitalizationType = .none
 		textField.placeholder = "Input password"
+		textField.isSecureTextEntry = true
 		return textField
 	}()
 	
@@ -119,6 +120,9 @@ class LoginViewController: UIViewController {
 		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.asset(.close_circle)?.withRenderingMode(.alwaysOriginal),
 															style: .done, target: self, action: #selector(dismissVC))
 		view.backgroundColor = .white
+		
+		passwordTextField.delegate = self
+		
 		setupUI()
 	}
 	
@@ -189,9 +193,16 @@ class LoginViewController: UIViewController {
 	}
 	
 	@objc func handleLogin() {
-		guard let email = emailTextField.text, let password = passwordTextField.text else { return }
+		guard let email = emailTextField.text, !email.isEmpty,
+			  let password = passwordTextField.text, !password.isEmpty else {
+				  let missingInputVC = MissingInputViewController()
+				  missingInputVC.modalTransitionStyle = .crossDissolve
+				  missingInputVC.modalPresentationStyle = .overCurrentContext
+				  present(missingInputVC, animated: true)
+				  return
+			  }
+		
 		Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-			
 			guard let self = self else { return }
 			if let error = error {
 				print("Error signing in: \(error)")
@@ -238,6 +249,18 @@ class LoginViewController: UIViewController {
 		request.nonce = sha256(nonce)
 		currentNonce = nonce
 		return request
+	}
+}
+
+// MARK: - UITextFieldDelegate
+extension LoginViewController: UITextFieldDelegate {
+	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+		let currentText = textField.text ?? ""
+		guard let stringRange = Range(range, in: currentText) else { return false }
+
+		let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+
+		return updatedText.count <= 20
 	}
 }
 

@@ -228,7 +228,13 @@ class CreateEventViewController: UIViewController {
 		guard let eventTitle = eventTitleTextField.text, !eventTitle.isEmpty,
 			  let addreddText = addressTitleTextField.text, !addreddText.isEmpty,
 			  let introText = briefTextView.text, !introText.isEmpty,
-			  let eventImage = eventImageView.image else { return }
+			  let eventImage = eventImageView.image else {
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
 		let eventDate = datePicker.date
 		let interval = eventDate.timeIntervalSince1970
 		

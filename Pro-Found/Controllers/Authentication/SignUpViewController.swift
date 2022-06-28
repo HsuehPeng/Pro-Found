@@ -89,6 +89,7 @@ class SignUpViewController: UIViewController {
 		textField.font = UIFont.customFont(.manropeRegular, size: 14)
 		textField.autocapitalizationType = .none
 		textField.placeholder = "Input password"
+		textField.isSecureTextEntry = true
 		return textField
 	}()
 	
@@ -111,6 +112,7 @@ class SignUpViewController: UIViewController {
 		super.viewDidLoad()
 		title = "Sign up"
 		view.backgroundColor = .white
+		passwordTextField.delegate = self
 		setupNavBar()
 		setupUI()
 	}
@@ -186,7 +188,16 @@ class SignUpViewController: UIViewController {
 	}
 	
 	@objc func handleSignup() {
-		guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else { return }
+		guard let email = emailTextField.text, !email.isEmpty,
+			  let password = passwordTextField.text, !password.isEmpty,
+			  let name = nameTextField.text, !name.isEmpty else {
+				  
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
 		
 		Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
 			guard let self = self else { return }
@@ -210,4 +221,17 @@ class SignUpViewController: UIViewController {
 
 	// MARK: - Helpers
 
+}
+
+// MARK: - UITextFieldDelegate
+
+extension SignUpViewController: UITextFieldDelegate {
+	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+		let currentText = textField.text ?? ""
+		guard let stringRange = Range(range, in: currentText) else { return false }
+
+		let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+
+		return updatedText.count <= 20
+	}
 }

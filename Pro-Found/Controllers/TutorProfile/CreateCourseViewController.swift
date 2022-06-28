@@ -283,9 +283,15 @@ class CreateCourseViewController: UIViewController {
 			  let briefText = briefTextView.text, !briefText.isEmpty,
 			  let introText = introductionTextView.text, !introText.isEmpty,
 			  let feetext = feeTextField.text, !feetext.isEmpty,
-			  let feetextDouble = Double(feetext) else { return }
-		guard selectedButton.count > 0 else { return }
-		guard let selectedSubject = selectedButton.first?.titleLabel?.text else { return }
+			  let feetextDouble = Double(feetext), selectedButton.count > 0,
+		let selectedSubject = selectedButton.first?.titleLabel?.text else {
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
+		
 		let firebaseCourse = FirebaseCourse(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText, subject: selectedSubject, location: addressText,
 									fee: feetextDouble, briefIntro: briefText, detailIntro: introText, hours: 1)
 		

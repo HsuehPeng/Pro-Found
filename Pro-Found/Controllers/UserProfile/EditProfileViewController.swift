@@ -194,8 +194,16 @@ class EditProfileViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func handleDoneEditting() {
-		guard let firstname = nameTitleTextField.text, let email = emailTitleTextField.text, let school = schoolTitleTextField.text,
-			  let major = majorTitleTextField.text, let introduction = introTextView.text else { return }
+		guard let firstname = nameTitleTextField.text, !firstname.isEmpty,
+			  let email = emailTitleTextField.text, !email.isEmpty,
+			  let school = schoolTitleTextField.text,
+			  let major = majorTitleTextField.text, let introduction = introTextView.text else {
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
 		let name = "\(firstname)"
 		let user = User(name: name, userID: user.userID, email: email, introContentText: introduction, school: school, schoolMajor: major,
 						ratings: user.ratings, courseBooked: user.courseBooked, profileImageURL: user.profileImageURL,
