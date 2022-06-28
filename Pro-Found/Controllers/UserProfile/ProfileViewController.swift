@@ -187,17 +187,27 @@ class ProfileViewController: UIViewController {
 	}
 	
 	@objc func handlePickingPhoto() {
-		var configuration = PHPickerConfiguration()
-		configuration.selectionLimit = 1
-		let picker = PHPickerViewController(configuration: configuration)
+		let actionSheet = UIAlertController(title: "Select Photo", message: "Where do you want to select a photo?",
+											preferredStyle: .actionSheet)
 		
-		if let sheet = picker.presentationController as? UISheetPresentationController {
-			sheet.detents = [.medium(), .large()]
-			sheet.preferredCornerRadius = 25
+		let photoAction = UIAlertAction(title: "Photos", style: .default) { (action) in
+			var configuration = PHPickerConfiguration()
+			configuration.selectionLimit = 1
+			let picker = PHPickerViewController(configuration: configuration)
+			picker.delegate = self
+			
+			if let sheet = picker.presentationController as? UISheetPresentationController {
+				sheet.detents = [.medium(), .large()]
+				sheet.preferredCornerRadius = 25
+			}
+			self.present(picker, animated: true, completion: nil)
 		}
+		actionSheet.addAction(photoAction)
 		
-		picker.delegate = self
-		self.present(picker, animated: true, completion: nil)
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
 	}
 	
 	func handleLogout() {

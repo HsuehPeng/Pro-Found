@@ -501,7 +501,11 @@ extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 	}
 	
 	func chooseBackgroundImage(_ cell: TutorProfileMainTableViewCell) {
-		if user.userID == tutor.userID {
+		
+		let actionSheet = UIAlertController(title: "Select Photo", message: "Where do you want to select a photo?",
+											preferredStyle: .actionSheet)
+		
+		let photoAction = UIAlertAction(title: "Photos", style: .default) { (action) in
 			var configuration = PHPickerConfiguration()
 			configuration.selectionLimit = 1
 			let picker = PHPickerViewController(configuration: configuration)
@@ -511,10 +515,15 @@ extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 				sheet.detents = [.medium(), .large()]
 				sheet.preferredCornerRadius = 25
 			}
-			
 			self.present(picker, animated: true, completion: nil)
-		} else {
-			return
+		}
+		actionSheet.addAction(photoAction)
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		actionSheet.addAction(cancelAction)
+		
+		if user.userID == tutor.userID {
+			self.present(actionSheet, animated: true, completion: nil)
 		}
 	}
 	
