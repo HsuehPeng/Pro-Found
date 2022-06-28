@@ -13,6 +13,7 @@ import FirebaseAuth
 protocol ArticleDetailIntroTableViewCellDelegate: AnyObject {
 	func handleRateArticlePopUp(_ cell: ArticleDetailIntroTableViewCell)
 	func handleSendRating(_ cell: ArticleDetailIntroTableViewCell)
+	func sharePDF(_ cell: ArticleDetailIntroTableViewCell)
 }
 
 class ArticleDetailIntroTableViewCell: UITableViewCell {
