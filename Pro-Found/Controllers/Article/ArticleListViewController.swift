@@ -23,7 +23,6 @@ class ArticleListViewController: UIViewController {
 	  return searchController.isActive && !isSearchBarEmpty
 	}
 
-	
 	let searchController = UISearchController()
 	
 	private let tableView: UITableView = {
@@ -54,6 +53,11 @@ class ArticleListViewController: UIViewController {
 		setupNavBar()
     }
 	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.navigationBar.isHidden = false
+	}
+	
 	// MARK: - UI
 	
 	func setupUI() {
@@ -69,7 +73,6 @@ class ArticleListViewController: UIViewController {
 														   target: self, action: #selector(popVC))
 		title = "Articles"
 		setupSearchController()
-		
 	}
 	
 	func setupSearchController() {
@@ -80,7 +83,6 @@ class ArticleListViewController: UIViewController {
 		searchController.searchBar.placeholder = "Search Articles"
 		navigationItem.searchController = searchController
 		definesPresentationContext = true
-
 	}
 	
 	// MARK: - Actions
@@ -95,7 +97,6 @@ class ArticleListViewController: UIViewController {
 		filteredArticles = articles.filter { article -> Bool in
 			return article.articleTitle.lowercased().contains(searchText.lowercased())
 		}
-		
 		tableView.reloadData()
 	}
 }
@@ -131,8 +132,13 @@ extension ArticleListViewController: UITableViewDataSource {
 extension ArticleListViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let articleDetailVC = ArticleDetailViewController(article: articles[indexPath.row])
-		navigationController?.pushViewController(articleDetailVC, animated: true)
+		if isFiltering {
+			let articleDetailVC = ArticleDetailViewController(article: filteredArticles[indexPath.row])
+			navigationController?.pushViewController(articleDetailVC, animated: true)
+		} else {
+			let articleDetailVC = ArticleDetailViewController(article: articles[indexPath.row])
+			navigationController?.pushViewController(articleDetailVC, animated: true)
+		}
 	}
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

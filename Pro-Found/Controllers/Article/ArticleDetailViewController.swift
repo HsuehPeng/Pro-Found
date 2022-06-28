@@ -105,6 +105,7 @@ class ArticleDetailViewController: UIViewController {
 	}
 	
 	func setupNavBar() {
+		navigationController?.navigationBar.isHidden = true
 		tabBarController?.tabBar.isHidden = true
 	}
 	
