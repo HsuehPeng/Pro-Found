@@ -22,6 +22,8 @@
 		B811E40728531136009C0838 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B811E40628531136009C0838 /* Assets.xcassets */; };
 		B811E40A28531136009C0838 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B811E40828531136009C0838 /* LaunchScreen.storyboard */; };
 		B8296B38286B0D2900EAAB99 /* MissingInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */; };
+		B8296B40286BF55100EAAB99 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B3F286BF55100EAAB99 /* Lottie.swift */; };
+		B8296B42286BF79300EAAB99 /* loadingAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = B8296B41286BF79300EAAB99 /* loadingAnimation.json */; };
 		B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E22857675A00772375 /* FirebaseConstant.swift */; };
 		B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */; };
 		B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E728578E1B00772375 /* CustomUIElements.swift */; };
@@ -120,6 +122,8 @@
 		B811E40928531136009C0838 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B811E40B28531136009C0838 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingInputViewController.swift; sourceTree = "<group>"; };
+		B8296B3F286BF55100EAAB99 /* Lottie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lottie.swift; sourceTree = "<group>"; };
+		B8296B41286BF79300EAAB99 /* loadingAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loadingAnimation.json; sourceTree = "<group>"; };
 		B83666E22857675A00772375 /* FirebaseConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConstant.swift; sourceTree = "<group>"; };
 		B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileMainTableViewCell.swift; sourceTree = "<group>"; };
 		B83666E728578E1B00772375 /* CustomUIElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIElements.swift; sourceTree = "<group>"; };
@@ -412,6 +416,7 @@
 			children = (
 				B8A8FDEF2855DC2200F98326 /* Font */,
 				B811E40628531136009C0838 /* Assets.xcassets */,
+				B8296B41286BF79300EAAB99 /* loadingAnimation.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -456,6 +461,7 @@
 				B8AB0646285B2B49002110A4 /* CalendarHelper.swift */,
 				B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */,
 				B80188762867350B009A6472 /* HudView.swift */,
+				B8296B3F286BF55100EAAB99 /* Lottie.swift */,
 				B801887E286A9AD0009A6472 /* PDFCreator.swift */,
 				B801887C2869FC23009A6472 /* PopUpAskToLoginController.swift */,
 				B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */,
@@ -579,6 +585,7 @@
 				B811E40A28531136009C0838 /* LaunchScreen.storyboard in Resources */,
 				B811E40728531136009C0838 /* Assets.xcassets in Resources */,
 				B8A8FDEE2855DC1E00F98326 /* Manrope-Regular.ttf in Resources */,
+				B8296B42286BF79300EAAB99 /* loadingAnimation.json in Resources */,
 				B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */,
 				B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */,
 				B811E40528531135009C0838 /* Main.storyboard in Resources */,
@@ -665,6 +672,7 @@
 				B8CC5EB2285979CA004C5D7A /* PostPageFeedCell.swift in Sources */,
 				B8F99C27286030AE00B88244 /* CourseDetailIntroTableViewCell.swift in Sources */,
 				B8A8FDF42855E4EE00F98326 /* UIColor+Extension.swift in Sources */,
+				B8296B40286BF55100EAAB99 /* Lottie.swift in Sources */,
 				B89AD403285ED15900CCE027 /* PostViewController.swift in Sources */,
 				B89AD407285EDEC400CCE027 /* EventListTableViewCell.swift in Sources */,
 				B86943CB2858425B008021C9 /* TutorProfileClassTableViewCell.swift in Sources */,

@@ -100,8 +100,11 @@ class SelectClassBottomSheetViewController: UIViewController {
 
 		let timeInterval = datePicker.date.timeIntervalSince1970
 		print(course.courseID, user.userID, timeInterval)
-		UserServie.shared.uploadScheduledCourse(user: user, tutor: tutor, courseID: course.courseID, time: timeInterval)
-		dismiss(animated: true)
+		UserServie.shared.uploadScheduledCourse(user: user, tutor: tutor, courseID: course.courseID,
+												time: timeInterval) { [weak self] in
+			guard let self = self else { return }
+			self.dismiss(animated: true)
+		}
 	}
 	
 	@objc func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {

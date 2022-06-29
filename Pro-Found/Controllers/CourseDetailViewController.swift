@@ -234,6 +234,11 @@ extension CourseDetailViewController: UITableViewDelegate {
 // MARK: - CourseDetailListTableViewCellDelegate
 
 extension CourseDetailViewController: CourseDetailListTableViewCellDelegate {
+	func goToPublicProfile(_ cell: CourseDetailListTableViewCell) {
+		guard let course = cell.course else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: course.tutor)
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
+	}
 	
 	func handleFollowing(_ cell: CourseDetailListTableViewCell) {
 		guard let isFollow = cell.isFollow, let uid = Auth.auth().currentUser?.uid else { return }

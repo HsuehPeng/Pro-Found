@@ -131,7 +131,7 @@ struct PostService {
 		}
 	}
 	
-	func likePost(post: Post, userID: String) {
+	func likePost(post: Post, userID: String, completion: @escaping () -> Void) {
 		
 		dbPosts.document(post.postID).updateData([
 			"likedBy": FieldValue.arrayUnion([userID]),
@@ -141,11 +141,12 @@ struct PostService {
 				print("Error liking post: \(error)")
 			} else {
 				print("Successfully liked post")
+				completion()
 			}
 		}
 	}
 	
-	func unlikePost(post: Post, userID: String) {
+	func unlikePost(post: Post, userID: String, completion: @escaping () -> Void) {
 		
 		dbPosts.document(post.postID).updateData([
 			"likedBy": FieldValue.arrayRemove([userID]),
@@ -155,6 +156,7 @@ struct PostService {
 				print("Error unliking post: \(error)")
 			} else {
 				print("Successfully unliked post")
+				completion()
 			}
 		}
 	}

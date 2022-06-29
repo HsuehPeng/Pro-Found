@@ -29,6 +29,12 @@ class HomeViewController: UIViewController {
 	
 	var isFiltered: Bool = false
 	
+	private lazy var refreshControl: UIRefreshControl = {
+		let refresh = UIRefreshControl()
+		refresh.addTarget(self, action: #selector(pullToRefresh), for: UIControl.Event.valueChanged)
+		return refresh
+	}()
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		return view
@@ -141,7 +147,6 @@ class HomeViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		setupNavBar()
-		
 		fetchUser()
 	}
 	
@@ -186,6 +191,7 @@ class HomeViewController: UIViewController {
 		view.addSubview(collectionView)
 		collectionView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
 		
+		collectionView.addSubview(refreshControl)
 	}
 	
 	func setupNavBar() {
@@ -260,10 +266,8 @@ class HomeViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func fetchUser() {
-		guard let uid = Auth.auth().currentUser?.uid else {
-			configureForNoUser()
-			return
-		}
+		guard let uid = Auth.auth().currentUser?.uid else { return }
+		
 		UserServie.shared.getUserData(uid: uid) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
@@ -277,7 +281,11 @@ class HomeViewController: UIViewController {
 	}
 	
 	func fetchTutors() {
-		guard let user = user else { return }
+		guard let user = user else {
+			configureForNoUser()
+			return
+		}
+		
 		UserServie.shared.getTutors { [weak self] result in
 			guard let self = self else { return }
 			switch result {
@@ -319,9 +327,40 @@ class HomeViewController: UIViewController {
 				print("Error getting tutors: \(error)")
 			}
 		}
-		
 		nameLabel.text = "My Guest"
 	}
+	
+	@objc func pullToRefresh() {
+		guard let user = user else {
+			UserServie.shared.getTutors { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let tutors):
+					self.tutors = tutors
+					self.filteredTutors = self.tutors
+					self.refreshControl.endRefreshing()
+				case .failure(let error):
+					print("Error getting tutors: \(error)")
+				}
+			}
+			return
+		}
+		
+		UserServie.shared.getTutors { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let tutors):
+				// Filter out blocked tutors
+				let filterOutBlockTutors = tutors.filter { !user.blockedUsers.contains($0.userID) }
+				self.tutors = filterOutBlockTutors
+				self.filteredTutors = self.tutors
+				self.refreshControl.endRefreshing()
+			case .failure(let error):
+				print("Error getting tutors: \(error)")
+			}
+		}
+	}
+	
 }
 
 // MARK: - UICollectionViewDataSource

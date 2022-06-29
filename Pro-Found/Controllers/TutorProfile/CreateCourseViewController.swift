@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Lottie
 
 class CreateCourseViewController: UIViewController {
 	
@@ -278,6 +279,7 @@ class CreateCourseViewController: UIViewController {
 		
 		let buttons = [languageButton, techButton, artButton, musicButton, sportButton]
 		let selectedButton = buttons.filter({ $0.isSelected })
+		
 		guard let courseTitleText = courseTitleTextField.text, !courseTitleText.isEmpty,
 			  let addressText = addressTitleTextField.text, !addressText.isEmpty,
 			  let briefText = briefTextView.text, !briefText.isEmpty,
@@ -295,13 +297,12 @@ class CreateCourseViewController: UIViewController {
 		let firebaseCourse = FirebaseCourse(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText, subject: selectedSubject, location: addressText,
 									fee: feetextDouble, briefIntro: briefText, detailIntro: introText, hours: 1)
 		
-		let hudView = HudView.hud(inView: self.navigationController!.view,
-								animated: true)
-		hudView.text = "Success"
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		
 		CourseServie.shared.uploadNewCourse(fireBasecourse: firebaseCourse) { [weak self] in
 			guard let self = self else { return }
-			hudView.hide()
+			loadingLottie.stopAnimation()
 			self.navigationController?.popViewController(animated: true)
 		}
 		

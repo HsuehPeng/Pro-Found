@@ -122,7 +122,7 @@ struct UserServie {
 		}
 	}
 	
-	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double) {
+	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double, completion: @escaping () -> Void) {
 		dbUsers.document(user.userID).collection("ScheduledCourse").document().setData([
 			"\(courseID)": time,
 			"student": user.userID
@@ -131,6 +131,7 @@ struct UserServie {
 				print("Error writing ScheduledCourse: \(error)")
 			} else {
 				print("ScheduledCourse successfully uploaded")
+				completion()
 			}
 		}
 		
@@ -268,7 +269,7 @@ struct UserServie {
 		dbUsers.document(uid).getDocument { snapshot, error in
 			if let error = error {
 				completion(.failure(error))
-			} else if snapshot == nil {
+			} else if snapshot?.data() == nil {
 				completion(.success(false))
 			} else {
 				completion(.success(true))

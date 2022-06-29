@@ -11,6 +11,7 @@ import FirebaseAuth
 
 protocol PostCommentTableHeaderDelegate: AnyObject {
 	func askToDelete(_ cell: PostCommentTableHeader)
+	func goToPublicProfile(_ cell: PostCommentTableHeader)
 }
 
 class PostCommentTableHeader: UITableViewHeaderFooterView {
@@ -37,9 +38,9 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
-//		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
-//		imageView.addGestureRecognizer(tap)
-//		imageView.isUserInteractionEnabled = true
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
 		
 		return imageView
 	}()
@@ -134,6 +135,10 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleProfileImageTapped() {
+		delegate?.goToPublicProfile(self)
+	}
 	
 	@objc func handleAskToDelete() {
 		if deleteButton.isHidden {

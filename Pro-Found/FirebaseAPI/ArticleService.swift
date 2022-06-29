@@ -32,7 +32,7 @@ struct ArticleService {
 		}
 	}
 	
-	func uploadArticle(article: FirebaseArticle) {
+	func uploadArticle(article: FirebaseArticle, completion: @escaping () -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		let articleRef = dbArticles.document()
 		let articleData: [String: Any] = [
@@ -53,7 +53,12 @@ struct ArticleService {
 			} else {
 				dbUsers.document(uid).updateData([
 					"articles": FieldValue.arrayUnion([articleRef.documentID])
-				])
+				]) { error in
+					if let error = error {
+						print("Error writing article: \(error)")
+					}
+					completion()
+				}
 				print("New article successfully created")
 			}
 		}

@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 import PhotosUI
+import Lottie
 
 class TutorProfileViewController: UIViewController {
 
@@ -315,7 +316,6 @@ extension TutorProfileViewController: UITableViewDelegate {
 			}
 		}
 	}
-
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return UITableView.automaticDimension
@@ -345,7 +345,6 @@ extension TutorProfileViewController: UITableViewDelegate {
 		
 		return 0
 	}
-	
 }
 
 // MARK: - ProfileClassTableViewHeaderDelegate
@@ -414,14 +413,19 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 	}
 	
 	func likePost(_ cell: PostPageFeedCell) {
-		
 		guard let post = cell.post else { return }
-		
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID)
+			PostService.shared.unlikePost(post: post, userID: user.userID) {
+
+			}
+			cell.post?.likes -= 1
 			cell.likeButton.isSelected = false
+			
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID)
+			PostService.shared.likePost(post: post, userID: user.userID) {
+
+			}
+			cell.post?.likes += 1
 			cell.likeButton.isSelected = true
 		}
 	}
@@ -435,11 +439,13 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 	
 	func askToDelete(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell) else { return }
-		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
 		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
 		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			loadingLottie.loadingAnimation()
 			PostService.shared.deletePost(postID: post.postID, userID: self.tutor.userID) { [weak self] in
 				guard let self = self else { return }
+				loadingLottie.stopAnimation()
 				self.tutorPosts.remove(at: indexPath.row)
 				self.tableView.deleteRows(at: [indexPath], with: .fade)
 			}
@@ -456,22 +462,28 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 
 extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 	func changeBlockingStatus(_ cell: TutorProfileMainTableViewCell) {
-		print(user.blockedUsers, tutor.userID)
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+
 		if user.blockedUsers.contains(tutor.userID) {
 			UserServie.shared.toggleBlockingStatus(senderID: user.userID, receiverID: tutor.userID) {
 				cell.blockUserButton.setImage(UIImage.asset(.password_show), for: .normal)
 				guard let index = self.user.blockedUsers.firstIndex(of: self.tutor.userID) else { return }
 				self.user.blockedUsers.remove(at: index)
+				loadingLottie.stopAnimation()
 			}
 		} else {
 			let controller = UIAlertController(title: "Are you sure to block this person?", message: nil, preferredStyle: .alert)
 			let okAction = UIAlertAction(title: "Sure", style: .destructive) { [weak self] _ in
 				guard let self = self else { return }
+				loadingLottie.loadingAnimation()
 				UserServie.shared.toggleBlockingStatus(senderID: self.user.userID, receiverID: self.tutor.userID) {
 					cell.blockUserButton.setImage(UIImage.asset(.password_hide), for: .normal)
 					self.user.blockedUsers.append(self.tutor.userID)
+					loadingLottie.stopAnimation()
 				}
 			}
+			
 			let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 			controller.addAction(okAction)
 			controller.addAction(cancelAction)
@@ -484,12 +496,11 @@ extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 	func rateTutor(_ cell: TutorProfileMainTableViewCell) {
 		guard let user = cell.user, let tutor = cell.tutor else { return }
 		
-		let hudView = HudView.hud(inView: self.navigationController!.view,
-								animated: true)
-		hudView.text = "Success"
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		
 		UserServie.shared.rateTutor(senderID: user.userID, receiverID: tutor.userID, rating: cell.starView.rating) {
-			hudView.hide()
+			loadingLottie.stopAnimation()
 		}
 		
 		cell.rateViewIsUp = false
@@ -529,18 +540,25 @@ extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 	
 }
 
+// MARK: - ArticleListTableViewCellDelegate
+
 extension TutorProfileViewController: ArticleListTableViewCellDelegate {
 	func askToDelete(_ cell: ArticleListTableViewCell) {
 		guard let article = cell.article, let indexPath = tableView.indexPath(for: cell) else { return }
 		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
 		let controller = UIAlertController(title: "Are you sure to delete this article?", message: nil, preferredStyle: .alert)
+		
 		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			loadingLottie.loadingAnimation()
 			ArticleService.shared.deleteArticle(articleID: article.articleID, userID: self.tutor.userID) { [weak self] in
 				guard let self = self else { return }
 				self.tutorArticles.remove(at: indexPath.row)
 				self.tableView.deleteRows(at: [indexPath], with: .fade)
+				loadingLottie.stopAnimation()
 			}
 		}
+		
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 		controller.addAction(okAction)
 		controller.addAction(cancelAction)
@@ -565,9 +583,12 @@ extension TutorProfileViewController: PHPickerViewControllerDelegate {
 									as? TutorProfileMainTableViewCell else { return }
 							cell.backImageView.image = nil
 							cell.backImageView.image = image
+							let loadingLottie = Lottie(superView: self.view, animationView: AnimationView.init(name: "loadingAnimation"))
+							loadingLottie.loadingAnimation()
 							UserServie.shared.uploadUserBackgroundImageAndDownloadImageURL(userBackgroundImage: image,
 																						   user: self.tutor) { result in
 								print("Photo uploaded")
+								loadingLottie.stopAnimation()
 							}
 						}
 					}

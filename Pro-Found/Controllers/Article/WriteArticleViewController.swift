@@ -8,13 +8,14 @@
 import UIKit
 import PhotosUI
 import Kingfisher
+import Lottie
 
 class WriteArticleViewController: UIViewController {
 	
 	// MARK: - Properties
 	
 	let user: User
-
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
@@ -286,7 +287,9 @@ class WriteArticleViewController: UIViewController {
 			present(missingInputVC, animated: true)
 			return
 		}
-		
+
+		let loadingAnimation = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingAnimation.loadingAnimation()
 		let currentDate = Date()
 		let interval = currentDate.timeIntervalSince1970
 		ArticleService.shared.createAndDownloadImageURL(articleImage: articleImage, author: user) { [weak self] result in
@@ -296,7 +299,9 @@ class WriteArticleViewController: UIViewController {
 				let imageURL = url
 				let firestoreArticle = FirebaseArticle(userID: self.user.userID, articleTitle: articleTitle, authorName: self.user.name,
 													   subject: selectedSubject, timestamp: interval, contentText: contentText, imageURL: imageURL, ratings: [])
-				ArticleService.shared.uploadArticle(article: firestoreArticle)
+				ArticleService.shared.uploadArticle(article: firestoreArticle) {
+					loadingAnimation.stopAnimation()
+				}
 				self.dismiss(animated: true)
 			case .failure(let error):
 				print(error)

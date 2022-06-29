@@ -198,7 +198,6 @@ class PDFCreator: NSObject {
 			
 			leftOverPageCount -= 1
 			newPage += 1
-			
 			createPageBody(currentStringIndex: newStringIndex, pageRect: pageRect, page: newPage,
 						   pageCountAfterFirst: leftOverPageCount, context: context)
 		} else {

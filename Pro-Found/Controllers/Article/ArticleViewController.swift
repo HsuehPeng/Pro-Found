@@ -27,6 +27,12 @@ class ArticleViewController: UIViewController {
 	
 	var subjectDict: [String: [Article]] = [:]
 	
+	private lazy var refreshControl: UIRefreshControl = {
+		let refresh = UIRefreshControl()
+		refresh.addTarget(self, action: #selector(pullToRefresh), for: UIControl.Event.valueChanged)
+		return refresh
+	}()
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		return view
@@ -94,6 +100,8 @@ class ArticleViewController: UIViewController {
 		view.addSubview(tableView)
 		tableView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
 		
+		tableView.addSubview(refreshControl)
+		
 		view.addSubview(writeArticleButton)
 		writeArticleButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 24, paddingRight: 16)
 	}
@@ -104,6 +112,21 @@ class ArticleViewController: UIViewController {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func pullToRefresh() {
+		ArticleService.shared.fetchArticles { [weak self] result in
+			guard let self = self, let user = self.user else { return }
+			switch result {
+			case.success(let articles):
+				let filterBlockedArticles = articles.filter { !user.blockedUsers.contains($0.user.userID) }
+				self.articles = filterBlockedArticles
+				self.filterArticles()
+				self.refreshControl.endRefreshing()
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
 	
 	@objc func handleWriteArticle() {
 		guard let user = user else { return }

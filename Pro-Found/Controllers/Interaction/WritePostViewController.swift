@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import Lottie
 
 class WritePostViewController: UIViewController {
 	
@@ -135,12 +136,12 @@ class WritePostViewController: UIViewController {
 		let timestamp = date.timeIntervalSince1970
 		let firebasepost = FirebasePosts(userID: user.userID, contentText: postText, likes: 0, timestamp: timestamp, likedBy: [])
 		
-		let hudView = HudView.hud(inView: self.view, animated: true)
-		hudView.text = "Done posting"
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		
 		PostService.shared.uploadPost(firebasePost: firebasepost) { [weak self] in
 			guard let self = self else { return }
-			hudView.hide()
+			loadingLottie.stopAnimation()
 			self.dismiss(animated: true)
 		}
 	}

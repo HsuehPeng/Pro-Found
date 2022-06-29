@@ -84,11 +84,14 @@ class PostCommentViewController: UIViewController {
 		tableView.dataSource = self
 		tableView.delegate = self
 		
-		setupNavBar()
 		setupUI()
 		fetchReplies()
 		configureUI()
-
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		setupNavBar()
 	}
 	
 	// MARK: - UI
@@ -179,6 +182,7 @@ extension PostCommentViewController: UITableViewDataSource {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: PostCommentTableCellTableViewCell.reuseIdentifier, for: indexPath)
 				as? PostCommentTableCellTableViewCell else { fatalError("Can not dequeue PostCommentTableCellTableViewCell") }
 		cell.reply = replies[indexPath.row]
+		cell.delegate = self
 		cell.selectionStyle = .none
 		return cell
 	}
@@ -196,7 +200,15 @@ extension PostCommentViewController: UITableViewDelegate {
 	}
 }
 
+// MARK: - PostCommentTableHeaderDelegate
+
 extension PostCommentViewController: PostCommentTableHeaderDelegate {
+	func goToPublicProfile(_ cell: PostCommentTableHeader) {
+		guard let post = cell.post else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: post.user)
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
+	}
+	
 	func askToDelete(_ cell: PostCommentTableHeader) {
 				
 		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
@@ -212,6 +224,17 @@ extension PostCommentViewController: PostCommentTableHeaderDelegate {
 		controller.addAction(cancelAction)
 		
 		present(controller, animated: true, completion: nil)
+	}
+}
+
+// MARK: - PostCommentTableCellTableViewCellDelegate
+
+extension PostCommentViewController: PostCommentTableCellTableViewCellDelegate {
+	func goToPublicProfile(_ cell: PostCommentTableCellTableViewCell) {
+		guard let reply = cell.reply else { return }
+		
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: reply.user)
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}
 	
 }

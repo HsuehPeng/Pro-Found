@@ -262,43 +262,61 @@ class ScheduleViewController: UIViewController {
 	}
 	
 	func fetchScheduledCourseAndEventIDs(user: User) {
-		let group = DispatchGroup()
 		
-		group.enter()
-		UserServie.shared.getScheduledCourseIDs(userID: user.userID) { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-			case .success(let scheduledCoursesIdWithTimes):
-				let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.time < $1.time })
-				self.scheduledCoursesIdWithTimes = sorted
-			case .failure(let error):
-				print(error)
-			}
-			group.leave()
-		}
-		group.enter()
-		UserServie.shared.getScheduledEventIDs(userID: user.userID) { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-			case .success(let scheduledEventIdWithTimes):
-				let sorted = scheduledEventIdWithTimes.sorted(by: { $0.time < $1.time })
-				self.scheduledEventIdWithTimes = sorted
-			case .failure(let error):
-				print(error)
-			}
-			group.leave()
-		}
+		// TODO: - Semaphore
+		let sem = DispatchSemaphore(value: 0)
 		
-		group.notify(queue: DispatchQueue.global()) {
+		DispatchQueue.global().async {
+			UserServie.shared.getScheduledCourseIDs(userID: user.userID) { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let scheduledCoursesIdWithTimes):
+					let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.time < $1.time })
+					self.scheduledCoursesIdWithTimes = sorted
+				case .failure(let error):
+					print(error)
+				}
+				sem.signal()
+			}
+			sem.wait()
+			UserServie.shared.getScheduledEventIDs(userID: user.userID) { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let scheduledEventIdWithTimes):
+					let sorted = scheduledEventIdWithTimes.sorted(by: { $0.time < $1.time })
+					self.scheduledEventIdWithTimes = sorted
+				case .failure(let error):
+					print(error)
+				}
+				sem.signal()
+			}
+			sem.wait()
 			self.fetchScheduledCoursesAndEvents(user: user)
 			DispatchQueue.main.async {
 				self.collectionView.reloadData()
+				sem.signal()
 			}
 		}
+		
+//		self.fetchScheduledCoursesAndEvents(user: user)
+//		DispatchQueue.main.async {
+//			print("3")
+//			self.collectionView.reloadData()
+//		}
+		
+//		group.notify(queue: DispatchQueue.global()) {
+//			self.fetchScheduledCoursesAndEvents(user: user)
+//			DispatchQueue.main.async {
+//				print("3")
+//				self.collectionView.reloadData()
+//			}
+//		}
 		
 	}
 	
 	func fetchScheduledCoursesAndEvents(user: User) {
+		scheduledCourses.removeAll()
+		scheduledEvents.removeAll()
 		
 		for scheduledCoursesIdWithTime in scheduledCoursesIdWithTimes {
 			CourseServie.shared.fetchCourse(courseID: scheduledCoursesIdWithTime.courseID) { [weak self] result in
