@@ -168,10 +168,17 @@ struct UserServie {
 				
 				for document in snapshot.documents {
 					group.enter()
-					
 					let courseTimeData = document.data()
-					guard let courseID = courseTimeData.keys.first, let time = courseTimeData["\(courseID)"] as? Double,
-						  let studentID = courseTimeData["student"] as? String else { return }
+					
+					let courseID = courseTimeData.keys.filter({ key in
+						return key != "student"
+					})
+					
+					guard let courseID = courseID.first, let time = courseTimeData["\(courseID)"] as? Double,
+						  let studentID = courseTimeData["student"] as? String else {
+						print("misismsimsimsimism")
+						return
+					}
 					
 					getUserData(uid: studentID) { result in
 						switch result {

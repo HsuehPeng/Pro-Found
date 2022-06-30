@@ -12,7 +12,12 @@ class ScheduleViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var user: User?
+	var user: User? {
+		didSet {
+			guard let user = user else { return }
+			self.fetchScheduledCourseAndEventIDs(user: user)
+		}
+	}
 	
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
 	var filteredCoursesIdWithTimes = [ScheduledCourseTime]()
@@ -254,7 +259,6 @@ class ScheduleViewController: UIViewController {
 			switch result {
 			case .success(let user):
 				self.user = user
-				self.fetchScheduledCourseAndEventIDs(user: user)
 			case .failure(let error):
 				print(error)
 			}
@@ -423,7 +427,7 @@ extension ScheduleViewController: UICollectionViewDataSource {
 		
 		let todayDateString = dateFormatter.string(from: Date())
 		if dateString == todayDateString {
-			calendarCell.dateLabel.textColor = .red40
+			calendarCell.dateLabel.textColor = .red50
 		}
 		
 		for scheduleEvent in scheduledEventIdWithTimes {
