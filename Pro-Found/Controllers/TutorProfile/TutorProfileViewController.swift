@@ -404,7 +404,6 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 	
 	func checkIfLikedByUser(_ cell: PostPageFeedCell) {
 		guard let post = cell.post  else { return }
-		
 		if post.likedBy.contains(user.userID) {
 			cell.likeButton.isSelected = true
 		} else {

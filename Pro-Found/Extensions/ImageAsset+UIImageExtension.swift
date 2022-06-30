@@ -162,6 +162,8 @@ enum ImageAsset: String {
 	case cross
 	case checkmarkHUD
 	case spinning
+	case grid
+	case network
 }
 
 // MARK: - Extension UIImage

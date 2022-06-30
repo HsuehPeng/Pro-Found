@@ -32,6 +32,7 @@ class PostViewController: UIViewController {
 		let tableView = UITableView()
 		tableView.register(PostPageFeedCell.self, forCellReuseIdentifier: PostPageFeedCell.reuseIdentifier)
 		tableView.separatorStyle = .none
+		
 		return tableView
 	}()
 	

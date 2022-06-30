@@ -30,4 +30,9 @@ class Lottie {
 		animationView.stop()
 		animationView.removeFromSuperview()
 	}
+	
+	func animateOnce() {
+		animationView.loopMode = .playOnce
+		animationView.play()
+	}
 }

@@ -216,8 +216,6 @@ struct UserServie {
 				completion()
 			}
 		}
-		
-		
 	}
 	
 	func getScheduledEventIDs(userID: String, completion: @escaping (Result<[ScheduledEventTime], Error>) -> Void) {
@@ -227,13 +225,28 @@ struct UserServie {
 				completion(.failure(error))
 			} else {
 				guard let snapshot = snapshot else { return }
+				
+				let group = DispatchGroup()
+				
 				for document in snapshot.documents {
+					group.enter()
 					let eventTimeData = document.data()
 					guard let eventID = eventTimeData.keys.first, let time = eventTimeData["\(eventID)"] as? Double else { return }
-					let eventTime = ScheduledEventTime(eventID: eventID, time: time)
-					eventTimes.append(eventTime)
+					
+					EventService.shared.fetchEvent(eventID: eventID) { result in
+						switch result {
+						case .success(let event):
+							let eventTime = ScheduledEventTime(eventID: eventID, time: time, event: event)
+							eventTimes.append(eventTime)
+						case .failure(let error):
+							completion(.failure(error))
+						}
+						group.leave()
+					}
 				}
-				completion(.success(eventTimes))
+				group.notify(queue: DispatchQueue.main) {
+					completion(.success(eventTimes))
+				}
 			}
 		}
 	}

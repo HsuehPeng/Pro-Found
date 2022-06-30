@@ -297,21 +297,6 @@ class ScheduleViewController: UIViewController {
 				sem.signal()
 			}
 		}
-		
-//		self.fetchScheduledCoursesAndEvents(user: user)
-//		DispatchQueue.main.async {
-//			print("3")
-//			self.collectionView.reloadData()
-//		}
-		
-//		group.notify(queue: DispatchQueue.global()) {
-//			self.fetchScheduledCoursesAndEvents(user: user)
-//			DispatchQueue.main.async {
-//				print("3")
-//				self.collectionView.reloadData()
-//			}
-//		}
-		
 	}
 	
 	func fetchScheduledCoursesAndEvents(user: User) {
@@ -418,10 +403,6 @@ class ScheduleViewController: UIViewController {
 
 extension ScheduleViewController: UICollectionViewDataSource {
 	
-	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 1
-	}
-
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return totalSquares.count
 	}

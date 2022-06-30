@@ -83,7 +83,6 @@ struct ArticleService {
 		}
 	}
 	
-	
 	func fetchArticles(completion: @escaping (Result<[Article], Error>) -> Void) {
 		dbArticles.getDocuments { snapshot, error in
 			var articles = [Article]()

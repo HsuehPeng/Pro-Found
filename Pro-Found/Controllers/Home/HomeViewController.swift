@@ -266,7 +266,10 @@ class HomeViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func fetchUser() {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
+		guard let uid = Auth.auth().currentUser?.uid else {
+			configureForNoUser()
+			return
+		}
 		
 		UserServie.shared.getUserData(uid: uid) { [weak self] result in
 			guard let self = self else { return }
@@ -281,10 +284,7 @@ class HomeViewController: UIViewController {
 	}
 	
 	func fetchTutors() {
-		guard let user = user else {
-			configureForNoUser()
-			return
-		}
+		guard let user = user else { return }
 		
 		UserServie.shared.getTutors { [weak self] result in
 			guard let self = self else { return }

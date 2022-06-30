@@ -24,6 +24,8 @@
 		B8296B38286B0D2900EAAB99 /* MissingInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */; };
 		B8296B40286BF55100EAAB99 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B3F286BF55100EAAB99 /* Lottie.swift */; };
 		B8296B42286BF79300EAAB99 /* loadingAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = B8296B41286BF79300EAAB99 /* loadingAnimation.json */; };
+		B8296B44286C322B00EAAB99 /* PostTab.json in Resources */ = {isa = PBXBuildFile; fileRef = B8296B43286C322B00EAAB99 /* PostTab.json */; };
+		B8296B46286C330800EAAB99 /* EventTab.json in Resources */ = {isa = PBXBuildFile; fileRef = B8296B45286C330800EAAB99 /* EventTab.json */; };
 		B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E22857675A00772375 /* FirebaseConstant.swift */; };
 		B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */; };
 		B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E728578E1B00772375 /* CustomUIElements.swift */; };
@@ -124,6 +126,8 @@
 		B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingInputViewController.swift; sourceTree = "<group>"; };
 		B8296B3F286BF55100EAAB99 /* Lottie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lottie.swift; sourceTree = "<group>"; };
 		B8296B41286BF79300EAAB99 /* loadingAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loadingAnimation.json; sourceTree = "<group>"; };
+		B8296B43286C322B00EAAB99 /* PostTab.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PostTab.json; sourceTree = "<group>"; };
+		B8296B45286C330800EAAB99 /* EventTab.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = EventTab.json; sourceTree = "<group>"; };
 		B83666E22857675A00772375 /* FirebaseConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConstant.swift; sourceTree = "<group>"; };
 		B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileMainTableViewCell.swift; sourceTree = "<group>"; };
 		B83666E728578E1B00772375 /* CustomUIElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIElements.swift; sourceTree = "<group>"; };
@@ -273,6 +277,16 @@
 			path = "Pro-Found";
 			sourceTree = "<group>";
 		};
+		B8296B49286D2C9E00EAAB99 /* SupplementaryController */ = {
+			isa = PBXGroup;
+			children = (
+				B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */,
+				B801887C2869FC23009A6472 /* PopUpAskToLoginController.swift */,
+				B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */,
+			);
+			path = SupplementaryController;
+			sourceTree = "<group>";
+		};
 		B83666E628576E1000772375 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -416,6 +430,8 @@
 			children = (
 				B8A8FDEF2855DC2200F98326 /* Font */,
 				B811E40628531136009C0838 /* Assets.xcassets */,
+				B8296B45286C330800EAAB99 /* EventTab.json */,
+				B8296B43286C322B00EAAB99 /* PostTab.json */,
 				B8296B41286BF79300EAAB99 /* loadingAnimation.json */,
 			);
 			path = Resources;
@@ -459,12 +475,9 @@
 			children = (
 				B8AB0619285A2977002110A4 /* Subject.swift */,
 				B8AB0646285B2B49002110A4 /* CalendarHelper.swift */,
-				B8AB064C285B84AF002110A4 /* SelectClassPresentationVController.swift */,
 				B80188762867350B009A6472 /* HudView.swift */,
 				B8296B3F286BF55100EAAB99 /* Lottie.swift */,
 				B801887E286A9AD0009A6472 /* PDFCreator.swift */,
-				B801887C2869FC23009A6472 /* PopUpAskToLoginController.swift */,
-				B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -495,6 +508,7 @@
 				B89AD40E285EF8D600CCE027 /* UserProfile */,
 				B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */,
 				B8F99C2C2860750D00B88244 /* EventDetailViewController.swift */,
+				B8296B49286D2C9E00EAAB99 /* SupplementaryController */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -582,11 +596,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8296B46286C330800EAAB99 /* EventTab.json in Resources */,
 				B811E40A28531136009C0838 /* LaunchScreen.storyboard in Resources */,
 				B811E40728531136009C0838 /* Assets.xcassets in Resources */,
 				B8A8FDEE2855DC1E00F98326 /* Manrope-Regular.ttf in Resources */,
 				B8296B42286BF79300EAAB99 /* loadingAnimation.json in Resources */,
 				B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */,
+				B8296B44286C322B00EAAB99 /* PostTab.json in Resources */,
 				B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */,
 				B811E40528531135009C0838 /* Main.storyboard in Resources */,
 				B8CC5EB528598D7C004C5D7A /* GoogleService-Info.plist in Resources */,

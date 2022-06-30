@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Lottie
 
 class InteractionViewController: UIViewController {
 
@@ -54,16 +55,21 @@ class InteractionViewController: UIViewController {
 	
 	private lazy var postOptionButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.intern)
+		let image = UIImage.asset(.grid)?.withTintColor(.dark40)
+		let imageSelected = UIImage.asset(.grid)?.withTintColor(.orange)
+		button.isSelected = true
 		button.setImage(image, for: .normal)
+		button.setImage(imageSelected, for: .selected)
 		button.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
 		return button
 	}()
 	
 	private lazy var eventOptionButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.event)
+		let image = UIImage.asset(.network)?.withTintColor(.dark40)
+		let imageSelected = UIImage.asset(.network)?.withTintColor(.orange)
 		button.setImage(image, for: .normal)
+		button.setImage(imageSelected, for: .selected)
 		button.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
 		return button
 	}()
@@ -85,10 +91,14 @@ class InteractionViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
-		
 		setupNavBar()
 		setupUI()
 		setupChildVC()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+		loadUserData()
 	}
 	
 	func setupChildVC() {
@@ -107,10 +117,7 @@ class InteractionViewController: UIViewController {
 		
 	}
 	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(true)
-		loadUserData()
-	}
+
 	
 	// MARK: - UI
 	
