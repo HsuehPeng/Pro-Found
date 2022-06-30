@@ -447,6 +447,7 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 				loadingLottie.stopAnimation()
 				self.tutorPosts.remove(at: indexPath.row)
 				self.tableView.deleteRows(at: [indexPath], with: .fade)
+				
 			}
 		}
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

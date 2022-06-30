@@ -24,6 +24,10 @@
 		B8296B38286B0D2900EAAB99 /* MissingInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */; };
 		B8296B40286BF55100EAAB99 /* Lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B3F286BF55100EAAB99 /* Lottie.swift */; };
 		B8296B42286BF79300EAAB99 /* loadingAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = B8296B41286BF79300EAAB99 /* loadingAnimation.json */; };
+		B8296B4B286D6EA400EAAB99 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B4A286D6EA400EAAB99 /* ChatViewController.swift */; };
+		B8296B4D286D6F0800EAAB99 /* ChatBubbleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B4C286D6F0800EAAB99 /* ChatBubbleTableViewCell.swift */; };
+		B8296B4F286D73B300EAAB99 /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B4E286D73B300EAAB99 /* ChatRoomViewController.swift */; };
+		B8296B51286D73CA00EAAB99 /* ChatRoomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8296B50286D73CA00EAAB99 /* ChatRoomTableViewCell.swift */; };
 		B83666E32857675A00772375 /* FirebaseConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E22857675A00772375 /* FirebaseConstant.swift */; };
 		B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */; };
 		B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83666E728578E1B00772375 /* CustomUIElements.swift */; };
@@ -124,6 +128,10 @@
 		B8296B37286B0D2900EAAB99 /* MissingInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissingInputViewController.swift; sourceTree = "<group>"; };
 		B8296B3F286BF55100EAAB99 /* Lottie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lottie.swift; sourceTree = "<group>"; };
 		B8296B41286BF79300EAAB99 /* loadingAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loadingAnimation.json; sourceTree = "<group>"; };
+		B8296B4A286D6EA400EAAB99 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		B8296B4C286D6F0800EAAB99 /* ChatBubbleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleTableViewCell.swift; sourceTree = "<group>"; };
+		B8296B4E286D73B300EAAB99 /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
+		B8296B50286D73CA00EAAB99 /* ChatRoomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomTableViewCell.swift; sourceTree = "<group>"; };
 		B83666E22857675A00772375 /* FirebaseConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConstant.swift; sourceTree = "<group>"; };
 		B83666E428576E0900772375 /* TutorProfileMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorProfileMainTableViewCell.swift; sourceTree = "<group>"; };
 		B83666E728578E1B00772375 /* CustomUIElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIElements.swift; sourceTree = "<group>"; };
@@ -332,6 +340,8 @@
 			isa = PBXGroup;
 			children = (
 				B8CC5EAD285872F4004C5D7A /* HomePageTutorCollectionViewCell.swift */,
+				B8296B50286D73CA00EAAB99 /* ChatRoomTableViewCell.swift */,
+				B8296B4C286D6F0800EAAB99 /* ChatBubbleTableViewCell.swift */,
 			);
 			path = HomePageVCViews;
 			sourceTree = "<group>";
@@ -393,6 +403,8 @@
 			isa = PBXGroup;
 			children = (
 				B8C7B38F2857258D00CA7370 /* HomeViewController.swift */,
+				B8296B4E286D73B300EAAB99 /* ChatRoomViewController.swift */,
+				B8296B4A286D6EA400EAAB99 /* ChatViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -655,6 +667,7 @@
 				B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */,
 				B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */,
 				B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */,
+				B8296B4B286D6EA400EAAB99 /* ChatViewController.swift in Sources */,
 				B80188792868B6C0009A6472 /* InitialEditProfileVC.swift in Sources */,
 				B8AB0661285DA60E002110A4 /* ArticlePageCollectionViewCell.swift in Sources */,
 				B801886F2864AB8E009A6472 /* UserProfileListTableViewCell.swift in Sources */,
@@ -663,6 +676,7 @@
 				B8AB060D2859FA13002110A4 /* Articles.swift in Sources */,
 				B8F99C312860766B00B88244 /* EventDetailContentTableViewCell.swift in Sources */,
 				B8AB0613285A04CC002110A4 /* TutorProfileClassTableViewHeader.swift in Sources */,
+				B8296B4D286D6F0800EAAB99 /* ChatBubbleTableViewCell.swift in Sources */,
 				B8C7B393285725E200CA7370 /* InteractionViewController.swift in Sources */,
 				B8F352DE2863FED10068E87D /* BecomeTutorViewController.swift in Sources */,
 				B89AD40A285EEBE600CCE027 /* CreateEventViewController.swift in Sources */,
@@ -691,6 +705,7 @@
 				B8AB0658285CD05E002110A4 /* CaptionTextView.swift in Sources */,
 				B80188772867350B009A6472 /* HudView.swift in Sources */,
 				B8AB06042859F9F8002110A4 /* UserService.swift in Sources */,
+				B8296B4F286D73B300EAAB99 /* ChatRoomViewController.swift in Sources */,
 				B8AB06052859F9F8002110A4 /* CourseService.swift in Sources */,
 				B86943D028586079008021C9 /* PrivateKey.swift in Sources */,
 				B811E40228531135009C0838 /* MainTabController.swift in Sources */,
@@ -732,6 +747,7 @@
 				B8AB063F285B088E002110A4 /* LoginViewController.swift in Sources */,
 				B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */,
 				B8AB0654285CB4FB002110A4 /* ProfileViewController.swift in Sources */,
+				B8296B51286D73CA00EAAB99 /* ChatRoomTableViewCell.swift in Sources */,
 				B8AB065C285DA0B0002110A4 /* ArticleService.swift in Sources */,
 				B8CC5EB028588BD0004C5D7A /* GeneralTableViewHeader.swift in Sources */,
 				B811E40028531135009C0838 /* SceneDelegate.swift in Sources */,
