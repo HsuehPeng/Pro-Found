@@ -40,7 +40,7 @@
 		B89AD407285EDEC400CCE027 /* EventListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD406285EDEC400CCE027 /* EventListTableViewCell.swift */; };
 		B89AD40A285EEBE600CCE027 /* CreateEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD409285EEBE600CCE027 /* CreateEventViewController.swift */; };
 		B89AD412286003DA00CCE027 /* CourseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */; };
-		B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */; };
+		B8A8FDE82855CED100F98326 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A8FDE72855CED100F98326 /* UIImage+Extension.swift */; };
 		B8A8FDEB2855DBEF00F98326 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */; };
 		B8A8FDEC2855DBEF00F98326 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */; };
 		B8A8FDEE2855DC1E00F98326 /* Manrope-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B8A8FDED2855DC1E00F98326 /* Manrope-Regular.ttf */; };
@@ -145,7 +145,7 @@
 		B89AD409285EEBE600CCE027 /* CreateEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEventViewController.swift; sourceTree = "<group>"; };
 		B89AD410285F8FF400CCE027 /* Pro-Found.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Pro-Found.entitlements"; sourceTree = "<group>"; };
 		B89AD411286003DA00CCE027 /* CourseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseDetailViewController.swift; sourceTree = "<group>"; };
-		B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAsset+UIImageExtension.swift"; sourceTree = "<group>"; };
+		B8A8FDE72855CED100F98326 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		B8A8FDE92855DBEF00F98326 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		B8A8FDEA2855DBEF00F98326 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		B8A8FDED2855DC1E00F98326 /* Manrope-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Manrope-Regular.ttf"; sourceTree = "<group>"; };
@@ -412,12 +412,9 @@
 		B8A8FDE62855CE6E00F98326 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				B8A8FDE72855CED100F98326 /* ImageAsset+UIImageExtension.swift */,
-				B83666E22857675A00772375 /* FirebaseConstant.swift */,
-				B8A8FDF12855E4D200F98326 /* Constraint.swift */,
+				B8A8FDE72855CED100F98326 /* UIImage+Extension.swift */,
 				B83D19BE285608770049846E /* UIFont+Extension.swift */,
 				B8A8FDF32855E4EE00F98326 /* UIColor+Extension.swift */,
-				B83666E728578E1B00772375 /* CustomUIElements.swift */,
 				B8F99C282860625200B88244 /* MKMapView + Extension.swift */,
 			);
 			path = Extensions;
@@ -479,6 +476,9 @@
 		B8AB0650285B91CE002110A4 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B83666E728578E1B00772375 /* CustomUIElements.swift */,
+				B83666E22857675A00772375 /* FirebaseConstant.swift */,
+				B8A8FDF12855E4D200F98326 /* Constraint.swift */,
 				B8AB0619285A2977002110A4 /* Subject.swift */,
 				B8AB0646285B2B49002110A4 /* CalendarHelper.swift */,
 				B80188762867350B009A6472 /* HudView.swift */,
@@ -664,7 +664,7 @@
 			files = (
 				B8AB0663285DAD7E002110A4 /* WriteArticleViewController.swift in Sources */,
 				B8AB060E2859FA13002110A4 /* User.swift in Sources */,
-				B8A8FDE82855CED100F98326 /* ImageAsset+UIImageExtension.swift in Sources */,
+				B8A8FDE82855CED100F98326 /* UIImage+Extension.swift in Sources */,
 				B8AB0665285DB54C002110A4 /* ArticleTextView.swift in Sources */,
 				B89AD405285ED2A700CCE027 /* EventViewController.swift in Sources */,
 				B8296B4B286D6EA400EAAB99 /* ChatViewController.swift in Sources */,

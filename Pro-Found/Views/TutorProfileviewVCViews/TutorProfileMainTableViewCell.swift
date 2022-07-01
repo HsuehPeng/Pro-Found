@@ -15,6 +15,7 @@ protocol TutorProfileMainTableViewCellDelegate: AnyObject {
 	func chooseBackgroundImage(_ cell: TutorProfileMainTableViewCell)
 	func rateTutor(_ cell: TutorProfileMainTableViewCell)
 	func changeBlockingStatus(_ cell: TutorProfileMainTableViewCell)
+	func handleGoChat(_ cell: TutorProfileMainTableViewCell)
 }
 
 class TutorProfileMainTableViewCell: UITableViewCell {
@@ -65,6 +66,14 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		imageView.clipsToBounds = true
 		imageView.contentMode = .scaleAspectFill
 		return imageView
+	}()
+	
+	lazy var chatButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.chat_new)?.withRenderingMode(.alwaysOriginal)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleChat), for: .touchUpInside)
+		return button
 	}()
 	
 	lazy var blockUserButton: UIButton = {
@@ -223,6 +232,9 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		profileView.addSubview(blockUserButton)
 		blockUserButton.anchor(top: profileView.topAnchor, right: profileView.rightAnchor, paddingTop: 16, paddingRight: 24)
 		
+		profileView.addSubview(chatButton)
+		chatButton.anchor(top: profileView.topAnchor, right: blockUserButton.leftAnchor, paddingTop: 16, paddingRight: 24)
+		
 		profileView.addSubview(nameLabel)
 		nameLabel.anchor(top: profileView.topAnchor, left: profileView.leftAnchor, paddingTop: 61, paddingLeft: 24)
 		
@@ -274,6 +286,10 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleChat() {
+		delegate?.handleGoChat(self)
+	}
 	
 	@objc func handleBlockUser() {
 		delegate?.changeBlockingStatus(self)

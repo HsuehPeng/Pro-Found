@@ -57,7 +57,7 @@ class PostCommentViewController: UIViewController {
 	
 	private lazy var sendCommentButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.send)?.withRenderingMode(.alwaysOriginal)
+		let image = UIImage.asset(.send)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
 		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(sendReply), for: .touchUpInside)
 		button.setDimensions(width: 32, height: 32)

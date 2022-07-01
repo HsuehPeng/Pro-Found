@@ -461,6 +461,12 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 // MARK: - TutorProfileMainTableViewCellDelegate
 
 extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
+	
+	func handleGoChat(_ cell: TutorProfileMainTableViewCell) {
+		let chatVC = ChatViewController(user: user)
+		navigationController?.pushViewController(chatVC, animated: true)
+	}
+	
 	func changeBlockingStatus(_ cell: TutorProfileMainTableViewCell) {
 		
 		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))

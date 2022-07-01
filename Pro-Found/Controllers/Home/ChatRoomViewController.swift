@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol ChatRoomViewControllerDelegate: AnyObject {
+	func controller(_ controller: ChatRoomViewController, wnatsToStartChatWith user: User)
+}
+ 
 class ChatRoomViewController: UIViewController {
+	
+	weak var delegate: ChatRoomViewControllerDelegate?
 	
 	// MARK: - Properties
 	
@@ -15,6 +21,8 @@ class ChatRoomViewController: UIViewController {
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
+		tableView.register(ChatRoomTableViewCell.self, forCellReuseIdentifier: ChatRoomTableViewCell.reuserIdentifier)
+		tableView.rowHeight = 76
 		return tableView
 	}()
 	
@@ -24,7 +32,7 @@ class ChatRoomViewController: UIViewController {
 		super.viewDidLoad()
 		view.backgroundColor = .light60
 		
-//		tableView.dataSource = self
+		tableView.dataSource = self
 		tableView.delegate = self
 		
 		setupUI()
@@ -40,7 +48,8 @@ class ChatRoomViewController: UIViewController {
 	}
 	
 	func setupNavBar() {
-		title = "Message"
+		navigationController?.navigationBar.isHidden = false
+		navigationItem.title = "Messages"
 		let titleAttribute: [NSAttributedString.Key: Any] = [
 			.font: UIFont.customFont(.interBold, size: 16)
 		]
@@ -48,7 +57,8 @@ class ChatRoomViewController: UIViewController {
 		appearance.titleTextAttributes = titleAttribute
 		appearance.configureWithDefaultBackground()
 		navigationController?.navigationBar.standardAppearance = appearance
-		navigationController?.navigationBar.isHidden = false
+		navigationController?.navigationBar.compactAppearance = appearance
+		navigationController?.navigationBar.scrollEdgeAppearance = appearance
 		tabBarController?.tabBar.isHidden = true
 		let leftImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftImage, style: .done, target: self, action: #selector(popVC))
@@ -83,14 +93,24 @@ class ChatRoomViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 
-//extension ChatRoomViewController: UITableViewDataSource {
-//
-//}
+extension ChatRoomViewController: UITableViewDataSource {
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 1
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		guard let cell = tableView.dequeueReusableCell(withIdentifier: ChatRoomTableViewCell.reuserIdentifier, for: indexPath)
+				as? ChatRoomTableViewCell else { fatalError("Can not dequeue ChatRoomTableViewCell") }
+		return cell
+	}
+}
 
 // MARK: - UITableViewDelegate
 
 extension ChatRoomViewController: UITableViewDelegate {
-	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//		delegate?.controller(self, wnatsToStartChatWith: user)
+	}
 }
 
 // MARK: - UISearchControllerDelegate
