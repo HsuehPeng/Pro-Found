@@ -32,6 +32,7 @@ class PostViewController: UIViewController {
 		let tableView = UITableView()
 		tableView.register(PostPageFeedCell.self, forCellReuseIdentifier: PostPageFeedCell.reuseIdentifier)
 		tableView.separatorStyle = .none
+		
 		return tableView
 	}()
 	
@@ -64,6 +65,7 @@ class PostViewController: UIViewController {
 	// MARK: - UI
 	
 	private func setupUI() {
+		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
 						 right: view.rightAnchor)
@@ -80,6 +82,9 @@ class PostViewController: UIViewController {
 		writePostVC.modalPresentationStyle = .fullScreen
 		present(writePostVC, animated: true)
 	}
+	
+	// MARK: - Helper
+
 }
 
 // MARK: - UITableViewDataSource
@@ -99,7 +104,6 @@ extension PostViewController: UITableViewDataSource {
 		let post = filteredPosts[indexPath.row]
 		feedCell.user = user
 		feedCell.post = post
-		
 		feedCell.delegate = self
 		feedCell.selectionStyle = .none
 		return feedCell
@@ -130,10 +134,16 @@ extension PostViewController: PostPageFeedCellDelegate {
 		guard let post = cell.post, let user = user else { return }
 		
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID)
+			PostService.shared.unlikePost(post: post, userID: user.userID) {
+				
+			}
+			cell.post?.likes -= 1
 			cell.likeButton.isSelected = false
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID)
+			PostService.shared.likePost(post: post, userID: user.userID) {
+				
+			}
+			cell.post?.likes += 1
 			cell.likeButton.isSelected = true
 		}
 	}

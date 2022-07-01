@@ -122,7 +122,7 @@ struct UserServie {
 		}
 	}
 	
-	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double) {
+	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double, completion: @escaping () -> Void) {
 		dbUsers.document(user.userID).collection("ScheduledCourse").document().setData([
 			"\(courseID)": time,
 			"student": user.userID
@@ -131,6 +131,7 @@ struct UserServie {
 				print("Error writing ScheduledCourse: \(error)")
 			} else {
 				print("ScheduledCourse successfully uploaded")
+				completion()
 			}
 		}
 		
@@ -167,10 +168,17 @@ struct UserServie {
 				
 				for document in snapshot.documents {
 					group.enter()
-					
 					let courseTimeData = document.data()
-					guard let courseID = courseTimeData.keys.first, let time = courseTimeData["\(courseID)"] as? Double,
-						  let studentID = courseTimeData["student"] as? String else { return }
+					
+					let courseID = courseTimeData.keys.filter({ key in
+						return key != "student"
+					})
+					
+					guard let courseID = courseID.first, let time = courseTimeData["\(courseID)"] as? Double,
+						  let studentID = courseTimeData["student"] as? String else {
+						print("misismsimsimsimism")
+						return
+					}
 					
 					getUserData(uid: studentID) { result in
 						switch result {
@@ -215,8 +223,6 @@ struct UserServie {
 				completion()
 			}
 		}
-		
-		
 	}
 	
 	func getScheduledEventIDs(userID: String, completion: @escaping (Result<[ScheduledEventTime], Error>) -> Void) {
@@ -226,13 +232,28 @@ struct UserServie {
 				completion(.failure(error))
 			} else {
 				guard let snapshot = snapshot else { return }
+				
+				let group = DispatchGroup()
+				
 				for document in snapshot.documents {
+					group.enter()
 					let eventTimeData = document.data()
 					guard let eventID = eventTimeData.keys.first, let time = eventTimeData["\(eventID)"] as? Double else { return }
-					let eventTime = ScheduledEventTime(eventID: eventID, time: time)
-					eventTimes.append(eventTime)
+					
+					EventService.shared.fetchEvent(eventID: eventID) { result in
+						switch result {
+						case .success(let event):
+							let eventTime = ScheduledEventTime(eventID: eventID, time: time, event: event)
+							eventTimes.append(eventTime)
+						case .failure(let error):
+							completion(.failure(error))
+						}
+						group.leave()
+					}
 				}
-				completion(.success(eventTimes))
+				group.notify(queue: DispatchQueue.main) {
+					completion(.success(eventTimes))
+				}
 			}
 		}
 	}
@@ -268,7 +289,7 @@ struct UserServie {
 		dbUsers.document(uid).getDocument { snapshot, error in
 			if let error = error {
 				completion(.failure(error))
-			} else if snapshot == nil {
+			} else if snapshot?.data() == nil {
 				completion(.success(false))
 			} else {
 				completion(.success(true))

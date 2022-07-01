@@ -7,6 +7,7 @@
 
 import UIKit
 import PhotosUI
+import Lottie
 
 class CreateEventViewController: UIViewController {
 	
@@ -238,10 +239,8 @@ class CreateEventViewController: UIViewController {
 		let eventDate = datePicker.date
 		let interval = eventDate.timeIntervalSince1970
 		
-		let hudView = HudView.hud(inView: self.view,
-								animated: true)
-		hudView.text = "Success"
-		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		EventService.shared.createAndDownloadImageURL(eventImage: eventImage) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
@@ -250,7 +249,7 @@ class CreateEventViewController: UIViewController {
 												   location: addreddText, introText: introText, imageURL: url, participants: [self.user.userID])
 				EventService.shared.uploadEvent(event: firestoreEvent) { [weak self] in
 					guard let self = self else { return }
-					hudView.hide()
+					loadingLottie.stopAnimation()
 					self.dismiss(animated: true)
 				}
 				

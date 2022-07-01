@@ -11,6 +11,7 @@ import FirebaseAuth
 
 protocol PostCommentTableHeaderDelegate: AnyObject {
 	func askToDelete(_ cell: PostCommentTableHeader)
+	func goToPublicProfile(_ cell: PostCommentTableHeader)
 }
 
 class PostCommentTableHeader: UITableViewHeaderFooterView {
@@ -24,6 +25,7 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 	var post: Post? {
 		didSet {
 			configureUI()
+			collectionView.reloadData()
 		}
 	}
 	
@@ -37,9 +39,9 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
-//		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
-//		imageView.addGestureRecognizer(tap)
-//		imageView.isUserInteractionEnabled = true
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
 		
 		return imageView
 	}()
@@ -87,9 +89,18 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		return label
 	}()
 	
+	private lazy var collectionView: UICollectionView = {
+		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createCompositionalLayout())
+		collectionView.register(ChooseSubjectUICollectionViewCell.self,
+								forCellWithReuseIdentifier: ChooseSubjectUICollectionViewCell.reuseIdentifier)
+		collectionView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+		return collectionView
+	}()
+	
 	private let dividerView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .dark20
+//		view.heightAnchor.constraint(equalToConstant: 1).isActive = true
 		return view
 	}()
 	
@@ -98,6 +109,7 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 	override init(reuseIdentifier: String?) {
 		super.init(reuseIdentifier: reuseIdentifier)
 		setupUI()
+		collectionView.dataSource = self
 	}
 	
 	required init?(coder: NSCoder) {
@@ -123,17 +135,29 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		contentView.addSubview(deleteButton)
 		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
 
-		contentView.addSubview(contentLabel)
-		contentLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor,
-							paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+//		contentView.addSubview(contentLabel)
+//		contentLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor,
+//							paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+//
 
+		let postCommentHeaderVStack = UIStackView(arrangedSubviews: [contentLabel, collectionView])
+		postCommentHeaderVStack.axis = .vertical
+		postCommentHeaderVStack.spacing = 16
+		contentView.addSubview(postCommentHeaderVStack)
+		postCommentHeaderVStack.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor,
+									    right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		contentView.addSubview(dividerView)
-		dividerView.anchor(top: contentLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
+		dividerView.anchor(top: postCommentHeaderVStack.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 						   right: contentView.rightAnchor, paddingTop: 16, paddingBottom: 1, height: 1)
+		
 		
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleProfileImageTapped() {
+		delegate?.goToPublicProfile(self)
+	}
 	
 	@objc func handleAskToDelete() {
 		if deleteButton.isHidden {
@@ -175,6 +199,44 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		if post.userID == uid{
 			feedEditButton.isHidden = false
 		}
+		
+		if post.imagesURL.isEmpty {
+			collectionView.isHidden = true
+		} else {
+			collectionView.isHidden = false
+		}
+
+	}
+	
+	func createCompositionalLayout() -> UICollectionViewCompositionalLayout {
+		let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+		let item = NSCollectionLayoutItem(layoutSize: itemSize)
+		
+		let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+		let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+		group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16)
+		
+		let section = NSCollectionLayoutSection(group: group)
+		section.orthogonalScrollingBehavior = .continuous
+		
+		let layout = UICollectionViewCompositionalLayout(section: section)
+		return layout
 	}
 
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension PostCommentTableHeader: UICollectionViewDataSource {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return post?.imagesURL.count ?? 0
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChooseSubjectUICollectionViewCell.reuseIdentifier, for: indexPath)
+				as? ChooseSubjectUICollectionViewCell else { fatalError("Can not dequeue ChooseSubjectUICollectionViewCell") }
+		guard let imageURL = URL(string: post?.imagesURL[indexPath.item] ?? "") else { return cell }
+		cell.subjectImageView.kf.setImage(with: imageURL)
+		return cell
+	}
 }

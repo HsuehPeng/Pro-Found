@@ -206,6 +206,8 @@ extension ArticleDetailViewController: UITableViewDataSource {
 	}
 }
 
+// MARK: - ArticleDetailIntroTableViewCellDelegate
+
 extension ArticleDetailViewController: ArticleDetailIntroTableViewCellDelegate {
 	func sharePDF(_ cell: ArticleDetailIntroTableViewCell) {
 		
@@ -225,6 +227,4 @@ extension ArticleDetailViewController: ArticleDetailIntroTableViewCellDelegate {
 		}
 		return
 	}
-	
-	
 }

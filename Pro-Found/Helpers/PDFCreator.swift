@@ -33,7 +33,7 @@ class PDFCreator: NSObject {
 			pageCountAfterFirst = (bodyCount - 1350) / 3000
 		} else {
 			indexFirstPage = body.endIndex
-			firstPageBody = String(body[...indexFirstPage])
+			firstPageBody = String(body[..<indexFirstPage])
 		}
 
 		let pdfMetaData = [
@@ -198,7 +198,6 @@ class PDFCreator: NSObject {
 			
 			leftOverPageCount -= 1
 			newPage += 1
-			
 			createPageBody(currentStringIndex: newStringIndex, pageRect: pageRect, page: newPage,
 						   pageCountAfterFirst: leftOverPageCount, context: context)
 		} else {

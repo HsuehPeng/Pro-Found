@@ -15,19 +15,17 @@ class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 	
 	let subjectImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.backgroundColor = .light
-		imageView.contentMode = .scaleAspectFill
+		imageView.backgroundColor = .orange10
+		imageView.layer.cornerRadius = 12
 		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
-	
-
 	
 	// MARK: - Lifecycle
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		backgroundColor = .red
 		setupUI()
 	}
 	
@@ -38,8 +36,8 @@ class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
-		addSubview(subjectImageView)
-		subjectImageView.addConstraintsToFillView(self)
+		contentView.addSubview(subjectImageView)
+		subjectImageView.addConstraintsToFillView(contentView)
 	}
 	
 	// MARK: - Actions

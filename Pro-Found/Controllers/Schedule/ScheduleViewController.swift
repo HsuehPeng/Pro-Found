@@ -12,7 +12,12 @@ class ScheduleViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var user: User?
+	var user: User? {
+		didSet {
+			guard let user = user else { return }
+			self.fetchScheduledCourseAndEventIDs(user: user)
+		}
+	}
 	
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
 	var filteredCoursesIdWithTimes = [ScheduledCourseTime]()
@@ -254,7 +259,6 @@ class ScheduleViewController: UIViewController {
 			switch result {
 			case .success(let user):
 				self.user = user
-				self.fetchScheduledCourseAndEventIDs(user: user)
 			case .failure(let error):
 				print(error)
 			}
@@ -262,43 +266,46 @@ class ScheduleViewController: UIViewController {
 	}
 	
 	func fetchScheduledCourseAndEventIDs(user: User) {
-		let group = DispatchGroup()
 		
-		group.enter()
-		UserServie.shared.getScheduledCourseIDs(userID: user.userID) { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-			case .success(let scheduledCoursesIdWithTimes):
-				let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.time < $1.time })
-				self.scheduledCoursesIdWithTimes = sorted
-			case .failure(let error):
-				print(error)
-			}
-			group.leave()
-		}
-		group.enter()
-		UserServie.shared.getScheduledEventIDs(userID: user.userID) { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-			case .success(let scheduledEventIdWithTimes):
-				let sorted = scheduledEventIdWithTimes.sorted(by: { $0.time < $1.time })
-				self.scheduledEventIdWithTimes = sorted
-			case .failure(let error):
-				print(error)
-			}
-			group.leave()
-		}
+		// TODO: - Semaphore
+		let sem = DispatchSemaphore(value: 0)
 		
-		group.notify(queue: DispatchQueue.global()) {
+		DispatchQueue.global().async {
+			UserServie.shared.getScheduledCourseIDs(userID: user.userID) { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let scheduledCoursesIdWithTimes):
+					let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.time < $1.time })
+					self.scheduledCoursesIdWithTimes = sorted
+				case .failure(let error):
+					print(error)
+				}
+				sem.signal()
+			}
+			sem.wait()
+			UserServie.shared.getScheduledEventIDs(userID: user.userID) { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let scheduledEventIdWithTimes):
+					let sorted = scheduledEventIdWithTimes.sorted(by: { $0.time < $1.time })
+					self.scheduledEventIdWithTimes = sorted
+				case .failure(let error):
+					print(error)
+				}
+				sem.signal()
+			}
+			sem.wait()
 			self.fetchScheduledCoursesAndEvents(user: user)
 			DispatchQueue.main.async {
 				self.collectionView.reloadData()
+				sem.signal()
 			}
 		}
-		
 	}
 	
 	func fetchScheduledCoursesAndEvents(user: User) {
+		scheduledCourses.removeAll()
+		scheduledEvents.removeAll()
 		
 		for scheduledCoursesIdWithTime in scheduledCoursesIdWithTimes {
 			CourseServie.shared.fetchCourse(courseID: scheduledCoursesIdWithTime.courseID) { [weak self] result in
@@ -400,10 +407,6 @@ class ScheduleViewController: UIViewController {
 
 extension ScheduleViewController: UICollectionViewDataSource {
 	
-	func numberOfSections(in collectionView: UICollectionView) -> Int {
-		return 1
-	}
-
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return totalSquares.count
 	}
@@ -424,7 +427,7 @@ extension ScheduleViewController: UICollectionViewDataSource {
 		
 		let todayDateString = dateFormatter.string(from: Date())
 		if dateString == todayDateString {
-			calendarCell.dateLabel.textColor = .red40
+			calendarCell.dateLabel.textColor = .red50
 		}
 		
 		for scheduleEvent in scheduledEventIdWithTimes {

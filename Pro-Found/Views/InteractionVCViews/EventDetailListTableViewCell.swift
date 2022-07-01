@@ -11,6 +11,7 @@ import Kingfisher
 
 protocol EventDetailListTableViewCellDelegate: AnyObject {
 	func handleFollowing(_ cell: EventDetailListTableViewCell)
+	func goToPublicProfile(_ cell: EventDetailListTableViewCell)
 }
 
 class EventDetailListTableViewCell: UITableViewCell {
@@ -33,13 +34,16 @@ class EventDetailListTableViewCell: UITableViewCell {
 		}
 	}
 	
-	private let eventOrganizerImageView: UIImageView = {
+	private lazy var eventOrganizerImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 48, height: 48)
 		imageView.layer.cornerRadius = 48 / 2
 		imageView.image = UIImage.asset(.account_circle)
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
 		return imageView
 	}()
 	
@@ -104,6 +108,10 @@ class EventDetailListTableViewCell: UITableViewCell {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleProfileImageTapped() {
+		delegate?.goToPublicProfile(self)
+	}
 	
 	@objc func handleFollowingAction() {
 		delegate?.handleFollowing(self)

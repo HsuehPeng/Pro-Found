@@ -14,5 +14,6 @@ target 'Pro-Found' do
 	pod 'Kingfisher', '~> 7.0'
 	pod 'Cosmos', '~> 23.0'
 	pod 'IQKeyboardManagerSwift'
+	pod 'lottie-ios'
 
 end

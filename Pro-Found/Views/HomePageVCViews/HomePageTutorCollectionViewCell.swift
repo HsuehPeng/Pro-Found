@@ -133,5 +133,4 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 		let roudedAverageRating = round(averageRating * 10) / 10
 		return String(roudedAverageRating)
 	}
-	
 }

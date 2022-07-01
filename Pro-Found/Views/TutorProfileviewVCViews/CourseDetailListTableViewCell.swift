@@ -12,6 +12,7 @@ import MapKit
 
 protocol CourseDetailListTableViewCellDelegate: AnyObject {
 	func handleFollowing(_ cell: CourseDetailListTableViewCell)
+	func goToPublicProfile(_ cell: CourseDetailListTableViewCell)
 }
 
 class CourseDetailListTableViewCell: UITableViewCell {
@@ -45,6 +46,10 @@ class CourseDetailListTableViewCell: UITableViewCell {
 		imageView.image = UIImage.asset(.account_circle)
 		imageView.clipsToBounds = true
 		imageView.contentMode = .scaleAspectFill
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
+		
 		return imageView
 	}()
 	
@@ -168,6 +173,10 @@ class CourseDetailListTableViewCell: UITableViewCell {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleProfileImageTapped() {
+		delegate?.goToPublicProfile(self)
+	}
 	
 	@objc func handleFollowingAction() {
 		delegate?.handleFollowing(self)

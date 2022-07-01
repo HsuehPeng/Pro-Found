@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Lottie
 
 class EventViewController: UIViewController {
 	
@@ -131,9 +132,12 @@ extension EventViewController: EventListTableViewCellDelegate {
 	
 	func bookEvent(_ cell: EventListTableViewCell) {
 		guard let user = user, let event = cell.event else { return }
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp) {
 			cell.bookEventButton.isEnabled = false
 			cell.bookEventButton.backgroundColor = .dark20
+			loadingLottie.stopAnimation()
 		}
 	}
 	

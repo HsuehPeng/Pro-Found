@@ -111,6 +111,11 @@ class ArticleListTableViewCell: UITableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		deleteButton.isHidden = true
+	}
+	
 	// MARK: - UI
 	
 	func setupUI() {
@@ -167,6 +172,7 @@ class ArticleListTableViewCell: UITableViewCell {
 	
 	@objc func deleteArticle() {
 		delegate?.askToDelete(self)
+		deleteButton.isHidden = true
 	}
 	
 	// MARK: - Helpers
