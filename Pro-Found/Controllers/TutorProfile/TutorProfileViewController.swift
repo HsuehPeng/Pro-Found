@@ -463,7 +463,7 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 	
 	func handleGoChat(_ cell: TutorProfileMainTableViewCell) {
-		let chatVC = ChatViewController(user: user)
+		let chatVC = ChatViewController(receiver: tutor, sender: user)
 		navigationController?.pushViewController(chatVC, animated: true)
 	}
 	

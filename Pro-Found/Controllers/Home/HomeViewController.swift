@@ -212,7 +212,8 @@ class HomeViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func goChatRoom() {
-		let chatRoomVC = ChatRoomViewController()
+		guard let user = user else { return }
+		let chatRoomVC = ChatRoomViewController(user: user)
 		navigationController?.pushViewController(chatRoomVC, animated: true)
 	}
 	

@@ -6,20 +6,24 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ChatViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	var messageArray = ["Hi", "How are you", "123123123123123123123123123123123123123123123123123123123123123123123"]
+	let receiver: User
 	
-	let user: User
+	let sender: User
+	
+	var messages = [Message]()
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.translatesAutoresizingMaskIntoConstraints = false
 		tableView.register(ChatBubbleTableViewCell.self,
 						   forCellReuseIdentifier: ChatBubbleTableViewCell.reuseIdentifier)
+		tableView.keyboardDismissMode = .interactive
 		tableView.separatorStyle = .none
 		tableView.alwaysBounceVertical = true
 		return tableView
@@ -38,6 +42,7 @@ class ChatViewController: UIViewController {
 		imageView.backgroundColor = .orange10
 		imageView.clipsToBounds = true
 		imageView.contentMode = .scaleAspectFill
+
 		return imageView
 	}()
 	
@@ -59,8 +64,9 @@ class ChatViewController: UIViewController {
 	
 	// MARK: - Lifecycle
 	
-	init(user: User) {
-		self.user = user
+	init(receiver: User, sender: User) {
+		self.receiver = receiver
+		self.sender = sender
 		super.init(nibName: nil, bundle: nil)
 	}
 	
@@ -76,8 +82,9 @@ class ChatViewController: UIViewController {
 		
 		setupNavigationBar()
 		setupUI()
+		configureUI()
+		fetchMessages()
 		
-		title = "客服訊息"
 		view.backgroundColor = .white
 		
 	}
@@ -85,7 +92,7 @@ class ChatViewController: UIViewController {
 	// MARK: - UI
 	
 	func setupNavigationBar() {
-		title = "User Name"
+		title = receiver.name
 		navigationController?.navigationBar.isHidden = false
 		let titleAttribute: [NSAttributedString.Key: Any] = [
 			.font: UIFont.customFont(.interBold, size: 16)
@@ -130,13 +137,42 @@ class ChatViewController: UIViewController {
 	
 	@objc func sendMessage() {
 		guard let text = messageTextView.text else { return }
-		messageArray.append(text)
-		messageTextView.text = ""
-		tableView.reloadData()
+		ChatService.shared.uploadMessage(text, to: receiver) { [weak self] error in
+			guard let self = self else { return }
+			if let error = error {
+				print("Error uploading message with error: \(error)")
+			}
+			self.clearMessageText()
+		}
 	}
 	
 	// MARK: - Helpers
+	
+	func fetchMessages() {
+		ChatService.shared.fetchMessages(forUser: receiver) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let messages):
+				self.messages = messages
+				self.tableView.reloadData()
+				self.tableView.scrollToRow(at: IndexPath(row: self.messages.count - 1, section: 0),
+										   at: .bottom, animated: true)
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
 
+	func clearMessageText() {
+		messageTextView.text = nil
+		messageTextView.placeholderLabel.isHidden = false
+	}
+	
+	func configureUI() {
+		guard let imageUrl = URL(string: sender.profileImageURL) else { return }
+		senderImageView.kf.setImage(with: imageUrl)
+	}
+	
 }
 
 
@@ -145,13 +181,13 @@ class ChatViewController: UIViewController {
 extension ChatViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return messageArray.count
+		return messages.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: ChatBubbleTableViewCell.reuseIdentifier, for: indexPath)
 				as? ChatBubbleTableViewCell else { fatalError("Can not dequeue ChatRoomTableViewCell") }
-		
+		cell.message = messages[indexPath.row]
 		return cell
 	}
 }

@@ -12,37 +12,28 @@ class ChatBubbleTableViewCell: UITableViewCell {
 	static let reuseIdentifier = "\(ChatBubbleTableViewCell.self)"
 	
 	// MARK: - Properties
+	
+	var message: Message? {
+		didSet {
+			configureUI()
+		}
+	}
+	
+	var bubbleLeftAnchor: NSLayoutConstraint?
+	var bubbleRightAnchor: NSLayoutConstraint?
 
-	let messageSelfBubbleView: UIView = {
+	let messageBubbleView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .orange
 		view.translatesAutoresizingMaskIntoConstraints = false
+		view.layer.cornerRadius = 8
 		return view
 	}()
 	
-	let messageSelf: UILabel = {
+	let messageText: UILabel = {
 		let label = UILabel()
 		label.font = UIFont(name: "PingFangTC", size: 10)
-		label.text = "test"
 		label.textColor = .white
-		label.numberOfLines = 0
-		label.translatesAutoresizingMaskIntoConstraints = false
-		
-		return label
-	}()
-	
-	let messageOtherBubbleView: UIView = {
-		let view = UIView()
-		view.backgroundColor = .light
-		view.translatesAutoresizingMaskIntoConstraints = false
-		view.isHidden = true
-		return view
-	}()
-	
-	let messageOther: UILabel = {
-		let label = UILabel()
-		label.font = UIFont(name: "PingFangTC", size: 10)
-//		label.text = "test"
 		label.numberOfLines = 0
 		label.translatesAutoresizingMaskIntoConstraints = false
 		
@@ -63,39 +54,33 @@ class ChatBubbleTableViewCell: UITableViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
-		contentView.addSubview(messageSelfBubbleView)
-		messageSelfBubbleView.layer.cornerRadius = 20
-		NSLayoutConstraint.activate([
-			messageSelfBubbleView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-			messageSelfBubbleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-			messageSelfBubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8)
-		])
+		contentView.addSubview(messageBubbleView)
+		messageBubbleView.anchor(top: contentView.topAnchor, bottom: contentView.bottomAnchor, paddingTop: 8, paddingBottom: 8)
+		messageBubbleView.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: 2/3).isActive = true
+		bubbleLeftAnchor = messageBubbleView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 12)
+		bubbleLeftAnchor?.isActive = false
+		bubbleRightAnchor = messageBubbleView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -12)
+		bubbleRightAnchor?.isActive = false
 		
-		messageSelfBubbleView.addSubview(messageSelf)
-		NSLayoutConstraint.activate([
-			messageSelf.leadingAnchor.constraint(equalTo: messageSelfBubbleView.leadingAnchor, constant: 8),
-			messageSelf.trailingAnchor.constraint(equalTo: messageSelfBubbleView.trailingAnchor, constant: -8),
-			messageSelf.bottomAnchor.constraint(equalTo: messageSelfBubbleView.bottomAnchor, constant: -8),
-			messageSelf.topAnchor.constraint(equalTo: messageSelfBubbleView.topAnchor, constant: 8),
-			messageSelf.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: 2/3)
-		])
+		messageBubbleView.addSubview(messageText)
+		messageText.anchor(top: messageBubbleView.topAnchor, left: messageBubbleView.leftAnchor,
+						   bottom: messageBubbleView.bottomAnchor, right: messageBubbleView.rightAnchor,
+						   paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8)
 		
-		contentView.addSubview(messageOtherBubbleView)
-		messageOtherBubbleView.layer.cornerRadius = 20
-		NSLayoutConstraint.activate([
-			messageOtherBubbleView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-			messageOtherBubbleView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-			messageOtherBubbleView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8)
-		])
 		
-		messageSelfBubbleView.addSubview(messageOther)
-		NSLayoutConstraint.activate([
-			messageOther.leadingAnchor.constraint(equalTo: messageOtherBubbleView.leadingAnchor, constant: 8),
-			messageOther.trailingAnchor.constraint(equalTo: messageOtherBubbleView.trailingAnchor, constant: -8),
-			messageOther.bottomAnchor.constraint(equalTo: messageOtherBubbleView.bottomAnchor, constant: -8),
-			messageOther.topAnchor.constraint(equalTo: messageOtherBubbleView.topAnchor, constant: 8),
-			messageOther.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: 2/3)
-		])
+	}
+	
+	// MARK: - Helpers
+	
+	func configureUI() {
+		guard let message = message else { return }
+		let viewModel = MessageViewModel(message: message)
+		messageBubbleView.backgroundColor = viewModel.messageBackgroundColor
+		messageText.textColor = viewModel.messageTextColor
+		messageText.text = message.text
+		
+		bubbleLeftAnchor?.isActive = viewModel.leftAnchorActive
+		bubbleRightAnchor?.isActive = viewModel.rightAnchorActive
 	}
 
 }

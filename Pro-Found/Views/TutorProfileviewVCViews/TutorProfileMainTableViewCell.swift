@@ -373,6 +373,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		
 		if tutor.userID == user.userID {
 			blockUserButton.isHidden = true
+			chatButton.isHidden = true
 			profileActionButton.isEnabled = false
 			profileActionButton.layer.borderColor = UIColor.dark20.cgColor
 		}

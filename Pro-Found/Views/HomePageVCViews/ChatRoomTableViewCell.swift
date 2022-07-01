@@ -14,7 +14,7 @@ class ChatRoomTableViewCell: UITableViewCell {
 	
 	// MARK: - Properties
 	
-	var user: User? {
+	var conversation: Conversation? {
 		didSet {
 			configureUI()
 		}
@@ -42,6 +42,12 @@ class ChatRoomTableViewCell: UITableViewCell {
 		return label
 	}()
 	
+	private let timestampLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: .dark40, text: "")
+		return label
+	}()
+	
 	// MARK: - Lifecycle
 	
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -64,15 +70,24 @@ class ChatRoomTableViewCell: UITableViewCell {
 		labelVStack.spacing = 2
 		contentView.addSubview(labelVStack)
 		labelVStack.centerY(inView: contentView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 16)
+		
+		contentView.addSubview(timestampLabel)
+		timestampLabel.anchor(right: contentView.rightAnchor, paddingRight: 20)
+		timestampLabel.centerY(inView: contentView)
 	}
 	
 	// MARK: - Helpers
 	
 	func configureUI() {
-		guard let user = user, let imageURL = URL(string: user.profileImageURL) else { return }
+		guard let conversation = conversation, let imageURL = URL(string: conversation.user.profileImageURL) else { return }
 		profileImageView.kf.setImage(with: imageURL)
-		nameLabel.text = user.name
+		nameLabel.text = conversation.user.name
+		latestMessageLabel.text = conversation.message.text
 		
+		let date = Date(timeIntervalSince1970: conversation.message.timestamp)
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "hh:mm a"
+		timestampLabel.text = dateFormatter.string(from: date)
 	}
 	
 
