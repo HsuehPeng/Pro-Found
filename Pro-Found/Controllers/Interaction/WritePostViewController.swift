@@ -18,10 +18,13 @@ class WritePostViewController: UIViewController {
 	
 	var postImageViews = [UIImage]()
 	
+	var postVideoData: Data?
+	
+	var postVideoURL: URL?
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
-		
 		let titleLabel = UILabel()
 		titleLabel.text = "Write Post"
 		titleLabel.font = UIFont.customFont(.interBold, size: 16)
@@ -48,6 +51,13 @@ class WritePostViewController: UIViewController {
 		imageView.clipsToBounds = true
 		imageView.contentMode = .scaleAspectFill
 		return imageView
+	}()
+	
+	private lazy var segmentedControl: UISegmentedControl = {
+		let control = UISegmentedControl(items: ["Photos", "Video"])
+		control.selectedSegmentIndex = 0
+		control.addTarget(self, action: #selector(handleSegmentChange), for: .valueChanged)
+		return control
 	}()
 	
 	private lazy var collectionView: UICollectionView = {
@@ -125,9 +135,12 @@ class WritePostViewController: UIViewController {
 							paddingTop: 12, paddingLeft: 12, paddingRight: 16)
 		postTextView.heightAnchor.constraint(equalToConstant: 350).isActive = true
 		
+		view.addSubview(segmentedControl)
+		segmentedControl.centerX(inView: view, topAnchor: postTextView.bottomAnchor, paddingTop: 8)
+		
 		view.addSubview(collectionView)
 		view.addSubview(bottomBarView)
-		collectionView.anchor(top: postTextView.bottomAnchor, left: view.leftAnchor, bottom: bottomBarView.topAnchor,
+		collectionView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, bottom: bottomBarView.topAnchor,
 							  right: view.rightAnchor, paddingBottom: 16)
 		
 		bottomBarView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: 64)
@@ -147,16 +160,37 @@ class WritePostViewController: UIViewController {
 	
 	// MARK: - Actions
 	
+	@objc func handleSegmentChange() {
+		if segmentedControl.selectedSegmentIndex == 0 {
+			postVideoData = nil
+			postVideoURL = nil
+			collectionView.reloadData()
+		} else {
+			postImageViews = []
+			collectionView.reloadData()
+		}
+	}
+	
 	@objc func handlePickingImage() {
 		var configuration = PHPickerConfiguration()
-		configuration.selectionLimit = 5
+		configuration.filter = .any(of: [.images, .livePhotos, .videos])
+		
+		if segmentedControl.selectedSegmentIndex == 0 {
+			configuration.selectionLimit = 5
+			configuration.filter = .any(of: [.images, .livePhotos])
+		} else {
+			configuration.selectionLimit = 1
+			configuration.filter = .any(of: [.videos])
+		}
+		
 		let picker = PHPickerViewController(configuration: configuration)
 		picker.delegate = self
-		
+
 		if let sheet = picker.presentationController as? UISheetPresentationController {
 			sheet.detents = [.medium()]
 			sheet.preferredCornerRadius = 25
 		}
+		
 		self.present(picker, animated: true, completion: nil)
 	}
 	
@@ -168,22 +202,51 @@ class WritePostViewController: UIViewController {
 		let loadingLottie = Lottie(superView: self.view, animationView: AnimationView.init(name: "loadingAnimation"))
 		loadingLottie.loadingAnimation()
 		
-		PostService.shared.createAndDownloadImageURLs(postImages: postImageViews,
-													  postUser: user) { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-			case .success(let imageURLs):
+		if segmentedControl.selectedSegmentIndex == 0 {
+			PostService.shared.createAndDownloadImageURLs(postImages: postImageViews,
+														  postUser: user) { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let imageURLs):
+					let firebasepost = FirebasePosts(userID: self.user.userID, contentText: postText, likes: 0,
+													 timestamp: timestamp, likedBy: [], imagesURL: imageURLs)
+					
+					PostService.shared.uploadPost(firebasePost: firebasepost) { [weak self] in
+						guard let self = self else { return }
+						loadingLottie.stopAnimation()
+						self.dismiss(animated: true)
+					}
+				case .failure(let error):
+					print(error)
+				}
+			}
+			
+		} else {
+			guard let postVideoData = postVideoData else {
 				let firebasepost = FirebasePosts(userID: self.user.userID, contentText: postText, likes: 0,
-												 timestamp: timestamp, likedBy: [], imagesURL: imageURLs)
-
+												 timestamp: timestamp, likedBy: [], imagesURL: [])
 				
 				PostService.shared.uploadPost(firebasePost: firebasepost) { [weak self] in
 					guard let self = self else { return }
 					loadingLottie.stopAnimation()
 					self.dismiss(animated: true)
 				}
-			case .failure(let error):
-				print(error)
+				return
+			}
+			PostService.shared.createAndDownloadVideoURL(postVideo: postVideoData, postUser: user) { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let url):
+					let firebasepost = FirebasePosts(userID: self.user.userID, contentText: postText, likes: 0,
+													 timestamp: timestamp, likedBy: [], imagesURL: [], videoURL: url)
+					PostService.shared.uploadPost(firebasePost: firebasepost) { [weak self] in
+						guard let self = self else { return }
+						loadingLottie.stopAnimation()
+						self.dismiss(animated: true)
+					}
+				case .failure(let error):
+					print(error)
+				}
 			}
 		}
 	}
@@ -203,13 +266,12 @@ class WritePostViewController: UIViewController {
 		let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
 		let item = NSCollectionLayoutItem(layoutSize: itemSize)
 		
-		let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.75), heightDimension: .fractionalHeight(1))
+		let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
 		let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-		group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16)
+		group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
 		
 		let section = NSCollectionLayoutSection(group: group)
 		section.orthogonalScrollingBehavior = .continuous
-		section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
 		
 		let layout = UICollectionViewCompositionalLayout(section: section)
 		return layout
@@ -218,18 +280,25 @@ class WritePostViewController: UIViewController {
 
 extension WritePostViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		if postImageViews.count <= 5 {
-			return postImageViews.count
+		if segmentedControl.selectedSegmentIndex == 0 {
+			if postImageViews.count <= 5 {
+				return postImageViews.count
+			} else {
+				return 5
+			}
 		} else {
-			return 5
+			return postVideoURL == nil ? 0 : 1
 		}
-		
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChooseSubjectUICollectionViewCell.reuseIdentifier, for: indexPath)
 				as? ChooseSubjectUICollectionViewCell else { fatalError("Can not dequeue ChooseSubjectUICollectionViewCell") }
-		cell.subjectImageView.image = postImageViews[indexPath.item]
+		if segmentedControl.selectedSegmentIndex == 0 {
+			cell.subjectImageView.image = postImageViews[indexPath.item]
+		} else {
+			cell.videoURL = postVideoURL
+		}
 		return cell
 	}
 }
@@ -238,6 +307,8 @@ extension WritePostViewController: UICollectionViewDataSource {
 
 extension WritePostViewController: PHPickerViewControllerDelegate {
 	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+		let loadingLottie = Lottie(superView: self.view, animationView: AnimationView.init(name: "loadingAnimation"))
+		
 		picker.dismiss(animated: true)
 		let itemProviders = results.map(\.itemProvider)
 		for item in itemProviders {
@@ -251,7 +322,45 @@ extension WritePostViewController: PHPickerViewControllerDelegate {
 						}
 					}
 				}
+			} else if item.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+				loadingLottie.loadingAnimation()
+				item.loadFileRepresentation(forTypeIdentifier: UTType.movie.identifier) { [weak self] url, error in
+					guard let self = self, let url = url else { return }
+					
+					DispatchQueue.main.sync {
+						let compressedURL = NSURL.fileURL(withPath: NSTemporaryDirectory() + UUID().uuidString + ".mp4")
+						
+						self.compressVideo(inputURL: url, outputURL: compressedURL) { exportSession in
+							let smallData = try? Data(contentsOf: compressedURL)
+							self.postVideoData = smallData
+						}
+						
+						self.postVideoURL = url
+						self.collectionView.reloadSections([0])
+						
+						loadingLottie.stopAnimation()
+					}
+				}
 			}
 		}
 	}
+	
+	func compressVideo(inputURL: URL,
+					   outputURL: URL,
+					   handler:@escaping (_ exportSession: AVAssetExportSession?) -> Void) {
+		let urlAsset = AVURLAsset(url: inputURL, options: nil)
+		guard let exportSession = AVAssetExportSession(asset: urlAsset,
+													   presetName: AVAssetExportPresetMediumQuality) else {
+			handler(nil)
+
+			return
+		}
+
+		exportSession.outputURL = outputURL
+		exportSession.outputFileType = .mp4
+		exportSession.exportAsynchronously {
+			handler(exportSession)
+		}
+	}
+
 }

@@ -9,6 +9,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 import FirebaseFirestoreSwift
+import AVFoundation
 
 struct PostService {
 	
@@ -41,7 +42,24 @@ struct PostService {
 		group.notify(queue: DispatchQueue.global()) {
 			completion(.success(postImageUrls))
 		}
-		
+	}
+	
+	func createAndDownloadVideoURL(postVideo: Data, postUser: User, completion: @escaping (Result<String, Error>) -> Void) {
+
+		let videoFileName = NSUUID().uuidString
+		let storageRef = storagePostVideo.child(videoFileName)
+
+		storageRef.putData(postVideo, metadata: nil) { metadata, error in
+
+			if let error = error {
+				print(error)
+			}
+
+			storageRef.downloadURL { url, error in
+				guard let url = url?.absoluteString else { return }
+				completion(.success(url))
+			}
+		}
 	}
 	
 	func uploadPost(firebasePost: FirebasePosts, completion: @escaping () -> Void) {
@@ -55,7 +73,8 @@ struct PostService {
 			"likes": firebasePost.likes,
 			"timestamp": firebasePost.timestamp,
 			"likedBy": firebasePost.likedBy,
-			"imagesURL": firebasePost.imagesURL
+			"imagesURL": firebasePost.imagesURL,
+			"videoURL": firebasePost.videoURL ?? ""
 		]
 
 		postRef.setData(postData) { error in
