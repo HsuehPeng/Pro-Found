@@ -5,6 +5,7 @@
 //  Created by Hsueh Peng Tseng on 2022/6/19.
 //
 
+import Lottie
 import UIKit
 
 class PostViewController: UIViewController {
@@ -164,11 +165,15 @@ extension PostViewController: PostPageFeedCellDelegate {
 	func askToDelete(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell), let user = user else { return }
 		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		
 		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
 		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			loadingLottie.loadingAnimation()
 			PostService.shared.deletePost(postID: post.postID, userID: user.userID) { [weak self] in
 				guard let self = self else { return }
 				self.filteredPosts.remove(at: indexPath.row)
+				loadingLottie.stopAnimation()
 			}
 		}
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

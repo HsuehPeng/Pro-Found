@@ -43,6 +43,7 @@ class PopUpAskToLoginController: UIViewController {
 	private let explainLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14),
 												 textColor: .dark40, text: "After logged in, you will have access to all the content in this app")
+		label.textAlignment = .center
 		label.numberOfLines = 0
 		return label
 	}()

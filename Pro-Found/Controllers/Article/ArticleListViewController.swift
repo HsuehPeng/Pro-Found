@@ -153,8 +153,6 @@ extension ArticleListViewController: UISearchResultsUpdating {
 		let searchBar = searchController.searchBar
 		filterContentForSearchText(searchBar.text!)
 	}
-	
-	
 }
 
 extension ArticleListViewController: UISearchBarDelegate {

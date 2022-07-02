@@ -280,6 +280,7 @@ extension TutorProfileViewController: UITableViewDataSource {
 			case "Events":
 				eventCell.event = tutorEvents[indexPath.row]
 				eventCell.selectionStyle = .none
+				eventCell.delegate = self
 				return eventCell
 			case "Posts":
 				postCell.delegate = self
@@ -439,7 +440,9 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 	func askToDelete(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell) else { return }
 		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		
 		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
+		
 		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
 			loadingLottie.loadingAnimation()
 			PostService.shared.deletePost(postID: post.postID, userID: self.tutor.userID) { [weak self] in
@@ -450,6 +453,7 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 				
 			}
 		}
+		
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 		controller.addAction(okAction)
 		controller.addAction(cancelAction)
@@ -461,28 +465,52 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 // MARK: - TutorProfileMainTableViewCellDelegate
 
 extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
+	func toggleFollowingStatus(_ cell: TutorProfileMainTableViewCell) {
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
+		
+		if cell.isFollowed {
+			UserServie.shared.unfollow(senderID: user.userID, receiverID: tutor.userID) { [weak self] in
+				guard let self = self else { return }
+				loadingLottie.stopAnimation()
+				cell.profileActionButton.setTitle("Follow", for: .normal)
+				self.isFollowed = false
+			}
+		} else {
+			UserServie.shared.follow(senderID: user.userID, receiverID: tutor.userID) { [weak self] in
+				guard let self = self else { return }
+				loadingLottie.stopAnimation()
+				cell.profileActionButton.setTitle("Unfollow", for: .normal)
+				self.isFollowed = true
+			}
+		}
+	}
 	
 	func handleGoChat(_ cell: TutorProfileMainTableViewCell) {
-		let chatVC = ChatViewController(user: user)
+		let chatVC = ChatViewController(receiver: tutor, sender: user)
 		navigationController?.pushViewController(chatVC, animated: true)
 	}
 	
 	func changeBlockingStatus(_ cell: TutorProfileMainTableViewCell) {
 		
 		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
-
+		
 		if user.blockedUsers.contains(tutor.userID) {
-			UserServie.shared.toggleBlockingStatus(senderID: user.userID, receiverID: tutor.userID) {
+			loadingLottie.loadingAnimation()
+			UserServie.shared.toggleBlockingStatus(senderID: user.userID, receiverID: tutor.userID) { [weak self] in
+				guard let self = self else { return }
+				
 				cell.blockUserButton.setImage(UIImage.asset(.password_show), for: .normal)
 				guard let index = self.user.blockedUsers.firstIndex(of: self.tutor.userID) else { return }
 				self.user.blockedUsers.remove(at: index)
 				loadingLottie.stopAnimation()
 			}
 		} else {
+			loadingLottie.loadingAnimation()
 			let controller = UIAlertController(title: "Are you sure to block this person?", message: nil, preferredStyle: .alert)
 			let okAction = UIAlertAction(title: "Sure", style: .destructive) { [weak self] _ in
 				guard let self = self else { return }
-				loadingLottie.loadingAnimation()
 				UserServie.shared.toggleBlockingStatus(senderID: self.user.userID, receiverID: self.tutor.userID) {
 					cell.blockUserButton.setImage(UIImage.asset(.password_hide), for: .normal)
 					self.user.blockedUsers.append(self.tutor.userID)
@@ -490,7 +518,9 @@ extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 				}
 			}
 			
-			let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+			let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+				loadingLottie.stopAnimation()
+			}
 			controller.addAction(okAction)
 			controller.addAction(cancelAction)
 			
@@ -541,6 +571,23 @@ extension TutorProfileViewController: TutorProfileMainTableViewCellDelegate {
 		
 		if user.userID == tutor.userID {
 			self.present(actionSheet, animated: true, completion: nil)
+		}
+	}
+	
+}
+
+// MARK: - EventListTableViewCellDelegate
+
+extension TutorProfileViewController: EventListTableViewCellDelegate {
+	
+	func bookEvent(_ cell: EventListTableViewCell) {
+		guard let event = cell.event else { return }
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
+		UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp) {
+			cell.bookEventButton.isEnabled = false
+			cell.bookEventButton.backgroundColor = .dark20
+			loadingLottie.stopAnimation()
 		}
 	}
 	
