@@ -342,7 +342,7 @@ struct UserServie {
 		}
 	}
 	
-	func follow(senderID: String, receiverID: String) {
+	func follow(senderID: String, receiverID: String, completion: @escaping () -> Void) {
 		dbUsers.document(senderID).updateData([
 			"followings": FieldValue.arrayUnion([receiverID])
 		]) { error in
@@ -356,13 +356,14 @@ struct UserServie {
 						print("Error getting followers: \(error)")
 					} else {
 						print("Successfully followed")
+						completion()
 					}
 				}
 			}
 		}
 	}
 	
-	func unfollow(senderID: String, receiverID: String) {
+	func unfollow(senderID: String, receiverID: String, completion: @escaping () -> Void) {
 		dbUsers.document(senderID).updateData([
 			"followings": FieldValue.arrayRemove([receiverID])
 		]) { error in
@@ -376,6 +377,7 @@ struct UserServie {
 						print("Error getting followers: \(error)")
 					} else {
 						print("Successfully unfollowed")
+						completion()
 					}
 				}
 			}

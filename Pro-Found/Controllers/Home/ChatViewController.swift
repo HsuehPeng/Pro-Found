@@ -58,7 +58,7 @@ class ChatViewController: UIViewController {
 		let image = UIImage.asset(.send)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
 		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
-		button.setDimensions(width: 32, height: 32)
+		button.setDimensions(width: 36, height: 36)
 		return button
 	}()
 	
@@ -136,7 +136,7 @@ class ChatViewController: UIViewController {
 	}
 	
 	@objc func sendMessage() {
-		guard let text = messageTextView.text else { return }
+		guard let text = messageTextView.text, !text.isEmpty else { return }
 		ChatService.shared.uploadMessage(text, to: receiver) { [weak self] error in
 			guard let self = self else { return }
 			if let error = error {
@@ -188,6 +188,7 @@ extension ChatViewController: UITableViewDataSource {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: ChatBubbleTableViewCell.reuseIdentifier, for: indexPath)
 				as? ChatBubbleTableViewCell else { fatalError("Can not dequeue ChatRoomTableViewCell") }
 		cell.message = messages[indexPath.row]
+		cell.selectionStyle = .none
 		return cell
 	}
 }

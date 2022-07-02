@@ -16,6 +16,7 @@ protocol TutorProfileMainTableViewCellDelegate: AnyObject {
 	func rateTutor(_ cell: TutorProfileMainTableViewCell)
 	func changeBlockingStatus(_ cell: TutorProfileMainTableViewCell)
 	func handleGoChat(_ cell: TutorProfileMainTableViewCell)
+	func toggleFollowingStatus(_ cell: TutorProfileMainTableViewCell)
 }
 
 class TutorProfileMainTableViewCell: UITableViewCell {
@@ -102,7 +103,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		return button
 	}()
 	
-	private lazy var profileActionButton: UIButton = {
+	lazy var profileActionButton: UIButton = {
 		let button = CustomUIElements().makeSmallButton(buttonColor: UIColor.light60, buttonTextColor: UIColor.orange,
 														borderColor: .orange, buttonText: "Follow")
 		button.setTitleColor(UIColor.dark20, for: .disabled)
@@ -327,17 +328,8 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	}
 	
 	@objc func handleProfileAction() {
-		guard let user = user, let tutor = tutor else { return }
 		
-		if isFollowed {
-			UserServie.shared.unfollow(senderID: user.userID, receiverID: tutor.userID)
-			profileActionButton.setTitle("Follow", for: .normal)
-			isFollowed = false
-		} else {
-			UserServie.shared.follow(senderID: user.userID, receiverID: tutor.userID)
-			profileActionButton.setTitle("Unfollow", for: .normal)
-			isFollowed = true
-		}
+		delegate?.toggleFollowingStatus(self)
 	}
 	
 	// MARK: - Helpers

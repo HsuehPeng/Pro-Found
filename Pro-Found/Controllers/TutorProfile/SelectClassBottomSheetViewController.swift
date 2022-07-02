@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Lottie
 
 class SelectClassBottomSheetViewController: UIViewController {
 	
@@ -97,12 +98,16 @@ class SelectClassBottomSheetViewController: UIViewController {
 	}
 	
 	@objc func confirmBookingCourse() {
-
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
+		
 		let timeInterval = datePicker.date.timeIntervalSince1970
 		print(course.courseID, user.userID, timeInterval)
 		UserServie.shared.uploadScheduledCourse(user: user, tutor: tutor, courseID: course.courseID,
 												time: timeInterval) { [weak self] in
 			guard let self = self else { return }
+			loadingLottie.stopAnimation()
 			self.dismiss(animated: true)
 		}
 	}

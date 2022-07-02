@@ -210,6 +210,20 @@ class ProfileViewController: UIViewController {
 		self.present(actionSheet, animated: true, completion: nil)
 	}
 	
+	func logOut() {
+		
+		let controller = UIAlertController(title: "Are you sure to log out?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { [weak self] _ in
+			guard let self = self else { return }
+			self.handleLogout()
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
+	}
+	
 	func handleLogout() {
 		
 		// Check provider ID to verify that the user has signed in with Apple
@@ -417,7 +431,7 @@ extension ProfileViewController: UITableViewDelegate {
 		case 6:
 			print("About app")
 		case 7:
-			handleLogout()
+			logOut()
 		case 8:
 			deleteAcount()
 		default:

@@ -17,6 +17,16 @@ class ChatRoomViewController: UIViewController {
 	
 	var conversations = [Conversation]()
 	
+	var filteredConversations = [Conversation]()
+	
+	var isSearchBarEmpty: Bool {
+	  return searchController.searchBar.text?.isEmpty ?? true
+	}
+	
+	var isFiltering: Bool {
+	  return searchController.isActive && !isSearchBarEmpty
+	}
+	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(ChatRoomTableViewCell.self, forCellReuseIdentifier: ChatRoomTableViewCell.reuserIdentifier)
@@ -44,6 +54,10 @@ class ChatRoomViewController: UIViewController {
 		
 		setupUI()
 		setupNavBar()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		fetchConversations()
 	}
 	
@@ -96,7 +110,10 @@ class ChatRoomViewController: UIViewController {
 			guard let self = self else { return }
 			switch result {
 			case .success(let conversations):
-				self.conversations = conversations
+				let filterBlockedUserConversations = conversations.filter { conversation in
+					return !self.user.blockedUsers.contains(conversation.user.userID)
+				}
+				self.conversations = filterBlockedUserConversations
 				self.tableView.reloadData()
 			case .failure(let error):
 				print(error)
@@ -105,9 +122,9 @@ class ChatRoomViewController: UIViewController {
 	}
 	
 	func filterContentForSearchText(_ searchText: String) {
-//		filteredArticles = articles.filter { article -> Bool in
-//			return article.articleTitle.lowercased().contains(searchText.lowercased())
-//		}
+		filteredConversations = conversations.filter { conversation -> Bool in
+			return conversation.user.name.lowercased().contains(searchText.lowercased())
+		}
 		tableView.reloadData()
 	}
 }
@@ -116,13 +133,23 @@ class ChatRoomViewController: UIViewController {
 
 extension ChatRoomViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if isFiltering {
+			return filteredConversations.count
+		}
 		return conversations.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: ChatRoomTableViewCell.reuserIdentifier, for: indexPath)
 				as? ChatRoomTableViewCell else { fatalError("Can not dequeue ChatRoomTableViewCell") }
-		cell.conversation = conversations[indexPath.row]
+		
+		if isFiltering {
+			cell.conversation = filteredConversations[indexPath.row]
+		} else {
+			cell.conversation = conversations[indexPath.row]
+
+		}
+		cell.selectionStyle = .none
 		return cell
 	}
 }
@@ -131,9 +158,16 @@ extension ChatRoomViewController: UITableViewDataSource {
 
 extension ChatRoomViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let conversation = conversations[indexPath.row]
-		let chatVC = ChatViewController(receiver: conversation.user, sender: user)
-		navigationController?.pushViewController(chatVC, animated: true)
+		
+		if isFiltering {
+			let filteredConversation = filteredConversations[indexPath.row]
+			let chatVC = ChatViewController(receiver: filteredConversation.user, sender: user)
+			navigationController?.pushViewController(chatVC, animated: true)
+		} else {
+			let conversation = conversations[indexPath.row]
+			let chatVC = ChatViewController(receiver: conversation.user, sender: user)
+			navigationController?.pushViewController(chatVC, animated: true)
+		}
 	}
 }
 
@@ -142,6 +176,6 @@ extension ChatRoomViewController: UITableViewDelegate {
 extension ChatRoomViewController: UISearchResultsUpdating {
 	func updateSearchResults(for searchController: UISearchController) {
 		let searchBar = searchController.searchBar
-//		filterContentForSearchText(searchBar.text!)
+		filterContentForSearchText(searchBar.text!)
 	}
 }

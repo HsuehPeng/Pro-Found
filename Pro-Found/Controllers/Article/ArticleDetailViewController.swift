@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Lottie
 
 class ArticleDetailViewController: UIViewController {
 	
@@ -129,21 +130,25 @@ class ArticleDetailViewController: UIViewController {
 			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
 			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
 			present(popUpAskToLoginVC, animated: true)
-			
 			return
 		}
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		
 		if isBookMarked {
 			ArticleService.shared.cancelFavoriteArticles(articleID: article.articleID, userID: uid) { [weak self] in
 				guard let self = self else { return }
 				self.bookmarkButton.isSelected = false
 				self.isBookMarked = false
+				loadingLottie.stopAnimation()
 			}
 		} else {
 			ArticleService.shared.addFavoriteArticles(articleID: article.articleID, userID: uid) { [weak self] in
 				guard let self = self else { return }
 				self.bookmarkButton.isSelected = true
 				self.isBookMarked = true
+				loadingLottie.stopAnimation()
 			}
 		}
 	}

@@ -15,7 +15,7 @@ struct MessageViewModel {
 	}
 	
 	var messageTextColor: UIColor {
-		return message.isFromCurrentUser ? .light60 : .black
+		return message.isFromCurrentUser ? .light60 : .dark60
 	}
 	
 	var rightAnchorActive: Bool {
@@ -24,6 +24,13 @@ struct MessageViewModel {
 	
 	var leftAnchorActive: Bool {
 		return !message.isFromCurrentUser
+	}
+	
+	var timeString: String {
+		let date = Date(timeIntervalSince1970: message.timestamp)
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "HH:mm"
+		return dateFormatter.string(from: date)
 	}
 	
 	init(message: Message) {

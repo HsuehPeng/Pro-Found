@@ -269,12 +269,20 @@ extension EventDetailViewController: EventDetailListTableViewCellDelegate {
 	
 	func handleFollowing(_ cell: EventDetailListTableViewCell) {
 		guard let isFollow = cell.isFollow, let uid = Auth.auth().currentUser?.uid else { return }
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
+		
 		if isFollow {
-			UserServie.shared.unfollow(senderID: uid, receiverID: event.organizer.userID)
+			UserServie.shared.unfollow(senderID: uid, receiverID: event.organizer.userID) {
+				loadingLottie.stopAnimation()
+			}
 			cell.followButton.setTitle("Follow", for: .normal)
 			self.isFollow = false
 		} else {
-			UserServie.shared.follow(senderID: uid, receiverID: event.organizer.userID)
+			UserServie.shared.follow(senderID: uid, receiverID: event.organizer.userID) {
+				loadingLottie.stopAnimation()
+			}
 			cell.followButton.setTitle("Unfollow", for: .normal)
 			self.isFollow = true
 		}
