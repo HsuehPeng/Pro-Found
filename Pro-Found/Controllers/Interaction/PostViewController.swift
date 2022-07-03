@@ -5,6 +5,7 @@
 //  Created by Hsueh Peng Tseng on 2022/6/19.
 //
 
+import Lottie
 import UIKit
 
 class PostViewController: UIViewController {
@@ -32,6 +33,7 @@ class PostViewController: UIViewController {
 		let tableView = UITableView()
 		tableView.register(PostPageFeedCell.self, forCellReuseIdentifier: PostPageFeedCell.reuseIdentifier)
 		tableView.separatorStyle = .none
+		
 		return tableView
 	}()
 	
@@ -64,6 +66,7 @@ class PostViewController: UIViewController {
 	// MARK: - UI
 	
 	private func setupUI() {
+		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
 						 right: view.rightAnchor)
@@ -80,6 +83,9 @@ class PostViewController: UIViewController {
 		writePostVC.modalPresentationStyle = .fullScreen
 		present(writePostVC, animated: true)
 	}
+	
+	// MARK: - Helper
+
 }
 
 // MARK: - UITableViewDataSource
@@ -99,7 +105,6 @@ extension PostViewController: UITableViewDataSource {
 		let post = filteredPosts[indexPath.row]
 		feedCell.user = user
 		feedCell.post = post
-		
 		feedCell.delegate = self
 		feedCell.selectionStyle = .none
 		return feedCell
@@ -130,10 +135,16 @@ extension PostViewController: PostPageFeedCellDelegate {
 		guard let post = cell.post, let user = user else { return }
 		
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID)
+			PostService.shared.unlikePost(post: post, userID: user.userID) {
+				
+			}
+			cell.post?.likes -= 1
 			cell.likeButton.isSelected = false
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID)
+			PostService.shared.likePost(post: post, userID: user.userID) {
+				
+			}
+			cell.post?.likes += 1
 			cell.likeButton.isSelected = true
 		}
 	}
@@ -154,11 +165,15 @@ extension PostViewController: PostPageFeedCellDelegate {
 	func askToDelete(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell), let user = user else { return }
 		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		
 		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
 		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			loadingLottie.loadingAnimation()
 			PostService.shared.deletePost(postID: post.postID, userID: user.userID) { [weak self] in
 				guard let self = self else { return }
 				self.filteredPosts.remove(at: indexPath.row)
+				loadingLottie.stopAnimation()
 			}
 		}
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

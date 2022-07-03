@@ -8,13 +8,14 @@
 import UIKit
 import PhotosUI
 import Kingfisher
+import Lottie
 
 class WriteArticleViewController: UIViewController {
 	
 	// MARK: - Properties
 	
 	let user: User
-
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
@@ -127,6 +128,12 @@ class WriteArticleViewController: UIViewController {
 		return button
 	}()
 	
+	private let characterCountLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
+												 textColor: .dark40, text: "")
+		return label
+	}()
+	
 	private lazy var postButton: UIButton = {
 		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Post")
 		button.widthAnchor.constraint(equalToConstant: 90).isActive = true
@@ -149,7 +156,7 @@ class WriteArticleViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
-		
+		articleTextView.delegate = self
 		setupUI()
 	}
 	
@@ -214,6 +221,10 @@ class WriteArticleViewController: UIViewController {
 		bottomBarView.addSubview(postButton)
 		postButton.centerY(inView: bottomBarView)
 		postButton.rightAnchor.constraint(equalTo: bottomBarView.rightAnchor, constant: -16).isActive = true
+		
+		bottomBarView.addSubview(characterCountLabel)
+		characterCountLabel.centerY(inView: bottomBarView)
+		characterCountLabel.rightAnchor.constraint(equalTo: postButton.leftAnchor, constant: -16).isActive = true
 	}
 	
 	// MARK: - Actions
@@ -238,11 +249,27 @@ class WriteArticleViewController: UIViewController {
 	}
 	
 	@objc func handlePickingImage() {
-		var configuration = PHPickerConfiguration()
-		configuration.selectionLimit = 1
-		let picker = PHPickerViewController(configuration: configuration)
-		picker.delegate = self
-		self.present(picker, animated: true, completion: nil)
+		let actionSheet = UIAlertController(title: "Select Photo", message: "Where do you want to select a photo?",
+											preferredStyle: .actionSheet)
+		
+		let photoAction = UIAlertAction(title: "Photos", style: .default) { (action) in
+			var configuration = PHPickerConfiguration()
+			configuration.selectionLimit = 1
+			let picker = PHPickerViewController(configuration: configuration)
+			picker.delegate = self
+			
+			if let sheet = picker.presentationController as? UISheetPresentationController {
+				sheet.detents = [.medium(), .large()]
+				sheet.preferredCornerRadius = 25
+			}
+			self.present(picker, animated: true, completion: nil)
+		}
+		actionSheet.addAction(photoAction)
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
 	}
 	
 	@objc func sendOutArticle() {
@@ -252,8 +279,17 @@ class WriteArticleViewController: UIViewController {
 		guard let articleTitle = articleTitleTextField.text, !articleTitle.isEmpty,
 			  let contentText = articleTextView.text, !contentText.isEmpty,
 			  selectedButton.count > 0, let selectedSubject = selectedButton.first?.titleLabel?.text,
-			  let articleImage = articleImageView.image else { return }
-		
+			  let articleImage = articleImageView.image else {
+			
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
+
+		let loadingAnimation = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingAnimation.loadingAnimation()
 		let currentDate = Date()
 		let interval = currentDate.timeIntervalSince1970
 		ArticleService.shared.createAndDownloadImageURL(articleImage: articleImage, author: user) { [weak self] result in
@@ -263,7 +299,9 @@ class WriteArticleViewController: UIViewController {
 				let imageURL = url
 				let firestoreArticle = FirebaseArticle(userID: self.user.userID, articleTitle: articleTitle, authorName: self.user.name,
 													   subject: selectedSubject, timestamp: interval, contentText: contentText, imageURL: imageURL, ratings: [])
-				ArticleService.shared.uploadArticle(article: firestoreArticle)
+				ArticleService.shared.uploadArticle(article: firestoreArticle) {
+					loadingAnimation.stopAnimation()
+				}
 				self.dismiss(animated: true)
 			case .failure(let error):
 				print(error)
@@ -284,6 +322,14 @@ class WriteArticleViewController: UIViewController {
 		}
 		selectedButton.isSelected = true
 		selectedButton.backgroundColor = .orange
+	}
+}
+
+// MARK: -
+
+extension WriteArticleViewController: UITextViewDelegate {
+	func textViewDidChange(_ textView: UITextView) {
+		self.characterCountLabel.text = "\(textView.text.count) character"
 	}
 }
 

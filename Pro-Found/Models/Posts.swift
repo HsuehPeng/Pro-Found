@@ -15,6 +15,8 @@ struct Post: Codable {
 	let timestamp: Double
 	let likedBy: [String]
 	let user: User
+	let imagesURL: [String]
+	var videoURL: String?
 }
 
 extension Post {
@@ -26,6 +28,8 @@ extension Post {
 		likes = dictionary["likes"] as? Int ?? 0
 		timestamp = dictionary["timestamp"] as? Double ?? 0
 		likedBy = dictionary["likedBy"] as? [String] ?? []
+		imagesURL = dictionary["imagesURL"] as? [String] ?? []
+		videoURL = dictionary["vidoeURL"] as? String ?? nil
 	}
 }
 
@@ -35,6 +39,8 @@ struct FirebasePosts: Codable {
 	let likes: Int
 	let timestamp: Double
 	let likedBy: [String]
+	let imagesURL: [String]
+	var videoURL: String?
 }
 
 struct Reply: Codable {

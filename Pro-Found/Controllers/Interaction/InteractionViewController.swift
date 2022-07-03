@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Lottie
 
 class InteractionViewController: UIViewController {
 
@@ -54,16 +55,21 @@ class InteractionViewController: UIViewController {
 	
 	private lazy var postOptionButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.intern)
+		let image = UIImage.asset(.grid)?.withTintColor(.dark40)
+		let imageSelected = UIImage.asset(.grid)?.withTintColor(.orange)
+		button.isSelected = true
 		button.setImage(image, for: .normal)
+		button.setImage(imageSelected, for: .selected)
 		button.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
 		return button
 	}()
 	
 	private lazy var eventOptionButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.event)
+		let image = UIImage.asset(.network)?.withTintColor(.dark40)
+		let imageSelected = UIImage.asset(.network)?.withTintColor(.orange)
 		button.setImage(image, for: .normal)
+		button.setImage(imageSelected, for: .selected)
 		button.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
 		return button
 	}()
@@ -85,10 +91,14 @@ class InteractionViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .white
-		
 		setupNavBar()
 		setupUI()
 		setupChildVC()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(true)
+		loadUserData()
 	}
 	
 	func setupChildVC() {
@@ -107,10 +117,7 @@ class InteractionViewController: UIViewController {
 		
 	}
 	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(true)
-		loadUserData()
-	}
+
 	
 	// MARK: - UI
 	
@@ -205,12 +212,10 @@ class InteractionViewController: UIViewController {
 	}
 	
 	func filterPosts() -> [Post] {
-		guard let user = user else {
-			return []
-		}
+		guard let user = user else { return [] }
 		var filteredPosts = [Post]()
 		for post in posts {
-			if user.followings.contains(post.userID) || post.userID == user.userID {
+			if (user.followings.contains(post.userID) || post.userID == user.userID) && !user.blockedUsers.contains(post.userID) {
 				filteredPosts.append(post)
 			}
 		}
@@ -230,10 +235,13 @@ class InteractionViewController: UIViewController {
 	}
 	
 	func filterAndSortEvents(events: [Event]) -> [Event] {
+		guard let user = user else { return [] }
 		let date = Date()
 		let currentTimeInterval = date.timeIntervalSince1970
-		let filteredEvents = events.filter({ $0.timestamp > currentTimeInterval })
-		let sortedFilteredEvents = filteredEvents.sorted(by: { $0.timestamp < $1.timestamp })
+		
+		let filterBlockingEvents = events.filter( { !user.blockedUsers.contains($0.organizer.userID) } )
+		let filteredOverdueEvents = filterBlockingEvents.filter({ $0.timestamp > currentTimeInterval })
+		let sortedFilteredEvents = filteredOverdueEvents.sorted(by: { $0.timestamp < $1.timestamp })
 		
 		return sortedFilteredEvents
 	}

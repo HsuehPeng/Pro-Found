@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Lottie
 
 class ArticleDetailViewController: UIViewController {
 	
@@ -15,6 +16,41 @@ class ArticleDetailViewController: UIViewController {
 	let article: Article
 	
 	var isBookMarked: Bool = false
+	
+	var articleImage: UIImage?
+	
+	private let topBarView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .white
+		return view
+	}()
+	
+	private lazy var backButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.chevron_left)?.withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(popVC), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var shareButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.share)?.withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(sharePDFArticle), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var bookmarkButton: UIButton = {
+		let button = UIButton()
+		button.setTitleColor((UIColor.orange), for: .selected)
+		let isBookMarkedimage = UIImage.asset(.bookmark)?.withTintColor(.orange)
+		let notBookMarkedimage = UIImage.asset(.bookmark)?.withTintColor(.dark40)
+		button.setImage(isBookMarkedimage, for: .selected)
+		button.setImage(notBookMarkedimage, for: .normal)
+		button.addTarget(self, action: #selector(bookmarkArticle), for: .touchUpInside)
+		return button
+	}()
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
@@ -44,40 +80,75 @@ class ArticleDetailViewController: UIViewController {
 		checkIfBookMarded()
 		setupNavBar()
 		setupUI()
+		fetchArticleImage()
     }
 	
 	// MARK: - UI
 	
 	func setupUI() {
+		
+		view.addSubview(topBarView)
+		topBarView.anchor(top:view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+		
+		topBarView.addSubview(backButton)
+		backButton.centerY(inView: topBarView, leftAnchor: topBarView.leftAnchor, paddingLeft: 18)
+		
+		topBarView.addSubview(bookmarkButton)
+		bookmarkButton.anchor(right: topBarView.rightAnchor, paddingRight: 18)
+		bookmarkButton.centerY(inView: topBarView)
+		
+		topBarView.addSubview(shareButton)
+		shareButton.anchor(right: bookmarkButton.leftAnchor, paddingRight: 16)
+		shareButton.centerY(inView: backButton)
+		
 		view.addSubview(tableView)
-		tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
+		tableView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 	}
 	
 	func setupNavBar() {
-		navigationController?.navigationBar.isHidden = false
+		navigationController?.navigationBar.isHidden = true
 		tabBarController?.tabBar.isHidden = true
-		let leftBarItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
-		let rightBarItemImage = UIImage.asset(.bookmark)?.withTintColor(.dark40)
-		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftBarItemImage, style: .done, target: self, action: #selector(popVC))
-		navigationItem.rightBarButtonItem = UIBarButtonItem(image: rightBarItemImage, style: .done, target: self, action: #selector(bookmarkArticle))
 	}
 	
 	// MARK: - Actions
 	
+	@objc func sharePDFArticle() {
+		guard let articleImage = articleImage else { return }
+		let title = article.articleTitle
+		let body = article.contentText
+		let author = article.authorName
+		
+		let pdfCreator = PDFCreator(title: title, body: body, image: articleImage, authorName: author)
+		let pdfData = pdfCreator.createFlyer()
+		let vc = UIActivityViewController(activityItems: [pdfData], applicationActivities: [])
+		present(vc, animated: true, completion: nil)
+	}
+	
 	@objc func bookmarkArticle() {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
+		guard let uid = Auth.auth().currentUser?.uid else {
+			let popUpAskToLoginVC = PopUpAskToLoginController()
+			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+			present(popUpAskToLoginVC, animated: true)
+			return
+		}
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		
 		if isBookMarked {
 			ArticleService.shared.cancelFavoriteArticles(articleID: article.articleID, userID: uid) { [weak self] in
 				guard let self = self else { return }
-				self.navigationItem.rightBarButtonItem?.tintColor = UIColor.dark40
+				self.bookmarkButton.isSelected = false
 				self.isBookMarked = false
+				loadingLottie.stopAnimation()
 			}
 		} else {
 			ArticleService.shared.addFavoriteArticles(articleID: article.articleID, userID: uid) { [weak self] in
 				guard let self = self else { return }
-				self.navigationItem.rightBarButtonItem?.tintColor = UIColor.orange
+				self.bookmarkButton.isSelected = true
 				self.isBookMarked = true
+				loadingLottie.stopAnimation()
 			}
 		}
 	}
@@ -86,7 +157,16 @@ class ArticleDetailViewController: UIViewController {
 		navigationController?.popViewController(animated: true)
 	}
 	
-	// MARK: Helpers
+	// MARK: - Helpers
+	
+	func fetchArticleImage() {
+		guard let url = URL(string: article.imageURL) else { return }
+		DispatchQueue.global().async {
+			if let data = try? Data(contentsOf: url) {
+				self.articleImage = UIImage(data: data)
+			}
+		}
+	}
 	
 	func checkIfBookMarded() {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -94,9 +174,9 @@ class ArticleDetailViewController: UIViewController {
 			guard let self = self else { return }
 			self.isBookMarked = isBookMarked
 			if isBookMarked {
-				self.navigationItem.rightBarButtonItem?.tintColor = .orange
+				self.bookmarkButton.isSelected = true
 			} else {
-				self.navigationItem.rightBarButtonItem?.tintColor = .dark40
+				self.bookmarkButton.isSelected = false
 			}
 		}
 	}
@@ -120,6 +200,7 @@ extension ArticleDetailViewController: UITableViewDataSource {
 		guard let contentCell = tableView.dequeueReusableCell(withIdentifier: ArticleDetailContentTableViewCell.reuseIdentifier, for: indexPath)
 				as? ArticleDetailContentTableViewCell else { fatalError("Can not dequeue ArticleDetailContentTableViewCell") }
 		introCell.article = article
+		introCell.delegate = self
 		contentCell.article = article
 		
 		if indexPath.section == 0 {
@@ -127,5 +208,28 @@ extension ArticleDetailViewController: UITableViewDataSource {
 		} else {
 			return contentCell
 		}
+	}
+}
+
+// MARK: - ArticleDetailIntroTableViewCellDelegate
+
+extension ArticleDetailViewController: ArticleDetailIntroTableViewCellDelegate {
+	func sharePDF(_ cell: ArticleDetailIntroTableViewCell) {
+		
+	}
+	
+	func handleRateArticlePopUp(_ cell: ArticleDetailIntroTableViewCell) {
+		
+	}
+	
+	func handleSendRating(_ cell: ArticleDetailIntroTableViewCell) {
+		guard Auth.auth().currentUser != nil else {
+			let popUpAskToLoginVC = PopUpAskToLoginController()
+			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+			present(popUpAskToLoginVC, animated: true)
+			return
+		}
+		return
 	}
 }

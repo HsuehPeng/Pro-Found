@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 	
@@ -15,19 +16,25 @@ class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 	
 	let subjectImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.backgroundColor = .light
-		imageView.contentMode = .scaleAspectFill
+		imageView.backgroundColor = .orange10
+		imageView.layer.cornerRadius = 12
 		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
 		return imageView
 	}()
 	
-
+	var avPlayerLayer: AVPlayerLayer?
 	
+	var videoURL: URL? {
+		didSet {
+			setupAV()
+		}
+	}
+
 	// MARK: - Lifecycle
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
-		backgroundColor = .red
 		setupUI()
 	}
 	
@@ -38,12 +45,28 @@ class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
-		addSubview(subjectImageView)
-		subjectImageView.addConstraintsToFillView(self)
+		contentView.addSubview(subjectImageView)
+		subjectImageView.addConstraintsToFillView(contentView)
 	}
 	
 	// MARK: - Actions
 	
 	// MARK: - Helpers
+	
+	func setupAV() {
+		guard let url = videoURL else { return }
+		
+		var avPlayer = AVPlayer()
+		avPlayer = AVPlayer(url: url)
+		avPlayerLayer = AVPlayerLayer(player: avPlayer)
+		avPlayerLayer?.videoGravity = .resizeAspectFill
+		avPlayerLayer?.player?.actionAtItemEnd = .none
+		
+		if let avPlayerLayer = avPlayerLayer {
+			subjectImageView.layer.addSublayer(avPlayerLayer)
+			avPlayerLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
+			avPlayer.play()
+		}
+	}
     
 }

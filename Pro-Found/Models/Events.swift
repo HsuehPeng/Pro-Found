@@ -49,4 +49,5 @@ struct FirebaseEvent: Codable {
 struct ScheduledEventTime: Codable {
 	let eventID: String
 	let time: Double
+	let event: Event
 }

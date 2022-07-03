@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import CoreLocation
 import MapKit
+import Lottie
 
 class EventDetailViewController: UIViewController {
 
@@ -115,10 +116,13 @@ class EventDetailViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func handleBookEvent() {
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp) { [weak self] in
 			guard let self = self else { return }
 			self.scheduleEventButton.isEnabled = false
 			self.scheduleEventButton.backgroundColor = .dark20
+			loadingLottie.stopAnimation()
 		}
 	}
 	
@@ -257,14 +261,28 @@ extension EventDetailViewController: UITableViewDelegate {
 // MARK: - EventDetailListTableViewCellDelegate
 
 extension EventDetailViewController: EventDetailListTableViewCellDelegate {
+	func goToPublicProfile(_ cell: EventDetailListTableViewCell) {
+		guard let event = cell.event else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: event.organizer)
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
+	}
+	
 	func handleFollowing(_ cell: EventDetailListTableViewCell) {
 		guard let isFollow = cell.isFollow, let uid = Auth.auth().currentUser?.uid else { return }
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
+		
 		if isFollow {
-			UserServie.shared.unfollow(senderID: uid, receiverID: event.organizer.userID)
+			UserServie.shared.unfollow(senderID: uid, receiverID: event.organizer.userID) {
+				loadingLottie.stopAnimation()
+			}
 			cell.followButton.setTitle("Follow", for: .normal)
 			self.isFollow = false
 		} else {
-			UserServie.shared.follow(senderID: uid, receiverID: event.organizer.userID)
+			UserServie.shared.follow(senderID: uid, receiverID: event.organizer.userID) {
+				loadingLottie.stopAnimation()
+			}
 			cell.followButton.setTitle("Unfollow", for: .normal)
 			self.isFollow = true
 		}

@@ -83,6 +83,7 @@ class EventDetailContentTableViewCell: UITableViewCell {
 			imageView.contentMode = .scaleAspectFill
 			participantHStack.addArrangedSubview(imageView)
 		}
+		
 		participantHStack.spacing = 8
 		
 		contentView.addSubview(participantHStack)

@@ -16,6 +16,8 @@ class BecomeTutorViewController: UIViewController {
 	
 	let subjects = [Subject.language, Subject.technology, Subject.sport, Subject.music, Subject.art]
 	
+	var updateProfilePage: (() -> Void)?
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .light60
@@ -81,7 +83,7 @@ class BecomeTutorViewController: UIViewController {
 		
 		setupUI()
 	}
-	
+
 	// MARK: - UI
 	
 	func setupUI() {
@@ -115,6 +117,7 @@ class BecomeTutorViewController: UIViewController {
 		
 		UserServie.shared.toggleTutorStatus(userID: uid, subject: subject, isTutor: user.isTutor) { [weak self] in
 			guard let self = self else { return }
+			self.updateProfilePage?()
 			self.dismiss(animated: true)
 		}
 	}

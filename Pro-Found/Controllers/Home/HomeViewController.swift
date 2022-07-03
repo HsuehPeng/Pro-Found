@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import FirebaseAuth
 
 class HomeViewController: UIViewController {
 
@@ -27,6 +28,12 @@ class HomeViewController: UIViewController {
 	}
 	
 	var isFiltered: Bool = false
+	
+	private lazy var refreshControl: UIRefreshControl = {
+		let refresh = UIRefreshControl()
+		refresh.addTarget(self, action: #selector(pullToRefresh), for: UIControl.Event.valueChanged)
+		return refresh
+	}()
 	
 	private let topBarView: UIView = {
 		let view = UIView()
@@ -56,10 +63,21 @@ class HomeViewController: UIViewController {
 		return label
 	}()
 	
+	private lazy var chatRoomButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.chat)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(goChatRoom), for: .touchUpInside)
+		button.setDimensions(width: 32, height: 32)
+		return button
+	}()
+	
 	private lazy var filterButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.filter)?.withRenderingMode(.alwaysOriginal), for: .normal)
+		let image = UIImage.asset(.filter)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(subjectFilterPressed), for: .touchUpInside)
+		button.setDimensions(width: 24, height: 26)
 		return button
 	}()
 	
@@ -116,7 +134,6 @@ class HomeViewController: UIViewController {
 		flowLayout.itemSize = CGSize(width: view.frame.size.width, height: 280)
 		flowLayout.minimumInteritemSpacing = 20
 		flowLayout.minimumLineSpacing = 20
-//		flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 		flowLayout.headerReferenceSize = CGSize(width: view.frame.size.width, height: 50)
 		collectionView.register(HomePageTutorCollectionViewCell.self, forCellWithReuseIdentifier: HomePageTutorCollectionViewCell.reuseIdentifier)
 		collectionView.register(GeneralHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -139,7 +156,7 @@ class HomeViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		setupNavBar()
-		fetchTutors()
+		fetchUser()
 	}
 	
 	var sixtyFour: NSLayoutConstraint?
@@ -168,6 +185,9 @@ class HomeViewController: UIViewController {
 		topBarView.addSubview(filterButton)
 		filterButton.anchor(top: topBarView.topAnchor, right: topBarView.rightAnchor, paddingTop: 8, paddingRight: 12)
 		
+		topBarView.addSubview(chatRoomButton)
+		chatRoomButton.anchor(top: topBarView.topAnchor, right: filterButton.leftAnchor, paddingTop: 8, paddingRight: 12)
+		
 		subjectButtonColletions.forEach { button in
 			button.isHidden = true
 			button.alpha = 0
@@ -183,6 +203,7 @@ class HomeViewController: UIViewController {
 		view.addSubview(collectionView)
 		collectionView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
 		
+		collectionView.addSubview(refreshControl)
 	}
 	
 	func setupNavBar() {
@@ -191,6 +212,12 @@ class HomeViewController: UIViewController {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func goChatRoom() {
+		guard let user = user else { return }
+		let chatRoomVC = ChatRoomViewController(user: user)
+		navigationController?.pushViewController(chatRoomVC, animated: true)
+	}
 	
 	@objc func subjectFilterPressed(_ sender: UIButton) {
 		if isFiltered {
@@ -256,13 +283,35 @@ class HomeViewController: UIViewController {
 	
 	// MARK: - Helpers
 	
+	func fetchUser() {
+		guard let uid = Auth.auth().currentUser?.uid else {
+			configureForNoUser()
+			return
+		}
+		
+		UserServie.shared.getUserData(uid: uid) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let user):
+				self.user = user
+				self.fetchTutors()
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
 	func fetchTutors() {
+		guard let user = user else { return }
+		
 		UserServie.shared.getTutors { [weak self] result in
 			guard let self = self else { return }
 			switch result {
 			case .success(let tutors):
-				self.tutors = tutors
-				self.filteredTutors = tutors
+				// Filter out blocked tutors
+				let filterOutBlockTutors = tutors.filter { !user.blockedUsers.contains($0.userID) }
+				self.tutors = filterOutBlockTutors
+				self.filteredTutors = self.tutors
 			case .failure(let error):
 				print("Error getting tutors: \(error)")
 			}
@@ -284,6 +333,52 @@ class HomeViewController: UIViewController {
 		selectedButton.isSelected = true
 		selectedButton.backgroundColor = .orange
 	}
+	
+	func configureForNoUser() {
+		UserServie.shared.getTutors { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let tutors):
+				self.tutors = tutors
+				self.filteredTutors = self.tutors
+			case .failure(let error):
+				print("Error getting tutors: \(error)")
+			}
+		}
+		nameLabel.text = "My Guest"
+	}
+	
+	@objc func pullToRefresh() {
+		guard let user = user else {
+			UserServie.shared.getTutors { [weak self] result in
+				guard let self = self else { return }
+				switch result {
+				case .success(let tutors):
+					self.tutors = tutors
+					self.filteredTutors = self.tutors
+					self.refreshControl.endRefreshing()
+				case .failure(let error):
+					print("Error getting tutors: \(error)")
+				}
+			}
+			return
+		}
+		
+		UserServie.shared.getTutors { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let tutors):
+				// Filter out blocked tutors
+				let filterOutBlockTutors = tutors.filter { !user.blockedUsers.contains($0.userID) }
+				self.tutors = filterOutBlockTutors
+				self.filteredTutors = self.tutors
+				self.refreshControl.endRefreshing()
+			case .failure(let error):
+				print("Error getting tutors: \(error)")
+			}
+		}
+	}
+	
 }
 
 // MARK: - UICollectionViewDataSource
@@ -308,7 +403,13 @@ extension HomeViewController: UICollectionViewDataSource {
 
 extension HomeViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		guard let user = user, let filteredTutor = filteredTutors else { return }
+		guard let user = user, let filteredTutor = filteredTutors else {
+			let popUpAskToLoginVC = PopUpAskToLoginController()
+			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+			present(popUpAskToLoginVC, animated: true)
+			return
+		}
 		let tutor = filteredTutor[indexPath.item]
 		let tutorProfileVC = TutorProfileViewController(user: user, tutor: tutor)
 		navigationController?.pushViewController(tutorProfileVC, animated: true)

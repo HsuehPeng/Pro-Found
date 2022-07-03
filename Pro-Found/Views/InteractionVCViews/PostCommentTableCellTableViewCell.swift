@@ -8,9 +8,15 @@
 import UIKit
 import Kingfisher
 
+protocol PostCommentTableCellTableViewCellDelegate: AnyObject {
+	func goToPublicProfile(_ cell: PostCommentTableCellTableViewCell)
+}
+
 class PostCommentTableCellTableViewCell: UITableViewCell {
 	
 	static let reuseIdentifier = "\(PostCommentTableCellTableViewCell.self)"
+	
+	weak var delegate: PostCommentTableCellTableViewCellDelegate?
 	
 	// MARK: - Properties
 	
@@ -30,9 +36,9 @@ class PostCommentTableCellTableViewCell: UITableViewCell {
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
-//		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
-//		imageView.addGestureRecognizer(tap)
-//		imageView.isUserInteractionEnabled = true
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
 		
 		return imageView
 	}()
@@ -90,6 +96,10 @@ class PostCommentTableCellTableViewCell: UITableViewCell {
 	
 	// MARK: - Actions
 	
+	@objc func handleProfileImageTapped() {
+		delegate?.goToPublicProfile(self)
+	}
+	
 	// MARK: - Helpers
 	
 	func configureUI() {
@@ -106,5 +116,4 @@ class PostCommentTableCellTableViewCell: UITableViewCell {
 		contentLabel.text = reply.contentText
 		feedTimeLabel.text = replyDate
 	}
-
 }

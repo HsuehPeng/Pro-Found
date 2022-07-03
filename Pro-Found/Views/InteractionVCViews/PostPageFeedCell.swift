@@ -31,6 +31,7 @@ class PostPageFeedCell: UITableViewCell {
 	var post: Post? {
 		didSet {
 			configure()
+			collectionView.reloadData()
 		}
 	}
 	
@@ -99,6 +100,14 @@ class PostPageFeedCell: UITableViewCell {
 		return label
 	}()
 	
+	private lazy var collectionView: UICollectionView = {
+		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: createCompositionalLayout())
+		collectionView.register(ChooseSubjectUICollectionViewCell.self,
+								forCellWithReuseIdentifier: ChooseSubjectUICollectionViewCell.reuseIdentifier)
+		collectionView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+		return collectionView
+	}()
+	
 	let likeCountLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.dark40, text: "Likes: 100")
@@ -132,10 +141,16 @@ class PostPageFeedCell: UITableViewCell {
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
 		setupUI()
+		collectionView.dataSource = self
 	}
 	
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+	
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		deleteButton.isHidden = true
 	}
 	
 	// MARK: - UI
@@ -157,21 +172,18 @@ class PostPageFeedCell: UITableViewCell {
 		contentView.addSubview(deleteButton)
 		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
 		
-		contentView.addSubview(contentTextLabel)
-		contentTextLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor,
-								right: contentView.rightAnchor, paddingTop: 15, paddingLeft: 16, paddingRight: 16)
-		
-		contentView.addSubview(likeCountLabel)
-		likeCountLabel.anchor(top: contentTextLabel.bottomAnchor, left: contentView.leftAnchor,
-							  paddingTop: 15, paddingLeft: 16)
-		
 		let feedHStack = UIStackView(arrangedSubviews: [likeButton, commentButton])
 		feedHStack.axis = .horizontal
 		feedHStack.distribution = .fillEqually
 		contentView.addSubview(feedHStack)
-		feedHStack.anchor(top: likeCountLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
-						  right: contentView.rightAnchor, paddingTop: 20, paddingBottom: 12)
-
+		
+		let feedVStack = UIStackView(arrangedSubviews: [contentTextLabel, collectionView, likeCountLabel, feedHStack])
+		contentView.addSubview(feedVStack)
+		feedVStack.spacing = 16
+		feedVStack.axis = .vertical
+		feedVStack.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
+						  right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
+		
 	}
 	
 	// MARK: - Actions
@@ -207,6 +219,7 @@ class PostPageFeedCell: UITableViewCell {
 	
 	@objc func deleteArticle() {
 		delegate?.askToDelete(self)
+		deleteButton.isHidden = true
 	}
 	
 	// MARK: - Helpers
@@ -231,6 +244,45 @@ class PostPageFeedCell: UITableViewCell {
 		} else {
 			feedEditButton.isHidden = true
 		}
+		
+		if post.imagesURL.isEmpty {
+			collectionView.isHidden = true
+		} else {
+			collectionView.isHidden = false
+		}
+		
 	}
 	
+	func createCompositionalLayout() -> UICollectionViewCompositionalLayout {
+		let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+		let item = NSCollectionLayoutItem(layoutSize: itemSize)
+		
+		let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+		let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+		group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16)
+		
+		let section = NSCollectionLayoutSection(group: group)
+		section.orthogonalScrollingBehavior = .continuous
+//		section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+		
+		let layout = UICollectionViewCompositionalLayout(section: section)
+		return layout
+	}
+	
+}
+
+// MARK: - UICollectionViewDataSource
+
+extension PostPageFeedCell: UICollectionViewDataSource {
+	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+		return post?.imagesURL.count ?? 0
+	}
+	
+	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+		guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChooseSubjectUICollectionViewCell.reuseIdentifier, for: indexPath)
+				as? ChooseSubjectUICollectionViewCell else { fatalError("Can not dequeue ChooseSubjectUICollectionViewCell") }
+		guard let imageURL = URL(string: post?.imagesURL[indexPath.item] ?? "") else { return cell }
+		cell.subjectImageView.kf.setImage(with: imageURL)
+		return cell
+	}
 }

@@ -10,9 +10,17 @@ import Kingfisher
 import Cosmos
 import FirebaseAuth
 
+protocol ArticleDetailIntroTableViewCellDelegate: AnyObject {
+	func handleRateArticlePopUp(_ cell: ArticleDetailIntroTableViewCell)
+	func handleSendRating(_ cell: ArticleDetailIntroTableViewCell)
+	func sharePDF(_ cell: ArticleDetailIntroTableViewCell)
+}
+
 class ArticleDetailIntroTableViewCell: UITableViewCell {
 	
 	static let reuseIdentifier = "\(ArticleDetailIntroTableViewCell.self)"
+	
+	weak var delegate: ArticleDetailIntroTableViewCellDelegate?
 	
 	// MARK: - Properties
 	
@@ -165,7 +173,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	// MARK: - Actions
 	
 	@objc func handleRateArticle() {
-		
+		delegate?.handleRateArticlePopUp(self)
 		if !rateViewIsUp {
 			contentView.addSubview(ratingView)
 			ratingView.anchor(left: contentView.leftAnchor, bottom: ratingButtonNumber.topAnchor, paddingLeft: 8,
@@ -188,6 +196,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	}
 	
 	@objc func handleSendRating() {
+		delegate?.handleSendRating(self)
 		guard let article = article, let uid = Auth.auth().currentUser?.uid else { return }
 		ArticleService.shared.rateArticle(senderID: uid, articleID: article.articleID, rating: starView.rating)
 		rateViewIsUp = false

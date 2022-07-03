@@ -111,6 +111,11 @@ class ArticleListTableViewCell: UITableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		deleteButton.isHidden = true
+	}
+	
 	// MARK: - UI
 	
 	func setupUI() {
@@ -120,7 +125,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		
 		contentView.addSubview(articleTitleLabel)
 		articleTitleLabel.anchor(top: articleImageView.topAnchor, left: articleImageView.rightAnchor,
-								 right: contentView.rightAnchor, paddingLeft: 12, paddingRight: 24)
+								 right: contentView.rightAnchor, paddingLeft: 12, paddingRight: 36)
 
 		contentView.addSubview(editButton)
 		editButton.centerY(inView: articleTitleLabel)
@@ -131,15 +136,15 @@ class ArticleListTableViewCell: UITableViewCell {
 
 		contentView.addSubview(dateLabel)
 		dateLabel.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
-								 right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 12)
+								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12)
 
 		contentView.addSubview(authorLabel)
 		authorLabel.anchor(top: dateLabel.bottomAnchor, left: articleImageView.rightAnchor,
-								 right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 12)
+								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12)
 
 		contentView.addSubview(subjectButton)
 		subjectButton.anchor(top: authorLabel.bottomAnchor, left: articleImageView.rightAnchor,
-							 paddingTop: 16, paddingLeft: 12)
+							 paddingTop: 12, paddingLeft: 12)
 		contentView.addSubview(ratingButtonNumber)
 		ratingButtonNumber.centerY(inView: subjectButton, leftAnchor: subjectButton.rightAnchor, paddingLeft: 60)
 	}
@@ -167,6 +172,7 @@ class ArticleListTableViewCell: UITableViewCell {
 	
 	@objc func deleteArticle() {
 		delegate?.askToDelete(self)
+		deleteButton.isHidden = true
 	}
 	
 	// MARK: - Helpers

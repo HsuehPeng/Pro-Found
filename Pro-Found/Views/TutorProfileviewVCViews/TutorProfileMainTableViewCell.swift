@@ -14,6 +14,9 @@ import PhotosUI
 protocol TutorProfileMainTableViewCellDelegate: AnyObject {
 	func chooseBackgroundImage(_ cell: TutorProfileMainTableViewCell)
 	func rateTutor(_ cell: TutorProfileMainTableViewCell)
+	func changeBlockingStatus(_ cell: TutorProfileMainTableViewCell)
+	func handleGoChat(_ cell: TutorProfileMainTableViewCell)
+	func toggleFollowingStatus(_ cell: TutorProfileMainTableViewCell)
 }
 
 class TutorProfileMainTableViewCell: UITableViewCell {
@@ -66,6 +69,22 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		return imageView
 	}()
 	
+	lazy var chatButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.chat_new)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleChat), for: .touchUpInside)
+		return button
+	}()
+	
+	lazy var blockUserButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.password_show)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleBlockUser), for: .touchUpInside)
+		return button
+	}()
+	
 	private let nameLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 20),
 												 textColor: UIColor.dark60, text: "TestName")
@@ -84,7 +103,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		return button
 	}()
 	
-	private lazy var profileActionButton: UIButton = {
+	lazy var profileActionButton: UIButton = {
 		let button = CustomUIElements().makeSmallButton(buttonColor: UIColor.light60, buttonTextColor: UIColor.orange,
 														borderColor: .orange, buttonText: "Follow")
 		button.setTitleColor(UIColor.dark20, for: .disabled)
@@ -211,6 +230,12 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		profilePhotoImageView.anchor(top: profileView.topAnchor, left: profileView.leftAnchor, paddingTop: -56, paddingLeft: 24)
 		profilePhotoImageView.setDimensions(width: 84, height: 92)
 		
+		profileView.addSubview(blockUserButton)
+		blockUserButton.anchor(top: profileView.topAnchor, right: profileView.rightAnchor, paddingTop: 16, paddingRight: 24)
+		
+		profileView.addSubview(chatButton)
+		chatButton.anchor(top: profileView.topAnchor, right: blockUserButton.leftAnchor, paddingTop: 16, paddingRight: 24)
+		
 		profileView.addSubview(nameLabel)
 		nameLabel.anchor(top: profileView.topAnchor, left: profileView.leftAnchor, paddingTop: 61, paddingLeft: 24)
 		
@@ -263,6 +288,14 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	// MARK: - Actions
 	
+	@objc func handleChat() {
+		delegate?.handleGoChat(self)
+	}
+	
+	@objc func handleBlockUser() {
+		delegate?.changeBlockingStatus(self)
+	}
+	
 	@objc func handleBackgroudImageTap() {
 		delegate?.chooseBackgroundImage(self)
 	}
@@ -295,17 +328,8 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	}
 	
 	@objc func handleProfileAction() {
-		guard let user = user, let tutor = tutor else { return }
 		
-		if isFollowed {
-			UserServie.shared.unfollow(senderID: user.userID, receiverID: tutor.userID)
-			profileActionButton.setTitle("Follow", for: .normal)
-			isFollowed = false
-		} else {
-			UserServie.shared.follow(senderID: user.userID, receiverID: tutor.userID)
-			profileActionButton.setTitle("Unfollow", for: .normal)
-			isFollowed = true
-		}
+		delegate?.toggleFollowingStatus(self)
 	}
 	
 	// MARK: - Helpers
@@ -330,7 +354,18 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		schoolLabel.text = tutor.school
 		majorSubjectLabel.text = tutor.schoolMajor
 		
+		
+		if user.blockedUsers.contains(tutor.userID) {
+			print("Ture")
+			blockUserButton.setImage(UIImage.asset(.password_hide), for: .normal)
+		} else {
+			print("false")
+			blockUserButton.setImage(UIImage.asset(.password_show), for: .normal)
+		}
+		
 		if tutor.userID == user.userID {
+			blockUserButton.isHidden = true
+			chatButton.isHidden = true
 			profileActionButton.isEnabled = false
 			profileActionButton.layer.borderColor = UIColor.dark20.cgColor
 		}

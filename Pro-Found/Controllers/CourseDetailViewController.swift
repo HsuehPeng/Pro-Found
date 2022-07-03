@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import CoreLocation
 import MapKit
+import Lottie
 
 class CourseDetailViewController: UIViewController {
 	
@@ -146,6 +147,13 @@ class CourseDetailViewController: UIViewController {
 		}
 	}
 	
+	func checkIfNotTutor() {
+		if !user.isTutor {
+			scheduleCourseButton.isEnabled = false
+			scheduleCourseButton.backgroundColor = .dark10
+		}
+	}
+	
 	func convertAdressToCLLocation() {
 		let address = course.location
 		let geoCoder = CLGeocoder()
@@ -226,15 +234,27 @@ extension CourseDetailViewController: UITableViewDelegate {
 // MARK: - CourseDetailListTableViewCellDelegate
 
 extension CourseDetailViewController: CourseDetailListTableViewCellDelegate {
+	func goToPublicProfile(_ cell: CourseDetailListTableViewCell) {
+		guard let course = cell.course else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: course.tutor)
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
+	}
 	
 	func handleFollowing(_ cell: CourseDetailListTableViewCell) {
 		guard let isFollow = cell.isFollow, let uid = Auth.auth().currentUser?.uid else { return }
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
+		
 		if isFollow {
-			UserServie.shared.unfollow(senderID: uid, receiverID: course.tutor.userID)
+			UserServie.shared.unfollow(senderID: uid, receiverID: course.tutor.userID) {
+				loadingLottie.stopAnimation()
+			}
 			cell.followButton.setTitle("Follow", for: .normal)
 			self.isFollow = false
 		} else {
-			UserServie.shared.follow(senderID: uid, receiverID: course.tutor.userID)
+			UserServie.shared.follow(senderID: uid, receiverID: course.tutor.userID) {
+				loadingLottie.stopAnimation()
+			}
 			cell.followButton.setTitle("Unfollow", for: .normal)
 			self.isFollow = true
 		}

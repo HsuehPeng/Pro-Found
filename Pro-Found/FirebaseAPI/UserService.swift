@@ -122,7 +122,7 @@ struct UserServie {
 		}
 	}
 	
-	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double) {
+	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double, completion: @escaping () -> Void) {
 		dbUsers.document(user.userID).collection("ScheduledCourse").document().setData([
 			"\(courseID)": time,
 			"student": user.userID
@@ -131,6 +131,7 @@ struct UserServie {
 				print("Error writing ScheduledCourse: \(error)")
 			} else {
 				print("ScheduledCourse successfully uploaded")
+				completion()
 			}
 		}
 		
@@ -167,10 +168,17 @@ struct UserServie {
 				
 				for document in snapshot.documents {
 					group.enter()
-					
 					let courseTimeData = document.data()
-					guard let courseID = courseTimeData.keys.first, let time = courseTimeData["\(courseID)"] as? Double,
-						  let studentID = courseTimeData["student"] as? String else { return }
+					
+					let courseID = courseTimeData.keys.filter({ key in
+						return key != "student"
+					})
+					
+					guard let courseID = courseID.first, let time = courseTimeData["\(courseID)"] as? Double,
+						  let studentID = courseTimeData["student"] as? String else {
+						print("misismsimsimsimism")
+						return
+					}
 					
 					getUserData(uid: studentID) { result in
 						switch result {
@@ -215,8 +223,6 @@ struct UserServie {
 				completion()
 			}
 		}
-		
-		
 	}
 	
 	func getScheduledEventIDs(userID: String, completion: @escaping (Result<[ScheduledEventTime], Error>) -> Void) {
@@ -226,13 +232,28 @@ struct UserServie {
 				completion(.failure(error))
 			} else {
 				guard let snapshot = snapshot else { return }
+				
+				let group = DispatchGroup()
+				
 				for document in snapshot.documents {
+					group.enter()
 					let eventTimeData = document.data()
 					guard let eventID = eventTimeData.keys.first, let time = eventTimeData["\(eventID)"] as? Double else { return }
-					let eventTime = ScheduledEventTime(eventID: eventID, time: time)
-					eventTimes.append(eventTime)
+					
+					EventService.shared.fetchEvent(eventID: eventID) { result in
+						switch result {
+						case .success(let event):
+							let eventTime = ScheduledEventTime(eventID: eventID, time: time, event: event)
+							eventTimes.append(eventTime)
+						case .failure(let error):
+							completion(.failure(error))
+						}
+						group.leave()
+					}
 				}
-				completion(.success(eventTimes))
+				group.notify(queue: DispatchQueue.main) {
+					completion(.success(eventTimes))
+				}
 			}
 		}
 	}
@@ -262,6 +283,18 @@ struct UserServie {
 //			}
 //		}
 		
+	}
+	
+	func checkIfUserExistOnFirebase(uid: String, completion: @escaping (Result<Bool, Error>) -> Void)  {
+		dbUsers.document(uid).getDocument { snapshot, error in
+			if let error = error {
+				completion(.failure(error))
+			} else if snapshot?.data() == nil {
+				completion(.success(false))
+			} else {
+				completion(.success(true))
+			}
+		}
 	}
 	
 	func getTutors(completion: @escaping (Result<[User], Error>) -> Void) {
@@ -309,7 +342,7 @@ struct UserServie {
 		}
 	}
 	
-	func follow(senderID: String, receiverID: String) {
+	func follow(senderID: String, receiverID: String, completion: @escaping () -> Void) {
 		dbUsers.document(senderID).updateData([
 			"followings": FieldValue.arrayUnion([receiverID])
 		]) { error in
@@ -323,13 +356,14 @@ struct UserServie {
 						print("Error getting followers: \(error)")
 					} else {
 						print("Successfully followed")
+						completion()
 					}
 				}
 			}
 		}
 	}
 	
-	func unfollow(senderID: String, receiverID: String) {
+	func unfollow(senderID: String, receiverID: String, completion: @escaping () -> Void) {
 		dbUsers.document(senderID).updateData([
 			"followings": FieldValue.arrayRemove([receiverID])
 		]) { error in
@@ -343,6 +377,7 @@ struct UserServie {
 						print("Error getting followers: \(error)")
 					} else {
 						print("Successfully unfollowed")
+						completion()
 					}
 				}
 			}
@@ -408,4 +443,64 @@ struct UserServie {
 		}
 	}
 	
+	func toggleBlockingStatus(senderID: String, receiverID: String, completion: @escaping () -> Void) {
+		dbUsers.document(senderID).getDocument { snapshot, error in
+			if let error = error {
+				print("Error getting user data: \(error)")
+			}
+			
+			guard let snapshot = snapshot, let userData = snapshot.data(),
+				  let blockedUsers = userData["blockedUsers"] as? [String] else { return }
+			if blockedUsers.contains(receiverID) {
+				dbUsers.document(senderID).updateData([
+					"blockedUsers": FieldValue.arrayRemove([receiverID])
+				]) { error in
+					if let error = error {
+						print("Error remove blocked user: \(error)")
+					} else {
+						completion()
+					}
+				}
+			} else {
+				dbUsers.document(senderID).updateData([
+					"blockedUsers": FieldValue.arrayUnion([receiverID])
+				]) { error in
+					if let error = error {
+						print("Error add blocked user: \(error)")
+					} else {
+						completion()
+					}
+				}
+			}
+		}
+	}
+	
+	func getBlockedTutors(userID: String, completion: @escaping (Result<[User], Error>) -> Void) {
+		var users = [User]()
+		dbUsers.document(userID).getDocument { snapshot, error in
+			if let error = error {
+				completion(.failure(error))
+			} else {
+				guard let snapshot = snapshot, let userData = snapshot.data(),
+				let followingTutorIDs = userData["blockedUsers"] as? [String] else { return }
+				let group = DispatchGroup()
+				
+				for id in followingTutorIDs {
+					group.enter()
+					getUserData(uid: id) { result in
+						switch result {
+						case .success(let user):
+							users.append(user)
+						case .failure(let error):
+							completion(.failure(error))
+						}
+						group.leave()
+					}
+				}
+				group.notify(queue: DispatchQueue.global()) {
+					completion(.success(users))
+				}
+			}
+		}
+	}
 }

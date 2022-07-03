@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Lottie
 
 class EditProfileViewController: UIViewController {
 	
@@ -194,14 +195,25 @@ class EditProfileViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func handleDoneEditting() {
-		guard let firstname = nameTitleTextField.text, let email = emailTitleTextField.text, let school = schoolTitleTextField.text,
-			  let major = majorTitleTextField.text, let introduction = introTextView.text else { return }
+		guard let firstname = nameTitleTextField.text, !firstname.isEmpty,
+			  let email = emailTitleTextField.text, !email.isEmpty,
+			  let school = schoolTitleTextField.text,
+			  let major = majorTitleTextField.text, let introduction = introTextView.text else {
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		let name = "\(firstname)"
 		let user = User(name: name, userID: user.userID, email: email, introContentText: introduction, school: school, schoolMajor: major,
 						ratings: user.ratings, courseBooked: user.courseBooked, profileImageURL: user.profileImageURL,
 						backgroundImageURL: user.backgroundImageURL, courses: user.courses, articles: user.articles, favoriteArticles: user.favoriteArticles, events: user.events, posts: user.posts, blockedUsers: user.blockedUsers, followers: user.followers, followings: user.followings, subject: user.subject, isTutor: user.isTutor)
 		UserServie.shared.uploadUserData(user: user) { [weak self] in
 			guard let self = self else { return }
+			loadingLottie.stopAnimation()
 			self.navigationController?.popViewController(animated: true)
 		}
 	}

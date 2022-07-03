@@ -9,10 +9,58 @@ import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 import FirebaseFirestoreSwift
+import AVFoundation
 
 struct PostService {
 	
 	static let shared = PostService()
+	
+	func createAndDownloadImageURLs(postImages: [UIImage], postUser: User, completion: @escaping (Result<[String], Error>) -> Void) {
+		var postImageUrls: [String] = []
+		let group = DispatchGroup()
+		
+		for image in postImages {
+			group.enter()
+			guard let imageData = image.jpegData(compressionQuality: 0.3) else { return }
+			let imageFileName = NSUUID().uuidString
+			let storageRef = storagePostImages.child(imageFileName)
+			
+			storageRef.putData(imageData, metadata: nil) { metadata, error in
+				
+				if let error = error {
+					print(error)
+				}
+
+				storageRef.downloadURL { url, error in
+					guard let url = url?.absoluteString else { return }
+					postImageUrls.append(url)
+					group.leave()
+				}
+			}
+		}
+		
+		group.notify(queue: DispatchQueue.global()) {
+			completion(.success(postImageUrls))
+		}
+	}
+	
+	func createAndDownloadVideoURL(postVideo: Data, postUser: User, completion: @escaping (Result<String, Error>) -> Void) {
+
+		let videoFileName = NSUUID().uuidString
+		let storageRef = storagePostVideo.child(videoFileName)
+
+		storageRef.putData(postVideo, metadata: nil) { metadata, error in
+
+			if let error = error {
+				print(error)
+			}
+
+			storageRef.downloadURL { url, error in
+				guard let url = url?.absoluteString else { return }
+				completion(.success(url))
+			}
+		}
+	}
 	
 	func uploadPost(firebasePost: FirebasePosts, completion: @escaping () -> Void) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -24,7 +72,9 @@ struct PostService {
 			"contentText": firebasePost.contentText,
 			"likes": firebasePost.likes,
 			"timestamp": firebasePost.timestamp,
-			"likedBy": firebasePost.likedBy
+			"likedBy": firebasePost.likedBy,
+			"imagesURL": firebasePost.imagesURL,
+			"videoURL": firebasePost.videoURL ?? ""
 		]
 
 		postRef.setData(postData) { error in
@@ -38,16 +88,6 @@ struct PostService {
 				completion()
 			}
 		}
-		
-//		do {
-//			try postRef.setData(from: firebasePost)
-//			dbUsers.document(uid).updateData([
-//				"posts": FieldValue.arrayUnion([postRef.documentID])
-//			])
-//		} catch let error {
-//			print("Error writing post to Firestore: \(error)")
-//		}
-//
 	}
 	
 	func getPosts(completion: @escaping (Result<[Post], Error>) -> Void) {
@@ -131,7 +171,7 @@ struct PostService {
 		}
 	}
 	
-	func likePost(post: Post, userID: String) {
+	func likePost(post: Post, userID: String, completion: @escaping () -> Void) {
 		
 		dbPosts.document(post.postID).updateData([
 			"likedBy": FieldValue.arrayUnion([userID]),
@@ -141,11 +181,12 @@ struct PostService {
 				print("Error liking post: \(error)")
 			} else {
 				print("Successfully liked post")
+				completion()
 			}
 		}
 	}
 	
-	func unlikePost(post: Post, userID: String) {
+	func unlikePost(post: Post, userID: String, completion: @escaping () -> Void) {
 		
 		dbPosts.document(post.postID).updateData([
 			"likedBy": FieldValue.arrayRemove([userID]),
@@ -155,6 +196,7 @@ struct PostService {
 				print("Error unliking post: \(error)")
 			} else {
 				print("Successfully unliked post")
+				completion()
 			}
 		}
 	}

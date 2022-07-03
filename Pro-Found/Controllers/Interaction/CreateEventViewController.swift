@@ -7,6 +7,7 @@
 
 import UIKit
 import PhotosUI
+import Lottie
 
 class CreateEventViewController: UIViewController {
 	
@@ -201,25 +202,45 @@ class CreateEventViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func handlePickingImage() {
-		var configuration = PHPickerConfiguration()
-		configuration.selectionLimit = 1
-		let picker = PHPickerViewController(configuration: configuration)
-		picker.delegate = self
-		self.present(picker, animated: true, completion: nil)
+		let actionSheet = UIAlertController(title: "Select Photo", message: "Where do you want to select a photo?",
+											preferredStyle: .actionSheet)
+		
+		let photoAction = UIAlertAction(title: "Photos", style: .default) { (action) in
+			var configuration = PHPickerConfiguration()
+			configuration.selectionLimit = 1
+			let picker = PHPickerViewController(configuration: configuration)
+			picker.delegate = self
+			
+			if let sheet = picker.presentationController as? UISheetPresentationController {
+				sheet.detents = [.medium(), .large()]
+				sheet.preferredCornerRadius = 25
+			}
+			self.present(picker, animated: true, completion: nil)
+		}
+		actionSheet.addAction(photoAction)
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
 	}
 	
 	@objc func createEvent() {
 		guard let eventTitle = eventTitleTextField.text, !eventTitle.isEmpty,
 			  let addreddText = addressTitleTextField.text, !addreddText.isEmpty,
 			  let introText = briefTextView.text, !introText.isEmpty,
-			  let eventImage = eventImageView.image else { return }
+			  let eventImage = eventImageView.image else {
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
 		let eventDate = datePicker.date
 		let interval = eventDate.timeIntervalSince1970
 		
-		let hudView = HudView.hud(inView: self.view,
-								animated: true)
-		hudView.text = "Success"
-		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		EventService.shared.createAndDownloadImageURL(eventImage: eventImage) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
@@ -228,7 +249,7 @@ class CreateEventViewController: UIViewController {
 												   location: addreddText, introText: introText, imageURL: url, participants: [self.user.userID])
 				EventService.shared.uploadEvent(event: firestoreEvent) { [weak self] in
 					guard let self = self else { return }
-					hudView.hide()
+					loadingLottie.stopAnimation()
 					self.dismiss(animated: true)
 				}
 				
