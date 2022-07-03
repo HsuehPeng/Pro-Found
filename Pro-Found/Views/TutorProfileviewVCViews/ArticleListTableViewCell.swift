@@ -136,15 +136,15 @@ class ArticleListTableViewCell: UITableViewCell {
 
 		contentView.addSubview(dateLabel)
 		dateLabel.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
-								 right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 12)
+								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12)
 
 		contentView.addSubview(authorLabel)
 		authorLabel.anchor(top: dateLabel.bottomAnchor, left: articleImageView.rightAnchor,
-								 right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 12)
+								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12)
 
 		contentView.addSubview(subjectButton)
 		subjectButton.anchor(top: authorLabel.bottomAnchor, left: articleImageView.rightAnchor,
-							 paddingTop: 16, paddingLeft: 12)
+							 paddingTop: 12, paddingLeft: 12)
 		contentView.addSubview(ratingButtonNumber)
 		ratingButtonNumber.centerY(inView: subjectButton, leftAnchor: subjectButton.rightAnchor, paddingLeft: 60)
 	}

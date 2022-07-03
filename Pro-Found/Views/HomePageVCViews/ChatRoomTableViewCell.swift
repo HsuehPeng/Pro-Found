@@ -89,6 +89,4 @@ class ChatRoomTableViewCell: UITableViewCell {
 		dateFormatter.dateFormat = "hh:mm a"
 		timestampLabel.text = dateFormatter.string(from: date)
 	}
-	
-
 }

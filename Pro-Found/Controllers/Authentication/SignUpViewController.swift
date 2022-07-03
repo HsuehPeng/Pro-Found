@@ -14,7 +14,8 @@ class SignUpViewController: UIViewController {
 	
 	private let appImageView: UIImageView = {
 		let imageView = UIImageView()
-		imageView.setDimensions(width: 32, height: 32)
+		imageView.image = UIImage.asset(.myIcon)
+		imageView.setDimensions(width: 60, height: 60)
 		imageView.layer.cornerRadius = 16
 		imageView.backgroundColor = .light50
 		return imageView

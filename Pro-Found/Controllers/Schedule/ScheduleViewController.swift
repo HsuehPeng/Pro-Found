@@ -202,9 +202,9 @@ class ScheduleViewController: UIViewController {
 		pageTitleLabel.anchor(left: topBarView.leftAnchor, paddingLeft: 16)
 		pageTitleLabel.centerY(inView: topBarView)
 		
-		topBarView.addSubview(switchMonthWeekButton)
-		switchMonthWeekButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
-		switchMonthWeekButton.centerY(inView: topBarView)
+//		topBarView.addSubview(switchMonthWeekButton)
+//		switchMonthWeekButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
+//		switchMonthWeekButton.centerY(inView: topBarView)
 		
 		let monthSwitchHStack = UIStackView(arrangedSubviews: [previousMonthButton, monthLabel, yearLabel, nextMonthButton])
 		monthSwitchHStack.axis = .horizontal
@@ -212,7 +212,7 @@ class ScheduleViewController: UIViewController {
 		monthSwitchHStack.distribution = .equalSpacing
 
 		topBarView.addSubview(monthSwitchHStack)
-		monthSwitchHStack.anchor(right: switchMonthWeekButton.leftAnchor, paddingRight: 12)
+		monthSwitchHStack.anchor(right: view.rightAnchor, paddingRight: 16)
 		monthSwitchHStack.centerY(inView: topBarView)
 		
 		let weekdayHStack = UIStackView(arrangedSubviews: [

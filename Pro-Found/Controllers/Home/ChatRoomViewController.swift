@@ -31,6 +31,7 @@ class ChatRoomViewController: UIViewController {
 		let tableView = UITableView()
 		tableView.register(ChatRoomTableViewCell.self, forCellReuseIdentifier: ChatRoomTableViewCell.reuserIdentifier)
 		tableView.rowHeight = 76
+		tableView.separatorStyle = .none
 		return tableView
 	}()
 	

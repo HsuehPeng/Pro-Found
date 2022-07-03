@@ -38,8 +38,10 @@ class TutorListViewController: UIViewController {
 		flowLayout.minimumLineSpacing = 20
 //		flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 		flowLayout.headerReferenceSize = CGSize(width: view.frame.size.width, height: 50)
+		
 		collectionView.register(HomePageTutorCollectionViewCell.self,
 								forCellWithReuseIdentifier: HomePageTutorCollectionViewCell.reuseIdentifier)
+		
 		return collectionView
 	}()
 	

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 	
@@ -22,6 +23,14 @@ class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 		return imageView
 	}()
 	
+	var avPlayerLayer: AVPlayerLayer?
+	
+	var videoURL: URL? {
+		didSet {
+			setupAV()
+		}
+	}
+
 	// MARK: - Lifecycle
 	
 	override init(frame: CGRect) {
@@ -43,5 +52,21 @@ class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 	// MARK: - Actions
 	
 	// MARK: - Helpers
+	
+	func setupAV() {
+		guard let url = videoURL else { return }
+		
+		var avPlayer = AVPlayer()
+		avPlayer = AVPlayer(url: url)
+		avPlayerLayer = AVPlayerLayer(player: avPlayer)
+		avPlayerLayer?.videoGravity = .resizeAspectFill
+		avPlayerLayer?.player?.actionAtItemEnd = .none
+		
+		if let avPlayerLayer = avPlayerLayer {
+			subjectImageView.layer.addSublayer(avPlayerLayer)
+			avPlayerLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
+			avPlayer.play()
+		}
+	}
     
 }

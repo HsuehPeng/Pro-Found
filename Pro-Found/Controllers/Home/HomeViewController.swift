@@ -65,7 +65,8 @@ class HomeViewController: UIViewController {
 	
 	private lazy var chatRoomButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.chat)?.withRenderingMode(.alwaysOriginal), for: .normal)
+		let image = UIImage.asset(.chat)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(goChatRoom), for: .touchUpInside)
 		button.setDimensions(width: 32, height: 32)
 		return button
@@ -73,7 +74,8 @@ class HomeViewController: UIViewController {
 	
 	private lazy var filterButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.filter)?.withRenderingMode(.alwaysOriginal), for: .normal)
+		let image = UIImage.asset(.filter)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(subjectFilterPressed), for: .touchUpInside)
 		button.setDimensions(width: 24, height: 26)
 		return button

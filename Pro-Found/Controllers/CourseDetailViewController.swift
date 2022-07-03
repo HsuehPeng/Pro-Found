@@ -79,7 +79,6 @@ class CourseDetailViewController: UIViewController {
 		convertAdressToCLLocation()
 		checkIfFollowed()
 		checkIfSamePerson()
-		checkIfNotTutor()
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
