@@ -53,7 +53,7 @@ struct ChatService {
 					let dictionary = change.document.data()
 					let message = Message(dictionary: dictionary)
 					
-					UserServie.shared.getUserData(uid: message.toID) { result in
+					UserServie.shared.getUserData(uid: change.document.documentID) { result in
 						switch result {
 						case .success(let user):
 							let conversation = Conversation(user: user, message: message)

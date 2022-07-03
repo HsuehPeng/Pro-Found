@@ -11,6 +11,8 @@ enum ImageAsset: String {
 	
 	// MARK: - Icon
 	
+	case myIcon
+	
 	// swiftlint:disable identifier_name
 	
 	case account_add_friends
