@@ -71,7 +71,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	lazy var chatButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.chat_new)?.withRenderingMode(.alwaysOriginal)
+		let image = UIImage.asset(.chat_new)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
 		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(handleChat), for: .touchUpInside)
 		return button
@@ -79,7 +79,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	lazy var blockUserButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.password_show)?.withRenderingMode(.alwaysOriginal)
+		let image = UIImage.asset(.password_show)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
 		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(handleBlockUser), for: .touchUpInside)
 		return button

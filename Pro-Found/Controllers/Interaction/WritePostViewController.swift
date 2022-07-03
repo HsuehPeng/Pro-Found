@@ -57,6 +57,9 @@ class WritePostViewController: UIViewController {
 		let control = UISegmentedControl(items: ["Photos", "Video"])
 		control.selectedSegmentIndex = 0
 		control.addTarget(self, action: #selector(handleSegmentChange), for: .valueChanged)
+		control.selectedSegmentTintColor = .orange10
+		control.setDimensions(width: 160, height: 35)
+	
 		return control
 	}()
 	
@@ -133,7 +136,7 @@ class WritePostViewController: UIViewController {
 		view.addSubview(postTextView)
 		postTextView.anchor(top: topBarView.bottomAnchor, left: profileImageView.rightAnchor, right: view.rightAnchor,
 							paddingTop: 12, paddingLeft: 12, paddingRight: 16)
-		postTextView.heightAnchor.constraint(equalToConstant: 350).isActive = true
+		postTextView.heightAnchor.constraint(equalToConstant: 300).isActive = true
 		
 		view.addSubview(segmentedControl)
 		segmentedControl.centerX(inView: view, topAnchor: postTextView.bottomAnchor, paddingTop: 8)
@@ -141,7 +144,7 @@ class WritePostViewController: UIViewController {
 		view.addSubview(collectionView)
 		view.addSubview(bottomBarView)
 		collectionView.anchor(top: segmentedControl.bottomAnchor, left: view.leftAnchor, bottom: bottomBarView.topAnchor,
-							  right: view.rightAnchor, paddingBottom: 16)
+							  right: view.rightAnchor, paddingTop: 8, paddingBottom: 16)
 		
 		bottomBarView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: 64)
 		
@@ -222,6 +225,7 @@ class WritePostViewController: UIViewController {
 			}
 			
 		} else {
+			
 			guard let postVideoData = postVideoData else {
 				let firebasepost = FirebasePosts(userID: self.user.userID, contentText: postText, likes: 0,
 												 timestamp: timestamp, likedBy: [], imagesURL: [])
@@ -233,6 +237,7 @@ class WritePostViewController: UIViewController {
 				}
 				return
 			}
+			
 			PostService.shared.createAndDownloadVideoURL(postVideo: postVideoData, postUser: user) { [weak self] result in
 				guard let self = self else { return }
 				switch result {

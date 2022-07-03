@@ -28,6 +28,7 @@ class ArticleListViewController: UIViewController {
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(ArticleListTableViewCell.self, forCellReuseIdentifier: ArticleListTableViewCell.reuseIdentifier)
+		tableView.separatorStyle = .none
 		return tableView
 	}()
 	

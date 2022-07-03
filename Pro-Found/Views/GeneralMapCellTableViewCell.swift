@@ -67,6 +67,7 @@ class GeneralMapCellTableViewCell: UITableViewCell {
 		
 		contentView.addSubview(addressLabel)
 		addressLabel.centerY(inView: locationMapView, leftAnchor: locationMapView.rightAnchor, paddingLeft: 8)
+		addressLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
 	}
 	
 	// MARK: - Actions

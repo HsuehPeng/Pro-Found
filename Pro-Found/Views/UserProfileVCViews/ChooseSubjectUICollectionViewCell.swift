@@ -64,7 +64,7 @@ class ChooseSubjectUICollectionViewCell: UICollectionViewCell {
 		
 		if let avPlayerLayer = avPlayerLayer {
 			subjectImageView.layer.addSublayer(avPlayerLayer)
-			avPlayerLayer.frame = CGRect(x: 0, y: 0, width: 300, height: 300)
+			avPlayerLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
 			avPlayer.play()
 		}
 	}

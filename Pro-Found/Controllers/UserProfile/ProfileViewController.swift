@@ -319,11 +319,11 @@ class ProfileViewController: UIViewController {
 	}
 	
 	func deleteAcount() {
-		let userAcount = Auth.auth().currentUser
+		guard let userAcount = Auth.auth().currentUser else { return }
 		
 		let controller = UIAlertController(title: "Are you sure to delete this account?", message: nil, preferredStyle: .alert)
 		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
-			userAcount?.delete(completion: { error in
+			userAcount.delete(completion: { error in
 				if let error = error {
 					print("Error deleting account: \(error)")
 				} else {
