@@ -18,6 +18,7 @@
 		B80D66E5286EBA84008D0FA8 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D66E4286EBA84008D0FA8 /* ChatService.swift */; };
 		B80D66E7286EBB02008D0FA8 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D66E6286EBB02008D0FA8 /* Message.swift */; };
 		B80D670B28704654008D0FA8 /* PostPageVideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D670A28704654008D0FA8 /* PostPageVideoCell.swift */; };
+		B80D670D2872CB11008D0FA8 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D670C2872CB11008D0FA8 /* CacheManager.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -124,6 +125,7 @@
 		B80D66E4286EBA84008D0FA8 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		B80D66E6286EBB02008D0FA8 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		B80D670A28704654008D0FA8 /* PostPageVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPageVideoCell.swift; sourceTree = "<group>"; };
+		B80D670C2872CB11008D0FA8 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -278,7 +280,7 @@
 				B86943CF28586079008021C9 /* PrivateKey.swift */,
 				B811E3FD28531135009C0838 /* AppDelegate.swift */,
 				B811E3FF28531135009C0838 /* SceneDelegate.swift */,
-				B8AB06012859F9F8002110A4 /* FirebaseAPI */,
+				B8AB06012859F9F8002110A4 /* API Manager */,
 				B8A8FDE62855CE6E00F98326 /* Extensions */,
 				B8AB0650285B91CE002110A4 /* Helpers */,
 				B83666E628576E1000772375 /* Views */,
@@ -450,7 +452,7 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		B8AB06012859F9F8002110A4 /* FirebaseAPI */ = {
+		B8AB06012859F9F8002110A4 /* API Manager */ = {
 			isa = PBXGroup;
 			children = (
 				B8AB0641285B0B3F002110A4 /* LoginService.swift */,
@@ -460,8 +462,9 @@
 				B8AB065B285DA0B0002110A4 /* ArticleService.swift */,
 				B8AB0659285D7D15002110A4 /* PostService.swift */,
 				B80D66E4286EBA84008D0FA8 /* ChatService.swift */,
+				B80D670C2872CB11008D0FA8 /* CacheManager.swift */,
 			);
-			path = FirebaseAPI;
+			path = "API Manager";
 			sourceTree = "<group>";
 		};
 		B8AB0640285B08A7002110A4 /* Authentication */ = {
@@ -748,6 +751,7 @@
 				B8AB0642285B0B3F002110A4 /* LoginService.swift in Sources */,
 				B8AB064B285B5DE0002110A4 /* ScheduleCourseListTableCell.swift in Sources */,
 				B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */,
+				B80D670D2872CB11008D0FA8 /* CacheManager.swift in Sources */,
 				B8AB06112859FA13002110A4 /* Events.swift in Sources */,
 				B8AB0647285B2B49002110A4 /* CalendarHelper.swift in Sources */,
 				B8AB0669285DFBB8002110A4 /* ArticleDetailViewController.swift in Sources */,
@@ -914,7 +918,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Pro-Found/Pro-Found.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 4JAU88YC33;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pro-Found/Info.plist";
@@ -946,7 +950,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Pro-Found/Pro-Found.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 4JAU88YC33;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Pro-Found/Info.plist";

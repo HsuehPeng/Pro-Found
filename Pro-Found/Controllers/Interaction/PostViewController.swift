@@ -32,6 +32,7 @@ class PostViewController: UIViewController {
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(PostPageFeedCell.self, forCellReuseIdentifier: PostPageFeedCell.reuseIdentifier)
+		tableView.register(PostPageVideoCell.self, forCellReuseIdentifier: PostPageVideoCell.reuserIdentifier)
 		tableView.separatorStyle = .none
 		
 		return tableView
@@ -44,7 +45,7 @@ class PostViewController: UIViewController {
 		button.setDimensions(width: 54, height: 54)
 		button.isHidden = true
 		button.layer.cornerRadius = 54 / 2
-		button.backgroundColor = .white
+		button.backgroundColor = .light60
 		button.layer.shadowColor = UIColor.dark60.cgColor
 		button.layer.shadowOffset = CGSize(width: 0, height: 4)
 		button.layer.shadowRadius = 10
@@ -62,6 +63,17 @@ class PostViewController: UIViewController {
 		
 		setupUI()
     }
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		let cells = tableView.visibleCells
+		cells.forEach { cell in
+			guard let cell = cell as? PostPageVideoCell else { return }
+			cell.looper = nil
+			cell.avQueueplayer.pause()
+			cell.avQueueplayer.removeAllItems()
+		}
+	}
 	
 	// MARK: - UI
 	
@@ -101,20 +113,42 @@ extension PostViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let feedCell = tableView.dequeueReusableCell(withIdentifier: PostPageFeedCell.reuseIdentifier, for: indexPath)
-				as? PostPageFeedCell else { return UITableViewCell() }
+				as? PostPageFeedCell else { fatalError("Can not dequeue PostPageFeedCell") }
+		guard let videoFeedCell = tableView.dequeueReusableCell(withIdentifier: PostPageVideoCell.reuserIdentifier, for: indexPath)
+				as? PostPageVideoCell else { fatalError("Can not dequeue PostPageVideoCell") }
 		let post = filteredPosts[indexPath.row]
-		feedCell.user = user
-		feedCell.post = post
-		feedCell.delegate = self
-		feedCell.selectionStyle = .none
-		return feedCell
+		if post.videoURL?.count ?? 0 > 0 {
+			videoFeedCell.user = user
+			videoFeedCell.post = post
+			videoFeedCell.delegate = self
+			videoFeedCell.selectionStyle = .none
+			return videoFeedCell
+		} else {
+			feedCell.user = user
+			feedCell.post = post
+			feedCell.delegate = self
+			feedCell.selectionStyle = .none
+			return feedCell
+		}
 	}
 }
 
 // MARK: - UITableViewDelegate
 
 extension PostViewController: UITableViewDelegate {
-
+	func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		if let cell = cell as? PostPageVideoCell {
+			cell.avQueueplayer.pause()
+			cell.avQueueplayer.removeAllItems()
+			cell.looper = nil
+		}
+	}
+	
+	func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		if let cell = cell as? PostPageVideoCell {
+			cell.setupAvPlayer()
+		}
+	}
 }
 
 // MARK: - PostPageFeedCellDelegate
@@ -182,7 +216,78 @@ extension PostViewController: PostPageFeedCellDelegate {
 		
 		present(controller, animated: true, completion: nil)
 	}
-
 }
 
-
+extension PostViewController: PostPageVideoCellDelegate {
+	
+	func toggleVideoVolunm(_ cell: PostPageVideoCell) {
+		if cell.isVolumnOn {
+			cell.avQueueplayer.volume = 1
+		} else {
+			cell.avQueueplayer.volume = 0
+		}
+	}
+	
+	func goToPostUserProfile(_ cell: PostPageVideoCell) {
+		guard let post = cell.post, let user = user else { return }
+		let publicProfilePage = TutorProfileViewController(user: user, tutor: post.user)
+		navigationController?.pushViewController(publicProfilePage, animated: true)
+	}
+	
+	func goToCommentVC(_ cell: PostPageVideoCell) {
+		guard let indexPath = tableView.indexPath(for: cell), let user = user else { return }
+		let post = filteredPosts[indexPath.row]
+		let postCommentVC = PostCommentViewController(post: post, user: user)
+		navigationController?.pushViewController(postCommentVC, animated: true)
+	}
+	
+	func likePost(_ cell: PostPageVideoCell) {
+		guard let post = cell.post, let user = user else { return }
+		
+		if cell.likeButton.isSelected {
+			PostService.shared.unlikePost(post: post, userID: user.userID) {
+				
+			}
+			cell.post?.likes -= 1
+			cell.likeButton.isSelected = false
+		} else {
+			PostService.shared.likePost(post: post, userID: user.userID) {
+				
+			}
+			cell.post?.likes += 1
+			cell.likeButton.isSelected = true
+		}
+	}
+	
+	func checkIfLikedByUser(_ cell: PostPageVideoCell) {
+		guard let post = cell.post, let user = user else { return }
+		
+		if post.likedBy.contains(user.userID) {
+			cell.likeButton.isSelected = true
+		} else {
+			cell.likeButton.isSelected = false
+		}
+	}
+	
+	func askToDelete(_ cell: PostPageVideoCell) {
+		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell), let user = user else { return }
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		
+		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			loadingLottie.loadingAnimation()
+			PostService.shared.deletePost(postID: post.postID, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				self.filteredPosts.remove(at: indexPath.row)
+				loadingLottie.stopAnimation()
+			}
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
+	}
+	
+}

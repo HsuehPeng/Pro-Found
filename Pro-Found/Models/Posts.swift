@@ -29,7 +29,7 @@ extension Post {
 		timestamp = dictionary["timestamp"] as? Double ?? 0
 		likedBy = dictionary["likedBy"] as? [String] ?? []
 		imagesURL = dictionary["imagesURL"] as? [String] ?? []
-		videoURL = dictionary["vidoeURL"] as? String ?? nil
+		videoURL = dictionary["videoURL"] as? String ?? nil
 	}
 }
 

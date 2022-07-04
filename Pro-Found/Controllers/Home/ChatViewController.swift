@@ -85,7 +85,7 @@ class ChatViewController: UIViewController {
 		configureUI()
 		fetchMessages()
 		
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 	}
 	
@@ -142,8 +142,8 @@ class ChatViewController: UIViewController {
 			if let error = error {
 				print("Error uploading message with error: \(error)")
 			}
-			self.clearMessageText()
 		}
+		self.clearMessageText()
 	}
 	
 	// MARK: - Helpers

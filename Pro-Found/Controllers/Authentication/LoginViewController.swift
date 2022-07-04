@@ -83,7 +83,7 @@ class LoginViewController: UIViewController {
 	}()
 
 	private lazy var loginButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white,
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60,
 														borderColor: .clear, buttonText: "Log In")
 		button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
 		return button
@@ -120,7 +120,7 @@ class LoginViewController: UIViewController {
 		title = "Login"
 		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.asset(.close_circle)?.withRenderingMode(.alwaysOriginal),
 															style: .done, target: self, action: #selector(dismissVC))
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		passwordTextField.delegate = self
 		

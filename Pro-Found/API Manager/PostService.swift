@@ -10,6 +10,7 @@ import FirebaseFirestore
 import FirebaseAuth
 import FirebaseFirestoreSwift
 import AVFoundation
+import FirebaseStorage
 
 struct PostService {
 	
@@ -49,12 +50,24 @@ struct PostService {
 		let videoFileName = NSUUID().uuidString
 		let storageRef = storagePostVideo.child(videoFileName)
 
-		storageRef.putData(postVideo, metadata: nil) { metadata, error in
-
+//		storageRef.putData(postVideo, metadata: nil) { metadata, error in
+//
+//			if let error = error {
+//				print(error)
+//			}
+//
+//			storageRef.downloadURL { url, error in
+//				guard let url = url?.absoluteString else { return }
+//				completion(.success(url))
+//			}
+//		}
+		let metaData = StorageMetadata()
+		metaData.contentType = "video/mp4"
+		storageRef.putData(postVideo, metadata: metaData) { metadata, error in
 			if let error = error {
 				print(error)
 			}
-
+			
 			storageRef.downloadURL { url, error in
 				guard let url = url?.absoluteString else { return }
 				completion(.success(url))

@@ -14,6 +14,7 @@ protocol PostPageVideoCellDelegate: AnyObject {
 	func likePost(_ cell: PostPageVideoCell)
 	func checkIfLikedByUser(_ cell: PostPageVideoCell)
 	func askToDelete(_ cell: PostPageVideoCell)
+	func toggleVideoVolunm(_ cell: PostPageVideoCell)
 }
 
 class PostPageVideoCell: UITableViewCell {
@@ -30,15 +31,21 @@ class PostPageVideoCell: UITableViewCell {
 		}
 	}
 	
-	var user: User? {
+	var user: User?
+	
+	var avPlayerLayer = AVPlayerLayer()
+	var avQueueplayer = AVQueuePlayer()
+	var looper: AVPlayerLooper?
+	
+	var isVolumnOn: Bool = false {
 		didSet {
-			configureUI()
+			if isVolumnOn {
+				toggleVolumeButton.isSelected = true
+			} else {
+				toggleVolumeButton.isSelected = false
+			}
 		}
 	}
-	
-	var videoURL: URL?
-	var avPlayer: AVPlayer?
-	var avPlayerLayer: AVPlayerLayer?
 	
 	private lazy var profileImageView: UIImageView = {
 		let imageView = UIImageView()
@@ -104,7 +111,19 @@ class PostPageVideoCell: UITableViewCell {
 		view.backgroundColor = .light50
 		view.setDimensions(width: UIScreen.main.bounds.width - 32, height: UIScreen.main.bounds.height * 0.3)
 		view.clipsToBounds = true
+		view.layer.cornerRadius = 12
 		return view
+	}()
+	
+	private lazy var toggleVolumeButton: UIButton = {
+		let button = UIButton()
+		let offImage = UIImage.asset(.media_volume_off)?.withRenderingMode(.alwaysOriginal)
+		let onImage = UIImage.asset(.media_volume)?.withRenderingMode(.alwaysOriginal)
+		button.setImage(offImage, for: .normal)
+		button.setImage(onImage, for: .selected)
+		button.addTarget(self, action: #selector(handleVolumn), for: .touchUpInside)
+		button.setDimensions(width: 50, height: 50)
+		return button
 	}()
 	
 	let likeCountLabel: UILabel = {
@@ -149,8 +168,7 @@ class PostPageVideoCell: UITableViewCell {
 	// MARK: - UI
 	
 	func setupUI() {
-		guard let avPlayerLayer = avPlayerLayer else { return }
-		
+
 		contentView.addSubview(profileImageView)
 		profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
@@ -167,13 +185,14 @@ class PostPageVideoCell: UITableViewCell {
 		contentView.addSubview(deleteButton)
 		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
 		
+		videoContainerView.addSubview(toggleVolumeButton)
+		toggleVolumeButton.anchor(bottom: videoContainerView.bottomAnchor, right: videoContainerView.rightAnchor,
+								  paddingBottom: 8, paddingRight: 8)
+		
 		let feedHStack = UIStackView(arrangedSubviews: [likeButton, commentButton])
 		feedHStack.axis = .horizontal
 		feedHStack.distribution = .fillEqually
 		contentView.addSubview(feedHStack)
-		
-		videoContainerView.layer.addSublayer(avPlayerLayer)
-		avPlayerLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 32, height: UIScreen.main.bounds.height * 0.3)
 		
 		let feedVStack = UIStackView(arrangedSubviews: [contentTextLabel, videoContainerView, likeCountLabel, feedHStack])
 		contentView.addSubview(feedVStack)
@@ -184,15 +203,43 @@ class PostPageVideoCell: UITableViewCell {
 	}
 	
 	func setupAvPlayer() {
-		guard let url = videoURL, var avPlayer = avPlayer, var avPlayerLayer = avPlayerLayer else { return }
-		avPlayer = AVPlayer(url: url)
-		avPlayerLayer = AVPlayerLayer(player: avPlayer)
-		avPlayerLayer.videoGravity = .resizeAspectFill
-		avPlayerLayer.player?.actionAtItemEnd = .none
-		avPlayer.play()
+		guard let post = post else { return }
+		guard let urlString = post.videoURL else { return }
+		
+		CacheManager.shared.getFileWith(stringUrl: urlString) { [weak self] result in
+			guard let self = self else { return }
+			
+			switch result {
+			case .success(let url):
+				
+				let item = AVPlayerItem(url: url)
+				self.avQueueplayer = AVQueuePlayer()
+				self.looper = AVPlayerLooper(player: self.avQueueplayer, templateItem: item)
+				self.avPlayerLayer = AVPlayerLayer(player: self.avQueueplayer)
+				self.avPlayerLayer.videoGravity = .resizeAspectFill
+				self.avPlayerLayer.player?.actionAtItemEnd = .none
+				
+				self.videoContainerView.layer.addSublayer(self.avPlayerLayer)
+				self.avPlayerLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 32,
+											 height: UIScreen.main.bounds.height * 0.3)
+				self.avPlayerLayer.addSublayer(self.toggleVolumeButton.layer)
+				self.avQueueplayer.volume = 0
+				
+				self.avQueueplayer.play()
+				
+			case .failure(let error):
+				print(error)
+			}
+		}
+		
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleVolumn() {
+		isVolumnOn.toggle()
+		delegate?.toggleVideoVolunm(self)
+	}
 	
 	@objc func handleProfileImageTapped() {
 		delegate?.goToPostUserProfile(self)

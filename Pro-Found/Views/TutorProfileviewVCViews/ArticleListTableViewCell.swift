@@ -83,7 +83,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		let button = UIButton()
 		button.layer.cornerRadius = 5
 		button.setTitle("Subject", for: .normal)
-		button.setTitleColor(UIColor.white, for: .normal)
+		button.setTitleColor(UIColor.light60, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 10)
 		button.setDimensions(width: 80, height: 25)
 		button.backgroundColor = .orange

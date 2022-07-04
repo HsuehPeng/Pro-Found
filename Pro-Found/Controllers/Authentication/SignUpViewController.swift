@@ -101,7 +101,7 @@ class SignUpViewController: UIViewController {
 	}()
 	
 	private lazy var signUpButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white,
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60,
 														borderColor: .clear, buttonText: "Sign Up")
 		button.addTarget(self, action: #selector(handleSignup), for: .touchUpInside)
 		return button
@@ -112,7 +112,7 @@ class SignUpViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = "Sign up"
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		passwordTextField.delegate = self
 		setupNavBar()
 		setupUI()

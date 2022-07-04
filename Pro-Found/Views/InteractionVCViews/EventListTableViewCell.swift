@@ -73,7 +73,7 @@ class EventListTableViewCell: UITableViewCell {
 	}()
 	
 	lazy var bookEventButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book")
+		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Book")
 		button.addTarget(self, action: #selector(bookEvent), for: .touchUpInside)
 		button.setTitle("Booked", for: .disabled)
 		button.widthAnchor.constraint(equalToConstant: 96).isActive = true

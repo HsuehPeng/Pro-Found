@@ -82,7 +82,7 @@ class InteractionViewController: UIViewController {
 	
 	private let contaninerView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		return view
 	}()
 	
@@ -90,7 +90,7 @@ class InteractionViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		setupNavBar()
 		setupUI()
 		setupChildVC()
