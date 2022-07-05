@@ -24,7 +24,7 @@ class WritePostViewController: UIViewController {
 	
 	private let topBarView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		let titleLabel = UILabel()
 		titleLabel.text = "Write Post"
 		titleLabel.font = UIFont.customFont(.interBold, size: 16)
@@ -74,7 +74,7 @@ class WritePostViewController: UIViewController {
 	
 	private let bottomBarView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		let dividerView = UIView()
 		dividerView.backgroundColor = .dark20
@@ -93,7 +93,7 @@ class WritePostViewController: UIViewController {
 	}()
 	
 	private lazy var postButton: UIButton = {
-		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Post")
+		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Post")
 		button.widthAnchor.constraint(equalToConstant: 90).isActive = true
 		button.addTarget(self, action: #selector(sendOutArticle), for: .touchUpInside)
 		
@@ -113,7 +113,7 @@ class WritePostViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		collectionView.dataSource = self
 		

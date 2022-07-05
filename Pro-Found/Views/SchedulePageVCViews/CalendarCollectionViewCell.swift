@@ -24,7 +24,7 @@ class CalendarCollectionViewCell: UICollectionViewCell {
 	
 	let backGroundView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		return view
 	}()
 	
