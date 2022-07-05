@@ -116,17 +116,19 @@ extension PostViewController: UITableViewDataSource {
 				as? PostPageFeedCell else { fatalError("Can not dequeue PostPageFeedCell") }
 		guard let videoFeedCell = tableView.dequeueReusableCell(withIdentifier: PostPageVideoCell.reuserIdentifier, for: indexPath)
 				as? PostPageVideoCell else { fatalError("Can not dequeue PostPageVideoCell") }
+		
 		let post = filteredPosts[indexPath.row]
+		
 		if post.videoURL?.count ?? 0 > 0 {
+			videoFeedCell.delegate = self
 			videoFeedCell.user = user
 			videoFeedCell.post = post
-			videoFeedCell.delegate = self
 			videoFeedCell.selectionStyle = .none
 			return videoFeedCell
 		} else {
+			feedCell.delegate = self
 			feedCell.user = user
 			feedCell.post = post
-			feedCell.delegate = self
 			feedCell.selectionStyle = .none
 			return feedCell
 		}
@@ -261,7 +263,6 @@ extension PostViewController: PostPageVideoCellDelegate {
 	
 	func checkIfLikedByUser(_ cell: PostPageVideoCell) {
 		guard let post = cell.post, let user = user else { return }
-		
 		if post.likedBy.contains(user.userID) {
 			cell.likeButton.isSelected = true
 		} else {

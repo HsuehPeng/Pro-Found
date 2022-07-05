@@ -35,11 +35,7 @@ class PostPageFeedCell: UITableViewCell {
 		}
 	}
 	
-	var user: User? {
-		didSet {
-			configure()
-		}
-	}
+	var user: User?
 	
 	private lazy var profileImageView: UIImageView = {
 		let imageView = UIImageView()

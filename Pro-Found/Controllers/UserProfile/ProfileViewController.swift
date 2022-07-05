@@ -428,6 +428,9 @@ extension ProfileViewController: UITableViewDelegate {
 			navigationController?.pushViewController(blockingTutorVC, animated: true)
 		case 5:
 			print("Term of usage")
+			let policyViewController = PolicyViewController()
+			policyViewController.url = PolicyType.eula.url
+			present(policyViewController, animated: true, completion: nil)
 		case 6:
 			print("About app")
 		case 7:

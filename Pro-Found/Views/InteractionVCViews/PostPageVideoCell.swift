@@ -17,6 +17,10 @@ protocol PostPageVideoCellDelegate: AnyObject {
 	func toggleVideoVolunm(_ cell: PostPageVideoCell)
 }
 
+extension PostPageVideoCellDelegate {
+	func goToPostUserProfile(_ cell: PostPageVideoCell) {}
+}
+
 class PostPageVideoCell: UITableViewCell {
 	
 	static let reuserIdentifier = "\(PostPageVideoCell.self)"
@@ -122,6 +126,7 @@ class PostPageVideoCell: UITableViewCell {
 		button.setImage(offImage, for: .normal)
 		button.setImage(onImage, for: .selected)
 		button.addTarget(self, action: #selector(handleVolumn), for: .touchUpInside)
+		button.isSelected = false
 		button.setDimensions(width: 50, height: 50)
 		return button
 	}()
@@ -185,10 +190,6 @@ class PostPageVideoCell: UITableViewCell {
 		contentView.addSubview(deleteButton)
 		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
 		
-		videoContainerView.addSubview(toggleVolumeButton)
-		toggleVolumeButton.anchor(bottom: videoContainerView.bottomAnchor, right: videoContainerView.rightAnchor,
-								  paddingBottom: 8, paddingRight: 8)
-		
 		let feedHStack = UIStackView(arrangedSubviews: [likeButton, commentButton])
 		feedHStack.axis = .horizontal
 		feedHStack.distribution = .fillEqually
@@ -200,6 +201,10 @@ class PostPageVideoCell: UITableViewCell {
 		feedVStack.axis = .vertical
 		feedVStack.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 						  right: contentView.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
+		
+		videoContainerView.addSubview(toggleVolumeButton)
+		toggleVolumeButton.anchor(bottom: videoContainerView.bottomAnchor, right: videoContainerView.rightAnchor,
+								  paddingBottom: 8, paddingRight: 8)
 	}
 	
 	func setupAvPlayer() {
