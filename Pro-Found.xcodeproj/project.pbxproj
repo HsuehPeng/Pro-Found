@@ -21,6 +21,10 @@
 		B80D670D2872CB11008D0FA8 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D670C2872CB11008D0FA8 /* CacheManager.swift */; };
 		B80D670F2873E17C008D0FA8 /* PolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D670E2873E17C008D0FA8 /* PolicyViewController.swift */; };
 		B80D67112873E253008D0FA8 /* PolicyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D67102873E253008D0FA8 /* PolicyType.swift */; };
+		B80D673528753DD9008D0FA8 /* ListMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673428753DD9008D0FA8 /* ListMenuView.swift */; };
+		B80D673728754B1F008D0FA8 /* ListMenuViewCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673628754B1F008D0FA8 /* ListMenuViewCellTableViewCell.swift */; };
+		B80D67392875C2A8008D0FA8 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D67382875C2A8008D0FA8 /* NotificationViewController.swift */; };
+		B80D673B2875C5FF008D0FA8 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -129,6 +133,10 @@
 		B80D670C2872CB11008D0FA8 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		B80D670E2873E17C008D0FA8 /* PolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyViewController.swift; sourceTree = "<group>"; };
 		B80D67102873E253008D0FA8 /* PolicyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyType.swift; sourceTree = "<group>"; };
+		B80D673428753DD9008D0FA8 /* ListMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListMenuView.swift; sourceTree = "<group>"; };
+		B80D673628754B1F008D0FA8 /* ListMenuViewCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListMenuViewCellTableViewCell.swift; sourceTree = "<group>"; };
+		B80D67382875C2A8008D0FA8 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -396,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				B8C7B3962857260300CA7370 /* ScheduleViewController.swift */,
+				B80D67382875C2A8008D0FA8 /* NotificationViewController.swift */,
 			);
 			path = Schedule;
 			sourceTree = "<group>";
@@ -485,6 +494,7 @@
 				B8AB0644285B2658002110A4 /* CalendarCollectionViewCell.swift */,
 				B8AB064A285B5DE0002110A4 /* ScheduleCourseListTableCell.swift */,
 				B8F352D92862DD0A0068E87D /* ScheduleEventListTableViewCell.swift */,
+				B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */,
 			);
 			path = SchedulePageVCViews;
 			sourceTree = "<group>";
@@ -513,6 +523,8 @@
 				B8AB0660285DA60E002110A4 /* ArticlePageCollectionViewCell.swift */,
 				B8AB066A285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift */,
 				B89AD400285E0B9900CCE027 /* ArticleDetailContentTableViewCell.swift */,
+				B80D673428753DD9008D0FA8 /* ListMenuView.swift */,
+				B80D673628754B1F008D0FA8 /* ListMenuViewCellTableViewCell.swift */,
 			);
 			path = ArticlePageVCViews;
 			sourceTree = "<group>";
@@ -704,6 +716,8 @@
 				B8AB064D285B84AF002110A4 /* SelectClassPresentationVController.swift in Sources */,
 				B8AB0649285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift in Sources */,
 				B801887F286A9AD0009A6472 /* PDFCreator.swift in Sources */,
+				B80D67392875C2A8008D0FA8 /* NotificationViewController.swift in Sources */,
+				B80D673728754B1F008D0FA8 /* ListMenuViewCellTableViewCell.swift in Sources */,
 				B83666E528576E0900772375 /* TutorProfileMainTableViewCell.swift in Sources */,
 				B8F99C2B286063D900B88244 /* MapViewController.swift in Sources */,
 				B8F99C2D2860750D00B88244 /* EventDetailViewController.swift in Sources */,
@@ -732,11 +746,13 @@
 				B8AB0667285DF3B4002110A4 /* EventService.swift in Sources */,
 				B8C7B3902857258D00CA7370 /* HomeViewController.swift in Sources */,
 				B8AB06102859FA13002110A4 /* Courses.swift in Sources */,
+				B80D673B2875C5FF008D0FA8 /* NotificationTableViewCell.swift in Sources */,
 				B801887128657C5D009A6472 /* TutorListViewController.swift in Sources */,
 				B8AB0615285A0AC4002110A4 /* CreateCourseViewController.swift in Sources */,
 				B8F352D42861CA0F0068E87D /* PostCommentTableHeader.swift in Sources */,
 				B8AB066B285E001B002110A4 /* ArticleDetailIntroTableViewCell.swift in Sources */,
 				B8F99C3328607BA600B88244 /* CourseDetailTableViewHeader.swift in Sources */,
+				B80D673528753DD9008D0FA8 /* ListMenuView.swift in Sources */,
 				B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */,
 				B8CC5EAE285872F4004C5D7A /* HomePageTutorCollectionViewCell.swift in Sources */,
 				B83D19BF285608770049846E /* UIFont+Extension.swift in Sources */,

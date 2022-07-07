@@ -123,9 +123,14 @@ struct UserServie {
 	}
 	
 	func uploadScheduledCourse(user: User, tutor: User, courseID: String, time: Double, completion: @escaping () -> Void) {
-		dbUsers.document(user.userID).collection("ScheduledCourse").document().setData([
+		let applicationTime = Date().timeIntervalSince1970
+		let ref = dbUsers.document(user.userID).collection("ScheduledCourse").document()
+		ref.setData([
 			"\(courseID)": time,
-			"student": user.userID
+			"student": user.userID,
+			"applicationTime": applicationTime,
+			"status": "Pending",
+			"applicationID": ref.documentID
 		]) { error in
 			if let error = error {
 				print("Error writing ScheduledCourse: \(error)")
@@ -135,9 +140,12 @@ struct UserServie {
 			}
 		}
 		
-		dbUsers.document(tutor.userID).collection("ScheduledCourse").document().setData([
+		dbUsers.document(tutor.userID).collection("ScheduledCourse").document(ref.documentID).setData([
 			"\(courseID)": time,
-			"student": user.userID
+			"student": user.userID,
+			"applicationTime": applicationTime,
+			"status": "Pending",
+			"applicationID": ref.documentID
 		]) { error in
 			if let error = error {
 				print("Error writing ScheduledCourse: \(error)")
@@ -157,6 +165,32 @@ struct UserServie {
 		}
 	}
 	
+	func updateScheduledCourseStatus(user: User, tutor: User, applicationID: String, result: String, completion: @escaping () -> Void) {
+		dbUsers.document(user.userID).collection("ScheduledCourse").document(applicationID).updateData([
+			"status": result
+		]) { error in
+			if let error = error {
+				print("Error updating shceduled course status: \(error)")
+			} else {
+				print("Application successfully updated")
+				completion()
+			}
+		}
+		
+		dbUsers.document(tutor.userID).collection("ScheduledCourse").document(applicationID).updateData([
+			"status": result
+		]) { error in
+			if let error = error {
+				print("Error updating shceduled course status: \(error)")
+			} else {
+				print("Application successfully updated")
+				completion()
+			}
+		}
+		
+
+	}
+	
 	func getScheduledCourseIDs(userID: String, completion: @escaping (Result<[ScheduledCourseTime], Error>) -> Void) {
 		dbUsers.document(userID).collection("ScheduledCourse").getDocuments { snapshot, error in
 			var courseTimes = [ScheduledCourseTime]()
@@ -171,24 +205,35 @@ struct UserServie {
 					let courseTimeData = document.data()
 					
 					let courseID = courseTimeData.keys.filter({ key in
-						return key != "student"
+						let isCourseID = key != "student" && key != "status" && key != "applicationTime" && key != "applicationID"
+						return isCourseID
 					})
 					
 					guard let courseID = courseID.first, let time = courseTimeData["\(courseID)"] as? Double,
-						  let studentID = courseTimeData["student"] as? String else {
+						  let studentID = courseTimeData["student"] as? String,
+						  let applicationTime = courseTimeData["applicationTime"] as? Double,
+						  let status = courseTimeData["status"] as? String,
+						  let applicationID = courseTimeData["applicationID"] as? String else {
 						print("misismsimsimsimism")
 						return
 					}
 					
-					getUserData(uid: studentID) { result in
+					CourseServie.shared.fetchCourse(courseID: courseID) { result in
 						switch result {
+						case .success(let course):
+							getUserData(uid: studentID) { result in
+								switch result {
+								case .failure(let error):
+									completion(.failure(error))
+								case .success(let user):
+									let courseTime = ScheduledCourseTime(courseID: courseID, time: time, student: user, course: course, applicationTime: applicationTime, status: status, applicationID: applicationID)
+									courseTimes.append(courseTime)
+								}
+								group.leave()
+							}
 						case .failure(let error):
 							completion(.failure(error))
-						case .success(let user):
-							let courseTime = ScheduledCourseTime(courseID: courseID, time: time, student: user)
-							courseTimes.append(courseTime)
 						}
-						group.leave()
 					}
 				}
 				

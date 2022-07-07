@@ -53,4 +53,8 @@ struct ScheduledCourseTime {
 	let courseID: String
 	let time: Double
 	let student: User
+	let course: Course
+	let applicationTime: Double
+	var status: String
+	let applicationID: String
 }

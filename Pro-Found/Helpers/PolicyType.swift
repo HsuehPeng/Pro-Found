@@ -16,7 +16,7 @@ enum PolicyType {
 		switch self {
 			
 		case .privacyPolicy:
-			return "https://pages.flycricket.io/lightening-0/privacy.html"
+			return "https://www.termsfeed.com/live/474dfa37-d4ef-47ed-a5b3-9f6164ea89ce"
 			
 		case .eula:
 			return "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
