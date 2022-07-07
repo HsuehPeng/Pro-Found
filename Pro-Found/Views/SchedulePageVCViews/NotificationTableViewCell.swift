@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 enum CourseApplicationState {
 	case accept
@@ -35,9 +36,16 @@ enum CourseApplicationState {
 	}
 }
 
+protocol NotificationTableViewCellDelegate: AnyObject {
+	func handleCourseApplication(_ cell: NotificationTableViewCell, result: String)
+	func handleProfileImageTapped(_ cell: NotificationTableViewCell)
+}
+
 class NotificationTableViewCell: UITableViewCell {
 	
 	static let reuserIdentifier = "\(NotificationTableViewCell.self)"
+	
+	var delegate: NotificationTableViewCellDelegate?
 
 	// MARK: - Properties
 	
@@ -46,18 +54,21 @@ class NotificationTableViewCell: UITableViewCell {
 			configureUI()
 		}
 	}
-	
-	var course: Course?
-	
+		
 	var scheduleCourse: ScheduledCourseTime?
 	
-	private let profileImageView: UIImageView = {
+	private lazy var profileImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 48, height: 48)
 		imageView.layer.cornerRadius = 48 / 2
 		imageView.backgroundColor = .orange10
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
+		
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
+		
 		return imageView
 	}()
 	
@@ -66,8 +77,8 @@ class NotificationTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private let timeLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12), textColor: .dark40, text: "Time")
+	private let applicationTimeLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 10), textColor: .dark40, text: "Time")
 		return label
 	}()
 	
@@ -76,7 +87,12 @@ class NotificationTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private lazy var acceptButton: UIButton = {
+	private let scheduleTimeLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 10), textColor: .dark40, text: "Time")
+		return label
+	}()
+	
+	lazy var acceptButton: UIButton = {
 		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white,
 														 borderColor: .clear, buttonText: CourseApplicationState.accept.buttonText)
 		button.widthAnchor.constraint(equalToConstant: 120).isActive = true
@@ -84,11 +100,19 @@ class NotificationTableViewCell: UITableViewCell {
 		return button
 	}()
 	
-	private lazy var rejectButton: UIButton = {
+	lazy var rejectButton: UIButton = {
 		let button = CustomUIElements().makeMediumButton(buttonColor: .dark10, buttonTextColor: .dark,
 														 borderColor: .clear, buttonText: CourseApplicationState.reject.buttonText)
 		button.widthAnchor.constraint(equalToConstant: 120).isActive = true
 		button.addTarget(self, action: #selector(handleApplicationResult), for: .touchUpInside)
+		return button
+	}()
+	
+	lazy var statusButton: UIButton = {
+		let button = CustomUIElements().makeMediumButton(buttonColor: .dark10, buttonTextColor: .dark,
+														 borderColor: .clear, buttonText: CourseApplicationState.pending.buttonText)
+		button.isHidden = true
+		button.widthAnchor.constraint(equalToConstant: 120).isActive = true
 		return button
 	}()
 	
@@ -110,20 +134,24 @@ class NotificationTableViewCell: UITableViewCell {
 	func setupUI() {
 		contentView.addSubview(profileImageView)
 		contentView.addSubview(nameLabel)
-		contentView.addSubview(timeLabel)
+		contentView.addSubview(applicationTimeLabel)
 		contentView.addSubview(courseTitleLabel)
+		contentView.addSubview(scheduleTimeLabel)
 		
 		profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 14, paddingLeft: 20)
 		
 		nameLabel.anchor(top: contentView.topAnchor, left: profileImageView.rightAnchor, paddingTop: 14, paddingLeft: 14)
 		
-		timeLabel.anchor(top: contentView.topAnchor, left: nameLabel.rightAnchor, right: contentView.rightAnchor,
+		applicationTimeLabel.anchor(top: contentView.topAnchor, left: nameLabel.rightAnchor, right: contentView.rightAnchor,
 						 paddingTop: 14, paddingLeft: 16, paddingRight: 16)
 		
-		courseTitleLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, right: contentView.rightAnchor,
-								paddingTop: 8, paddingLeft: 14, paddingRight: 16)
+		courseTitleLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor,
+								paddingTop: 8, paddingLeft: 14)
 		
-		let buttonHStack = UIStackView(arrangedSubviews: [acceptButton, rejectButton, fillView1])
+		scheduleTimeLabel.centerY(inView: courseTitleLabel)
+		scheduleTimeLabel.anchor(right: contentView.rightAnchor, paddingRight: 16)
+		
+		let buttonHStack = UIStackView(arrangedSubviews: [acceptButton, rejectButton, statusButton, fillView1])
 		buttonHStack.spacing = 12
 		contentView.addSubview(buttonHStack)
 		buttonHStack.anchor(top: courseTitleLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: contentView.bottomAnchor,
@@ -132,25 +160,61 @@ class NotificationTableViewCell: UITableViewCell {
 	
 	// MARK: - Actions
 	
+	@objc func handleProfileImageTapped() {
+		delegate?.handleProfileImageTapped(self)
+	}
+	
 	@objc func handleApplicationResult(_ sender: UIButton) {
-		guard let user = user, let course = course, let scheduledCouse = scheduleCourse else { return }
+		guard let user = user, let _ = scheduleCourse else { return }
 		if sender == acceptButton {
-			UserServie.shared.updateScheduledCourseStatus(user: user, tutor: course.tutor, applicationID: scheduledCouse.applicationID,
-														  result: CourseApplicationState.accept.status) {
-				
-			}
+			delegate?.handleCourseApplication(self, result: CourseApplicationState.accept.status)
 		} else {
-			UserServie.shared.updateScheduledCourseStatus(user: user, tutor: course.tutor, applicationID: scheduledCouse.applicationID,
-														  result: CourseApplicationState.accept.status) {
-				
-			}
+			delegate?.handleCourseApplication(self, result: CourseApplicationState.reject.status)
 		}
 	}
 	
 	// MARK: - Helpers
 	
 	func configureUI() {
+		guard let scheduledCourse = scheduleCourse, let user = user,
+			  let profileImageURl = URL(string: scheduledCourse.student.profileImageURL) else { return }
+		
+		if scheduledCourse.student.userID == user.userID {
+			toggleButtons()
+			statusButton.setTitle(scheduledCourse.status, for: .normal)
+			print(scheduledCourse.status)
+		} else {
+			if scheduledCourse.status != CourseApplicationState.pending.status {
+				toggleButtons()
+				statusButton.setTitle(scheduledCourse.status, for: .normal)
+			}
+		}
+		
+		let formatter = DateComponentsFormatter()
+		formatter.allowedUnits = [.day, .hour]
+		formatter.unitsStyle = .short
+		let currentDate = Date().timeIntervalSince1970
+		let interval = currentDate - scheduledCourse.applicationTime
+		
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMMM dd, yyyy ∙ h:mm a"
+		let scheduleDate = Date(timeIntervalSince1970: scheduledCourse.time)
+		let scheduleDateString = dateFormatter.string(from: scheduleDate)
+
+		profileImageView.kf.setImage(with: profileImageURl)
+		nameLabel.text = scheduledCourse.student.name
+		courseTitleLabel.text = scheduledCourse.course.courseTitle
+		if let formattedString = formatter.string(from: interval) {
+			applicationTimeLabel.text = "\(formattedString) ago"
+		}
+		scheduleTimeLabel.text = scheduleDateString
 		
 	}
-
+	
+	func toggleButtons() {
+		acceptButton.isHidden = true
+		rejectButton.isHidden = true
+		statusButton.isHidden = false
+	}
+	
 }

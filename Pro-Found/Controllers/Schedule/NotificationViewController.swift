@@ -6,16 +6,19 @@
 //
 
 import UIKit
+import Lottie
 
 class NotificationViewController: UIViewController {
 	
 	// MARK: - Properties
 	
 	let user: User
-	
-	let courses: [Course]
-	
-	let scheduleCourses: [ScheduledCourseTime]
+			
+	var sortedScheduleCourses = [ScheduledCourseTime]() {
+		didSet {
+			tableView.reloadData()
+		}
+	}
 	
 	private let topBarView: UIView = {
 		let view = UIView()
@@ -32,7 +35,7 @@ class NotificationViewController: UIViewController {
 	}()
 	
 	private let titleLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16), textColor: .dark, text: "Notification")
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16), textColor: .dark, text: "Course Applications")
 		return label
 	}()
 	
@@ -45,10 +48,8 @@ class NotificationViewController: UIViewController {
 	
 	// MARK: - Lifecycle
 	
-	init(user: User, courses: [Course], scheduleCourses: [ScheduledCourseTime]) {
+	init(user: User) {
 		self.user = user
-		self.courses = courses
-		self.scheduleCourses = scheduleCourses
 		super.init(nibName: nil, bundle: nil)
 	}
 	
@@ -65,15 +66,7 @@ class NotificationViewController: UIViewController {
 		tableView.dataSource = self
 		
 		setupUI()
-		
-		courses.forEach { course in
-			print(course.courseID)
-		}
-		
-		scheduleCourses.forEach { courseTime in
-			print(courseTime.courseID)
-		}
-		
+		fetchScheduleCourses()
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -106,18 +99,36 @@ class NotificationViewController: UIViewController {
 	
 	// MARK: - Helpers
 	
+	func fetchScheduleCourses() {
+		UserServie.shared.getScheduledCourseIDs(userID: user.userID) { [weak self] result in
+			guard let self = self else { return }
+			switch result {
+			case .success(let scheduledCoursesIdWithTimes):
+				let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.applicationTime > $1.applicationTime })
+				self.sortedScheduleCourses = sorted
+			case .failure(let error):
+				print(error)
+			}
+		}
+	}
+	
 }
 
 // MARK: - UITableViewDataSource
 
 extension NotificationViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return scheduleCourses.count
+		return sortedScheduleCourses.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.reuserIdentifier, for: indexPath)
 				as? NotificationTableViewCell else { fatalError("Can not dequeue NotificationTableViewCell")}
+		
+		let scheduleCourse = sortedScheduleCourses[indexPath.row]
+		cell.delegate = self
+		cell.scheduleCourse = scheduleCourse
+		cell.user = user
 		return cell
 	}
 }
@@ -125,5 +136,43 @@ extension NotificationViewController: UITableViewDataSource {
 // MARK: - UITableViewDataSource
 
 extension NotificationViewController: UITableViewDelegate {
+	
+}
+
+// MARK: - NotificationTableViewCellDelegate
+
+extension NotificationViewController: NotificationTableViewCellDelegate {
+	func handleProfileImageTapped(_ cell: NotificationTableViewCell) {
+		guard let scheduleCourse = cell.scheduleCourse else { return }
+		let publicProfileVC = TutorProfileViewController(user: user, tutor: scheduleCourse.student)
+		navigationController?.pushViewController(publicProfileVC, animated: true)
+	}
+	
+	func handleCourseApplication(_ cell: NotificationTableViewCell, result: String) {
+		
+		guard let scheduledCouse = cell.scheduleCourse else { return }
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
+		
+		UserServie.shared.updateScheduledCourseStatus(user: scheduledCouse.student, tutor: scheduledCouse.course.tutor,
+													  applicationID: scheduledCouse.applicationID,
+													  result: result) {
+			loadingLottie.stopAnimation()
+			switch result {
+			case CourseApplicationState.accept.status:
+				cell.toggleButtons()
+				cell.statusButton.setTitle(result, for: .normal)
+			case CourseApplicationState.reject.status:
+				cell.toggleButtons()
+				cell.statusButton.setTitle(result, for: .normal)
+			default:
+				break
+			}
+			
+			UIView.animate(withDuration: 0.3) {
+				cell.layoutIfNeeded()
+			}
+		}
+	}
 	
 }

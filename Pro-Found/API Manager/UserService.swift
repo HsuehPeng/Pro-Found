@@ -129,7 +129,7 @@ struct UserServie {
 			"\(courseID)": time,
 			"student": user.userID,
 			"applicationTime": applicationTime,
-			"status": "pending",
+			"status": "Pending",
 			"applicationID": ref.documentID
 		]) { error in
 			if let error = error {
@@ -144,7 +144,7 @@ struct UserServie {
 			"\(courseID)": time,
 			"student": user.userID,
 			"applicationTime": applicationTime,
-			"status": "pending",
+			"status": "Pending",
 			"applicationID": ref.documentID
 		]) { error in
 			if let error = error {
@@ -187,6 +187,8 @@ struct UserServie {
 				completion()
 			}
 		}
+		
+
 	}
 	
 	func getScheduledCourseIDs(userID: String, completion: @escaping (Result<[ScheduledCourseTime], Error>) -> Void) {
@@ -216,15 +218,22 @@ struct UserServie {
 						return
 					}
 					
-					getUserData(uid: studentID) { result in
+					CourseServie.shared.fetchCourse(courseID: courseID) { result in
 						switch result {
+						case .success(let course):
+							getUserData(uid: studentID) { result in
+								switch result {
+								case .failure(let error):
+									completion(.failure(error))
+								case .success(let user):
+									let courseTime = ScheduledCourseTime(courseID: courseID, time: time, student: user, course: course, applicationTime: applicationTime, status: status, applicationID: applicationID)
+									courseTimes.append(courseTime)
+								}
+								group.leave()
+							}
 						case .failure(let error):
 							completion(.failure(error))
-						case .success(let user):
-							let courseTime = ScheduledCourseTime(courseID: courseID, time: time, student: user, applicationTime: applicationTime, status: status, applicationID: applicationID)
-							courseTimes.append(courseTime)
 						}
-						group.leave()
 					}
 				}
 				
