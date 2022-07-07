@@ -10,30 +10,30 @@ import PDFKit
 
 class PDFCreator: NSObject {
 	let title: String
-	let body: String
 	let image: UIImage
 	let authorName: String
+	let attributedBody: NSAttributedString
 	
-	init(title: String, body: String, image: UIImage, authorName: String) {
+	init(title: String, image: UIImage, authorName: String, attributedBody: NSAttributedString) {
 		self.title = title
-		self.body = body
 		self.image = image
 		self.authorName = authorName
+		self.attributedBody = attributedBody
 	}
 	
 	func createFlyer() -> Data {
-		let bodyCount = Int(body.count)
-		var indexFirstPage: String.Index
-		var firstPageBody: String = ""
+		let bodyCount = attributedBody.length
+		var indexFirstPage: Int
+		var firstPageBody: NSAttributedString = NSAttributedString(string: "")
 		var pageCountAfterFirst: Int = 0
 		
 		if bodyCount > 1350 {
-			indexFirstPage = body.index(body.startIndex, offsetBy: 1350)
-			firstPageBody = String(body[...indexFirstPage])
+			indexFirstPage = 1350
+			firstPageBody = attributedBody.attributedSubstring(from: NSRange(location: 0, length: indexFirstPage))
 			pageCountAfterFirst = (bodyCount - 1350) / 3000
 		} else {
-			indexFirstPage = body.endIndex
-			firstPageBody = String(body[..<indexFirstPage])
+			indexFirstPage = attributedBody.length
+			firstPageBody = attributedBody.attributedSubstring(from: NSRange(location: 0, length: indexFirstPage))
 		}
 
 		let pdfMetaData = [
@@ -41,6 +41,7 @@ class PDFCreator: NSObject {
 			kCGPDFContextAuthor: "Peng.com",
 			kCGPDFContextTitle: title
 		]
+		
 		let format = UIGraphicsPDFRendererFormat()
 		format.documentInfo = pdfMetaData as [String: Any]
 		
@@ -60,8 +61,8 @@ class PDFCreator: NSObject {
 			addBodyText(pageRect: pageRect, textTop: imageBottom + 18.0, pageoneBody: firstPageBody)
 			addPage(pageRect: pageRect, page: "Page 1")
 			
-			if pageCountAfterFirst > 0 {
-				createPageBody(currentStringIndex: indexFirstPage, pageRect: pageRect, page: 2,
+			if bodyCount > 1350 {
+				createPageBody(currentStringLocation: indexFirstPage, pageRect: pageRect, page: 2,
 							   pageCountAfterFirst: pageCountAfterFirst, context: context)
 			}
 		}
@@ -107,27 +108,25 @@ class PDFCreator: NSObject {
 		return titleStringRect.origin.y + titleStringRect.size.height
 	}
 	
-	func addBodyText(pageRect: CGRect, textTop: CGFloat, pageoneBody: String) {
-		
-		let textFont = UIFont.customFont(.manropeRegular, size: 12)
-		
+	func addBodyText(pageRect: CGRect, textTop: CGFloat, pageoneBody: NSAttributedString) {
+				
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.alignment = .natural
 		paragraphStyle.lineBreakMode = .byWordWrapping
 		
 		let textAttributes = [
 			NSAttributedString.Key.paragraphStyle: paragraphStyle,
-			NSAttributedString.Key.font: textFont
 		]
-		let attributedText = NSAttributedString(string: pageoneBody, attributes: textAttributes)
+		
+		let attributedText = NSMutableAttributedString(attributedString: pageoneBody)
+		attributedText.addAttributes(textAttributes, range: NSRange(location: 0, length: attributedText.length))
 		
 		let textRect = CGRect(x: 50, y: textTop, width: pageRect.width - 100,
 							  height: pageRect.height - textTop - 70)
 		attributedText.draw(in: textRect)
 	}
 	
-	func bodyTextForPage(pageRect: CGRect, pageBody: String) {
-		let textFont = UIFont.customFont(.manropeRegular, size: 12)
+	func bodyTextForPage(pageRect: CGRect, pageBody: NSAttributedString) {
 		
 		let paragraphStyle = NSMutableParagraphStyle()
 		paragraphStyle.alignment = .natural
@@ -135,9 +134,9 @@ class PDFCreator: NSObject {
 		
 		let textAttributes = [
 			NSAttributedString.Key.paragraphStyle: paragraphStyle,
-			NSAttributedString.Key.font: textFont
 		]
-		let attributedText = NSAttributedString(string: pageBody, attributes: textAttributes)
+		let attributedText = NSMutableAttributedString(attributedString: pageBody)
+		attributedText.addAttributes(textAttributes, range: NSRange(location: 0, length: attributedText.length))
 		
 		let textRect = CGRect(x: 50, y: 70, width: pageRect.width - 100,
 							  height: pageRect.height - 70)
@@ -184,25 +183,25 @@ class PDFCreator: NSObject {
 		attributedPage.draw(in: textRect)
 	}
 	
-	func createPageBody(currentStringIndex: String.Index, pageRect: CGRect, page: Int,
+	func createPageBody(currentStringLocation: Int, pageRect: CGRect, page: Int,
 						pageCountAfterFirst: Int, context: UIGraphicsPDFRendererContext) {
 		var leftOverPageCount = pageCountAfterFirst
-		var newStringIndex = currentStringIndex
+		var newStringIndex = currentStringLocation
 		var newPage = page
 		if leftOverPageCount > 0 {
-			newStringIndex = body.index(newStringIndex, offsetBy: 3000)
-
+			
 			context.beginPage()
-			bodyTextForPage(pageRect: pageRect, pageBody: String(body[currentStringIndex...newStringIndex]))
+			bodyTextForPage(pageRect: pageRect, pageBody: attributedBody.attributedSubstring(from: NSRange(location: currentStringLocation, length: 3000)))
 			addPage(pageRect: pageRect, page: "Page \(newPage)")
 			
+			newStringIndex = newStringIndex + 3000
 			leftOverPageCount -= 1
 			newPage += 1
-			createPageBody(currentStringIndex: newStringIndex, pageRect: pageRect, page: newPage,
+			createPageBody(currentStringLocation: newStringIndex, pageRect: pageRect, page: newPage,
 						   pageCountAfterFirst: leftOverPageCount, context: context)
 		} else {
 			context.beginPage()
-			bodyTextForPage(pageRect: pageRect, pageBody: String(body[newStringIndex..<body.endIndex]))
+			bodyTextForPage(pageRect: pageRect, pageBody: attributedBody.attributedSubstring(from: NSRange(location: newStringIndex, length: attributedBody.length - newStringIndex)))
 			addPage(pageRect: pageRect, page: "Page \(newPage)")
 			return
 		}
