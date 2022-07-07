@@ -20,8 +20,8 @@ class ScheduleViewController: UIViewController {
 	}
 	
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
-	var filteredCoursesIdWithTimes = [ScheduledCourseTime]()
 	var scheduledCourses = [Course]()
+	var filteredCoursesIdWithTimes = [ScheduledCourseTime]()
 	var filteredScheduledCourses = [Course]() {
 		didSet {
 			tableView.reloadData()
@@ -88,6 +88,7 @@ class ScheduleViewController: UIViewController {
 	private lazy var switchMonthWeekButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.article), for: .normal)
+		button.addTarget(self, action: #selector(goToNotificationVC), for: .touchUpInside)
 		return button
 	}()
 	
@@ -202,9 +203,9 @@ class ScheduleViewController: UIViewController {
 		pageTitleLabel.anchor(left: topBarView.leftAnchor, paddingLeft: 16)
 		pageTitleLabel.centerY(inView: topBarView)
 		
-//		topBarView.addSubview(switchMonthWeekButton)
-//		switchMonthWeekButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
-//		switchMonthWeekButton.centerY(inView: topBarView)
+		topBarView.addSubview(switchMonthWeekButton)
+		switchMonthWeekButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
+		switchMonthWeekButton.centerY(inView: topBarView)
 		
 		let monthSwitchHStack = UIStackView(arrangedSubviews: [previousMonthButton, monthLabel, yearLabel, nextMonthButton])
 		monthSwitchHStack.axis = .horizontal
@@ -212,7 +213,7 @@ class ScheduleViewController: UIViewController {
 		monthSwitchHStack.distribution = .equalSpacing
 
 		topBarView.addSubview(monthSwitchHStack)
-		monthSwitchHStack.anchor(right: view.rightAnchor, paddingRight: 16)
+		monthSwitchHStack.anchor(right: switchMonthWeekButton.leftAnchor, paddingRight: 16)
 		monthSwitchHStack.centerY(inView: topBarView)
 		
 		let weekdayHStack = UIStackView(arrangedSubviews: [
@@ -239,6 +240,12 @@ class ScheduleViewController: UIViewController {
 	}
 	
 	// MARK: - Actions
+	
+	@objc func goToNotificationVC() {
+		guard let user = user, !scheduledCourses.isEmpty, !scheduledCourses.isEmpty else { return }
+		let notificationVC = NotificationViewController(user: user, courses: scheduledCourses, scheduleCourses: scheduledCoursesIdWithTimes)
+		navigationController?.pushViewController(notificationVC, animated: true)
+	}
 	
 	@objc func goNextMonth() {
 		selectedDate = CalendarHelper().plusMonth(date: selectedDate)

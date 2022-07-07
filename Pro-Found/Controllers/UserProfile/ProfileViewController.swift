@@ -42,8 +42,8 @@ class ProfileViewController: UIViewController {
 									 "Following Tutors",
 									 "Saved Articles",
 									 "Blocked Users",
-									 "Term of Usage",
-									 "About App",
+									 "User License Agreement",
+									 "Privacy Policy",
 									 "Logout",
 									 "Delete Account"]
 		
@@ -427,12 +427,13 @@ extension ProfileViewController: UITableViewDelegate {
 			blockingTutorVC.forBlockingPage = true
 			navigationController?.pushViewController(blockingTutorVC, animated: true)
 		case 5:
-			print("Term of usage")
 			let policyViewController = PolicyViewController()
 			policyViewController.url = PolicyType.eula.url
 			present(policyViewController, animated: true, completion: nil)
 		case 6:
-			print("About app")
+			let policyViewController = PolicyViewController()
+			policyViewController.url = PolicyType.privacyPolicy.url
+			present(policyViewController, animated: true, completion: nil)
 		case 7:
 			logOut()
 		case 8:

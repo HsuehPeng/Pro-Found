@@ -97,6 +97,7 @@ class ChatViewController: UIViewController {
 		let titleAttribute: [NSAttributedString.Key: Any] = [
 			.font: UIFont.customFont(.interBold, size: 16)
 		]
+		
 		let appearance = UINavigationBarAppearance()
 		appearance.titleTextAttributes = titleAttribute
 		appearance.configureWithDefaultBackground()
