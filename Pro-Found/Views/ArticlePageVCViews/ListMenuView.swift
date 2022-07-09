@@ -80,6 +80,7 @@ enum TextFormateColor {
 
 protocol ListMenuViewDelegate: AnyObject {
 	func listMenuView(_ view: ListMenuView, for SelectedTextFormateType: TextFormateType)
+	func listMenuView(_ View: ListMenuView, for selectedTextColorType: TextFormateColor)
 }
 
 class ListMenuView: UIView {
@@ -87,6 +88,8 @@ class ListMenuView: UIView {
 	weak var delegate: ListMenuViewDelegate?
 
 	var textFormateOptions = [TextFormateType]()
+	
+	var textColorOptions = [TextFormateColor]()
 		
 	var isUp = false
 	
@@ -118,13 +121,23 @@ class ListMenuView: UIView {
 
 extension ListMenuView: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return textFormateOptions.count
+		if textFormateOptions.isEmpty {
+			return textColorOptions.count
+		} else {
+			return textFormateOptions.count
+		}
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: ListMenuViewCellTableViewCell.reuseIdentifier, for: indexPath)
 				as? ListMenuViewCellTableViewCell else { fatalError("Can not dequeue ListMenuViewCellTableViewCell") }
-		cell.label.text = textFormateOptions[indexPath.row].description
+		
+		if textFormateOptions.isEmpty {
+			cell.contentView.backgroundColor = textColorOptions[indexPath.row].color
+		} else {
+			cell.label.text = textFormateOptions[indexPath.row].description
+		}
+		
 		return cell
 	}
 }
@@ -132,8 +145,14 @@ extension ListMenuView: UITableViewDataSource {
 extension ListMenuView: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let textFormateType = textFormateOptions[indexPath.row]
-		delegate?.listMenuView(self, for: textFormateType)
+
+		if textFormateOptions.isEmpty {
+			let textColorType = textColorOptions[indexPath.row]
+			delegate?.listMenuView(self, for: textColorType)
+		} else {
+			let textFormateType = textFormateOptions[indexPath.row]
+			delegate?.listMenuView(self, for: textFormateType)
+		}
 	}
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

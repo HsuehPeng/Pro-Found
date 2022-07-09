@@ -190,21 +190,30 @@ class WriteArticleViewController: UIViewController {
 		listView.delegate = self
 		return listView
 	}()
-	
-	private lazy var colorWell: UIColorWell = {
-		let well = UIColorWell()
-		well.supportsAlpha = true
-		well.title = "Text Color"
-		well.selectedColor = TextFormateColor.dark.color
-		well.addTarget(self, action: #selector(didSelectColorWellColor), for: .valueChanged)
-		return well
-	}()
-	
+
 	private lazy var textColorButton: UIBarButtonItem = {
-		let button = UIBarButtonItem(customView: colorWell)
+		let button = UIBarButtonItem(image: UIImage(systemName: "paintbrush.pointed"), style: .plain, target: self,
+									 action: #selector(handleTextFormate))
 		button.tintColor = TextFormateColor.dark.color
 		button.width = view.frame.size.width / 4
 		return button
+	}()
+	
+	var textColorListViewHeight = NSLayoutConstraint()
+	
+	private lazy var textColorListView: ListMenuView = {
+		let listView = ListMenuView()
+		view.addSubview(listView)
+		listView.anchor(left: textFormateView.rightAnchor, bottom: bottomBarView.topAnchor, paddingBottom: 50)
+		listView.translatesAutoresizingMaskIntoConstraints = false
+		listView.widthAnchor.constraint(equalToConstant: textColorButton.width).isActive = true
+		textColorListViewHeight = listView.heightAnchor.constraint(equalToConstant: 0)
+		listView.textColorOptions = [TextFormateColor.red,
+									   TextFormateColor.green,
+									   TextFormateColor.dark,
+									   TextFormateColor.orange]
+		listView.delegate = self
+		return listView
 	}()
 	
 	private lazy var italicButton: UIBarButtonItem = {
@@ -242,10 +251,8 @@ class WriteArticleViewController: UIViewController {
 		
 		currentAttribute[.font] = currentTextType.font
 		
-		self.hideKeyboardWhenTappedAround()
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardEvent), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(keyboardEvent), name: UIResponder.keyboardWillHideNotification, object: nil)
-		
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -351,10 +358,6 @@ class WriteArticleViewController: UIViewController {
 		let keyboardViewEndFrame: CGRect = view.convert(keyboardScreenEndFrame, to: view.window)
 		print(keyboardViewEndFrame.height)
 	}
-	
-	@objc func didSelectColorWellColor() {
-		currentAttribute[.foregroundColor] = colorWell.selectedColor
-	}
 
 	@objc func selectedSubject(_ sender: UIButton) {
 		let buttons = [languageButton, techButton, artButton, musicButton, sportButton]
@@ -441,6 +444,8 @@ class WriteArticleViewController: UIViewController {
 	@objc func handleTextFormate(_ sender: UIBarButtonItem) {
 		if sender == textFormateButton {
 			toggleMenuView(textFormateView)
+		} else {
+			toggleMenuView(textColorListView)
 		}
 	}
 	
@@ -470,7 +475,9 @@ class WriteArticleViewController: UIViewController {
 	@objc func handleDoneKBEditing() {
 		articleTextView.resignFirstResponder()
 		textFormateView.isUp = true
+		textColorListView.isUp = true
 		showOrHideListMenuView(for: textFormateView, heightConstraint: textFormateViewHeight)
+		showOrHideListMenuView(for: textColorListView, heightConstraint: textColorListViewHeight)
 	}
 
 	@objc func dismissVC() {
@@ -491,6 +498,8 @@ class WriteArticleViewController: UIViewController {
 	func toggleMenuView(_ listView: UIView) {
 		if listView == textFormateView {
 			showOrHideListMenuView(for: textFormateView, heightConstraint: textFormateViewHeight)
+		} else {
+			showOrHideListMenuView(for: textColorListView, heightConstraint: textColorListViewHeight)
 		}
 	}
 	
@@ -506,7 +515,7 @@ class WriteArticleViewController: UIViewController {
 			listView.isUp = true
 			
 			heightConstraint.isActive = false
-			heightConstraint.constant = CGFloat(40 * listView.textFormateOptions.count)
+			heightConstraint.constant = listView == textFormateView ? CGFloat(40 * listView.textFormateOptions.count) : CGFloat(40 * listView.textColorOptions.count)
 			heightConstraint.isActive = true
 
 			UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseInOut) {
@@ -546,7 +555,17 @@ extension WriteArticleViewController: ListMenuViewDelegate {
 		italicButton.isSelected = false
 		
 		currentTextType = SelectedTextFormateType
-		currentAttribute[.font] = SelectedTextFormateType.font
+		currentAttribute[.font] = currentTextType.font
+	}
+	
+	func listMenuView(_ View: ListMenuView, for selectedTextColorType: TextFormateColor) {
+		textColorListView.isUp = false
+		textColorListViewHeight.isActive = false
+		textColorListViewHeight.constant = 0
+		textColorListViewHeight.isActive = true
+		
+		currentAttribute[.foregroundColor] = selectedTextColorType.color
+		textColorButton.tintColor = selectedTextColorType.color
 	}
 }
 
