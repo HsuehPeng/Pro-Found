@@ -33,15 +33,15 @@ enum TextFormateType: String {
 		
 		switch self {
 		case .heading1:
-			return UIFont.systemFont(ofSize: 24, weight: .semibold)
+			return UIFont.systemFont(ofSize: 22, weight: .semibold)
 		case .heading2:
-			return UIFont.systemFont(ofSize: 20, weight: .semibold)
+			return UIFont.systemFont(ofSize: 18, weight: .semibold)
 		case .title1:
-			return UIFont.systemFont(ofSize: 20, weight: .medium)
-		case .title2:
 			return UIFont.systemFont(ofSize: 18, weight: .medium)
+		case .title2:
+			return UIFont.systemFont(ofSize: 16, weight: .medium)
 		case .text:
-			return UIFont.systemFont(ofSize: 16, weight: .regular)
+			return UIFont.systemFont(ofSize: 14, weight: .regular)
 		}
 	}
 }

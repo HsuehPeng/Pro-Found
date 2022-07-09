@@ -10,7 +10,6 @@ import PhotosUI
 import Kingfisher
 import Lottie
 import IQKeyboardManagerSwift
-import SwiftUI
 
 class WriteArticleViewController: UIViewController {
 	
@@ -209,9 +208,12 @@ class WriteArticleViewController: UIViewController {
 		listView.widthAnchor.constraint(equalToConstant: textColorButton.width).isActive = true
 		textColorListViewHeight = listView.heightAnchor.constraint(equalToConstant: 0)
 		listView.textColorOptions = [TextFormateColor.red,
-									   TextFormateColor.green,
-									   TextFormateColor.dark,
-									   TextFormateColor.orange]
+									 TextFormateColor.green,
+									 TextFormateColor.dark,
+									 TextFormateColor.orange,
+									 TextFormateColor.light,
+									 TextFormateColor.skyblue
+		]
 		listView.delegate = self
 		return listView
 	}()
