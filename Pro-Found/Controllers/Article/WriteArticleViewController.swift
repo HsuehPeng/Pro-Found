@@ -10,6 +10,7 @@ import PhotosUI
 import Kingfisher
 import Lottie
 import IQKeyboardManagerSwift
+import SwiftUI
 
 class WriteArticleViewController: UIViewController {
 	
@@ -116,6 +117,7 @@ class WriteArticleViewController: UIViewController {
 	private let articleTextView: ArticleTextView = {
 		let textView = ArticleTextView()
 		textView.isScrollEnabled = true
+		textView.autocorrectionType = .no
 		return textView
 	}()
 	
@@ -149,18 +151,25 @@ class WriteArticleViewController: UIViewController {
 		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Post")
 		button.widthAnchor.constraint(equalToConstant: 90).isActive = true
 		button.addTarget(self, action: #selector(sendOutArticle), for: .touchUpInside)
-		
 		return button
 	}()
 	
-	private lazy var doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDoneKBEditing))
+	private lazy var toolBar: UIToolbar = {
+		let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 50))
+		return toolBar
+	}()
+	
+	private lazy var doneButton: UIBarButtonItem = {
+		let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDoneKBEditing))
+		button.width = view.frame.size.width / 4
+		return button
+	}()
 	
 	private lazy var textFormateButton: UIBarButtonItem = {
-		let button = UIBarButtonItem(title: TextFormateType.heading1.description,
-									 style: .plain, target: self, action: #selector(handleTextFormate))
-		button.setTitleTextAttributes([NSAttributedString.Key.font: TextFormateType.heading1.font,
-									   NSAttributedString.Key.foregroundColor: TextFormateColor.dark.color], for: .normal)
-		button.width = 150
+		let button = UIBarButtonItem(image: UIImage(systemName: "textformat.alt"), style: .plain, target: self,
+									 action: #selector(handleTextFormate))
+		button.tintColor = TextFormateColor.dark.color
+		button.width = view.frame.size.width / 4
 		return button
 	}()
 	
@@ -169,7 +178,8 @@ class WriteArticleViewController: UIViewController {
 	private lazy var textFormateView: ListMenuView = {
 		let listView = ListMenuView()
 		view.addSubview(listView)
-		listView.center(inView: view)
+		listView.anchor(left: view.leftAnchor, bottom: bottomBarView.topAnchor, paddingBottom: 50)
+		listView.translatesAutoresizingMaskIntoConstraints = false
 		listView.widthAnchor.constraint(equalToConstant: textFormateButton.width).isActive = true
 		textFormateViewHeight = listView.heightAnchor.constraint(equalToConstant: 0)
 		listView.textFormateOptions = [TextFormateType.heading1,
@@ -181,44 +191,32 @@ class WriteArticleViewController: UIViewController {
 		return listView
 	}()
 	
-	private let toolBarDivideBarButton: UIBarButtonItem = {
-		let view = UIView()
-		view.backgroundColor = .dark20
-		view.setDimensions(width: 1.5, height: 50)
-		let button = UIBarButtonItem(customView: view)
-		button.width = 1.5
-		return button
+	private lazy var colorWell: UIColorWell = {
+		let well = UIColorWell()
+		well.supportsAlpha = true
+		well.title = "Text Color"
+		well.selectedColor = TextFormateColor.dark.color
+		well.addTarget(self, action: #selector(didSelectColorWellColor), for: .valueChanged)
+		return well
 	}()
 	
 	private lazy var textColorButton: UIBarButtonItem = {
-		let button = UIBarButtonItem(image: UIImage(systemName: "character"), style: .plain, target: self,
-									 action: #selector(handleTextFormate))
+		let button = UIBarButtonItem(customView: colorWell)
 		button.tintColor = TextFormateColor.dark.color
-		
-		button.width = 50
+		button.width = view.frame.size.width / 4
 		return button
-	}()
-	
-	var textColorViewHeight = NSLayoutConstraint()
-	
-	private lazy var textColorView: ListMenuView = {
-		let listView = ListMenuView()
-		view.addSubview(listView)
-		listView.center(inView: view)
-		listView.widthAnchor.constraint(equalToConstant: textColorButton.width).isActive = true
-		textColorViewHeight = listView.heightAnchor.constraint(equalToConstant: 0)
-		listView.textColorOptions = [.red, .light, .dark, .yellow, .green, .orange, .ocean, .skyblue]
-		listView.delegate = self
-		return listView
 	}()
 	
 	private lazy var italicButton: UIBarButtonItem = {
-		let button = UIBarButtonItem(image: UIImage(systemName: "italic"), style: .plain, target: self, action: #selector(handleItalic))
+		let image  = UIImage.asset(.italic)
+		let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleItalic))
 		button.tintColor = TextFormateColor.dark.color
 		button.isSelected = false
-		button.width = 50
+		button.width = view.frame.size.width / 4
 		return button
 	}()
+	
+	private var KeyboardHeightVar: CGFloat = 0.0
 	
 	// MARK: - Lifecycle
 	
@@ -244,6 +242,10 @@ class WriteArticleViewController: UIViewController {
 		
 		currentAttribute[.font] = currentTextType.font
 		
+		self.hideKeyboardWhenTappedAround()
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardEvent), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardEvent), name: UIResponder.keyboardWillHideNotification, object: nil)
+		
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -254,76 +256,106 @@ class WriteArticleViewController: UIViewController {
 	// MARK: - UI
 	
 	func setupUI() {
+		
 		view.addSubview(topBarView)
-		topBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+				
+		view.addSubview(bottomBarView)
 		
 		topBarView.addSubview(cancelButton)
-		cancelButton.centerY(inView: topBarView, leftAnchor: topBarView.leftAnchor, paddingLeft: 18)
 		
 		view.addSubview(articleImageView)
-		articleImageView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
 		view.addSubview(pickImageButton)
-		pickImageButton.anchor(bottom: articleImageView.bottomAnchor, right: articleImageView.rightAnchor, paddingBottom: -10, paddingRight: -10)
 		
 		view.addSubview(articleTitleLabel)
-		articleTitleLabel.anchor(top: topBarView.bottomAnchor, left: articleImageView.rightAnchor,
-									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(articleTitleTextField)
-		articleTitleTextField.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
-									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(articleTitleDividerView)
-		articleTitleDividerView.anchor(top: articleTitleTextField.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
-									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(subjectTitleLabel)
-		subjectTitleLabel.anchor(top: articleTitleDividerView.bottomAnchor, left: articleImageView.rightAnchor,
-									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+		bottomBarView.addSubview(postButton)
+		
+		bottomBarView.addSubview(characterCountLabel)
 		
 		let topSubjectHStack = UIStackView(arrangedSubviews: [languageButton, techButton])
 		topSubjectHStack.distribution = .fillEqually
 		topSubjectHStack.spacing = 5
 		view.addSubview(topSubjectHStack)
-		topSubjectHStack.anchor(top: subjectTitleLabel.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
-								paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
 		let bottomSubjectHStack = UIStackView(arrangedSubviews: [musicButton, sportButton, artButton])
 		bottomSubjectHStack.distribution = .fillEqually
 		bottomSubjectHStack.spacing = 5
 		view.addSubview(bottomSubjectHStack)
+		
+		view.addSubview(articleTextView)
+		
+		topBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+				
+		cancelButton.centerY(inView: topBarView, leftAnchor: topBarView.leftAnchor, paddingLeft: 18)
+		
+		articleImageView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		
+		pickImageButton.anchor(bottom: articleImageView.bottomAnchor, right: articleImageView.rightAnchor, paddingBottom: -10, paddingRight: -10)
+		
+		articleTitleLabel.anchor(top: topBarView.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+		articleTitleTextField.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		articleTitleDividerView.anchor(top: articleTitleTextField.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		subjectTitleLabel.anchor(top: articleTitleDividerView.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+
+		topSubjectHStack.anchor(top: subjectTitleLabel.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+								paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+
 		bottomSubjectHStack.anchor(top: topSubjectHStack.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
 								paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(articleTextView)
-		articleTextView.anchor(top: articleImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
-							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(bottomBarView)
-		bottomBarView.anchor(top: articleTextView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+		articleTextView.anchor(top: articleImageView.bottomAnchor, left: view.leftAnchor, bottom: bottomBarView.topAnchor, right: view.rightAnchor,
+							   paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
+		
+		bottomBarView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
 							 right: view.rightAnchor, height: 64)
 		
-		bottomBarView.addSubview(postButton)
 		postButton.centerY(inView: bottomBarView)
 		postButton.rightAnchor.constraint(equalTo: bottomBarView.rightAnchor, constant: -16).isActive = true
 		
-		bottomBarView.addSubview(characterCountLabel)
+		
 		characterCountLabel.centerY(inView: bottomBarView)
 		characterCountLabel.rightAnchor.constraint(equalTo: postButton.leftAnchor, constant: -16).isActive = true
 	}
 	
 	func setupKBToolBar() {
-		let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 50))
-
-		toolBar.items = [textFormateButton, toolBarDivideBarButton, textColorButton, italicButton, doneButton]
-		toolBar.sizeToFit()
 		
+		toolBar.items = [textFormateButton, textColorButton, italicButton, doneButton]
+		toolBar.sizeToFit()
 		articleTextView.inputAccessoryView = toolBar
 	}
 	
 	// MARK: - Actions
 	
+	@objc func keyboardEvent(_ notification: Notification) {
+		guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+		
+		let keyboardScreenEndFrame: CGRect = keyboardFrame.cgRectValue
+		
+		let keyboardViewEndFrame: CGRect = view.convert(keyboardScreenEndFrame, to: view.window)
+		print(keyboardViewEndFrame.height)
+	}
+	
+	@objc func didSelectColorWellColor() {
+		currentAttribute[.foregroundColor] = colorWell.selectedColor
+	}
+
 	@objc func selectedSubject(_ sender: UIButton) {
 		let buttons = [languageButton, techButton, artButton, musicButton, sportButton]
 		
@@ -409,8 +441,6 @@ class WriteArticleViewController: UIViewController {
 	@objc func handleTextFormate(_ sender: UIBarButtonItem) {
 		if sender == textFormateButton {
 			toggleMenuView(textFormateView)
-		} else {
-			toggleMenuView(textColorView)
 		}
 	}
 	
@@ -440,15 +470,12 @@ class WriteArticleViewController: UIViewController {
 	@objc func handleDoneKBEditing() {
 		articleTextView.resignFirstResponder()
 		textFormateView.isUp = true
-		textColorView.isUp = true
 		showOrHideListMenuView(for: textFormateView, heightConstraint: textFormateViewHeight)
-		showOrHideListMenuView(for: textColorView, heightConstraint: textColorViewHeight)
 	}
-	
+
 	@objc func dismissVC() {
 		dismiss(animated: true)
 	}
-
 	
 	// MARK: - Helpers
 	
@@ -464,8 +491,6 @@ class WriteArticleViewController: UIViewController {
 	func toggleMenuView(_ listView: UIView) {
 		if listView == textFormateView {
 			showOrHideListMenuView(for: textFormateView, heightConstraint: textFormateViewHeight)
-		} else {
-			showOrHideListMenuView(for: textColorView, heightConstraint: textColorViewHeight)
 		}
 	}
 	
@@ -481,7 +506,7 @@ class WriteArticleViewController: UIViewController {
 			listView.isUp = true
 			
 			heightConstraint.isActive = false
-			heightConstraint.constant = 150
+			heightConstraint.constant = CGFloat(40 * listView.textFormateOptions.count)
 			heightConstraint.isActive = true
 
 			UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseInOut) {
@@ -512,34 +537,16 @@ class WriteArticleViewController: UIViewController {
 
 extension WriteArticleViewController: ListMenuViewDelegate {
 	
-	func listMenuView(_ view: ListMenuView, for selectedTextColor: TextFormateColor) {
-		textColorView.isUp = false
-		textColorViewHeight.isActive = false
-		textColorViewHeight.constant = 0
-		textColorViewHeight.isActive = true
-		textColorButton.tintColor = selectedTextColor.color
-		
-		currentAttribute[.foregroundColor] = selectedTextColor.color
-	}
-	
 	func listMenuView(_ view: ListMenuView, for SelectedTextFormateType: TextFormateType) {
 		textFormateView.isUp = false
 		textFormateViewHeight.isActive = false
 		textFormateViewHeight.constant = 0
 		textFormateViewHeight.isActive = true
 		
-		textFormateButton.title = SelectedTextFormateType.description
-		textFormateButton.setTitleTextAttributes([NSAttributedString.Key.font: SelectedTextFormateType.font,
-												  NSAttributedString.Key.foregroundColor: TextFormateColor.dark.color],
-												 for: .normal)
-		
-		textColorButton.tintColor = TextFormateColor.dark.color
 		italicButton.isSelected = false
 		
 		currentTextType = SelectedTextFormateType
 		currentAttribute[.font] = SelectedTextFormateType.font
-		currentAttribute[.foregroundColor] = TextFormateColor.dark.color
-
 	}
 }
 

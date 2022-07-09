@@ -38,5 +38,4 @@ class ListMenuViewCellTableViewCell: UITableViewCell {
 		label.center(inView: contentView)
 	}
 
-
 }

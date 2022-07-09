@@ -120,10 +120,17 @@ class ArticleDetailViewController: UIViewController {
 		let data = Data(article.contentText.utf8)
 		
 		if let attributedString = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
-			let pdfCreator = PDFCreator(title: title, image: articleImage, authorName: author, attributedBody: attributedString)
-			let pdfData = pdfCreator.createFlyer()
+//			let pdfCreator = PDFCreator(title: title, image: articleImage, authorName: author, attributedBody: attributedString)
+//			let pdfData = pdfCreator.createFlyer()
+//			let vc = UIActivityViewController(activityItems: [pdfData], applicationActivities: [])
+//			present(vc, animated: true, completion: nil)
+			let pdfRenderer = PDFDINA4PrintRenderer(title: title, image: articleImage, authorName: author, attributedBody: attributedString)
+			let printFormatter = UISimpleTextPrintFormatter(attributedText: attributedString)
+			pdfRenderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
+			let pdfData = pdfRenderer.createFlyer()
 			let vc = UIActivityViewController(activityItems: [pdfData], applicationActivities: [])
 			present(vc, animated: true, completion: nil)
+
 		}
 	
 	}
