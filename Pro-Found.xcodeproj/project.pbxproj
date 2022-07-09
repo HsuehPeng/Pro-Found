@@ -25,6 +25,7 @@
 		B80D673728754B1F008D0FA8 /* ListMenuViewCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673628754B1F008D0FA8 /* ListMenuViewCellTableViewCell.swift */; };
 		B80D67392875C2A8008D0FA8 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D67382875C2A8008D0FA8 /* NotificationViewController.swift */; };
 		B80D673B2875C5FF008D0FA8 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */; };
+		B80D673E28783655008D0FA8 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673D28783655008D0FA8 /* UIViewController+Extension.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -137,6 +138,7 @@
 		B80D673628754B1F008D0FA8 /* ListMenuViewCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListMenuViewCellTableViewCell.swift; sourceTree = "<group>"; };
 		B80D67382875C2A8008D0FA8 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
+		B80D673D28783655008D0FA8 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -439,6 +441,7 @@
 				B83D19BE285608770049846E /* UIFont+Extension.swift */,
 				B8A8FDF32855E4EE00F98326 /* UIColor+Extension.swift */,
 				B8F99C282860625200B88244 /* MKMapView + Extension.swift */,
+				B80D673D28783655008D0FA8 /* UIViewController+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -801,6 +804,7 @@
 				B8AB0652285C8F36002110A4 /* SignUpViewController.swift in Sources */,
 				B8F352DA2862DD0A0068E87D /* ScheduleEventListTableViewCell.swift in Sources */,
 				B8AB064F285B88F2002110A4 /* SelectClassBottomSheetViewController.swift in Sources */,
+				B80D673E28783655008D0FA8 /* UIViewController+Extension.swift in Sources */,
 				B80188752866D114009A6472 /* ChooseSubjectUICollectionViewCell.swift in Sources */,
 				B8AB063F285B088E002110A4 /* LoginViewController.swift in Sources */,
 				B8C7B3972857260300CA7370 /* ScheduleViewController.swift in Sources */,

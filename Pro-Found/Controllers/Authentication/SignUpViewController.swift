@@ -128,7 +128,7 @@ class SignUpViewController: UIViewController {
 	func setupUI() {
 		
 		view.addSubview(appImageView)
-		appImageView.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 168, paddingLeft: 16)
+		appImageView.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 375 * (120/375), paddingLeft: 16)
 		
 		view.addSubview(appLabel)
 		appLabel.centerY(inView: appImageView, leftAnchor: appImageView.rightAnchor, paddingLeft: 16)

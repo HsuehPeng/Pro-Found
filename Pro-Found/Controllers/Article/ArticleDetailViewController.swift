@@ -115,13 +115,24 @@ class ArticleDetailViewController: UIViewController {
 	@objc func sharePDFArticle() {
 		guard let articleImage = articleImage else { return }
 		let title = article.articleTitle
-		let body = article.contentText
 		let author = article.authorName
 		
-		let pdfCreator = PDFCreator(title: title, body: body, image: articleImage, authorName: author)
-		let pdfData = pdfCreator.createFlyer()
-		let vc = UIActivityViewController(activityItems: [pdfData], applicationActivities: [])
-		present(vc, animated: true, completion: nil)
+		let data = Data(article.contentText.utf8)
+		
+		if let attributedString = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+//			let pdfCreator = PDFCreator(title: title, image: articleImage, authorName: author, attributedBody: attributedString)
+//			let pdfData = pdfCreator.createFlyer()
+//			let vc = UIActivityViewController(activityItems: [pdfData], applicationActivities: [])
+//			present(vc, animated: true, completion: nil)
+			let pdfRenderer = PDFDINA4PrintRenderer(title: title, image: articleImage, authorName: author, attributedBody: attributedString)
+			let printFormatter = UISimpleTextPrintFormatter(attributedText: attributedString)
+			pdfRenderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
+			let pdfData = pdfRenderer.createFlyer()
+			let vc = UIActivityViewController(activityItems: [pdfData], applicationActivities: [])
+			present(vc, animated: true, completion: nil)
+
+		}
+	
 	}
 	
 	@objc func bookmarkArticle() {

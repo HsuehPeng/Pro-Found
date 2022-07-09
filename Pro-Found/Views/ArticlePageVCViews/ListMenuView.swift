@@ -33,15 +33,15 @@ enum TextFormateType: String {
 		
 		switch self {
 		case .heading1:
-			return UIFont.systemFont(ofSize: 24, weight: .semibold)
+			return UIFont.systemFont(ofSize: 22, weight: .semibold)
 		case .heading2:
-			return UIFont.systemFont(ofSize: 20, weight: .semibold)
+			return UIFont.systemFont(ofSize: 18, weight: .semibold)
 		case .title1:
-			return UIFont.systemFont(ofSize: 20, weight: .medium)
-		case .title2:
 			return UIFont.systemFont(ofSize: 18, weight: .medium)
+		case .title2:
+			return UIFont.systemFont(ofSize: 16, weight: .medium)
 		case .text:
-			return UIFont.systemFont(ofSize: 16, weight: .regular)
+			return UIFont.systemFont(ofSize: 14, weight: .regular)
 		}
 	}
 }
@@ -80,7 +80,7 @@ enum TextFormateColor {
 
 protocol ListMenuViewDelegate: AnyObject {
 	func listMenuView(_ view: ListMenuView, for SelectedTextFormateType: TextFormateType)
-	func listMenuView(_ view: ListMenuView, for selectedTextColor: TextFormateColor)
+	func listMenuView(_ View: ListMenuView, for selectedTextColorType: TextFormateColor)
 }
 
 class ListMenuView: UIView {
@@ -90,7 +90,7 @@ class ListMenuView: UIView {
 	var textFormateOptions = [TextFormateType]()
 	
 	var textColorOptions = [TextFormateColor]()
-	
+		
 	var isUp = false
 	
 	private let tableView: UITableView = {
@@ -121,7 +121,6 @@ class ListMenuView: UIView {
 
 extension ListMenuView: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		
 		if textFormateOptions.isEmpty {
 			return textColorOptions.count
 		} else {
@@ -138,6 +137,7 @@ extension ListMenuView: UITableViewDataSource {
 		} else {
 			cell.label.text = textFormateOptions[indexPath.row].description
 		}
+		
 		return cell
 	}
 }
@@ -145,10 +145,10 @@ extension ListMenuView: UITableViewDataSource {
 extension ListMenuView: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		
+
 		if textFormateOptions.isEmpty {
-			let textColor = textColorOptions[indexPath.row]
-			delegate?.listMenuView(self, for: textColor)
+			let textColorType = textColorOptions[indexPath.row]
+			delegate?.listMenuView(self, for: textColorType)
 		} else {
 			let textFormateType = textFormateOptions[indexPath.row]
 			delegate?.listMenuView(self, for: textFormateType)
