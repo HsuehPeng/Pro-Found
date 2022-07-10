@@ -40,7 +40,7 @@ class ArticleListTableViewCell: UITableViewCell {
 	private let articleTitleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 14),
 												 textColor: .dark60, text: "Test Title")
-		label.numberOfLines = 0
+		label.numberOfLines = 2
 		return label
 	}()
 	
@@ -68,7 +68,6 @@ class ArticleListTableViewCell: UITableViewCell {
 	private let authorLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: .dark40, text: "Author Name")
-		label.numberOfLines = 0
 		return label
 	}()
 	

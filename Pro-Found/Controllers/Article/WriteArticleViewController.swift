@@ -31,7 +31,7 @@ class WriteArticleViewController: UIViewController {
 	
 	private let topBarView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		let titleLabel = UILabel()
 		titleLabel.text = "Write Article"
@@ -124,7 +124,7 @@ class WriteArticleViewController: UIViewController {
 	
 	private let bottomBarView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		let dividerView = UIView()
 		dividerView.backgroundColor = .dark20
@@ -149,7 +149,7 @@ class WriteArticleViewController: UIViewController {
 	}()
 	
 	private lazy var postButton: UIButton = {
-		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Post")
+		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Post")
 		button.widthAnchor.constraint(equalToConstant: 90).isActive = true
 		button.addTarget(self, action: #selector(sendOutArticle), for: .touchUpInside)
 		return button
@@ -244,7 +244,7 @@ class WriteArticleViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		articleTextView.delegate = self
 		

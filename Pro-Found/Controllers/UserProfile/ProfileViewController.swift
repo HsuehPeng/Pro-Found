@@ -49,7 +49,7 @@ class ProfileViewController: UIViewController {
 		
 	private let topView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		return view
 	}()
@@ -111,6 +111,7 @@ class ProfileViewController: UIViewController {
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.separatorStyle = .none
+		tableView.backgroundColor = .light60
 		tableView.register(UserProfileListTableViewCell.self, forCellReuseIdentifier: UserProfileListTableViewCell.reuserIdentifier)
 		return tableView
 	}()
@@ -119,7 +120,7 @@ class ProfileViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		tableView.dataSource = self
 		tableView.delegate = self

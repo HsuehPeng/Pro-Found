@@ -50,7 +50,7 @@ class TutorProfileViewController: UIViewController {
 	
 	private lazy var backButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.chevron_left)?.withTintColor(.white)
+		let image = UIImage.asset(.chevron_left)?.withTintColor(.light60)
 		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(popVC), for: .touchUpInside)
 		button.setDimensions(width: 36, height: 36)
@@ -91,7 +91,7 @@ class TutorProfileViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		tableView.dataSource = self
 		tableView.delegate = self
@@ -206,7 +206,7 @@ class TutorProfileViewController: UIViewController {
 					}
 					return false
 				}
-				self.tutorPosts = filteredPosts
+				self.tutorPosts = filteredPosts.sorted(by: {$0.timestamp > $1.timestamp})
 			case . failure(let error):
 				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)

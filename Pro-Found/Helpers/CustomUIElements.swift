@@ -104,7 +104,7 @@ class CustomUIElements {
 		let button = UIButton()
 		button.layer.cornerRadius = 12
 		button.setTitle(subject.rawValue, for: .normal)
-		button.setTitleColor(UIColor.white, for: .selected)
+		button.setTitleColor(UIColor.light60, for: .selected)
 		button.setTitleColor(UIColor.dark30, for: .normal)
 		button.backgroundColor = .dark10
 		button.heightAnchor.constraint(equalToConstant: 29).isActive = true

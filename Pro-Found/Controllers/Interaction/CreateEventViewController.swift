@@ -17,7 +17,7 @@ class CreateEventViewController: UIViewController {
 	
 	private let topBarView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		let titleLabel = UILabel()
 		titleLabel.text = "Create Event"
@@ -119,7 +119,7 @@ class CreateEventViewController: UIViewController {
 	}()
 	
 	private lazy var createEventButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white,
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60,
 														borderColor: .clear, buttonText: "Create Event")
 		button.widthAnchor.constraint(equalToConstant: 128).isActive = true
 		button.addTarget(self, action: #selector(createEvent), for: .touchUpInside)
@@ -139,7 +139,7 @@ class CreateEventViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		setupUI()
 		
 	}

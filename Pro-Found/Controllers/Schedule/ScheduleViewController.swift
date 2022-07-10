@@ -185,7 +185,7 @@ class ScheduleViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		collectionView.dataSource = self
 		collectionView.delegate = self

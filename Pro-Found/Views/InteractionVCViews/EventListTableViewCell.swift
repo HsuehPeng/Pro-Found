@@ -68,7 +68,7 @@ class EventListTableViewCell: UITableViewCell {
 	private let addressLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: .dark40, text: "Event address")
-		label.numberOfLines = 0
+		label.numberOfLines = 2
 		return label
 	}()
 	
@@ -89,6 +89,12 @@ class EventListTableViewCell: UITableViewCell {
 	
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+	
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		guard let event = event else { return }
+		checkIfBooked(event: event)
 	}
 	
 	// MARK: - UI
@@ -133,11 +139,13 @@ class EventListTableViewCell: UITableViewCell {
 		guard let event = event else { return }
 		
 		checkIfBooked(event: event)
+		
 		let organizerImageUrl = URL(string: event.organizer.profileImageURL)
 		let eventImageUrl = URL(string: event.imageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMMM dd, yyyy ∙ h:mm a"
 		let eventDate = Date(timeIntervalSince1970: event.timestamp)
+		
 		eventImageView.kf.setImage(with: eventImageUrl)
 		organizerImageView.kf.setImage(with: organizerImageUrl)
 		eventTitleLabel.text = event.eventTitle

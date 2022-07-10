@@ -13,7 +13,7 @@ class MissingInputViewController: UIViewController {
 	
 	private let middleView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		view.alpha = 0.95
 		view.layer.cornerRadius = 24
 		view.setDimensions(width: 295, height: 256)

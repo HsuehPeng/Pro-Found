@@ -48,7 +48,7 @@ class BecomeTutorViewController: UIViewController {
 	}()
 	
 	private lazy var chooseButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Confirm")
+		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Confirm")
 		button.backgroundColor = .orange
 		button.addTarget(self, action: #selector(handleConfirm), for: .touchUpInside)
 		return button

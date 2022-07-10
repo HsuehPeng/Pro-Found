@@ -98,7 +98,7 @@ class NotificationTableViewCell: UITableViewCell {
 	}()
 	
 	lazy var acceptButton: UIButton = {
-		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white,
+		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .light60,
 														 borderColor: .clear, buttonText: CourseApplicationState.accept.buttonText)
 		button.widthAnchor.constraint(equalToConstant: 120).isActive = true
 		button.addTarget(self, action: #selector(handleApplicationResult), for: .touchUpInside)

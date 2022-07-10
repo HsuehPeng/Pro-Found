@@ -59,7 +59,7 @@ class ArticleViewController: UIViewController {
 		button.isHidden = true
 		button.setDimensions(width: 54, height: 54)
 		button.layer.cornerRadius = 54 / 2
-		button.backgroundColor = .white
+		button.backgroundColor = .light60
 		button.layer.shadowColor = UIColor.dark60.cgColor
 		button.layer.shadowOffset = CGSize(width: 0, height: 4)
 		button.layer.shadowRadius = 10
@@ -73,7 +73,7 @@ class ArticleViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		tableView.dataSource = self
 		tableView.delegate = self
