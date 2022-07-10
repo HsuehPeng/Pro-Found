@@ -34,6 +34,7 @@ enum ImageAsset: String {
 	case article
 	case assignment
 	case attach_file
+	case bold
 	case bookmark
 	case calendar_selected
 	case calendar_time
@@ -63,6 +64,7 @@ enum ImageAsset: String {
 	case control_radio_checked
 	case control_radio_unchecked
 	case credit_card
+	case capital_a
 	case dashboard
 	case delete
 	case dialpad
@@ -87,6 +89,8 @@ enum ImageAsset: String {
 	case help_center
 	case help
 	case home
+	case italic
+	case italics
 	case layers
 	case logout
 	case map_gps
@@ -135,6 +139,7 @@ enum ImageAsset: String {
 	case transport_bus
 	case transport_plane
 	case transport_train
+	case textA
 	case verified_user
 	case verified
 	case web

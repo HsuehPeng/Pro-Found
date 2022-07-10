@@ -60,7 +60,7 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 	private let subjectButton: UIButton = {
 		let button = UIButton()
 		button.setTitle("Subject", for: .normal)
-		button.setTitleColor(UIColor.white, for: .normal)
+		button.setTitleColor(UIColor.light60, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 10)
 		button.widthAnchor.constraint(equalToConstant: 70).isActive = true
 		button.heightAnchor.constraint(equalToConstant: 25).isActive = true

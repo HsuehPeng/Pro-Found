@@ -10,6 +10,7 @@ target 'Pro-Found' do
 	pod 'FirebaseAuth'
 	pod 'FirebaseFirestore'
 	pod 'FirebaseFirestoreSwift'
+	pod 'FirebaseCrashlytics'
 	pod 'FirebaseStorage'
 	pod 'Kingfisher', '~> 7.0'
 	pod 'Cosmos', '~> 23.0'

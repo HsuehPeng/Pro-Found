@@ -59,7 +59,7 @@ class ArticleViewController: UIViewController {
 		button.isHidden = true
 		button.setDimensions(width: 54, height: 54)
 		button.layer.cornerRadius = 54 / 2
-		button.backgroundColor = .white
+		button.backgroundColor = .light60
 		button.layer.shadowColor = UIColor.dark60.cgColor
 		button.layer.shadowOffset = CGSize(width: 0, height: 4)
 		button.layer.shadowRadius = 10
@@ -73,7 +73,7 @@ class ArticleViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		tableView.dataSource = self
 		tableView.delegate = self
@@ -123,6 +123,7 @@ class ArticleViewController: UIViewController {
 				self.filterArticles()
 				self.refreshControl.endRefreshing()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -149,7 +150,8 @@ class ArticleViewController: UIViewController {
 				self.user = user
 				self.fetchArticles()
 			case .failure(let error):
-				print("asdfasdf \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+				print(error)
 			}
 		}
 	}
@@ -163,6 +165,7 @@ class ArticleViewController: UIViewController {
 				self.articles = filterBlockedArticles
 				self.filterArticles()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -176,6 +179,7 @@ class ArticleViewController: UIViewController {
 				self.articles = articles
 				self.filterArticles()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -238,7 +242,7 @@ extension ArticleViewController: UITableViewDataSource {
 		
 		switch indexPath.section {
 		case 0:
-			cell.filteredArticles = subjectDict[Subject.language.rawValue] ?? []
+			cell.filteredArticles = subjectDict[Subject.art.rawValue] ?? []
 			return cell
 		case 1:
 			cell.filteredArticles = subjectDict[Subject.technology.rawValue] ?? []
@@ -250,7 +254,7 @@ extension ArticleViewController: UITableViewDataSource {
 			cell.filteredArticles = subjectDict[Subject.sport.rawValue] ?? []
 			return cell
 		case 4:
-			cell.filteredArticles = subjectDict[Subject.art.rawValue] ?? []
+			cell.filteredArticles = subjectDict[Subject.language.rawValue] ?? []
 			return cell
 		default:
 			break
@@ -273,7 +277,7 @@ extension ArticleViewController: UITableViewDelegate {
 		header.delegate = self
 		switch section {
 		case 0:
-			header.titleLabel.text = Subject.language.rawValue
+			header.titleLabel.text = Subject.art.rawValue
 			return header
 		case 1:
 			header.titleLabel.text = Subject.technology.rawValue
@@ -285,7 +289,7 @@ extension ArticleViewController: UITableViewDelegate {
 			header.titleLabel.text = Subject.sport.rawValue
 			return header
 		case 4:
-			header.titleLabel.text = Subject.art.rawValue
+			header.titleLabel.text = Subject.language.rawValue
 			return header
 		default:
 			break

@@ -58,6 +58,11 @@ class ArticleDetailContentTableViewCell: UITableViewCell {
 	func configure() {
 		guard let article = article else { return }
 		contentTextView.text = article.contentText
+		
+		let data = Data(article.contentText.utf8)
+		if let attributedString = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+			contentTextView.attributedText = attributedString
+		}
 	}
 
 }

@@ -68,12 +68,12 @@ class EventListTableViewCell: UITableViewCell {
 	private let addressLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: .dark40, text: "Event address")
-		label.numberOfLines = 0
+		label.numberOfLines = 2
 		return label
 	}()
 	
 	lazy var bookEventButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book")
+		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Book")
 		button.addTarget(self, action: #selector(bookEvent), for: .touchUpInside)
 		button.setTitle("Booked", for: .disabled)
 		button.widthAnchor.constraint(equalToConstant: 96).isActive = true
@@ -91,6 +91,12 @@ class EventListTableViewCell: UITableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		bookEventButton.isEnabled = true
+		bookEventButton.backgroundColor = .orange
+	}
+
 	// MARK: - UI
 	
 	private func setupUI() {
@@ -133,11 +139,13 @@ class EventListTableViewCell: UITableViewCell {
 		guard let event = event else { return }
 		
 		checkIfBooked(event: event)
+		
 		let organizerImageUrl = URL(string: event.organizer.profileImageURL)
 		let eventImageUrl = URL(string: event.imageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMMM dd, yyyy ∙ h:mm a"
 		let eventDate = Date(timeIntervalSince1970: event.timestamp)
+		
 		eventImageView.kf.setImage(with: eventImageUrl)
 		organizerImageView.kf.setImage(with: organizerImageUrl)
 		eventTitleLabel.text = event.eventTitle
@@ -146,7 +154,7 @@ class EventListTableViewCell: UITableViewCell {
 		organizerNameLabel.text = event.organizerName
 	}
 	
-	private func checkIfBooked(event: Event) {
+	func checkIfBooked(event: Event) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		if event.participants.contains(uid) {
 			bookEventButton.backgroundColor = .dark20

@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import Lottie
 
 class ArticleListViewController: UIViewController {
 	
 	// MARK: - Properties
 	
-	let articles: [Article]
+	var articles: [Article]
 	
 	var filteredArticles = [Article]()
 	
@@ -116,7 +117,7 @@ extension ArticleListViewController: UITableViewDataSource {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: ArticleListTableViewCell.reuseIdentifier, for: indexPath)
 				as? ArticleListTableViewCell else { fatalError("Can not dequeue ArticleListTableViewCell") }
-		
+		cell.delegate = self
 		if isFiltering {
 			let article = filteredArticles[indexPath.row]
 			cell.article = article
@@ -158,5 +159,38 @@ extension ArticleListViewController: UISearchResultsUpdating {
 
 extension ArticleListViewController: UISearchBarDelegate {
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+	}
+}
+
+// MARK: - ArticleListTableViewCellDelegate
+
+extension ArticleListViewController: ArticleListTableViewCellDelegate {
+	func askToDelete(_ cell: ArticleListTableViewCell) {
+		guard let article = cell.article, let indexPath = tableView.indexPath(for: cell) else { return }
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		let controller = UIAlertController(title: "Are you sure to delete this article?", message: nil, preferredStyle: .alert)
+		
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			loadingLottie.loadingAnimation()
+			ArticleService.shared.deleteArticle(articleID: article.articleID, userID: article.userID) { [weak self] in
+				guard let self = self else { return }
+				if self.isFiltering {
+					self.filteredArticles.remove(at: indexPath.row)
+					self.tableView.deleteRows(at: [indexPath], with: .fade)
+				} else {
+					self.articles.remove(at: indexPath.row)
+					self.tableView.deleteRows(at: [indexPath], with: .fade)
+				}
+
+				loadingLottie.stopAnimation()
+			}
+		}
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
 	}
 }

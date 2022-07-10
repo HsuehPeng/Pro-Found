@@ -85,7 +85,7 @@ class ChatViewController: UIViewController {
 		configureUI()
 		fetchMessages()
 		
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 	}
 	
@@ -97,6 +97,7 @@ class ChatViewController: UIViewController {
 		let titleAttribute: [NSAttributedString.Key: Any] = [
 			.font: UIFont.customFont(.interBold, size: 16)
 		]
+		
 		let appearance = UINavigationBarAppearance()
 		appearance.titleTextAttributes = titleAttribute
 		appearance.configureWithDefaultBackground()
@@ -141,9 +142,10 @@ class ChatViewController: UIViewController {
 			guard let self = self else { return }
 			if let error = error {
 				print("Error uploading message with error: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 			}
-			self.clearMessageText()
 		}
+		self.clearMessageText()
 	}
 	
 	// MARK: - Helpers
@@ -158,6 +160,7 @@ class ChatViewController: UIViewController {
 				self.tableView.scrollToRow(at: IndexPath(row: self.messages.count - 1, section: 0),
 										   at: .bottom, animated: true)
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

@@ -9,6 +9,7 @@ import UIKit
 import PhotosUI
 import Kingfisher
 import Lottie
+import IQKeyboardManagerSwift
 
 class WriteArticleViewController: UIViewController {
 	
@@ -16,9 +17,21 @@ class WriteArticleViewController: UIViewController {
 	
 	let user: User
 	
+	var htmlText = ""
+	
+	var currentTextType: TextFormateType = TextFormateType.heading1
+	
+	var currentAttribute: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: TextFormateType.heading1.font] {
+		didSet {
+			articleTextView.typingAttributes = currentAttribute
+		}
+	}
+	
+	var kbHeight: CGFloat = 0.0
+	
 	private let topBarView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		let titleLabel = UILabel()
 		titleLabel.text = "Write Article"
@@ -105,12 +118,13 @@ class WriteArticleViewController: UIViewController {
 	private let articleTextView: ArticleTextView = {
 		let textView = ArticleTextView()
 		textView.isScrollEnabled = true
+		textView.autocorrectionType = .no
 		return textView
 	}()
 	
 	private let bottomBarView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		let dividerView = UIView()
 		dividerView.backgroundColor = .dark20
@@ -122,8 +136,8 @@ class WriteArticleViewController: UIViewController {
 	
 	private lazy var pickImageButton: UIButton = {
 		let button = UIButton()
-		button.setDimensions(width: 24, height: 24)
-		button.setImage(UIImage.asset(.photo), for: .normal)
+		button.setDimensions(width: 36, height: 36)
+		button.setImage(UIImage.asset(.add_circle)?.withRenderingMode(.alwaysOriginal).withTintColor(.orange), for: .normal)
 		button.addTarget(self, action: #selector(handlePickingImage), for: .touchUpInside)
 		return button
 	}()
@@ -135,12 +149,87 @@ class WriteArticleViewController: UIViewController {
 	}()
 	
 	private lazy var postButton: UIButton = {
-		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Post")
+		let button = CustomUIElements().makeMediumButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Post")
 		button.widthAnchor.constraint(equalToConstant: 90).isActive = true
 		button.addTarget(self, action: #selector(sendOutArticle), for: .touchUpInside)
-		
 		return button
 	}()
+	
+	private lazy var toolBar: UIToolbar = {
+		let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 50))
+		return toolBar
+	}()
+	
+	private lazy var doneButton: UIBarButtonItem = {
+		let button = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleDoneKBEditing))
+		button.width = view.frame.size.width / 4
+		return button
+	}()
+	
+	private lazy var textFormateButton: UIBarButtonItem = {
+		let button = UIBarButtonItem(image: UIImage(systemName: "textformat.alt"), style: .plain, target: self,
+									 action: #selector(handleTextFormate))
+		button.tintColor = TextFormateColor.dark.color
+		button.width = view.frame.size.width / 4
+		return button
+	}()
+	
+	var textFormateViewHeight = NSLayoutConstraint()
+	
+	private lazy var textFormateView: ListMenuView = {
+		let listView = ListMenuView()
+		view.addSubview(listView)
+		listView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 110)
+		listView.translatesAutoresizingMaskIntoConstraints = false
+		listView.widthAnchor.constraint(equalToConstant: textFormateButton.width).isActive = true
+		textFormateViewHeight = listView.heightAnchor.constraint(equalToConstant: 0)
+		listView.textFormateOptions = [TextFormateType.heading1,
+									   TextFormateType.heading2,
+									   TextFormateType.title1,
+									   TextFormateType.title2,
+									   TextFormateType.text]
+		listView.delegate = self
+		return listView
+	}()
+
+	private lazy var textColorButton: UIBarButtonItem = {
+		let button = UIBarButtonItem(image: UIImage(systemName: "paintbrush.pointed"), style: .plain, target: self,
+									 action: #selector(handleTextFormate))
+		button.tintColor = TextFormateColor.dark.color
+		button.width = view.frame.size.width / 4
+		return button
+	}()
+	
+	var textColorListViewHeight = NSLayoutConstraint()
+	
+	private lazy var textColorListView: ListMenuView = {
+		let listView = ListMenuView()
+		view.addSubview(listView)
+		listView.anchor(left: textFormateView.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 110)
+		listView.translatesAutoresizingMaskIntoConstraints = false
+		listView.widthAnchor.constraint(equalToConstant: textColorButton.width).isActive = true
+		textColorListViewHeight = listView.heightAnchor.constraint(equalToConstant: 0)
+		listView.textColorOptions = [TextFormateColor.red,
+									 TextFormateColor.green,
+									 TextFormateColor.dark,
+									 TextFormateColor.orange,
+									 TextFormateColor.light,
+									 TextFormateColor.skyblue
+		]
+		listView.delegate = self
+		return listView
+	}()
+	
+	private lazy var italicButton: UIBarButtonItem = {
+		let image  = UIImage.asset(.italic)
+		let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(handleItalic))
+		button.tintColor = TextFormateColor.dark.color
+		button.isSelected = false
+		button.width = view.frame.size.width / 4
+		return button
+	}()
+	
+	private var KeyboardHeightVar: CGFloat = 0.0
 	
 	// MARK: - Lifecycle
 	
@@ -155,80 +244,126 @@ class WriteArticleViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
+		
 		articleTextView.delegate = self
+		
+		IQKeyboardManager.shared.enableAutoToolbar = false
+		
 		setupUI()
+		setupKBToolBar()
+		
+		currentAttribute[.font] = currentTextType.font
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardEvent), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(keyboardEvent), name: UIResponder.keyboardWillHideNotification, object: nil)
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		IQKeyboardManager.shared.enableAutoToolbar = true
 	}
 	
 	// MARK: - UI
 	
 	func setupUI() {
+		
 		view.addSubview(topBarView)
-		topBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+				
+		view.addSubview(bottomBarView)
 		
 		topBarView.addSubview(cancelButton)
-		cancelButton.centerY(inView: topBarView, leftAnchor: topBarView.leftAnchor, paddingLeft: 18)
 		
 		view.addSubview(articleImageView)
-		articleImageView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		
+		view.addSubview(pickImageButton)
 		
 		view.addSubview(articleTitleLabel)
-		articleTitleLabel.anchor(top: topBarView.bottomAnchor, left: articleImageView.rightAnchor,
-									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(articleTitleTextField)
-		articleTitleTextField.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
-									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(articleTitleDividerView)
-		articleTitleDividerView.anchor(top: articleTitleTextField.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
-									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(subjectTitleLabel)
-		subjectTitleLabel.anchor(top: articleTitleDividerView.bottomAnchor, left: articleImageView.rightAnchor,
-									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+		bottomBarView.addSubview(postButton)
+		
+		bottomBarView.addSubview(characterCountLabel)
 		
 		let topSubjectHStack = UIStackView(arrangedSubviews: [languageButton, techButton])
 		topSubjectHStack.distribution = .fillEqually
 		topSubjectHStack.spacing = 5
 		view.addSubview(topSubjectHStack)
-		topSubjectHStack.anchor(top: subjectTitleLabel.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
-								paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 		let bottomSubjectHStack = UIStackView(arrangedSubviews: [musicButton, sportButton, artButton])
 		bottomSubjectHStack.distribution = .fillEqually
 		bottomSubjectHStack.spacing = 5
 		view.addSubview(bottomSubjectHStack)
-		bottomSubjectHStack.anchor(top: topSubjectHStack.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
-								paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(articleTextView)
-		articleTextView.anchor(top: articleImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
-							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(bottomBarView)
-		bottomBarView.anchor(top: articleTextView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+		topBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
+				
+		cancelButton.centerY(inView: topBarView, leftAnchor: topBarView.leftAnchor, paddingLeft: 18)
+		
+		articleImageView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		
+		pickImageButton.anchor(bottom: articleImageView.bottomAnchor, right: articleImageView.rightAnchor, paddingBottom: -10, paddingRight: -10)
+		
+		articleTitleLabel.anchor(top: topBarView.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+		articleTitleTextField.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		articleTitleDividerView.anchor(top: articleTitleTextField.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+									  paddingTop: 8, paddingLeft: 16, paddingRight: 16)
+		
+		subjectTitleLabel.anchor(top: articleTitleDividerView.bottomAnchor, left: articleImageView.rightAnchor,
+									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+
+		topSubjectHStack.anchor(top: subjectTitleLabel.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+								paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+
+		bottomSubjectHStack.anchor(top: topSubjectHStack.bottomAnchor, left: articleImageView.rightAnchor, right: view.rightAnchor,
+								paddingTop: 16, paddingLeft: 16, paddingRight: 16)
+		
+		
+		articleTextView.anchor(top: articleImageView.bottomAnchor, left: view.leftAnchor, bottom: bottomBarView.topAnchor, right: view.rightAnchor,
+							   paddingTop: 16, paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
+		
+		bottomBarView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
 							 right: view.rightAnchor, height: 64)
 		
-		let actionButtonHStack = UIStackView(arrangedSubviews: [
-			pickImageButton
-		])
-		actionButtonHStack.axis = .horizontal
-		actionButtonHStack.spacing = 24
-		bottomBarView.addSubview(actionButtonHStack)
-		actionButtonHStack.centerY(inView: bottomBarView, leftAnchor: bottomBarView.leftAnchor, paddingLeft: 16)
-		
-		bottomBarView.addSubview(postButton)
 		postButton.centerY(inView: bottomBarView)
 		postButton.rightAnchor.constraint(equalTo: bottomBarView.rightAnchor, constant: -16).isActive = true
 		
-		bottomBarView.addSubview(characterCountLabel)
+		
 		characterCountLabel.centerY(inView: bottomBarView)
 		characterCountLabel.rightAnchor.constraint(equalTo: postButton.leftAnchor, constant: -16).isActive = true
 	}
 	
+	func setupKBToolBar() {
+		
+		toolBar.items = [textFormateButton, textColorButton, italicButton, doneButton]
+		toolBar.sizeToFit()
+		articleTextView.inputAccessoryView = toolBar
+	}
+	
 	// MARK: - Actions
 	
+	@objc func keyboardEvent(_ notification: Notification) {
+		guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+		
+		let keyboardScreenEndFrame: CGRect = keyboardFrame.cgRectValue
+		
+		let keyboardViewEndFrame: CGRect = view.convert(keyboardScreenEndFrame, to: view.window)
+		kbHeight = keyboardViewEndFrame.height
+		print(keyboardViewEndFrame.height)
+	}
+
 	@objc func selectedSubject(_ sender: UIButton) {
 		let buttons = [languageButton, techButton, artButton, musicButton, sportButton]
 		
@@ -287,6 +422,8 @@ class WriteArticleViewController: UIViewController {
 			present(missingInputVC, animated: true)
 			return
 		}
+		
+		convertAttributeStringToHtml()
 
 		let loadingAnimation = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
 		loadingAnimation.loadingAnimation()
@@ -298,17 +435,57 @@ class WriteArticleViewController: UIViewController {
 			case .success(let url):
 				let imageURL = url
 				let firestoreArticle = FirebaseArticle(userID: self.user.userID, articleTitle: articleTitle, authorName: self.user.name,
-													   subject: selectedSubject, timestamp: interval, contentText: contentText, imageURL: imageURL, ratings: [])
+													   subject: selectedSubject, timestamp: interval, contentText: self.htmlText, imageURL: imageURL, ratings: [])
 				ArticleService.shared.uploadArticle(article: firestoreArticle) {
 					loadingAnimation.stopAnimation()
+					self.dismiss(animated: true)
 				}
-				self.dismiss(animated: true)
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
 	}
 	
+	@objc func handleTextFormate(_ sender: UIBarButtonItem) {
+		if sender == textFormateButton {
+			toggleMenuView(textFormateView)
+		} else {
+			toggleMenuView(textColorListView)
+		}
+	}
+	
+	@objc func handleItalic() {
+		italicButton.isSelected = !italicButton.isSelected
+		if italicButton.isSelected {
+			let font = currentTextType.font
+			
+			switch currentTextType {
+			case .heading1:
+				currentAttribute[NSAttributedString.Key.font] = font.boldItalics()
+			case .heading2:
+				currentAttribute[NSAttributedString.Key.font] = font.boldItalics()
+			case .title1:
+				currentAttribute[NSAttributedString.Key.font] = font.italics()
+			case .title2:
+				currentAttribute[NSAttributedString.Key.font] = font.italics()
+			case .text:
+				currentAttribute[NSAttributedString.Key.font] = font.italics()
+			}
+			
+		} else {
+			currentAttribute[NSAttributedString.Key.font] = currentTextType.font
+		}
+	}
+	
+	@objc func handleDoneKBEditing() {
+		articleTextView.resignFirstResponder()
+		textFormateView.isUp = true
+		textColorListView.isUp = true
+		showOrHideListMenuView(for: textFormateView, heightConstraint: textFormateViewHeight)
+		showOrHideListMenuView(for: textColorListView, heightConstraint: textColorListViewHeight)
+	}
+
 	@objc func dismissVC() {
 		dismiss(animated: true)
 	}
@@ -323,9 +500,82 @@ class WriteArticleViewController: UIViewController {
 		selectedButton.isSelected = true
 		selectedButton.backgroundColor = .orange
 	}
+	
+	func toggleMenuView(_ listView: UIView) {
+		if listView == textFormateView {
+			showOrHideListMenuView(for: textFormateView, heightConstraint: textFormateViewHeight)
+		} else {
+			showOrHideListMenuView(for: textColorListView, heightConstraint: textColorListViewHeight)
+		}
+	}
+	
+	func showOrHideListMenuView(for listView: ListMenuView, heightConstraint: NSLayoutConstraint) {
+		if listView.isUp {
+			listView.isUp = false
+			
+			heightConstraint.isActive = false
+			heightConstraint.constant = 0
+			heightConstraint.isActive = true
+			
+		} else {
+			listView.isUp = true
+			
+			heightConstraint.isActive = false
+			heightConstraint.constant = listView == textFormateView ? CGFloat(40 * listView.textFormateOptions.count) : CGFloat(40 * listView.textColorOptions.count)
+			heightConstraint.isActive = true
+
+			UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .curveEaseInOut) {
+				listView.center.y -= listView.frame.height / 2
+				listView.layoutIfNeeded()
+			}
+		}
+	}
+	
+	func convertAttributeStringToHtml() {
+		do {
+			let range = NSRange(location: 0, length: articleTextView.attributedText.length)
+			let att = [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.html]
+
+			let htmlData = try articleTextView.attributedText.data(from: range, documentAttributes: att)
+
+			if let htmlText = String(data: htmlData, encoding: .utf8) {
+				self.htmlText = htmlText
+			}
+		}
+		catch {
+			print("Utterly failed to convert to html!!! \n>\(String(describing: articleTextView.attributedText))<\n")
+		}
+	}
 }
 
-// MARK: -
+// MARK: - ListMenuViewDelegate
+
+extension WriteArticleViewController: ListMenuViewDelegate {
+	
+	func listMenuView(_ view: ListMenuView, for SelectedTextFormateType: TextFormateType) {
+		textFormateView.isUp = false
+		textFormateViewHeight.isActive = false
+		textFormateViewHeight.constant = 0
+		textFormateViewHeight.isActive = true
+		
+		italicButton.isSelected = false
+		
+		currentTextType = SelectedTextFormateType
+		currentAttribute[.font] = currentTextType.font
+	}
+	
+	func listMenuView(_ View: ListMenuView, for selectedTextColorType: TextFormateColor) {
+		textColorListView.isUp = false
+		textColorListViewHeight.isActive = false
+		textColorListViewHeight.constant = 0
+		textColorListViewHeight.isActive = true
+		
+		currentAttribute[.foregroundColor] = selectedTextColorType.color
+		textColorButton.tintColor = selectedTextColorType.color
+	}
+}
+
+// MARK: - UITextViewDelegate
 
 extension WriteArticleViewController: UITextViewDelegate {
 	func textViewDidChange(_ textView: UITextView) {

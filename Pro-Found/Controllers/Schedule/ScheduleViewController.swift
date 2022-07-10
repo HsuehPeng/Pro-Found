@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Lottie
 
 class ScheduleViewController: UIViewController {
 
@@ -20,17 +21,17 @@ class ScheduleViewController: UIViewController {
 	}
 	
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
-	var filteredCoursesIdWithTimes = [ScheduledCourseTime]()
-	var scheduledCourses = [Course]()
-	var filteredScheduledCourses = [Course]() {
+	
+	var acceptedCoursesIdWithTimes = [ScheduledCourseTime]()
+	
+	var filteredCoursesIdWithTimes = [ScheduledCourseTime]() {
 		didSet {
 			tableView.reloadData()
 		}
 	}
 	
 	var scheduledEventIdWithTimes = [ScheduledEventTime]()
-	var scheduledEvents = [Event]()
-	var filteredScheduledEvents = [Event]() {
+	var filteredEventsIdWithTimes = [ScheduledEventTime]() {
 		didSet {
 			tableView.reloadData()
 		}
@@ -47,6 +48,10 @@ class ScheduleViewController: UIViewController {
 	
 	var selectedDate = Date()
 	var totalSquares = [String]()
+	
+	private lazy var loadingLottie: Lottie = {
+		return Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+	}()
 	
 	private let topBarView: UIView = {
 		let view = UIView()
@@ -85,10 +90,20 @@ class ScheduleViewController: UIViewController {
 		return button
 	}()
 	
-	private lazy var switchMonthWeekButton: UIButton = {
+	private lazy var courseApplicationButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.article), for: .normal)
+		button.addTarget(self, action: #selector(goToNotificationVC), for: .touchUpInside)
 		return button
+	}()
+	
+	private let applicationButtonBadge: UIView = {
+		let view = UIView()
+		view.setDimensions(width: 10, height: 10)
+		view.layer.cornerRadius = 5
+		view.backgroundColor = .orange
+		view.isHidden = true
+		return view
 	}()
 	
 	private let sundayLabel: UILabel = {
@@ -172,7 +187,7 @@ class ScheduleViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		collectionView.dataSource = self
 		collectionView.delegate = self
@@ -182,6 +197,7 @@ class ScheduleViewController: UIViewController {
 		setupNavBar()
 		setupUI()
 		setMonthView()
+		loadingLottie.loadingAnimation()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -202,9 +218,12 @@ class ScheduleViewController: UIViewController {
 		pageTitleLabel.anchor(left: topBarView.leftAnchor, paddingLeft: 16)
 		pageTitleLabel.centerY(inView: topBarView)
 		
-//		topBarView.addSubview(switchMonthWeekButton)
-//		switchMonthWeekButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
-//		switchMonthWeekButton.centerY(inView: topBarView)
+		topBarView.addSubview(courseApplicationButton)
+		courseApplicationButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
+		courseApplicationButton.centerY(inView: topBarView)
+		
+		courseApplicationButton.addSubview(applicationButtonBadge)
+		applicationButtonBadge.anchor(top: courseApplicationButton.topAnchor, right: courseApplicationButton.rightAnchor, paddingTop: 0, paddingRight: 0)
 		
 		let monthSwitchHStack = UIStackView(arrangedSubviews: [previousMonthButton, monthLabel, yearLabel, nextMonthButton])
 		monthSwitchHStack.axis = .horizontal
@@ -212,7 +231,7 @@ class ScheduleViewController: UIViewController {
 		monthSwitchHStack.distribution = .equalSpacing
 
 		topBarView.addSubview(monthSwitchHStack)
-		monthSwitchHStack.anchor(right: view.rightAnchor, paddingRight: 16)
+		monthSwitchHStack.anchor(right: courseApplicationButton.leftAnchor, paddingRight: 16)
 		monthSwitchHStack.centerY(inView: topBarView)
 		
 		let weekdayHStack = UIStackView(arrangedSubviews: [
@@ -240,6 +259,12 @@ class ScheduleViewController: UIViewController {
 	
 	// MARK: - Actions
 	
+	@objc func goToNotificationVC() {
+		guard let user = user, !scheduledCoursesIdWithTimes.isEmpty else { return }
+		let notificationVC = NotificationViewController(user: user)
+		navigationController?.pushViewController(notificationVC, animated: true)
+	}
+	
 	@objc func goNextMonth() {
 		selectedDate = CalendarHelper().plusMonth(date: selectedDate)
 		setMonthView()
@@ -260,6 +285,7 @@ class ScheduleViewController: UIViewController {
 			case .success(let user):
 				self.user = user
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -275,9 +301,20 @@ class ScheduleViewController: UIViewController {
 				guard let self = self else { return }
 				switch result {
 				case .success(let scheduledCoursesIdWithTimes):
-					let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.time < $1.time })
-					self.scheduledCoursesIdWithTimes = sorted
+					
+					self.scheduledCoursesIdWithTimes = scheduledCoursesIdWithTimes
+					
+					if scheduledCoursesIdWithTimes.contains(where: {$0.status == CourseApplicationState.pending.status}) {
+						self.applicationButtonBadge.isHidden = false
+					} else {
+						self.applicationButtonBadge.isHidden = true
+					}
+					
+					let filtered = scheduledCoursesIdWithTimes.filter({ $0.status == CourseApplicationState.accept.status })
+					let sorted = filtered.sorted(by: { $0.time < $1.time })
+					self.acceptedCoursesIdWithTimes = sorted
 				case .failure(let error):
+					self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 					print(error)
 				}
 				sem.signal()
@@ -290,57 +327,26 @@ class ScheduleViewController: UIViewController {
 					let sorted = scheduledEventIdWithTimes.sorted(by: { $0.time < $1.time })
 					self.scheduledEventIdWithTimes = sorted
 				case .failure(let error):
+					self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 					print(error)
 				}
 				sem.signal()
 			}
 			sem.wait()
-			self.fetchScheduledCoursesAndEvents(user: user)
 			DispatchQueue.main.async {
 				self.collectionView.reloadData()
+				self.loadingLottie.stopAnimation()
 				sem.signal()
-			}
-		}
-	}
-	
-	func fetchScheduledCoursesAndEvents(user: User) {
-		scheduledCourses.removeAll()
-		scheduledEvents.removeAll()
-		
-		for scheduledCoursesIdWithTime in scheduledCoursesIdWithTimes {
-			CourseServie.shared.fetchCourse(courseID: scheduledCoursesIdWithTime.courseID) { [weak self] result in
-				guard let self = self else { return }
-				switch result {
-				case .success(let course):
-					self.scheduledCourses.append(course)
-				case . failure(let error):
-					print(error)
-				}
-			}
-		}
-		
-		for scheduledEventIdWithTime in scheduledEventIdWithTimes {
-			EventService.shared.fetchEvent(eventID: scheduledEventIdWithTime.eventID) { [weak self] result in
-				guard let self = self else { return }
-				switch result {
-				case .success(let event):
-					self.scheduledEvents.append(event)
-				case . failure(let error):
-					print(error)
-				}
 			}
 		}
 	}
 	
 	func filterCourseAndEventByDate(dateString: String) {
 		
-		filteredScheduledCourses.removeAll()
-		filteredScheduledEvents.removeAll()
-		
 		let formatter = DateFormatter()
 		formatter.dateFormat = "dd MMMM yyyy"
 		
-		filteredCoursesIdWithTimes = scheduledCoursesIdWithTimes.filter { scheduledCourseTime in
+		filteredCoursesIdWithTimes = acceptedCoursesIdWithTimes.filter { scheduledCourseTime in
 			let date = Date(timeIntervalSince1970: scheduledCourseTime.time)
 			let courseTimeString = formatter.string(from: date)
 			if courseTimeString == dateString {
@@ -350,31 +356,13 @@ class ScheduleViewController: UIViewController {
 			}
 		}
 		
-		filteredCoursesIdWithTimes.forEach { scheduledCourseIdWithTime in
-			for i in 0..<scheduledCourses.count {
-				if scheduledCourseIdWithTime.courseID == scheduledCourses[i].courseID {
-					filteredScheduledCourses.append(scheduledCourses[i])
-					break
-				}
-			}
-		}
-		
-		let filteredEventsIdWithTimes = scheduledEventIdWithTimes.filter { scheduledEventTime in
+		filteredEventsIdWithTimes = scheduledEventIdWithTimes.filter { scheduledEventTime in
 			let date = Date(timeIntervalSince1970: scheduledEventTime.time)
 			let eventTimeString = formatter.string(from: date)
 			if eventTimeString == dateString {
 				return true
 			} else {
 				return false
-			}
-		}
-		
-		filteredEventsIdWithTimes.forEach { scheduledEventIdWithTime in
-			for i in 0..<scheduledEvents.count {
-				if scheduledEventIdWithTime.eventID == scheduledEvents[i].eventID {
-					filteredScheduledEvents.append(scheduledEvents[i])
-					break
-				}
 			}
 		}
 	}
@@ -415,7 +403,6 @@ extension ScheduleViewController: UICollectionViewDataSource {
 		guard let calendarCell = collectionView.dequeueReusableCell(withReuseIdentifier: CalendarCollectionViewCell.reuseIdentifier, for: indexPath)
 				as? CalendarCollectionViewCell else { fatalError("Can not dequeue CalendarCollectionViewCell") }
 		
-//		guard let monthAndYear = monthLabel.text, let year = yearLabel.text else { fatalError("Can not dequeue CalendarCollectionViewCell") }
 		calendarCell.dateLabel.textColor = .dark
 		calendarCell.backGroundView.backgroundColor = .clear
 		calendarCell.badgeDot.isHidden = true
@@ -438,7 +425,7 @@ extension ScheduleViewController: UICollectionViewDataSource {
 			}
 		}
 		
-		for scheduleCourse in scheduledCoursesIdWithTimes {
+		for scheduleCourse in acceptedCoursesIdWithTimes {
 			let date = Date(timeIntervalSince1970: scheduleCourse.time)
 			let courseDateString = dateFormatter.string(from: date)
 			if courseDateString == dateString {
@@ -487,9 +474,9 @@ extension ScheduleViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if section == 0 {
-			return filteredScheduledCourses.count
+			return filteredCoursesIdWithTimes.count
 		} else {
-			return filteredScheduledEvents.count
+			return filteredEventsIdWithTimes.count
 		}
 	}
 
@@ -502,15 +489,14 @@ extension ScheduleViewController: UITableViewDataSource {
 		
 		if indexPath.section == 0 {
 			courseCell.scheduledCourseWithTimeAndStudent = filteredCoursesIdWithTimes[indexPath.row]
-			courseCell.course = filteredScheduledCourses[indexPath.row]
+			courseCell.course = filteredCoursesIdWithTimes[indexPath.row].course
 			courseCell.selectionStyle = .none
 			return courseCell
 		} else {
-			eventCell.event = filteredScheduledEvents[indexPath.row]
+			eventCell.event = filteredEventsIdWithTimes[indexPath.row].event
 			eventCell.selectionStyle = .none
 			return eventCell
 		}
-
 	}
 
 }
@@ -523,11 +509,11 @@ extension ScheduleViewController: UITableViewDelegate {
 		guard let user = user else { return }
 		
 		if indexPath.section == 0 {
-			let course = filteredScheduledCourses[indexPath.row]
+			let course = filteredCoursesIdWithTimes[indexPath.row].course
 			let courseDetailVC = CourseDetailViewController(course: course, user: user)
 			navigationController?.pushViewController(courseDetailVC, animated: true)
 		} else {
-			let event = filteredScheduledEvents[indexPath.row]
+			let event = filteredEventsIdWithTimes[indexPath.row].event
 			let eventDetailVC = EventDetailViewController(event: event, user: user)
 			navigationController?.pushViewController(eventDetailVC, animated: true)
 		}

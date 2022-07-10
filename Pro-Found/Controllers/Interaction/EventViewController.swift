@@ -43,7 +43,7 @@ class EventViewController: UIViewController {
 		button.setDimensions(width: 54, height: 54)
 		button.isHidden = true
 		button.layer.cornerRadius = 54 / 2
-		button.backgroundColor = .white
+		button.backgroundColor = .light60
 		button.layer.shadowColor = UIColor.dark60.cgColor
 		button.layer.shadowOffset = CGSize(width: 0, height: 4)
 		button.layer.shadowRadius = 10
@@ -108,6 +108,7 @@ extension EventViewController: UITableViewDataSource {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: EventListTableViewCell.reuseIdentifier, for: indexPath)
 				as? EventListTableViewCell else { fatalError("Can not dequeue EventListTableViewCell") }
 		let event = events[indexPath.row]
+				
 		cell.event = event
 		cell.selectionStyle = .none
 		cell.delegate = self

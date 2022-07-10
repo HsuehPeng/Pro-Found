@@ -39,7 +39,7 @@ class CourseDetailViewController: UIViewController {
 	
 	private let bottomBarView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		return view
 	}()
 	
@@ -50,7 +50,7 @@ class CourseDetailViewController: UIViewController {
 	}()
 	
 	private lazy var scheduleCourseButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book Course")
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Book Course")
 		button.addTarget(self, action: #selector(handleBookCourse), for: .touchUpInside)
 		button.widthAnchor.constraint(equalToConstant: 200).isActive = true
 		return button
@@ -70,7 +70,7 @@ class CourseDetailViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		tableView.dataSource = self
 		tableView.delegate = self

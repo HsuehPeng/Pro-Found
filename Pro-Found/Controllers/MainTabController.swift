@@ -17,19 +17,6 @@ class MainTabController: UITabBarController {
 			guard let homeNav = viewControllers?[0] as? UINavigationController else { return }
 			guard let homevc = homeNav.viewControllers.first as? HomeViewController else { return }
 			homevc.user = user
-			
-			
-//			guard let user = user else { return }
-//			UserServie.shared.getUserData(uid: user.userID) { result in
-//				switch result {
-//				case .success(let user):
-//					print(user)
-//				case .failure(let error):
-//					print(error)
-//				}
-//			}
-			
-			
 		}
 	}
 	
@@ -49,12 +36,14 @@ class MainTabController: UITabBarController {
 	
 	func fetchUser() {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
-		UserServie.shared.getUserData(uid: uid) { result in
+		UserServie.shared.getUserData(uid: uid) { [weak self] result in
+			guard let self = self else { return }
 			switch result {
 			case .success(let user):
 				self.user = user
 			case .failure(let error):
 				print("Error fetching user: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Connection Issue")
 			}
 		}
 	}
@@ -95,7 +84,6 @@ class MainTabController: UITabBarController {
 		let nav = UINavigationController(rootViewController: rootVC)
 		let appearance = UINavigationBarAppearance()
 		appearance.configureWithDefaultBackground()
-//		appearance.backgroundColor = .white
 		nav.navigationBar.standardAppearance = appearance
 		nav.tabBarItem.image = image
 		nav.tabBarItem.selectedImage = image?.withTintColor(UIColor.orange, renderingMode: .alwaysOriginal)

@@ -41,7 +41,7 @@ class SelectClassBottomSheetViewController: UIViewController {
 	}()
 	
 	private lazy var confirmButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white, borderColor: .clear, buttonText: "Book Course")
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Book Course")
 		button.addTarget(self, action: #selector(confirmBookingCourse), for: .touchUpInside)
 		
 		return button

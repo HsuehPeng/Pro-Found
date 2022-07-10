@@ -124,7 +124,7 @@ class CreateCourseViewController: UIViewController {
 	}()
 	
 	private lazy var createButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white,
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60,
 														borderColor: .clear, buttonText: "Create Course")
 		button.widthAnchor.constraint(equalToConstant: 128).isActive = true
 		button.addTarget(self, action: #selector(createCourse), for: .touchUpInside)
@@ -144,11 +144,10 @@ class CreateCourseViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		title = "Create Course"
 		setupNavBar()
 		setupUI()
-		
 	}
 	
 	override func viewWillDisappear(_ animated: Bool) {

@@ -83,9 +83,35 @@ class LoginViewController: UIViewController {
 	}()
 
 	private lazy var loginButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white,
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60,
 														borderColor: .clear, buttonText: "Log In")
 		button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var eulaButton: UIButton = {
+		let button = UIButton()
+		
+		let attributedTitle = NSMutableAttributedString(string: "EULA", attributes: [
+			NSAttributedString.Key.font: UIFont.customFont(.interSemiBold, size: 16),
+			NSAttributedString.Key.foregroundColor: UIColor.dark
+		])
+		
+		button.setAttributedTitle(attributedTitle, for: .normal)
+		button.addTarget(self, action: #selector(goEULA), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var privacyPolicyButton: UIButton = {
+		let button = UIButton()
+		
+		let attributedTitle = NSMutableAttributedString(string: "Privacy Policy", attributes: [
+			NSAttributedString.Key.font: UIFont.customFont(.interSemiBold, size: 16),
+			NSAttributedString.Key.foregroundColor: UIColor.dark
+		])
+		
+		button.setAttributedTitle(attributedTitle, for: .normal)
+		button.addTarget(self, action: #selector(goPrivacyPolicy), for: .touchUpInside)
 		return button
 	}()
 	
@@ -120,7 +146,7 @@ class LoginViewController: UIViewController {
 		title = "Login"
 		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.asset(.close_circle)?.withRenderingMode(.alwaysOriginal),
 															style: .done, target: self, action: #selector(dismissVC))
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		passwordTextField.delegate = self
 		
@@ -132,52 +158,70 @@ class LoginViewController: UIViewController {
 	func setupUI() {
 		
 		view.addSubview(appImageView)
-		appImageView.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 168, paddingLeft: 16)
 		
 		view.addSubview(appLabel)
-		appLabel.centerY(inView: appImageView, leftAnchor: appImageView.rightAnchor, paddingLeft: 16)
 		
 		view.addSubview(welcomeLabel)
+		
+		view.addSubview(askToLoginLabel)
+		
+		view.addSubview(emailLabel)
+		
+		view.addSubview(emailTextField)
+		
+		view.addSubview(emailDividerView)
+		
+		view.addSubview(passwordLabel)
+		
+		view.addSubview(passwordTextField)
+		
+		view.addSubview(passwordDividerView)
+		
+		view.addSubview(appleSignInButton)
+		
+		view.addSubview(loginButton)
+		
+		view.addSubview(dontHaveAccountButton)
+		
+		appImageView.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 375 * (120/375), paddingLeft: 16)
+		
+		appLabel.centerY(inView: appImageView, leftAnchor: appImageView.rightAnchor, paddingLeft: 16)
+		
 		welcomeLabel.anchor(top: appImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
 							paddingTop: 40, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(askToLoginLabel)
 		askToLoginLabel.anchor(top: welcomeLabel.bottomAnchor, left: view.leftAnchor,
 							   right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(emailLabel)
 		emailLabel.anchor(top: askToLoginLabel.bottomAnchor, left: view.leftAnchor,
 						  right: view.rightAnchor, paddingTop: 44, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(emailTextField)
 		emailTextField.anchor(top: emailLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
 							  paddingTop: 4, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(emailDividerView)
 		emailDividerView.anchor(top: emailTextField.bottomAnchor, left: view.leftAnchor,
 								right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16, height: 1)
 		
-		view.addSubview(passwordLabel)
 		passwordLabel.anchor(top: emailDividerView.bottomAnchor, left: view.leftAnchor,
 						  right: view.rightAnchor, paddingTop: 26, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(passwordTextField)
 		passwordTextField.anchor(top: passwordLabel.bottomAnchor, left: view.leftAnchor,
 								 right: view.rightAnchor, paddingTop: 4, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(passwordDividerView)
 		passwordDividerView.anchor(top: passwordTextField.bottomAnchor, left: view.leftAnchor,
 								right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16, height: 1)
 		
-		view.addSubview(appleSignInButton)
 		appleSignInButton.anchor(top: passwordDividerView.bottomAnchor, left: view.leftAnchor, paddingTop: 32, paddingLeft: 16)
 		
-		view.addSubview(loginButton)
 		loginButton.anchor(left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 25, paddingRight: 25)
 		
-		view.addSubview(dontHaveAccountButton)
-		dontHaveAccountButton.anchor(top: loginButton.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-									   right: view.rightAnchor, paddingTop: 50, paddingLeft: 40, paddingRight: 40)
+		let policyHStack = UIStackView(arrangedSubviews: [eulaButton, privacyPolicyButton])
+		view.addSubview(policyHStack)
+		policyHStack.spacing = 12
+		policyHStack.centerX(inView: view, topAnchor: loginButton.bottomAnchor, paddingTop: 12)
+		
+		dontHaveAccountButton.anchor(top: policyHStack.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+									   right: view.rightAnchor, paddingTop: 375 * (1/25), paddingLeft: 40, paddingRight: 40)
 	}
 	
 	// MARK: - Actions
@@ -207,6 +251,7 @@ class LoginViewController: UIViewController {
 			guard let self = self else { return }
 			if let error = error {
 				print("Error signing in: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Error signing in")
 			}
 			
 			guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene
@@ -218,6 +263,18 @@ class LoginViewController: UIViewController {
 			tab.authenticateUserAndConfigureUI()
 			self.dismiss(animated: true, completion: nil)
 		}
+	}
+	
+	@objc func goEULA() {
+		let policyViewController = PolicyViewController()
+		policyViewController.url = PolicyType.eula.url
+		present(policyViewController, animated: true, completion: nil)
+	}
+	
+	@objc func goPrivacyPolicy() {
+		let policyViewController = PolicyViewController()
+		policyViewController.url = PolicyType.privacyPolicy.url
+		present(policyViewController, animated: true, completion: nil)
 	}
 	
 	@objc func goSignUp() {

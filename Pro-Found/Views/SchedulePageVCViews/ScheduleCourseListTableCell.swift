@@ -33,13 +33,13 @@ class ScheduleCourseListTableCell: UITableViewCell {
 	
 	private let classTitleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 16),
-												 textColor: UIColor.white, text: "Test Title")
+												 textColor: UIColor.light60, text: "Test Title")
 		return label
 	}()
 	
 	private let timeLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
-												 textColor: UIColor.white, text: "Test summary")
+												 textColor: UIColor.light60, text: "Test summary")
 		label.numberOfLines = 0
 		return label
 	}()
@@ -75,14 +75,14 @@ class ScheduleCourseListTableCell: UITableViewCell {
 	
 	private let locationLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
-												 textColor: UIColor.white, text: "Test address")
+												 textColor: UIColor.light60, text: "Test address")
 		label.numberOfLines = 0
 		return label
 	}()
 	
 	private let feeLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 14),
-												 textColor: UIColor.white, text: "$100")
+												 textColor: UIColor.light60, text: "$100")
 		return label
 	}()
 	

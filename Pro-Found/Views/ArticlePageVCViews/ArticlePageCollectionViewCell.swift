@@ -45,7 +45,7 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 		let button = UIButton()
 		button.layer.cornerRadius = 5
 		button.setTitle("Subject", for: .normal)
-		button.setTitleColor(UIColor.white, for: .normal)
+		button.setTitleColor(UIColor.light60, for: .normal)
 		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 9)
 		button.backgroundColor = .orange
 		return button

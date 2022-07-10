@@ -101,7 +101,7 @@ class SignUpViewController: UIViewController {
 	}()
 	
 	private lazy var signUpButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .white,
+		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60,
 														borderColor: .clear, buttonText: "Sign Up")
 		button.addTarget(self, action: #selector(handleSignup), for: .touchUpInside)
 		return button
@@ -112,7 +112,7 @@ class SignUpViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		title = "Sign up"
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		passwordTextField.delegate = self
 		setupNavBar()
 		setupUI()
@@ -128,7 +128,7 @@ class SignUpViewController: UIViewController {
 	func setupUI() {
 		
 		view.addSubview(appImageView)
-		appImageView.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 168, paddingLeft: 16)
+		appImageView.anchor(top: view.topAnchor, left: view.leftAnchor, paddingTop: 375 * (120/375), paddingLeft: 16)
 		
 		view.addSubview(appLabel)
 		appLabel.centerY(inView: appImageView, leftAnchor: appImageView.rightAnchor, paddingLeft: 16)
@@ -203,7 +203,8 @@ class SignUpViewController: UIViewController {
 		Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
 			guard let self = self else { return }
 			if let error = error {
-				print("Error signing in: \(error)")
+				print("Error signing up: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Error signing up")
 			}
 			
 			guard let uid = authResult?.user.uid else { return }
