@@ -22,6 +22,8 @@ class ScheduleViewController: UIViewController {
 	
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
 	
+	var acceptedCoursesIdWithTimes = [ScheduledCourseTime]()
+	
 	var filteredCoursesIdWithTimes = [ScheduledCourseTime]() {
 		didSet {
 			tableView.reloadData()
@@ -300,13 +302,17 @@ class ScheduleViewController: UIViewController {
 				switch result {
 				case .success(let scheduledCoursesIdWithTimes):
 					
+					self.scheduledCoursesIdWithTimes = scheduledCoursesIdWithTimes
+					
 					if scheduledCoursesIdWithTimes.contains(where: {$0.status == CourseApplicationState.pending.status}) {
 						self.applicationButtonBadge.isHidden = false
+					} else {
+						self.applicationButtonBadge.isHidden = true
 					}
 					
 					let filtered = scheduledCoursesIdWithTimes.filter({ $0.status == CourseApplicationState.accept.status })
 					let sorted = filtered.sorted(by: { $0.time < $1.time })
-					self.scheduledCoursesIdWithTimes = sorted
+					self.acceptedCoursesIdWithTimes = sorted
 				case .failure(let error):
 					self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 					print(error)
@@ -340,7 +346,7 @@ class ScheduleViewController: UIViewController {
 		let formatter = DateFormatter()
 		formatter.dateFormat = "dd MMMM yyyy"
 		
-		filteredCoursesIdWithTimes = scheduledCoursesIdWithTimes.filter { scheduledCourseTime in
+		filteredCoursesIdWithTimes = acceptedCoursesIdWithTimes.filter { scheduledCourseTime in
 			let date = Date(timeIntervalSince1970: scheduledCourseTime.time)
 			let courseTimeString = formatter.string(from: date)
 			if courseTimeString == dateString {
@@ -419,7 +425,7 @@ extension ScheduleViewController: UICollectionViewDataSource {
 			}
 		}
 		
-		for scheduleCourse in scheduledCoursesIdWithTimes {
+		for scheduleCourse in acceptedCoursesIdWithTimes {
 			let date = Date(timeIntervalSince1970: scheduleCourse.time)
 			let courseDateString = dateFormatter.string(from: date)
 			if courseDateString == dateString {
@@ -491,7 +497,6 @@ extension ScheduleViewController: UITableViewDataSource {
 			eventCell.selectionStyle = .none
 			return eventCell
 		}
-
 	}
 
 }

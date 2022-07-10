@@ -242,7 +242,7 @@ extension ArticleViewController: UITableViewDataSource {
 		
 		switch indexPath.section {
 		case 0:
-			cell.filteredArticles = subjectDict[Subject.language.rawValue] ?? []
+			cell.filteredArticles = subjectDict[Subject.art.rawValue] ?? []
 			return cell
 		case 1:
 			cell.filteredArticles = subjectDict[Subject.technology.rawValue] ?? []
@@ -254,7 +254,7 @@ extension ArticleViewController: UITableViewDataSource {
 			cell.filteredArticles = subjectDict[Subject.sport.rawValue] ?? []
 			return cell
 		case 4:
-			cell.filteredArticles = subjectDict[Subject.art.rawValue] ?? []
+			cell.filteredArticles = subjectDict[Subject.language.rawValue] ?? []
 			return cell
 		default:
 			break
@@ -277,7 +277,7 @@ extension ArticleViewController: UITableViewDelegate {
 		header.delegate = self
 		switch section {
 		case 0:
-			header.titleLabel.text = Subject.language.rawValue
+			header.titleLabel.text = Subject.art.rawValue
 			return header
 		case 1:
 			header.titleLabel.text = Subject.technology.rawValue
@@ -289,7 +289,7 @@ extension ArticleViewController: UITableViewDelegate {
 			header.titleLabel.text = Subject.sport.rawValue
 			return header
 		case 4:
-			header.titleLabel.text = Subject.art.rawValue
+			header.titleLabel.text = Subject.language.rawValue
 			return header
 		default:
 			break

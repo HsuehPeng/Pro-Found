@@ -149,7 +149,7 @@ class HomeViewController: UIViewController {
 		
 		collectionView.dataSource = self
 		collectionView.delegate = self
-		
+//		fetchUser()
 		setupUI()
 	}
 	
