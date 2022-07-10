@@ -108,7 +108,7 @@ extension EventViewController: UITableViewDataSource {
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: EventListTableViewCell.reuseIdentifier, for: indexPath)
 				as? EventListTableViewCell else { fatalError("Can not dequeue EventListTableViewCell") }
 		let event = events[indexPath.row]
-		
+				
 		cell.event = event
 		cell.selectionStyle = .none
 		cell.delegate = self

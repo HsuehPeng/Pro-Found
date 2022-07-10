@@ -93,10 +93,10 @@ class EventListTableViewCell: UITableViewCell {
 	
 	override func prepareForReuse() {
 		super.prepareForReuse()
-		guard let event = event else { return }
-		checkIfBooked(event: event)
+		bookEventButton.isEnabled = true
+		bookEventButton.backgroundColor = .orange
 	}
-	
+
 	// MARK: - UI
 	
 	private func setupUI() {
@@ -154,7 +154,7 @@ class EventListTableViewCell: UITableViewCell {
 		organizerNameLabel.text = event.organizerName
 	}
 	
-	private func checkIfBooked(event: Event) {
+	func checkIfBooked(event: Event) {
 		guard let uid = Auth.auth().currentUser?.uid else { return }
 		if event.participants.contains(uid) {
 			bookEventButton.backgroundColor = .dark20
