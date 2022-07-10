@@ -165,7 +165,7 @@ class InteractionViewController: UIViewController {
 			self.postVC.view.isHidden = false
 			self.eventVC.view.isHidden = true
 			
-			UIView.animate(withDuration: 0.5) {
+			UIView.animate(withDuration: 0.3) {
 				self.indicatorView.transform = CGAffineTransform(translationX: 0, y: 0)
 				self.indicatorView.layoutIfNeeded()
 			}
@@ -186,13 +186,15 @@ class InteractionViewController: UIViewController {
 	
 	func loadUserData() {
 		guard let uid = Auth.auth().currentUser?.uid  else { return }
-		UserServie.shared.getUserData(uid: uid) { result in
+		UserServie.shared.getUserData(uid: uid) { [weak self] result in
+			guard let self = self else { return }
 			switch result {
 			case .success(let user):
 				self.user = user
 				self.fetchPosts()
 				self.fetchEvents()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -206,6 +208,7 @@ class InteractionViewController: UIViewController {
 				self.posts = posts
 				self.filteredPosts = self.filterPosts()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -229,6 +232,7 @@ class InteractionViewController: UIViewController {
 			case .success(let events):
 				self.events = self.filterAndSortEvents(events: events)
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

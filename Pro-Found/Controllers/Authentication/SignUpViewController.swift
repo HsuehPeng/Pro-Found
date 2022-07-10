@@ -203,7 +203,8 @@ class SignUpViewController: UIViewController {
 		Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
 			guard let self = self else { return }
 			if let error = error {
-				print("Error signing in: \(error)")
+				print("Error signing up: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Error signing up")
 			}
 			
 			guard let uid = authResult?.user.uid else { return }

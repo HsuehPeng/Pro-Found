@@ -14,8 +14,6 @@ class TutorProfileViewController: UIViewController {
 
 	// MARK: - Properties
 	
-//	var isTutor = false
-	
 	var user: User
 	
 	var tutor: User
@@ -52,7 +50,7 @@ class TutorProfileViewController: UIViewController {
 	
 	private lazy var backButton: UIButton = {
 		let button = UIButton()
-		let image = UIImage.asset(.chevron_left)?.withTintColor(.white)
+		let image = UIImage.asset(.chevron_left)?.withTintColor(.light60)
 		button.setImage(image, for: .normal)
 		button.addTarget(self, action: #selector(popVC), for: .touchUpInside)
 		button.setDimensions(width: 36, height: 36)
@@ -93,7 +91,7 @@ class TutorProfileViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		tableView.dataSource = self
 		tableView.delegate = self
@@ -153,6 +151,7 @@ class TutorProfileViewController: UIViewController {
 			case .success(let courses):
 				self.tutorCourses = courses
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -171,6 +170,7 @@ class TutorProfileViewController: UIViewController {
 				}
 				self.tutorArticles = filteredArticles
 			case . failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -189,6 +189,7 @@ class TutorProfileViewController: UIViewController {
 				}
 				self.tutorEvents = filteredEvents
 			case . failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -205,8 +206,9 @@ class TutorProfileViewController: UIViewController {
 					}
 					return false
 				}
-				self.tutorPosts = filteredPosts
+				self.tutorPosts = filteredPosts.sorted(by: {$0.timestamp > $1.timestamp})
 			case . failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -272,6 +274,7 @@ extension TutorProfileViewController: UITableViewDataSource {
 				as? PostPageFeedCell else { fatalError("Can not dequeue ArticleListTableViewCell") }
 		guard let postVideoCell = tableView.dequeueReusableCell(withIdentifier: PostPageVideoCell.reuserIdentifier)
 				as? PostPageVideoCell else { fatalError("Can not dequeue PostPageVideoCell") }
+		
 		if indexPath.section == 0 {
 			mainCell.delegate = self
 			mainCell.isFollowed = isFollowed

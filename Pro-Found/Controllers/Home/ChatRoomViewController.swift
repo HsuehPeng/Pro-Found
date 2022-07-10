@@ -117,6 +117,7 @@ class ChatRoomViewController: UIViewController {
 				self.conversations = filterBlockedUserConversations
 				self.tableView.reloadData()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

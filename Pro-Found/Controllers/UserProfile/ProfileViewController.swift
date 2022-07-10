@@ -49,7 +49,7 @@ class ProfileViewController: UIViewController {
 		
 	private let topView: UIView = {
 		let view = UIView()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		return view
 	}()
@@ -111,6 +111,7 @@ class ProfileViewController: UIViewController {
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.separatorStyle = .none
+		tableView.backgroundColor = .light60
 		tableView.register(UserProfileListTableViewCell.self, forCellReuseIdentifier: UserProfileListTableViewCell.reuserIdentifier)
 		return tableView
 	}()
@@ -119,7 +120,7 @@ class ProfileViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		view.backgroundColor = .white
+		view.backgroundColor = .light60
 		
 		tableView.dataSource = self
 		tableView.delegate = self
@@ -265,6 +266,7 @@ class ProfileViewController: UIViewController {
 				self.user = user
 				self.tutorBadgeImageView.isHidden = !user.isTutor
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -278,6 +280,7 @@ class ProfileViewController: UIViewController {
 			case .success(let articles):
 				self.favoriteArticles = articles
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -291,6 +294,7 @@ class ProfileViewController: UIViewController {
 			case .success(let users):
 				self.followingTutors = users
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -305,6 +309,7 @@ class ProfileViewController: UIViewController {
 				print(users)
 				self.blockingTutors = users
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

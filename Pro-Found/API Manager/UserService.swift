@@ -270,6 +270,18 @@ struct UserServie {
 		}
 	}
 	
+	func deleteEventParticipant(participantID: String, eventID: String, completion: @escaping () -> Void) {
+		dbEvents.document(eventID).updateData([
+			"participants": FieldValue.arrayRemove([participantID])
+		]) { error in
+			if let error = error {
+				print("Error deleting participants: \(error)")
+			} else {
+				print("Successfully deleted participants")
+			}
+		}
+	}
+	
 	func getScheduledEventIDs(userID: String, completion: @escaping (Result<[ScheduledEventTime], Error>) -> Void) {
 		dbUsers.document(userID).collection("ScheduledEvent").getDocuments { snapshot, error in
 			var eventTimes = [ScheduledEventTime]()

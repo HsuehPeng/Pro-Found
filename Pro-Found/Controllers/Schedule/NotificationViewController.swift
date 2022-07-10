@@ -107,6 +107,7 @@ class NotificationViewController: UIViewController {
 				let sorted = scheduledCoursesIdWithTimes.sorted(by: { $0.applicationTime > $1.applicationTime })
 				self.sortedScheduleCourses = sorted
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -174,5 +175,4 @@ extension NotificationViewController: NotificationTableViewCellDelegate {
 			}
 		}
 	}
-	
 }

@@ -49,14 +49,14 @@ class TutorProfileClassTableViewCell: UITableViewCell {
 	private let summaryLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.light60, text: "Test summary")
-		label.numberOfLines = 0
+		label.numberOfLines = 4
 		return label
 	}()
 	
 	private let locationLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.light60, text: "Test address")
-		label.numberOfLines = 0
+		label.numberOfLines = 3
 		return label
 	}()
 	
