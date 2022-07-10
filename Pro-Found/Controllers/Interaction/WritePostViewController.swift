@@ -250,6 +250,7 @@ class WritePostViewController: UIViewController {
 						self.dismiss(animated: true)
 					}
 				case .failure(let error):
+					self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 					print(error)
 				}
 			}

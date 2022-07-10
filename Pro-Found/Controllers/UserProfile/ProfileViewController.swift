@@ -265,6 +265,7 @@ class ProfileViewController: UIViewController {
 				self.user = user
 				self.tutorBadgeImageView.isHidden = !user.isTutor
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -278,6 +279,7 @@ class ProfileViewController: UIViewController {
 			case .success(let articles):
 				self.favoriteArticles = articles
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -291,6 +293,7 @@ class ProfileViewController: UIViewController {
 			case .success(let users):
 				self.followingTutors = users
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -305,6 +308,7 @@ class ProfileViewController: UIViewController {
 				print(users)
 				self.blockingTutors = users
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

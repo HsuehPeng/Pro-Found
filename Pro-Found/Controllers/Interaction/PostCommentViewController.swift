@@ -160,6 +160,7 @@ class PostCommentViewController: UIViewController {
 			case .success(let replies):
 				self.replies = self.filterReplies(replies: replies)
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

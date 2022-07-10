@@ -89,6 +89,32 @@ class LoginViewController: UIViewController {
 		return button
 	}()
 	
+	private lazy var eulaButton: UIButton = {
+		let button = UIButton()
+		
+		let attributedTitle = NSMutableAttributedString(string: "EULA", attributes: [
+			NSAttributedString.Key.font: UIFont.customFont(.interSemiBold, size: 16),
+			NSAttributedString.Key.foregroundColor: UIColor.dark
+		])
+		
+		button.setAttributedTitle(attributedTitle, for: .normal)
+		button.addTarget(self, action: #selector(goEULA), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var privacyPolicyButton: UIButton = {
+		let button = UIButton()
+		
+		let attributedTitle = NSMutableAttributedString(string: "Privacy Policy", attributes: [
+			NSAttributedString.Key.font: UIFont.customFont(.interSemiBold, size: 16),
+			NSAttributedString.Key.foregroundColor: UIColor.dark
+		])
+		
+		button.setAttributedTitle(attributedTitle, for: .normal)
+		button.addTarget(self, action: #selector(goPrivacyPolicy), for: .touchUpInside)
+		return button
+	}()
+	
 	private lazy var appleSignInButton: ASAuthorizationAppleIDButton = {
 		let button = ASAuthorizationAppleIDButton(authorizationButtonType: .signIn, authorizationButtonStyle: .whiteOutline)
 		button.addTarget(self, action: #selector(handleSignInWithAppleTapped), for: .touchUpInside)
@@ -189,8 +215,13 @@ class LoginViewController: UIViewController {
 		
 		loginButton.anchor(left: view.leftAnchor, right: view.rightAnchor, paddingLeft: 25, paddingRight: 25)
 		
-		dontHaveAccountButton.anchor(top: loginButton.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
-									   right: view.rightAnchor, paddingTop: 375 * (2/15), paddingLeft: 40, paddingRight: 40)
+		let policyHStack = UIStackView(arrangedSubviews: [eulaButton, privacyPolicyButton])
+		view.addSubview(policyHStack)
+		policyHStack.spacing = 12
+		policyHStack.centerX(inView: view, topAnchor: loginButton.bottomAnchor, paddingTop: 12)
+		
+		dontHaveAccountButton.anchor(top: policyHStack.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+									   right: view.rightAnchor, paddingTop: 375 * (1/25), paddingLeft: 40, paddingRight: 40)
 	}
 	
 	// MARK: - Actions
@@ -220,6 +251,7 @@ class LoginViewController: UIViewController {
 			guard let self = self else { return }
 			if let error = error {
 				print("Error signing in: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Error signing in")
 			}
 			
 			guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene
@@ -231,6 +263,18 @@ class LoginViewController: UIViewController {
 			tab.authenticateUserAndConfigureUI()
 			self.dismiss(animated: true, completion: nil)
 		}
+	}
+	
+	@objc func goEULA() {
+		let policyViewController = PolicyViewController()
+		policyViewController.url = PolicyType.eula.url
+		present(policyViewController, animated: true, completion: nil)
+	}
+	
+	@objc func goPrivacyPolicy() {
+		let policyViewController = PolicyViewController()
+		policyViewController.url = PolicyType.privacyPolicy.url
+		present(policyViewController, animated: true, completion: nil)
 	}
 	
 	@objc func goSignUp() {

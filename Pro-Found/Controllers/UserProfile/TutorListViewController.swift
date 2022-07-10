@@ -103,7 +103,7 @@ class TutorListViewController: UIViewController {
 		searchController.searchBar.delegate = self
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
-		searchController.searchBar.placeholder = "Search Articles"
+		searchController.searchBar.placeholder = "Search Tutors"
 		navigationItem.searchController = searchController
 		definesPresentationContext = true
 
@@ -162,8 +162,6 @@ extension TutorListViewController: UISearchResultsUpdating {
 		let searchBar = searchController.searchBar
 		filterContentForSearchText(searchBar.text!)
 	}
-	
-	
 }
 
 extension TutorListViewController: UISearchBarDelegate {

@@ -27,6 +27,8 @@ class WriteArticleViewController: UIViewController {
 		}
 	}
 	
+	var kbHeight: CGFloat = 0.0
+	
 	private let topBarView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .white
@@ -177,7 +179,7 @@ class WriteArticleViewController: UIViewController {
 	private lazy var textFormateView: ListMenuView = {
 		let listView = ListMenuView()
 		view.addSubview(listView)
-		listView.anchor(left: view.leftAnchor, bottom: bottomBarView.topAnchor, paddingBottom: 50)
+		listView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 110)
 		listView.translatesAutoresizingMaskIntoConstraints = false
 		listView.widthAnchor.constraint(equalToConstant: textFormateButton.width).isActive = true
 		textFormateViewHeight = listView.heightAnchor.constraint(equalToConstant: 0)
@@ -203,7 +205,7 @@ class WriteArticleViewController: UIViewController {
 	private lazy var textColorListView: ListMenuView = {
 		let listView = ListMenuView()
 		view.addSubview(listView)
-		listView.anchor(left: textFormateView.rightAnchor, bottom: bottomBarView.topAnchor, paddingBottom: 50)
+		listView.anchor(left: textFormateView.rightAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, paddingBottom: 110)
 		listView.translatesAutoresizingMaskIntoConstraints = false
 		listView.widthAnchor.constraint(equalToConstant: textColorButton.width).isActive = true
 		textColorListViewHeight = listView.heightAnchor.constraint(equalToConstant: 0)
@@ -358,6 +360,7 @@ class WriteArticleViewController: UIViewController {
 		let keyboardScreenEndFrame: CGRect = keyboardFrame.cgRectValue
 		
 		let keyboardViewEndFrame: CGRect = view.convert(keyboardScreenEndFrame, to: view.window)
+		kbHeight = keyboardViewEndFrame.height
 		print(keyboardViewEndFrame.height)
 	}
 
@@ -438,6 +441,7 @@ class WriteArticleViewController: UIViewController {
 					self.dismiss(animated: true)
 				}
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

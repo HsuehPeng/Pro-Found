@@ -123,6 +123,7 @@ class ArticleViewController: UIViewController {
 				self.filterArticles()
 				self.refreshControl.endRefreshing()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -149,7 +150,8 @@ class ArticleViewController: UIViewController {
 				self.user = user
 				self.fetchArticles()
 			case .failure(let error):
-				print("asdfasdf \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+				print(error)
 			}
 		}
 	}
@@ -163,6 +165,7 @@ class ArticleViewController: UIViewController {
 				self.articles = filterBlockedArticles
 				self.filterArticles()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -176,6 +179,7 @@ class ArticleViewController: UIViewController {
 				self.articles = articles
 				self.filterArticles()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

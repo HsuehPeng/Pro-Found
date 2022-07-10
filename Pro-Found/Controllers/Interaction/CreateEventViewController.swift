@@ -254,6 +254,7 @@ class CreateEventViewController: UIViewController {
 				}
 				
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

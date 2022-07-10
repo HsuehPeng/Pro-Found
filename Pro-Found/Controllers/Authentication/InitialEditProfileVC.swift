@@ -171,7 +171,8 @@ class InitialEditProfileVC: UIViewController {
 							 paddingTop: 26, paddingLeft: 16, paddingRight: 16)
 		
 		view.addSubview(doneButton)
-		doneButton.anchor(top: introTextView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 16, paddingLeft: 25, paddingBottom: 50, paddingRight: 25)
+		doneButton.anchor(top: introTextView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+						  right: view.rightAnchor, paddingTop: 16, paddingLeft: 25, paddingBottom: 50, paddingRight: 25)
 	}
 	
 	func setupNavBar() {
@@ -231,6 +232,7 @@ class InitialEditProfileVC: UIViewController {
 				}
 
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Error updating user info")
 				print(error)
 			}
 		}

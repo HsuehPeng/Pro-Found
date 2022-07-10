@@ -12,6 +12,7 @@ enum CourseApplicationState {
 	case accept
 	case reject
 	case pending
+	case cancel
 	
 	var status: String {
 		switch self {
@@ -21,6 +22,8 @@ enum CourseApplicationState {
 			return "Rejected"
 		case .pending:
 			return "Pending"
+		case .cancel:
+			return "Cancelled"
 		}
 	}
 	
@@ -32,6 +35,8 @@ enum CourseApplicationState {
 			return "Reject"
 		case .pending:
 			return "Pending"
+		case .cancel:
+			return "Cancelled"
 		}
 	}
 }
@@ -165,7 +170,6 @@ class NotificationTableViewCell: UITableViewCell {
 	}
 	
 	@objc func handleApplicationResult(_ sender: UIButton) {
-		guard let user = user, let _ = scheduleCourse else { return }
 		if sender == acceptButton {
 			delegate?.handleCourseApplication(self, result: CourseApplicationState.accept.status)
 		} else {
@@ -182,9 +186,8 @@ class NotificationTableViewCell: UITableViewCell {
 		if scheduledCourse.student.userID == user.userID {
 			toggleButtons()
 			statusButton.setTitle(scheduledCourse.status, for: .normal)
-			print(scheduledCourse.status)
 		} else {
-			if scheduledCourse.status != CourseApplicationState.pending.status {
+			if scheduledCourse.status != CourseApplicationState.pending.status || scheduledCourse.status == CourseApplicationState.cancel.status {
 				toggleButtons()
 				statusButton.setTitle(scheduledCourse.status, for: .normal)
 			}

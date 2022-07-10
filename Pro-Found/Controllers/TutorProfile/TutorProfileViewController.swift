@@ -14,8 +14,6 @@ class TutorProfileViewController: UIViewController {
 
 	// MARK: - Properties
 	
-//	var isTutor = false
-	
 	var user: User
 	
 	var tutor: User
@@ -153,6 +151,7 @@ class TutorProfileViewController: UIViewController {
 			case .success(let courses):
 				self.tutorCourses = courses
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -171,6 +170,7 @@ class TutorProfileViewController: UIViewController {
 				}
 				self.tutorArticles = filteredArticles
 			case . failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -189,6 +189,7 @@ class TutorProfileViewController: UIViewController {
 				}
 				self.tutorEvents = filteredEvents
 			case . failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -207,6 +208,7 @@ class TutorProfileViewController: UIViewController {
 				}
 				self.tutorPosts = filteredPosts
 			case . failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -272,6 +274,7 @@ extension TutorProfileViewController: UITableViewDataSource {
 				as? PostPageFeedCell else { fatalError("Can not dequeue ArticleListTableViewCell") }
 		guard let postVideoCell = tableView.dequeueReusableCell(withIdentifier: PostPageVideoCell.reuserIdentifier)
 				as? PostPageVideoCell else { fatalError("Can not dequeue PostPageVideoCell") }
+		
 		if indexPath.section == 0 {
 			mainCell.delegate = self
 			mainCell.isFollowed = isFollowed

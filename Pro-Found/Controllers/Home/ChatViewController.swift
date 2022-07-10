@@ -142,6 +142,7 @@ class ChatViewController: UIViewController {
 			guard let self = self else { return }
 			if let error = error {
 				print("Error uploading message with error: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 			}
 		}
 		self.clearMessageText()
@@ -159,6 +160,7 @@ class ChatViewController: UIViewController {
 				self.tableView.scrollToRow(at: IndexPath(row: self.messages.count - 1, section: 0),
 										   at: .bottom, animated: true)
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}

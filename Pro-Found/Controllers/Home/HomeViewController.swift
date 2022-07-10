@@ -296,6 +296,7 @@ class HomeViewController: UIViewController {
 				self.user = user
 				self.fetchTutors()
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -313,7 +314,8 @@ class HomeViewController: UIViewController {
 				self.tutors = filterOutBlockTutors
 				self.filteredTutors = self.tutors
 			case .failure(let error):
-				print("Error getting tutors: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+				print(error)
 			}
 		}
 	}
@@ -342,7 +344,8 @@ class HomeViewController: UIViewController {
 				self.tutors = tutors
 				self.filteredTutors = self.tutors
 			case .failure(let error):
-				print("Error getting tutors: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+				print(error)
 			}
 		}
 		nameLabel.text = "My Guest"
@@ -358,7 +361,8 @@ class HomeViewController: UIViewController {
 					self.filteredTutors = self.tutors
 					self.refreshControl.endRefreshing()
 				case .failure(let error):
-					print("Error getting tutors: \(error)")
+					self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+					print(error)
 				}
 			}
 			return
@@ -374,7 +378,8 @@ class HomeViewController: UIViewController {
 				self.filteredTutors = self.tutors
 				self.refreshControl.endRefreshing()
 			case .failure(let error):
-				print("Error getting tutors: \(error)")
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+				print(error)
 			}
 		}
 	}
@@ -429,7 +434,4 @@ extension HomeViewController: GeneralHeaderCollectionReusableViewDelegate {
 	func filterByTutorSubject(_ cell: GeneralHeaderCollectionReusableView) {
 		
 	}
-	
 }
-
-

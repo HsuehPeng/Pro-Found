@@ -21,6 +21,7 @@ class ScheduleViewController: UIViewController {
 	}
 	
 	var scheduledCoursesIdWithTimes = [ScheduledCourseTime]()
+	
 	var filteredCoursesIdWithTimes = [ScheduledCourseTime]() {
 		didSet {
 			tableView.reloadData()
@@ -87,11 +88,20 @@ class ScheduleViewController: UIViewController {
 		return button
 	}()
 	
-	private lazy var switchMonthWeekButton: UIButton = {
+	private lazy var courseApplicationButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.article), for: .normal)
 		button.addTarget(self, action: #selector(goToNotificationVC), for: .touchUpInside)
 		return button
+	}()
+	
+	private let applicationButtonBadge: UIView = {
+		let view = UIView()
+		view.setDimensions(width: 10, height: 10)
+		view.layer.cornerRadius = 5
+		view.backgroundColor = .orange
+		view.isHidden = true
+		return view
 	}()
 	
 	private let sundayLabel: UILabel = {
@@ -206,9 +216,12 @@ class ScheduleViewController: UIViewController {
 		pageTitleLabel.anchor(left: topBarView.leftAnchor, paddingLeft: 16)
 		pageTitleLabel.centerY(inView: topBarView)
 		
-		topBarView.addSubview(switchMonthWeekButton)
-		switchMonthWeekButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
-		switchMonthWeekButton.centerY(inView: topBarView)
+		topBarView.addSubview(courseApplicationButton)
+		courseApplicationButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
+		courseApplicationButton.centerY(inView: topBarView)
+		
+		courseApplicationButton.addSubview(applicationButtonBadge)
+		applicationButtonBadge.anchor(top: courseApplicationButton.topAnchor, right: courseApplicationButton.rightAnchor, paddingTop: 0, paddingRight: 0)
 		
 		let monthSwitchHStack = UIStackView(arrangedSubviews: [previousMonthButton, monthLabel, yearLabel, nextMonthButton])
 		monthSwitchHStack.axis = .horizontal
@@ -216,7 +229,7 @@ class ScheduleViewController: UIViewController {
 		monthSwitchHStack.distribution = .equalSpacing
 
 		topBarView.addSubview(monthSwitchHStack)
-		monthSwitchHStack.anchor(right: switchMonthWeekButton.leftAnchor, paddingRight: 16)
+		monthSwitchHStack.anchor(right: courseApplicationButton.leftAnchor, paddingRight: 16)
 		monthSwitchHStack.centerY(inView: topBarView)
 		
 		let weekdayHStack = UIStackView(arrangedSubviews: [
@@ -270,6 +283,7 @@ class ScheduleViewController: UIViewController {
 			case .success(let user):
 				self.user = user
 			case .failure(let error):
+				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)
 			}
 		}
@@ -285,10 +299,16 @@ class ScheduleViewController: UIViewController {
 				guard let self = self else { return }
 				switch result {
 				case .success(let scheduledCoursesIdWithTimes):
+					
+					if scheduledCoursesIdWithTimes.contains(where: {$0.status == CourseApplicationState.pending.status}) {
+						self.applicationButtonBadge.isHidden = false
+					}
+					
 					let filtered = scheduledCoursesIdWithTimes.filter({ $0.status == CourseApplicationState.accept.status })
 					let sorted = filtered.sorted(by: { $0.time < $1.time })
 					self.scheduledCoursesIdWithTimes = sorted
 				case .failure(let error):
+					self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 					print(error)
 				}
 				sem.signal()
@@ -301,6 +321,7 @@ class ScheduleViewController: UIViewController {
 					let sorted = scheduledEventIdWithTimes.sorted(by: { $0.time < $1.time })
 					self.scheduledEventIdWithTimes = sorted
 				case .failure(let error):
+					self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 					print(error)
 				}
 				sem.signal()
