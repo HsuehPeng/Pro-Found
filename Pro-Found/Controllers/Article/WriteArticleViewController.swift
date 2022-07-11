@@ -537,7 +537,7 @@ class WriteArticleViewController: UIViewController {
 			let att = [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.html]
 
 			let htmlData = try articleTextView.attributedText.data(from: range, documentAttributes: att)
-
+			
 			if let htmlText = String(data: htmlData, encoding: .utf8) {
 				self.htmlText = htmlText
 			}
@@ -559,7 +559,7 @@ extension WriteArticleViewController: ListMenuViewDelegate {
 		textFormateViewHeight.isActive = true
 		
 		italicButton.isSelected = false
-		
+	
 		currentTextType = SelectedTextFormateType
 		currentAttribute[.font] = currentTextType.font
 	}
@@ -569,7 +569,6 @@ extension WriteArticleViewController: ListMenuViewDelegate {
 		textColorListViewHeight.isActive = false
 		textColorListViewHeight.constant = 0
 		textColorListViewHeight.isActive = true
-		
 		currentAttribute[.foregroundColor] = selectedTextColorType.color
 		textColorButton.tintColor = selectedTextColorType.color
 	}
