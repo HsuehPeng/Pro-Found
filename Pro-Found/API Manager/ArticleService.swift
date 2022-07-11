@@ -8,7 +8,6 @@
 import FirebaseAuth
 import FirebaseFirestore
 import UIKit
-import SwiftUI
 
 struct ArticleService {
 	
