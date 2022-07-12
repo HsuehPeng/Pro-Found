@@ -31,9 +31,19 @@ class CreateEventViewController: UIViewController {
 	
 	private lazy var cancelButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.close), for: .normal)
+		let image = UIImage.asset(.close)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
 		button.setDimensions(width: 24, height: 24)
 		button.addTarget(self, action: #selector(dismissVC), for: .touchUpInside)
+		return button
+	}()
+	
+	private lazy var uploadButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.send)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.setDimensions(width: 24, height: 24)
+		button.addTarget(self, action: #selector(createEvent), for: .touchUpInside)
 		return button
 	}()
 	
@@ -43,8 +53,15 @@ class CreateEventViewController: UIViewController {
 		imageView.layer.cornerRadius = 12
 		imageView.contentMode = .scaleAspectFill
 		imageView.clipsToBounds = true
-		imageView.setDimensions(width: 132, height: 200)
 		return imageView
+	}()
+	
+	private lazy var pickImageButton: UIButton = {
+		let button = UIButton()
+		button.setDimensions(width: 36, height: 36)
+		button.setImage(UIImage.asset(.add_circle)?.withRenderingMode(.alwaysOriginal).withTintColor(.orange), for: .normal)
+		button.addTarget(self, action: #selector(handlePickingImage), for: .touchUpInside)
+		return button
 	}()
 	
 	private let eventTitleLabel: UILabel = {
@@ -110,22 +127,6 @@ class CreateEventViewController: UIViewController {
 		return textView
 	}()
 	
-	private lazy var pickImageButton: UIButton = {
-		let button = UIButton()
-		button.setDimensions(width: 24, height: 24)
-		button.setImage(UIImage.asset(.photo), for: .normal)
-		button.addTarget(self, action: #selector(handlePickingImage), for: .touchUpInside)
-		return button
-	}()
-	
-	private lazy var createEventButton: UIButton = {
-		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60,
-														borderColor: .clear, buttonText: "Create Event")
-		button.widthAnchor.constraint(equalToConstant: 128).isActive = true
-		button.addTarget(self, action: #selector(createEvent), for: .touchUpInside)
-		return button
-	}()
-	
 	// MARK: - Lifecycle
 	
 	init(user: User) {
@@ -149,54 +150,58 @@ class CreateEventViewController: UIViewController {
 	private func setupUI() {
 		
 		view.addSubview(topBarView)
+		topBarView.addSubview(cancelButton)
+		topBarView.addSubview(uploadButton)
+		view.addSubview(eventImageView)
+		view.addSubview(pickImageButton)
+		view.addSubview(eventTitleLabel)
+		view.addSubview(eventTitleTextField)
+		view.addSubview(eventTitleDividerView)
+		view.addSubview(addressTitleLabel)
+		view.addSubview(addressTitleTextField)
+		view.addSubview(addressDividerView)
+		view.addSubview(datePicker)
+		view.addSubview(briefIntroLabel)
+		view.addSubview(briefTextView)
+		
 		topBarView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
 		
-		topBarView.addSubview(cancelButton)
 		cancelButton.centerY(inView: topBarView, leftAnchor: topBarView.leftAnchor, paddingLeft: 18)
 		
-		view.addSubview(eventImageView)
+		uploadButton.centerY(inView: topBarView)
+		uploadButton.rightAnchor.constraint(equalTo: topBarView.rightAnchor, constant: -18).isActive = true
+				
 		eventImageView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		eventImageView.setDimensions(width: 132, height: view.frame.size.height * (200/812))
+		print(view.frame.size.height)
 		
-		view.addSubview(eventTitleLabel)
+		pickImageButton.anchor(bottom: eventImageView.bottomAnchor, right: eventImageView.rightAnchor, paddingBottom: -10, paddingRight: -10)
+		
 		eventTitleLabel.anchor(top: topBarView.bottomAnchor, left: eventImageView.rightAnchor,
 									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(eventTitleTextField)
 		eventTitleTextField.anchor(top: eventTitleLabel.bottomAnchor, left: eventImageView.rightAnchor,
 									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 
-		view.addSubview(eventTitleDividerView)
 		eventTitleDividerView.anchor(top: eventTitleTextField.bottomAnchor, left: eventImageView.rightAnchor, right: view.rightAnchor,
 									  paddingTop: 8, paddingLeft: 16, paddingRight: 16, height: 1)
 
-		view.addSubview(addressTitleLabel)
 		addressTitleLabel.anchor(top: eventTitleDividerView.bottomAnchor, left: eventImageView.rightAnchor,
 									right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
 
-		view.addSubview(addressTitleTextField)
 		addressTitleTextField.anchor(top: addressTitleLabel.bottomAnchor, left: eventImageView.rightAnchor,
 									right: view.rightAnchor, paddingTop: 8, paddingLeft: 16, paddingRight: 16)
 
-		view.addSubview(addressDividerView)
 		addressDividerView.anchor(top: addressTitleTextField.bottomAnchor, left: eventImageView.rightAnchor, right: view.rightAnchor,
 									  paddingTop: 8, paddingLeft: 16, paddingRight: 16, height: 1)
 		
-		view.addSubview(datePicker)
 		datePicker.anchor(top: eventImageView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 16,
 						  paddingLeft: 16, paddingRight: 16)
 		
-		view.addSubview(briefIntroLabel)
-		briefIntroLabel.anchor(top: datePicker.bottomAnchor, left: view.leftAnchor, paddingTop: 16, paddingLeft: 16)
+		briefIntroLabel.anchor(top: datePicker.bottomAnchor, left: view.leftAnchor, paddingTop: 0, paddingLeft: 16)
 		
-		view.addSubview(briefTextView)
-		briefTextView.anchor(top: briefIntroLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 16,
-							 paddingLeft: 16, paddingRight: 16, height: 100)
-		
-		view.addSubview(createEventButton)
-		createEventButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 12, paddingRight: 16)
-		
-		view.addSubview(pickImageButton)
-		pickImageButton.centerY(inView: createEventButton, leftAnchor: view.leftAnchor, paddingLeft: 16)
+		briefTextView.anchor(top: briefIntroLabel.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 8,
+							 paddingLeft: 16, paddingBottom: 16, paddingRight: 16)
 	}
 	
 	// MARK: - Actions
