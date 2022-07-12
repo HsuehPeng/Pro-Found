@@ -26,6 +26,7 @@
 		B80D67392875C2A8008D0FA8 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D67382875C2A8008D0FA8 /* NotificationViewController.swift */; };
 		B80D673B2875C5FF008D0FA8 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */; };
 		B80D673E28783655008D0FA8 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673D28783655008D0FA8 /* UIViewController+Extension.swift */; };
+		B80D6740287D5757008D0FA8 /* PlaceHolderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673F287D5756008D0FA8 /* PlaceHolderTextView.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -139,6 +140,7 @@
 		B80D67382875C2A8008D0FA8 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		B80D673D28783655008D0FA8 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		B80D673F287D5756008D0FA8 /* PlaceHolderTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceHolderTextView.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 				B8CC5EAF28588BD0004C5D7A /* GeneralTableViewHeader.swift */,
 				B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */,
 				B8F99C3428607F6D00B88244 /* GeneralMapCellTableViewCell.swift */,
+				B80D673F287D5756008D0FA8 /* PlaceHolderTextView.swift */,
 				B86943D12858670D008021C9 /* HomePageVCViews */,
 				B8CC5EB3285979D2004C5D7A /* InteractionVCViews */,
 				B8AB065F285DA56A002110A4 /* ArticlePageVCViews */,
@@ -779,6 +782,7 @@
 				B80D673528753DD9008D0FA8 /* ListMenuView.swift in Sources */,
 				B8F99C292860625200B88244 /* MKMapView + Extension.swift in Sources */,
 				B8CC5EAE285872F4004C5D7A /* HomePageTutorCollectionViewCell.swift in Sources */,
+				B80D6740287D5757008D0FA8 /* PlaceHolderTextView.swift in Sources */,
 				B83D19BF285608770049846E /* UIFont+Extension.swift in Sources */,
 				B8C7B3992857260D00CA7370 /* TutorProfileViewController.swift in Sources */,
 				B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */,

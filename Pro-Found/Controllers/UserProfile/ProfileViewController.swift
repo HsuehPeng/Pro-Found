@@ -145,33 +145,44 @@ class ProfileViewController: UIViewController {
 	func setupUI() {
 		
 		view.addSubview(topView)
-		topView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 157)
-		
-		topView.addSubview(profileImageView)
-		profileImageView.anchor(top: topView.topAnchor, left: topView.leftAnchor, paddingTop: 16, paddingLeft: 16)
-				
-		topView.addSubview(nameLabel)
-		nameLabel.anchor(top: topView.topAnchor, left: profileImageView.rightAnchor, paddingTop: 24, paddingLeft: 16)
 		
 		topView.addSubview(tutorBadgeImageView)
-		tutorBadgeImageView.centerY(inView: nameLabel, leftAnchor: nameLabel.rightAnchor, paddingLeft: 4)
-//		tutorBadgeImageView.rightAnchor.constraint(equalTo: topView.rightAnchor, constant: -16).isActive = true
+		
+		topView.addSubview(nameLabel)
+		
+		topView.addSubview(profileImageView)
 		
 		topView.addSubview(universityLabel)
+		
+		topView.addSubview(editButton)
+		
+		topView.addSubview(changePhotoButton)
+		
+		topView.addSubview(dividerView)
+		
+		view.addSubview(tableView)
+		
+		topView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 157)
+		
+		profileImageView.anchor(top: topView.topAnchor, left: topView.leftAnchor, paddingTop: 16,
+								paddingLeft: 16)
+		
+		nameLabel.anchor(top: topView.topAnchor, left: profileImageView.rightAnchor, right: tutorBadgeImageView.leftAnchor,
+						 paddingTop: 24, paddingLeft: 16, paddingRight: 4)
+		
+		tutorBadgeImageView.centerY(inView: nameLabel)
+		tutorBadgeImageView.rightAnchor.constraint(lessThanOrEqualTo: topView.rightAnchor, constant: -16).isActive = true
+		
 		universityLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, right: topView.rightAnchor,
 							   paddingTop: 4, paddingLeft: 16, paddingRight: 16)
 		
-		topView.addSubview(editButton)
 		editButton.anchor(top: universityLabel.bottomAnchor, left: profileImageView.rightAnchor, paddingTop: 16, paddingLeft: 16)
 		
-		topView.addSubview(changePhotoButton)
 		changePhotoButton.anchor(top: universityLabel.bottomAnchor, left: editButton.rightAnchor, paddingTop: 16, paddingLeft: 12)
 		
-		topView.addSubview(dividerView)
 		dividerView.anchor(top: editButton.bottomAnchor, left: topView.leftAnchor,
 						   bottom: topView.bottomAnchor, right: topView.rightAnchor, paddingTop: 36, height: 1)
 		
-		view.addSubview(tableView)
 		tableView.anchor(top: topView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
 	}
 	

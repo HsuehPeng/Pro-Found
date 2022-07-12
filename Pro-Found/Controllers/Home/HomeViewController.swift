@@ -176,17 +176,17 @@ class HomeViewController: UIViewController {
 		topBarView.addSubview(profilePhotoImageView)
 		profilePhotoImageView.anchor(top: topBarView.topAnchor, left: topBarView.leftAnchor, paddingTop: 8, paddingLeft: 16)
 		
-		let topBarLabelVStack = UIStackView(arrangedSubviews: [greetingLabel, nameLabel])
-		topBarLabelVStack.spacing = 0
-		topBarLabelVStack.axis = .vertical
-		topBarView.addSubview(topBarLabelVStack)
-		topBarLabelVStack.anchor(top: topBarView.topAnchor, left: profilePhotoImageView.rightAnchor, paddingTop: 8, paddingLeft: 12)
-		
 		topBarView.addSubview(filterButton)
 		filterButton.anchor(top: topBarView.topAnchor, right: topBarView.rightAnchor, paddingTop: 8, paddingRight: 12)
 		
 		topBarView.addSubview(chatRoomButton)
 		chatRoomButton.anchor(top: topBarView.topAnchor, right: filterButton.leftAnchor, paddingTop: 8, paddingRight: 12)
+		
+		let topBarLabelVStack = UIStackView(arrangedSubviews: [greetingLabel, nameLabel])
+		topBarLabelVStack.spacing = 0
+		topBarLabelVStack.axis = .vertical
+		topBarView.addSubview(topBarLabelVStack)
+		topBarLabelVStack.anchor(top: topBarView.topAnchor, left: profilePhotoImageView.rightAnchor, right: chatRoomButton.leftAnchor, paddingTop: 8, paddingLeft: 12, paddingRight: 12)
 		
 		subjectButtonColletions.forEach { button in
 			button.isHidden = true

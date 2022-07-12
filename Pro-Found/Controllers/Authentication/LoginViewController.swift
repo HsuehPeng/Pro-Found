@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import AuthenticationServices
 import CryptoKit
+import Lottie
 
 class LoginViewController: UIViewController {
 
@@ -246,11 +247,14 @@ class LoginViewController: UIViewController {
 				  present(missingInputVC, animated: true)
 				  return
 			  }
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		
 		Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
 			guard let self = self else { return }
 			if let error = error {
 				print("Error signing in: \(error)")
+				loadingLottie.stopAnimation()
 				self.showAlert(alertText: "Error", alertMessage: "Error signing in")
 			}
 			
@@ -258,9 +262,12 @@ class LoginViewController: UIViewController {
 				
 			}).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
 			
+			loadingLottie.stopAnimation()
+			
 			guard let tab = window.rootViewController as? MainTabController else { return }
 			
 			tab.authenticateUserAndConfigureUI()
+			
 			self.dismiss(animated: true, completion: nil)
 		}
 	}
