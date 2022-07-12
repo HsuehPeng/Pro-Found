@@ -115,7 +115,7 @@ class ArticleDetailViewController: UIViewController {
 	@objc func sharePDFArticle() {
 		guard let articleImage = articleImage else { return }
 		let title = article.articleTitle
-		let author = article.authorName
+		let author = article.user.name
 		
 		let data = Data(article.contentText.utf8)
 		

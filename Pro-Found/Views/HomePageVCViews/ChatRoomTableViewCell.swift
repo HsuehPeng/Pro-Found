@@ -63,15 +63,17 @@ class ChatRoomTableViewCell: UITableViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(profileImageView)
+		contentView.addSubview(timestampLabel)
+		
 		profileImageView.centerY(inView: contentView, leftAnchor: contentView.leftAnchor, paddingLeft: 16)
 		
 		let labelVStack = UIStackView(arrangedSubviews: [nameLabel, latestMessageLabel])
 		labelVStack.axis = .vertical
 		labelVStack.spacing = 2
 		contentView.addSubview(labelVStack)
-		labelVStack.centerY(inView: contentView, leftAnchor: profileImageView.rightAnchor, paddingLeft: 16)
+		labelVStack.centerY(inView: contentView, leftAnchor: profileImageView.rightAnchor,paddingLeft: 16)
+		labelVStack.rightAnchor.constraint(equalTo: timestampLabel.leftAnchor, constant: -16).isActive = true
 		
-		contentView.addSubview(timestampLabel)
 		timestampLabel.anchor(right: contentView.rightAnchor, paddingRight: 20)
 		timestampLabel.centerY(inView: contentView)
 	}

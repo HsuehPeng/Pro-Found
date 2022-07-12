@@ -120,25 +120,22 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 	
 	func setupUI() {
 		contentView.addSubview(profileImageView)
+		contentView.addSubview(feedNameLabel)
+		contentView.addSubview(feedTimeLabel)
+		contentView.addSubview(feedEditButton)
+		contentView.addSubview(deleteButton)
+		
 		profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
-		contentView.addSubview(feedNameLabel)
-		feedNameLabel.anchor(top: contentView.topAnchor, left: profileImageView.rightAnchor, paddingTop: 16, paddingLeft: 12)
+		feedNameLabel.anchor(top: contentView.topAnchor, left: profileImageView.rightAnchor, right: contentView.rightAnchor,
+							 paddingTop: 16, paddingLeft: 12, paddingRight: 24)
 
-		contentView.addSubview(feedTimeLabel)
-		feedTimeLabel.anchor(top: feedNameLabel.bottomAnchor, left: profileImageView.rightAnchor, paddingLeft: 12)
+		feedTimeLabel.anchor(top: feedNameLabel.bottomAnchor, left: profileImageView.rightAnchor, right: contentView.rightAnchor, paddingLeft: 12, paddingRight: 24)
 
-		contentView.addSubview(feedEditButton)
 		feedEditButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
 		feedEditButton.anchor(right: contentView.rightAnchor, paddingRight: 12)
 
-		contentView.addSubview(deleteButton)
 		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
-
-//		contentView.addSubview(contentLabel)
-//		contentLabel.anchor(top: profileImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor,
-//							paddingTop: 16, paddingLeft: 16, paddingRight: 16)
-//
 
 		let postCommentHeaderVStack = UIStackView(arrangedSubviews: [contentLabel, collectionView])
 		postCommentHeaderVStack.axis = .vertical

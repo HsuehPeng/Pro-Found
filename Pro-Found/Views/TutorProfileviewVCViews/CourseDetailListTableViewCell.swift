@@ -84,7 +84,7 @@ class CourseDetailListTableViewCell: UITableViewCell {
 	
 	private let addressLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12), textColor: .dark40, text: "Test Address")
-		label.numberOfLines = 0
+		label.numberOfLines = 3
 		return label
 	}()
 	
@@ -129,26 +129,28 @@ class CourseDetailListTableViewCell: UITableViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(tutorImageView)
+		contentView.addSubview(tutorNameLabel)
+		contentView.addSubview(followButton)
+		contentView.addSubview(dividerLine1)
+		contentView.addSubview(locationMapView)
+		contentView.addSubview(addressLabel)
+		contentView.addSubview(dividerLine2)
+		
 		tutorImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
-		contentView.addSubview(tutorNameLabel)
 		tutorNameLabel.centerY(inView: tutorImageView, leftAnchor: tutorImageView.rightAnchor, paddingLeft: 8)
+		tutorNameLabel.rightAnchor.constraint(equalTo: followButton.leftAnchor, constant: -12).isActive = true
 		
-		contentView.addSubview(followButton)
 		followButton.centerY(inView: tutorImageView)
 		followButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
 
-		contentView.addSubview(dividerLine1)
 		dividerLine1.anchor(top: tutorImageView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 8, height: 1)
 		
-		contentView.addSubview(locationMapView)
 		locationMapView.anchor(top: dividerLine1.bottomAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
-		contentView.addSubview(addressLabel)
 		addressLabel.centerY(inView: locationMapView, leftAnchor: locationMapView.rightAnchor, paddingLeft: 8)
 		addressLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
 		
-		contentView.addSubview(dividerLine2)
 		dividerLine2.anchor(top: locationMapView.bottomAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, paddingTop: 8, height: 1)
 		
 		let subjectVStack = UIStackView(arrangedSubviews: [subjectTitleLabel, subjectLabel])
@@ -188,7 +190,7 @@ class CourseDetailListTableViewCell: UITableViewCell {
 		guard let course = course, let isFollow = isFollow, let uid = Auth.auth().currentUser?.uid else { return }
 		let tutorImageUrl = URL(string: course.tutor.profileImageURL)
 		tutorImageView.kf.setImage(with: tutorImageUrl)
-		tutorNameLabel.text = course.tutorName
+		tutorNameLabel.text = course.tutor.name
 		addressLabel.text = course.location
 		subjectLabel.text = course.subject
 		durationLabel.text = "\(course.hours) hour"

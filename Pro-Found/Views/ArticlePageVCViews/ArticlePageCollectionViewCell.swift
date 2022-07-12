@@ -37,7 +37,7 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 	
 	private let authorLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 10), textColor: UIColor.dark40, text: "Test Author Name")
-		label.numberOfLines = 0
+		label.numberOfLines = 1
 		return label
 	}()
 	
@@ -76,20 +76,22 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(articleImageView)
+		contentView.addSubview(titleLabel)
+		contentView.addSubview(ratingButtonNumber)
+		contentView.addSubview(authorLabel)
+		
 		articleImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor,
 								right: contentView.rightAnchor, height: 168)
 		
-		contentView.addSubview(titleLabel)
 		titleLabel.anchor(top: articleImageView.bottomAnchor, left: contentView.leftAnchor,
 						  right: contentView.rightAnchor, paddingTop: 12)
 		
-		contentView.addSubview(ratingButtonNumber)
 		ratingButtonNumber.anchor(top: titleLabel.bottomAnchor, bottom: contentView.bottomAnchor,
 								  right: contentView.rightAnchor, paddingRight: 8)
 		
-		contentView.addSubview(authorLabel)
 		authorLabel.centerY(inView: ratingButtonNumber)
-		authorLabel.anchor(left: contentView.leftAnchor)
+		authorLabel.anchor(left: contentView.leftAnchor, right: ratingButtonNumber.leftAnchor,
+						   paddingRight: 16)
 		
 	}
 	
@@ -101,7 +103,7 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 		
 		articleImageView.kf.setImage(with: imageUrl)
 		titleLabel.text = article.articleTitle
-		authorLabel.text = article.authorName
+		authorLabel.text = article.user.name
 		subjectButton.setTitle(article.subject, for: .normal)
 		
 		if article.ratings.isEmpty {

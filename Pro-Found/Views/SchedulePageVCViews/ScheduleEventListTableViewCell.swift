@@ -61,7 +61,7 @@ class ScheduleEventListTableViewCell: UITableViewCell {
 	private let addressLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: .dark40, text: "Event address")
-		label.numberOfLines = 0
+		label.numberOfLines = 2
 		return label
 	}()
 	
@@ -80,26 +80,28 @@ class ScheduleEventListTableViewCell: UITableViewCell {
 	
 	private func setupUI() {
 		contentView.addSubview(eventImageView)
-		eventImageView.centerY(inView: contentView, leftAnchor: contentView.leftAnchor, paddingLeft: 16)
-		
 		contentView.addSubview(eventTitleLabel)
+		contentView.addSubview(timeLabel)
+		contentView.addSubview(addressLabel)
+		contentView.addSubview(organizerImageView)
+		contentView.addSubview(organizerNameLabel)
+
+		eventImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
+							  paddingTop: 12, paddingLeft: 16, paddingBottom: 12)
+		
 		eventTitleLabel.anchor(top: contentView.topAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
 							   paddingTop: 16, paddingLeft: 12, paddingRight: 16)
-
-		contentView.addSubview(timeLabel)
+		
 		timeLabel.anchor(top: eventTitleLabel.bottomAnchor, left: eventImageView.rightAnchor, right: contentView.rightAnchor,
 						 paddingTop: 4, paddingLeft: 12, paddingRight: 16)
 		
-		contentView.addSubview(addressLabel)
 		addressLabel.anchor(top: timeLabel.bottomAnchor, left: eventImageView.rightAnchor,
 							right: contentView.rightAnchor, paddingTop: 4, paddingLeft: 12, paddingRight: 16)
 		
-		contentView.addSubview(organizerImageView)
-		organizerImageView.anchor(top: addressLabel.bottomAnchor, left: eventImageView.rightAnchor,
-								  bottom: contentView.bottomAnchor, paddingTop: 8, paddingLeft: 12, paddingBottom: 24)
-
-		contentView.addSubview(organizerNameLabel)
+		organizerImageView.anchor(top: addressLabel.bottomAnchor, left: eventImageView.rightAnchor, paddingTop: 8, paddingLeft: 12)
+		
 		organizerNameLabel.centerY(inView: organizerImageView, leftAnchor: organizerImageView.rightAnchor, paddingLeft: 8)
+		organizerNameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
 
 	}
 	
