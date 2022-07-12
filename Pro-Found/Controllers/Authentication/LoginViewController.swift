@@ -369,8 +369,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
 							tab.authenticateUserAndConfigureUI()
 							self.dismiss(animated: true, completion: nil)
 						} else {
-							guard let userName = appleIDCredential.fullName?.description, let userEmail = appleIDCredential.email else { return }
-							let user = User(name: userName, userID: uid, email: userEmail, introContentText: "", school: "", schoolMajor: "",
+							guard let givenName = appleIDCredential.fullName?.givenName, let familyName = appleIDCredential.fullName?.familyName, let userEmail = appleIDCredential.email else { return }
+							let user = User(name: "\(givenName) \(familyName)", userID: uid, email: userEmail, introContentText: "", school: "", schoolMajor: "",
 											ratings: [], courseBooked: 0, profileImageURL: "",
 											backgroundImageURL: "", courses: [], articles: [], favoriteArticles: [], events: [], posts: [], blockedUsers: [],
 											followers: [], followings: [], subject: "", isTutor: false)

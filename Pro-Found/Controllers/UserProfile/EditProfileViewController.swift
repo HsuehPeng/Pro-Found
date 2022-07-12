@@ -23,7 +23,7 @@ class EditProfileViewController: UIViewController {
 	private let nameTitleTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = UIFont.customFont(.manropeRegular, size: 12)
-		textField.placeholder = ""
+		textField.placeholder = "Name"
 		return textField
 	}()
 	
@@ -63,7 +63,7 @@ class EditProfileViewController: UIViewController {
 	private let schoolTitleTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = UIFont.customFont(.manropeRegular, size: 12)
-		textField.placeholder = "Email"
+		textField.placeholder = "School"
 		return textField
 	}()
 	
@@ -83,7 +83,7 @@ class EditProfileViewController: UIViewController {
 	private let majorTitleTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = UIFont.customFont(.manropeRegular, size: 12)
-		textField.placeholder = "Email"
+		textField.placeholder = "Major"
 		return textField
 	}()
 	
@@ -94,12 +94,21 @@ class EditProfileViewController: UIViewController {
 		return dividerView
 	}()
 	
-	private let introTextView: UITextView = {
-		let textView = UITextView()
+	private let introTextView: PlaceHolderTextView = {
+		let textView = PlaceHolderTextView()
+		
+		if !textView.text.isEmpty {
+			textView.placeholderLabel.isHidden = false
+		} else {
+			textView.placeholderLabel.isHidden = true
+		}
+		
 		textView.font = UIFont.customFont(.manropeRegular, size: 12)
+		textView.placeholderLabel.text = "Self Introduction"
 		textView.layer.borderColor = UIColor.orange.cgColor
 		textView.layer.borderWidth = 1
 		textView.layer.cornerRadius = 10
+		
 		return textView
 	}()
 	
