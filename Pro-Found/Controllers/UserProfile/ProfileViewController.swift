@@ -136,6 +136,10 @@ class ProfileViewController: UIViewController {
 		fetchFollowingTutors()
 		fetchBlockedTutors()
 		
+		if Auth.auth().currentUser == nil {
+			tabBarController?.selectedIndex = 0
+		}
+		
 		navigationController?.navigationBar.isHidden = true
 		tabBarController?.tabBar.isHidden = false
 	}
@@ -263,7 +267,6 @@ class ProfileViewController: UIViewController {
 		
 		tab.authenticateUserAndConfigureUI()
 		self.dismiss(animated: true, completion: nil)
-
 	}
 	
 	// MARK: - Helpers

@@ -86,13 +86,12 @@ class ArticlePageCollectionViewCell: UICollectionViewCell {
 		titleLabel.anchor(top: articleImageView.bottomAnchor, left: contentView.leftAnchor,
 						  right: contentView.rightAnchor, paddingTop: 12)
 		
-		ratingButtonNumber.anchor(top: titleLabel.bottomAnchor, bottom: contentView.bottomAnchor,
+		ratingButtonNumber.anchor(top: titleLabel.bottomAnchor, left: authorLabel.rightAnchor, bottom: contentView.bottomAnchor,
 								  right: contentView.rightAnchor, paddingRight: 8)
 		
 		authorLabel.centerY(inView: ratingButtonNumber)
-		authorLabel.anchor(left: contentView.leftAnchor, right: ratingButtonNumber.leftAnchor,
-						   paddingRight: 16)
-		
+		authorLabel.anchor(left: contentView.leftAnchor)
+		authorLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 	}
 	
 	// MARK: - Helpers

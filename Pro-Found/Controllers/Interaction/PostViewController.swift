@@ -38,6 +38,13 @@ class PostViewController: UIViewController {
 		return tableView
 	}()
 	
+	private let emptyIndicatorView: UIView = {
+		let view = UIView()
+		view.backgroundColor = .light60
+		
+		return view
+	}()
+	
 	private lazy var writePostButton: UIButton = {
 		let button = UIButton()
 		let image = UIImage.asset(.edit)?.withTintColor(UIColor.orange)

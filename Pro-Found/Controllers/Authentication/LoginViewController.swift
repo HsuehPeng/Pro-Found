@@ -235,6 +235,7 @@ class LoginViewController: UIViewController {
 		guard let tab = window.rootViewController as? MainTabController else { return }
 		
 		tab.configureViewControllers()
+		
 		self.dismiss(animated: true, completion: nil)
 	}
 	

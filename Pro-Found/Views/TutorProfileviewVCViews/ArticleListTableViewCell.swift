@@ -48,6 +48,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.more), for: .normal)
 		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
+		button.isHidden = true
 		return button
 	}()
 	
@@ -201,8 +202,6 @@ class ArticleListTableViewCell: UITableViewCell {
 		} else {
 			ratingButtonNumber.setTitle(calculateAverageRating(article: article), for: .normal)
 		}
-		
-		
 	}
 	
 	func calculateAverageRating(article: Article) -> String {
@@ -218,8 +217,8 @@ class ArticleListTableViewCell: UITableViewCell {
 	
 	func checkIfAuthorIsUser() {
 		guard let uid = Auth.auth().currentUser?.uid, let article = article else { return }
-		if article.userID != uid {
-			editButton.isHidden = true
+		if article.userID == uid {
+			editButton.isHidden = false
 		}
 	}
 

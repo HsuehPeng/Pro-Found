@@ -226,7 +226,10 @@ extension ArticleDetailViewController: ArticleDetailIntroTableViewCellDelegate {
 	}
 	
 	func handleRateArticlePopUp(_ cell: ArticleDetailIntroTableViewCell) {
-		
+		let popUpAskToLoginVC = PopUpAskToLoginController()
+		popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+		popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+		present(popUpAskToLoginVC, animated: true)
 	}
 	
 	func handleSendRating(_ cell: ArticleDetailIntroTableViewCell) {

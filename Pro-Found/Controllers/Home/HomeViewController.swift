@@ -149,7 +149,6 @@ class HomeViewController: UIViewController {
 		
 		collectionView.dataSource = self
 		collectionView.delegate = self
-//		fetchUser()
 		setupUI()
 	}
 	
@@ -214,7 +213,14 @@ class HomeViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func goChatRoom() {
-		guard let user = user else { return }
+		guard let user = user else {
+			let popUpAskToLoginVC = PopUpAskToLoginController()
+			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+			present(popUpAskToLoginVC, animated: true)
+			
+			return
+		}
 		let chatRoomVC = ChatRoomViewController(user: user)
 		navigationController?.pushViewController(chatRoomVC, animated: true)
 	}

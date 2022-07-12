@@ -27,6 +27,7 @@
 		B80D673B2875C5FF008D0FA8 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */; };
 		B80D673E28783655008D0FA8 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673D28783655008D0FA8 /* UIViewController+Extension.swift */; };
 		B80D6740287D5757008D0FA8 /* PlaceHolderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D673F287D5756008D0FA8 /* PlaceHolderTextView.swift */; };
+		B80D6742287D8980008D0FA8 /* EmptyIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D6741287D8980008D0FA8 /* EmptyIndicatorView.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -141,6 +142,7 @@
 		B80D673A2875C5FF008D0FA8 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		B80D673D28783655008D0FA8 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		B80D673F287D5756008D0FA8 /* PlaceHolderTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceHolderTextView.swift; sourceTree = "<group>"; };
+		B80D6741287D8980008D0FA8 /* EmptyIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyIndicatorView.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 				B8AB0648285B565E002110A4 /* GeneralHeaderCollectionReusableView.swift */,
 				B8F99C3428607F6D00B88244 /* GeneralMapCellTableViewCell.swift */,
 				B80D673F287D5756008D0FA8 /* PlaceHolderTextView.swift */,
+				B80D6741287D8980008D0FA8 /* EmptyIndicatorView.swift */,
 				B86943D12858670D008021C9 /* HomePageVCViews */,
 				B8CC5EB3285979D2004C5D7A /* InteractionVCViews */,
 				B8AB065F285DA56A002110A4 /* ArticlePageVCViews */,
@@ -793,6 +796,7 @@
 				B8AB0656285CCAB0002110A4 /* WritePostViewController.swift in Sources */,
 				B8AB061A285A2977002110A4 /* Subject.swift in Sources */,
 				B801887D2869FC23009A6472 /* PopUpAskToLoginController.swift in Sources */,
+				B80D6742287D8980008D0FA8 /* EmptyIndicatorView.swift in Sources */,
 				B8AB065A285D7D15002110A4 /* PostService.swift in Sources */,
 				B8A8FDF22855E4D200F98326 /* Constraint.swift in Sources */,
 				B8AB0642285B0B3F002110A4 /* LoginService.swift in Sources */,

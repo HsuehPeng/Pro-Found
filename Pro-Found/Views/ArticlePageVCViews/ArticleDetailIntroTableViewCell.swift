@@ -181,6 +181,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	
 	@objc func handleRateArticle() {
 		delegate?.handleRateArticlePopUp(self)
+		guard Auth.auth().currentUser != nil else { return }
 		if !rateViewIsUp {
 			contentView.addSubview(ratingView)
 			ratingView.anchor(left: contentView.leftAnchor, bottom: ratingButtonNumber.topAnchor, paddingLeft: 8,
