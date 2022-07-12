@@ -96,7 +96,7 @@ class MainTabController: UITabBarController {
 extension MainTabController: UITabBarControllerDelegate {
 	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
 		if let navigationController = viewController as? UINavigationController,
-		   navigationController.viewControllers.contains(where: { $0 is ProfileViewController }),
+		   navigationController.viewControllers.contains(where: { $0 is ProfileViewController || $0 is InteractionViewController || $0 is ScheduleViewController }),
 		   Auth.auth().currentUser == nil {
 			let popUpAskToLoginVC = PopUpAskToLoginController()
 			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve

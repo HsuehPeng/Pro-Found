@@ -48,6 +48,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.more), for: .normal)
 		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
+		button.isHidden = true
 		return button
 	}()
 	
@@ -119,33 +120,36 @@ class ArticleListTableViewCell: UITableViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(articleImageView)
+		contentView.addSubview(articleTitleLabel)
+		contentView.addSubview(editButton)
+		contentView.addSubview(deleteButton)
+		contentView.addSubview(dateLabel)
+		contentView.addSubview(authorLabel)
+		contentView.addSubview(subjectButton)
+		contentView.addSubview(ratingButtonNumber)
+		
 		articleImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 								paddingTop: 8, paddingLeft: 16, paddingBottom: 8)
 		
-		contentView.addSubview(articleTitleLabel)
 		articleTitleLabel.anchor(top: articleImageView.topAnchor, left: articleImageView.rightAnchor,
 								 right: contentView.rightAnchor, paddingLeft: 12, paddingRight: 36)
 
-		contentView.addSubview(editButton)
 		editButton.centerY(inView: articleTitleLabel)
 		editButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
 		
-		contentView.addSubview(deleteButton)
 		deleteButton.anchor(top: editButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 16)
 
-		contentView.addSubview(dateLabel)
 		dateLabel.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
-								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12)
+								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12, paddingRight: 16)
 
-		contentView.addSubview(authorLabel)
 		authorLabel.anchor(top: dateLabel.bottomAnchor, left: articleImageView.rightAnchor,
-								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12)
+								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12, paddingRight: 16)
 
-		contentView.addSubview(subjectButton)
 		subjectButton.anchor(top: authorLabel.bottomAnchor, left: articleImageView.rightAnchor,
 							 paddingTop: 12, paddingLeft: 12)
-		contentView.addSubview(ratingButtonNumber)
-		ratingButtonNumber.centerY(inView: subjectButton, leftAnchor: subjectButton.rightAnchor, paddingLeft: 60)
+		
+		ratingButtonNumber.centerY(inView: subjectButton)
+		ratingButtonNumber.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
 	}
 	
 	// MARK: - Actions
@@ -188,7 +192,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		articleImageView.kf.setImage(with: imageURL)
 		articleTitleLabel.text = article.articleTitle
 		dateLabel.text = articleDate
-		authorLabel.text = article.authorName
+		authorLabel.text = article.user.name
 		subjectButton.setTitle(article.subject, for: .normal)
 		
 		checkIfAuthorIsUser()
@@ -198,8 +202,6 @@ class ArticleListTableViewCell: UITableViewCell {
 		} else {
 			ratingButtonNumber.setTitle(calculateAverageRating(article: article), for: .normal)
 		}
-		
-		
 	}
 	
 	func calculateAverageRating(article: Article) -> String {
@@ -215,8 +217,8 @@ class ArticleListTableViewCell: UITableViewCell {
 	
 	func checkIfAuthorIsUser() {
 		guard let uid = Auth.auth().currentUser?.uid, let article = article else { return }
-		if article.userID != uid {
-			editButton.isHidden = true
+		if article.userID == uid {
+			editButton.isHidden = false
 		}
 	}
 

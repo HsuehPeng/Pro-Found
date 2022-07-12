@@ -89,15 +89,17 @@ class CourseDetailViewController: UIViewController {
 	
 	func setupUI() {
 		view.addSubview(tableView)
+		view.addSubview(bottomBarView)
+		bottomBarView.addSubview(feeLabel)
+		bottomBarView.addSubview(scheduleCourseButton)
+		
 		tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor)
 		
-		view.addSubview(bottomBarView)
 		bottomBarView.anchor(top: tableView.bottomAnchor ,left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, height: 78)
 		
-		bottomBarView.addSubview(feeLabel)
 		feeLabel.centerY(inView: bottomBarView, leftAnchor: bottomBarView.leftAnchor, paddingLeft: 16)
+		feeLabel.rightAnchor.constraint(equalTo: scheduleCourseButton.leftAnchor, constant: -16).isActive = true
 		
-		bottomBarView.addSubview(scheduleCourseButton)
 		scheduleCourseButton.centerY(inView: bottomBarView)
 		scheduleCourseButton.rightAnchor.constraint(equalTo: bottomBarView.rightAnchor, constant: -16).isActive = true
 	}

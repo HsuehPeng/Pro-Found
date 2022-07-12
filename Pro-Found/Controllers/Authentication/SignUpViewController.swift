@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import Lottie
 
 class SignUpViewController: UIViewController {
 
@@ -199,11 +200,14 @@ class SignUpViewController: UIViewController {
 			present(missingInputVC, animated: true)
 			return
 		}
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		
 		Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
 			guard let self = self else { return }
 			if let error = error {
 				print("Error signing up: \(error)")
+				loadingLottie.stopAnimation()
 				self.showAlert(alertText: "Error", alertMessage: "Error signing up")
 			}
 			
@@ -215,6 +219,7 @@ class SignUpViewController: UIViewController {
 			
 			UserServie.shared.uploadUserData(user: user) { [weak self] in
 				guard let self = self else { return }
+				loadingLottie.stopAnimation()
 				let initialEditVC = InitialEditProfileVC(user: user)
 				self.navigationController?.pushViewController(initialEditVC, animated: true)
 			}
@@ -231,7 +236,6 @@ extension SignUpViewController: UITextFieldDelegate {
 	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 		let currentText = textField.text ?? ""
 		guard let stringRange = Range(range, in: currentText) else { return false }
-
 		let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
 
 		return updatedText.count <= 20

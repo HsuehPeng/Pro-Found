@@ -8,6 +8,7 @@
 import UIKit
 import Kingfisher
 import PhotosUI
+import Lottie
 
 class InitialEditProfileVC: UIViewController {
 
@@ -58,7 +59,6 @@ class InitialEditProfileVC: UIViewController {
 	private let schoolTitleTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = UIFont.customFont(.manropeRegular, size: 12)
-		textField.placeholder = "Email"
 		return textField
 	}()
 	
@@ -78,7 +78,6 @@ class InitialEditProfileVC: UIViewController {
 	private let majorTitleTextField: UITextField = {
 		let textField = UITextField()
 		textField.font = UIFont.customFont(.manropeRegular, size: 12)
-		textField.placeholder = "Email"
 		return textField
 	}()
 	
@@ -89,12 +88,13 @@ class InitialEditProfileVC: UIViewController {
 		return dividerView
 	}()
 	
-	private let introTextView: UITextView = {
-		let textView = UITextView()
+	private let introTextView: PlaceHolderTextView = {
+		let textView = PlaceHolderTextView()
 		textView.font = UIFont.customFont(.manropeRegular, size: 12)
 		textView.layer.borderColor = UIColor.orange.cgColor
 		textView.layer.borderWidth = 1
 		textView.layer.cornerRadius = 10
+		textView.placeholderLabel.text = "Self Introduction"
 		return textView
 	}()
 	
@@ -206,11 +206,20 @@ class InitialEditProfileVC: UIViewController {
 	}
 	
 	@objc func handleDoneEditting() {
-		
+				
 		guard let school = schoolTitleTextField.text, !school.isEmpty,
 			  let major = majorTitleTextField.text, !major.isEmpty,
 			  let intro = introTextView.text, !intro.isEmpty,
-			  let image = profileImageView.image else { return }
+			  let image = profileImageView.image else {
+			let missingInputVC = MissingInputViewController()
+			missingInputVC.modalTransitionStyle = .crossDissolve
+			missingInputVC.modalPresentationStyle = .overCurrentContext
+			present(missingInputVC, animated: true)
+			return
+		}
+		
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		loadingLottie.loadingAnimation()
 		
 		UserServie.shared.uploadUserImageAndDownloadImageURL(userProfileImage: image, user: user) { [weak self] result in
 			guard let self = self else { return }
@@ -228,6 +237,7 @@ class InitialEditProfileVC: UIViewController {
 						$0.windows }).first(where: { $0.isKeyWindow }) else { return }
 					guard let tab = window.rootViewController as? MainTabController else { return }
 					tab.authenticateUserAndConfigureUI()
+					loadingLottie.stopAnimation()
 					self.dismiss(animated: true)
 				}
 

@@ -88,6 +88,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	private let nameLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 20),
 												 textColor: UIColor.dark60, text: "TestName")
+		label.numberOfLines = 2
 		return label
 	}()
 	
@@ -219,31 +220,33 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(backImageView)
+		profileView.addSubview(profileActionButton)
+		contentView.addSubview(profileView)
+		profileView.addSubview(profilePhotoImageView)
+		profileView.addSubview(blockUserButton)
+		profileView.addSubview(chatButton)
+		profileView.addSubview(nameLabel)
+		profileView.addSubview(subjectButton)
+		profileActionButton.centerY(inView: nameLabel)
+		
 		backImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 812 * (280 / 812))
 		
-		contentView.addSubview(profileView)
 		profileView.anchor(top: backImageView.bottomAnchor, left: contentView.leftAnchor,
 						   bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingTop: -28)
 //		profileView.heightAnchor.constraint(equalToConstant: 560).isActive = true
 		
-		profileView.addSubview(profilePhotoImageView)
 		profilePhotoImageView.anchor(top: profileView.topAnchor, left: profileView.leftAnchor, paddingTop: -56, paddingLeft: 24)
 		profilePhotoImageView.setDimensions(width: 84, height: 92)
 		
-		profileView.addSubview(blockUserButton)
 		blockUserButton.anchor(top: profileView.topAnchor, right: profileView.rightAnchor, paddingTop: 16, paddingRight: 24)
 		
-		profileView.addSubview(chatButton)
 		chatButton.anchor(top: profileView.topAnchor, right: blockUserButton.leftAnchor, paddingTop: 16, paddingRight: 24)
 		
-		profileView.addSubview(nameLabel)
-		nameLabel.anchor(top: profileView.topAnchor, left: profileView.leftAnchor, paddingTop: 61, paddingLeft: 24)
+		nameLabel.anchor(top: profileView.topAnchor, left: profileView.leftAnchor,
+						 right: profileActionButton.leftAnchor, paddingTop: 61, paddingLeft: 24, paddingRight: 12)
 		
-		profileView.addSubview(subjectButton)
 		subjectButton.anchor(top: nameLabel.bottomAnchor, left: profileView.leftAnchor, paddingTop: 4, paddingLeft: 24)
 		
-		profileView.addSubview(profileActionButton)
-		profileActionButton.centerY(inView: nameLabel)
 		profileActionButton.anchor(right: profileView.rightAnchor, paddingRight: 24)
 		
 		let followersVStack = UIStackView(arrangedSubviews: [followerNumber, followersLabel])

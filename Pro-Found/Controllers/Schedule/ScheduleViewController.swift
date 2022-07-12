@@ -278,7 +278,10 @@ class ScheduleViewController: UIViewController {
 	// MARK: - Helpers
 	
 	func fetchUserData() {
-		guard let userID = Auth.auth().currentUser?.uid else { return }
+		guard let userID = Auth.auth().currentUser?.uid else {
+			self.loadingLottie.stopAnimation()
+			return
+		}
 		UserServie.shared.getUserData(uid: userID) { [weak self] result in
 			guard let self = self else { return }
 			switch result {
