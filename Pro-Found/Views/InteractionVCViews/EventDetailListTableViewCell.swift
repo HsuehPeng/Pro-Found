@@ -89,22 +89,24 @@ class EventDetailListTableViewCell: UITableViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(eventOrganizerImageView)
+		contentView.addSubview(eventOrganizerNameLabel)
+		contentView.addSubview(followButton)
+		contentView.addSubview(dateImageView)
+		contentView.addSubview(dateLabel)
+		
 		eventOrganizerImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 8, paddingLeft: 16)
 		
-		contentView.addSubview(eventOrganizerNameLabel)
 		eventOrganizerNameLabel.centerY(inView: eventOrganizerImageView, leftAnchor: eventOrganizerImageView.rightAnchor, paddingLeft: 8)
+		eventOrganizerNameLabel.rightAnchor.constraint(equalTo: followButton.leftAnchor, constant: -16).isActive = true
 		
-		contentView.addSubview(followButton)
 		followButton.anchor(right: contentView.rightAnchor, paddingRight: 16)
 		followButton.centerY(inView: eventOrganizerImageView)
 		
-		contentView.addSubview(dateImageView)
 		dateImageView.anchor(top: eventOrganizerImageView.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 							 paddingTop: 16, paddingLeft: 16, paddingBottom: 8)
 		
-		contentView.addSubview(dateLabel)
 		dateLabel.centerY(inView: dateImageView, leftAnchor: dateImageView.rightAnchor, paddingLeft: 8)
-		
+		dateLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
 	}
 	
 	// MARK: - Actions
@@ -123,7 +125,7 @@ class EventDetailListTableViewCell: UITableViewCell {
 		guard let event = event, let isFollow = isFollow, let uid = Auth.auth().currentUser?.uid else { return }
 		let eventImageUrl = URL(string: event.organizer.profileImageURL)
 		eventOrganizerImageView.kf.setImage(with: eventImageUrl)
-		eventOrganizerNameLabel.text = event.organizerName
+		eventOrganizerNameLabel.text = event.organizer.name
 		
 		let dateformatter = DateFormatter()
 		dateformatter.dateFormat = "MMMM dd, yyyy∙HH:mm"

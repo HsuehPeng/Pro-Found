@@ -32,14 +32,12 @@ class HomePageTutorCollectionViewCell: UICollectionViewCell {
 	private let nameLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 13),
 												 textColor: UIColor.dark60, text: "Test Name")
-		label.numberOfLines = 0
 		return label
 	}()
 	
 	private let schoolLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.dark40, text: "University")
-		label.numberOfLines = 0
 		return label
 	}()
 	

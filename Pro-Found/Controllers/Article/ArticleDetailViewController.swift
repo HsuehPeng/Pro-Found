@@ -115,7 +115,7 @@ class ArticleDetailViewController: UIViewController {
 	@objc func sharePDFArticle() {
 		guard let articleImage = articleImage else { return }
 		let title = article.articleTitle
-		let author = article.authorName
+		let author = article.user.name
 		
 		let data = Data(article.contentText.utf8)
 		
@@ -226,7 +226,10 @@ extension ArticleDetailViewController: ArticleDetailIntroTableViewCellDelegate {
 	}
 	
 	func handleRateArticlePopUp(_ cell: ArticleDetailIntroTableViewCell) {
-		
+		let popUpAskToLoginVC = PopUpAskToLoginController()
+		popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+		popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+		present(popUpAskToLoginVC, animated: true)
 	}
 	
 	func handleSendRating(_ cell: ArticleDetailIntroTableViewCell) {

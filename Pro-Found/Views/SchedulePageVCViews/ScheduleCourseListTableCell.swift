@@ -76,7 +76,7 @@ class ScheduleCourseListTableCell: UITableViewCell {
 	private let locationLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 												 textColor: UIColor.light60, text: "Test address")
-		label.numberOfLines = 0
+		label.numberOfLines = 2
 		return label
 	}()
 	
@@ -101,16 +101,19 @@ class ScheduleCourseListTableCell: UITableViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(classView)
+		classView.addSubview(classTitleLabel)
+		classView.addSubview(feeLabel)
+		classView.addSubview(timeLabel)
+		classView.addSubview(locationLabel)
+		
 		classView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
 						 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 20, paddingBottom: 12, paddingRight: 20)
 		
-		classView.addSubview(classTitleLabel)
-		classTitleLabel.anchor(top: classView.topAnchor, left: classView.leftAnchor, paddingTop: 20, paddingLeft: 20)
+		classTitleLabel.anchor(top: classView.topAnchor, left: classView.leftAnchor, right: feeLabel.leftAnchor,
+							   paddingTop: 20, paddingLeft: 20, paddingRight: 16)
 		
-		classView.addSubview(feeLabel)
 		feeLabel.anchor(top: classView.topAnchor, right: classView.rightAnchor, paddingTop: 20, paddingRight: 20)
 		
-		classView.addSubview(timeLabel)
 		timeLabel.anchor(top: classTitleLabel.bottomAnchor, left: classView.leftAnchor, right: classView.rightAnchor, paddingTop: 9, paddingLeft: 20, paddingRight: 20)
 		
 		let profileImageHStack = UIStackView(arrangedSubviews: [instructorImageView, crossImageView, studentImageView])
@@ -120,9 +123,6 @@ class ScheduleCourseListTableCell: UITableViewCell {
 		classView.addSubview(profileImageHStack)
 		profileImageHStack.centerX(inView: classView, topAnchor: timeLabel.bottomAnchor, paddingTop: 16)
 		
-		
-		
-		classView.addSubview(locationLabel)
 		locationLabel.anchor(left: classView.leftAnchor, bottom: classView.bottomAnchor, right: classView.rightAnchor,
 							paddingLeft: 20, paddingBottom: 20, paddingRight: 8)
 	}

@@ -125,6 +125,7 @@ extension ArticleListViewController: UITableViewDataSource {
 			let article = articles[indexPath.row]
 			cell.article = article
 		}
+		cell.selectionStyle = .none
 		return cell
 	}
 }

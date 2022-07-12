@@ -44,12 +44,14 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	private let articleTitleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 16),
 												 textColor: UIColor.dark60, text: "Article Title")
+		label.textAlignment = .center
 		return label
 	}()
 	
 	private let authorNameLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14),
 												 textColor: UIColor.dark40, text: "By author name")
+		label.textAlignment = .center
 		return label
 	}()
 	
@@ -135,13 +137,18 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	func setupUI() {
 		
 		contentView.addSubview(articleImageView)
+		contentView.addSubview(articleTitleLabel)
+		contentView.addSubview(authorNameLabel)
+		
 		articleImageView.centerX(inView: contentView, topAnchor: contentView.topAnchor, paddingTop: 8)
 		
-		contentView.addSubview(articleTitleLabel)
 		articleTitleLabel.centerX(inView: contentView, topAnchor: articleImageView.bottomAnchor, paddingTop: 30)
+		articleTitleLabel.anchor(left: contentView.leftAnchor, right: contentView.rightAnchor,
+								 paddingLeft: 16, paddingRight: 16)
 		
-		contentView.addSubview(authorNameLabel)
 		authorNameLabel.centerX(inView: contentView, topAnchor: articleTitleLabel.bottomAnchor, paddingTop: 14)
+		authorNameLabel.anchor(left: contentView.leftAnchor, right: contentView.rightAnchor,
+								 paddingLeft: 16, paddingRight: 16)
 		
 		let infoOneVStack = UIStackView(arrangedSubviews: [ratingTitleLabel, ratingButtonNumber])
 		infoOneVStack.axis = .vertical
@@ -174,6 +181,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	
 	@objc func handleRateArticle() {
 		delegate?.handleRateArticlePopUp(self)
+		guard Auth.auth().currentUser != nil else { return }
 		if !rateViewIsUp {
 			contentView.addSubview(ratingView)
 			ratingView.anchor(left: contentView.leftAnchor, bottom: ratingButtonNumber.topAnchor, paddingLeft: 8,
@@ -218,7 +226,7 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 		
 		articleImageView.kf.setImage(with: imageUrl)
 		articleTitleLabel.text = article.articleTitle
-		authorNameLabel.text = "By \(article.authorName)"
+		authorNameLabel.text = "By \(article.user.name)"
 		dateLabel.text = dateFormatter.string(from: postDate)
 		subjectLabel.text = article.subject
 

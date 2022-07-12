@@ -145,13 +145,14 @@ class NotificationTableViewCell: UITableViewCell {
 		
 		profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 14, paddingLeft: 20)
 		
-		nameLabel.anchor(top: contentView.topAnchor, left: profileImageView.rightAnchor, paddingTop: 14, paddingLeft: 14)
+		nameLabel.anchor(top: contentView.topAnchor, left: profileImageView.rightAnchor, right: applicationTimeLabel.leftAnchor,
+						 paddingTop: 14, paddingLeft: 14, paddingRight: 16)
 		
 		applicationTimeLabel.anchor(top: contentView.topAnchor, left: nameLabel.rightAnchor, right: contentView.rightAnchor,
 						 paddingTop: 14, paddingLeft: 16, paddingRight: 16)
 		
-		courseTitleLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor,
-								paddingTop: 8, paddingLeft: 14)
+		courseTitleLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, right: scheduleTimeLabel.leftAnchor,
+								paddingTop: 8, paddingLeft: 14, paddingRight: 16)
 		
 		scheduleTimeLabel.centerY(inView: courseTitleLabel)
 		scheduleTimeLabel.anchor(right: contentView.rightAnchor, paddingRight: 16)
