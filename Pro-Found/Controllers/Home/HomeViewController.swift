@@ -19,11 +19,19 @@ class HomeViewController: UIViewController {
 		}
 	}
 	
-	var tutors: [User]?
+	var tutors = [User]()
 	
-	var filteredTutors: [User]? {
+	var filteredTutors = [User]() {
 		didSet {
 			collectionView.reloadData()
+			
+			if filteredTutors.isEmpty {
+				collectionView.alpha = 0
+				noCellView.indicatorLottie.loadingAnimation()
+			} else {
+				collectionView.alpha = 1
+				noCellView.indicatorLottie.stopAnimation()
+			}
 		}
 	}
 	
@@ -133,6 +141,12 @@ class HomeViewController: UIViewController {
 		}
 	}
 	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Active Tutor"
+		return view
+	}()
+	
 	private lazy var collectionView: UICollectionView = {
 		let flowLayout = UICollectionViewFlowLayout()
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -204,6 +218,9 @@ class HomeViewController: UIViewController {
 		subjectButtonVStack.anchor(top: profilePhotoImageView.bottomAnchor, left: topBarView.leftAnchor,
 								   right: topBarView.rightAnchor, paddingTop: 8, paddingLeft: 8, paddingRight: 8)
 		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
+		
 		view.addSubview(collectionView)
 		collectionView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
 		
@@ -260,7 +277,7 @@ class HomeViewController: UIViewController {
 	}
 	
 	@objc func subjectButtonPressed(_ sender: UIButton) {
-		guard let titleLabel = sender.titleLabel, let tutors = tutors else { return }
+		guard let titleLabel = sender.titleLabel else { return }
 		switch titleLabel.text {
 		case Subject.language.rawValue:
 			toggleSelectedSubjectButton(buttons: subjectButtonColletions, selectedButton: languageButton)
@@ -408,14 +425,14 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		guard let filteredTutors = filteredTutors else { return 0 }
+//		guard let filteredTutors = filteredTutors else { return 0 }
 		return filteredTutors.count
 	}
 	
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		guard let tutorCell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageTutorCollectionViewCell.reuseIdentifier, for: indexPath)
 				as? HomePageTutorCollectionViewCell else { fatalError("Can not dequeue HomePageTutorCollectionViewCell") }
-		guard let filteredTutors = filteredTutors else { return tutorCell }
+//		guard let filteredTutors = filteredTutors else { return tutorCell }
 		tutorCell.tutor = filteredTutors[indexPath.item]
 		return tutorCell
 	}
@@ -426,14 +443,14 @@ extension HomeViewController: UICollectionViewDataSource {
 
 extension HomeViewController: UICollectionViewDelegate {
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		guard let user = user, let filteredTutor = filteredTutors else {
+		guard let user = user else {
 			let popUpAskToLoginVC = PopUpAskToLoginController()
 			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
 			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
 			present(popUpAskToLoginVC, animated: true)
 			return
 		}
-		let tutor = filteredTutor[indexPath.item]
+		let tutor = filteredTutors[indexPath.item]
 		let tutorProfileVC = TutorProfileViewController(user: user, tutor: tutor)
 		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}

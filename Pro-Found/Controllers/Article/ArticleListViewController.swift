@@ -26,6 +26,12 @@ class ArticleListViewController: UIViewController {
 
 	let searchController = UISearchController()
 	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Saved Article"
+		return view
+	}()
+	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(ArticleListTableViewCell.self, forCellReuseIdentifier: ArticleListTableViewCell.reuseIdentifier)
@@ -53,6 +59,14 @@ class ArticleListViewController: UIViewController {
 		
 		setupUI()
 		setupNavBar()
+		
+		if articles.isEmpty {
+			tableView.alpha = 0
+			noCellView.indicatorLottie.loadingAnimation()
+		} else {
+			tableView.alpha = 1
+			noCellView.indicatorLottie.stopAnimation()
+		}
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -63,6 +77,10 @@ class ArticleListViewController: UIViewController {
 	// MARK: - UI
 	
 	func setupUI() {
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
+		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 	}

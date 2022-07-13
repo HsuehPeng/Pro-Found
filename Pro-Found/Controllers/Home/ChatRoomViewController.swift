@@ -35,6 +35,12 @@ class ChatRoomViewController: UIViewController {
 		return tableView
 	}()
 	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Conversation"
+		return view
+	}()
+	
 	// MARK: - Lifecycle
 	
 	init(user: User) {
@@ -55,6 +61,9 @@ class ChatRoomViewController: UIViewController {
 		
 		setupUI()
 		setupNavBar()
+		
+		tableView.alpha = 0
+		noCellView.indicatorLottie.loadingAnimation()
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -65,6 +74,11 @@ class ChatRoomViewController: UIViewController {
 	// MARK: - UI
 	
 	func setupUI() {
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
+						 right: view.rightAnchor)
+		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
 						 right: view.rightAnchor)
@@ -111,6 +125,12 @@ class ChatRoomViewController: UIViewController {
 			guard let self = self else { return }
 			switch result {
 			case .success(let conversations):
+				
+				if !conversations.isEmpty {
+					self.tableView.alpha = 1
+					self.noCellView.indicatorLottie.stopAnimation()
+				}
+				
 				let filterBlockedUserConversations = conversations.filter { conversation in
 					return !self.user.blockedUsers.contains(conversation.user.userID)
 				}

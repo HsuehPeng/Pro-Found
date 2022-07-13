@@ -436,6 +436,7 @@ extension ProfileViewController: UITableViewDelegate {
 			navigationController?.pushViewController(publicProfilePage, animated: true)
 		case 2:
 			let followingTutorVC = TutorListViewController(tutors: followingTutors, user: user)
+			followingTutorVC.noCellView.indicatorLabel.text = "You are not following any tutor"
 			navigationController?.pushViewController(followingTutorVC, animated: true)
 		case 3:
 			let savedArticleVC = ArticleListViewController(articles: favoriteArticles)
@@ -443,6 +444,7 @@ extension ProfileViewController: UITableViewDelegate {
 		case 4:
 			print(blockingTutors.count)
 			let blockingTutorVC = TutorListViewController(tutors: blockingTutors, user: user)
+			blockingTutorVC.noCellView.indicatorLabel.text = "You are not blocking any tutor"
 			blockingTutorVC.forBlockingPage = true
 			navigationController?.pushViewController(blockingTutorVC, animated: true)
 		case 5:

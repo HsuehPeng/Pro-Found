@@ -16,6 +16,13 @@ class NotificationViewController: UIViewController {
 			
 	var sortedScheduleCourses = [ScheduledCourseTime]() {
 		didSet {
+			if sortedScheduleCourses.isEmpty {
+				tableView.alpha = 0
+				noCellView.indicatorLottie.loadingAnimation()
+			} else {
+				tableView.alpha = 1
+				noCellView.indicatorLottie.stopAnimation()
+			}
 			tableView.reloadData()
 		}
 	}
@@ -37,6 +44,12 @@ class NotificationViewController: UIViewController {
 	private let titleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16), textColor: .dark, text: "Course Applications")
 		return label
+	}()
+	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Course Application"
+		return view
 	}()
 	
 	private let tableView: UITableView = {
@@ -91,6 +104,9 @@ class NotificationViewController: UIViewController {
 		
 		topBarView.addSubview(titleLabel)
 		titleLabel.center(inView: topBarView)
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 		
 		view.addSubview(tableView)
 		tableView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)

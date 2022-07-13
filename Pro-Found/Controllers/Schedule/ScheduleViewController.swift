@@ -260,7 +260,7 @@ class ScheduleViewController: UIViewController {
 	// MARK: - Actions
 	
 	@objc func goToNotificationVC() {
-		guard let user = user, !scheduledCoursesIdWithTimes.isEmpty else { return }
+		guard let user = user else { return }
 		let notificationVC = NotificationViewController(user: user)
 		navigationController?.pushViewController(notificationVC, animated: true)
 	}

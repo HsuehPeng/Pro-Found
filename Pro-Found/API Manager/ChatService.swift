@@ -48,6 +48,11 @@ struct ChatService {
 		
 		let query = dbChats.document(currentUid).collection("recent-messages").order(by: "timestamp")
 		query.addSnapshotListener { snapshot, error in
+			
+			if let error = error {
+				completion(.failure(error))
+			}
+			
 			snapshot?.documentChanges.forEach({ change in
 				if change.type == .added {
 					let dictionary = change.document.data()
@@ -67,5 +72,4 @@ struct ChatService {
 			})
 		}
 	}
-	
 }

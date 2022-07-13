@@ -25,9 +25,22 @@ class PostViewController: UIViewController {
 	
 	var filteredPosts = [Post]() {
 		didSet {
+			if filteredPosts.isEmpty {
+				tableView.alpha = 0
+				noCellView.indicatorLottie.loadingAnimation()
+			} else {
+				tableView.alpha = 1
+				noCellView.indicatorLottie.stopAnimation()
+			}
 			tableView.reloadData()
 		}
 	}
+	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "Follow Tutors to See Posts"
+		return view
+	}()
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
@@ -85,6 +98,10 @@ class PostViewController: UIViewController {
 	// MARK: - UI
 	
 	private func setupUI() {
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+						  right: view.rightAnchor)
 		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
@@ -176,21 +193,17 @@ extension PostViewController: PostPageFeedCellDelegate {
 	
 	func likePost(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let user = user else { return }
-		
-		guard let indexPath = tableView.indexPath(for: cell) else { return }
-		
-		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID) { 
 				
+		if cell.likeButton.isSelected {
+			PostService.shared.unlikePost(post: post, userID: user.userID) {
+				cell.post?.likes -= 1
+				cell.likeButton.isSelected = false
 			}
-			cell.post?.likes -= 1
-			cell.likeButton.isSelected = false
 		} else {
 			PostService.shared.likePost(post: post, userID: user.userID) {
-				
+				cell.post?.likes += 1
+				cell.likeButton.isSelected = true
 			}
-			cell.post?.likes += 1
-			cell.likeButton.isSelected = true
 		}
 	}
 	
@@ -257,16 +270,14 @@ extension PostViewController: PostPageVideoCellDelegate {
 		
 		if cell.likeButton.isSelected {
 			PostService.shared.unlikePost(post: post, userID: user.userID) {
-				
+				cell.post?.likes -= 1
+				cell.likeButton.isSelected = false
 			}
-			cell.post?.likes -= 1
-			cell.likeButton.isSelected = false
 		} else {
 			PostService.shared.likePost(post: post, userID: user.userID) {
-				
+				cell.post?.likes += 1
+				cell.likeButton.isSelected = true
 			}
-			cell.post?.likes += 1
-			cell.likeButton.isSelected = true
 		}
 	}
 	

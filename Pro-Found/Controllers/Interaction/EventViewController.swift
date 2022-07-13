@@ -25,9 +25,22 @@ class EventViewController: UIViewController {
 	
 	var events = [Event]() {
 		didSet {
+			if events.isEmpty {
+				tableView.alpha = 0
+				noCellView.indicatorLottie.loadingAnimation()
+			} else {
+				tableView.alpha = 1
+				noCellView.indicatorLottie.stopAnimation()
+			}
 			tableView.reloadData()
 		}
 	}
+	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Active Events"
+		return view
+	}()
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
@@ -71,6 +84,11 @@ class EventViewController: UIViewController {
 	// MARK: - UI
 	
 	private func setupUI() {
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
+						  right: view.rightAnchor)
+		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
 						 right: view.rightAnchor)
