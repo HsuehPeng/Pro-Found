@@ -491,6 +491,7 @@ extension ScheduleViewController: UITableViewDataSource {
 				as? ScheduleCourseListTableCell else { fatalError("Can not dequeue ScheduleCourseListTableCell") }
 		
 		if indexPath.section == 0 {
+			courseCell.delegate = self
 			courseCell.scheduledCourseWithTimeAndStudent = filteredCoursesIdWithTimes[indexPath.row]
 			courseCell.course = filteredCoursesIdWithTimes[indexPath.row].course
 			courseCell.selectionStyle = .none
@@ -537,5 +538,21 @@ extension ScheduleViewController: UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		return 50
+	}
+}
+
+// MARK: - ScheduleCourseListTableCellDelegate
+
+extension ScheduleViewController: ScheduleCourseListTableCellDelegate {
+	func handleGoToTutorProfile(_ cell: ScheduleCourseListTableCell) {
+		guard let user = user, let scheduledCourse = cell.scheduledCourseWithTimeAndStudent?.course else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: scheduledCourse.tutor)
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
+	}
+	
+	func handleGoToStudentProfile(_ cell: ScheduleCourseListTableCell) {
+		guard let user = user, let scheduledCourse = cell.scheduledCourseWithTimeAndStudent else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: scheduledCourse.student)
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}
 }

@@ -69,9 +69,14 @@ class NotificationViewController: UIViewController {
 		fetchScheduleCourses()
 	}
 	
-	override func viewWillDisappear(_ animated: Bool) {
+	override func viewDidDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		tabBarController?.tabBar.isHidden = false
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.navigationBar.isHidden = true
 	}
 	
 	// MARK: - UI
@@ -143,6 +148,12 @@ extension NotificationViewController: UITableViewDelegate {
 // MARK: - NotificationTableViewCellDelegate
 
 extension NotificationViewController: NotificationTableViewCellDelegate {
+	func handleCourseTapped(_ cell: NotificationTableViewCell) {
+		guard let scheduleCourse = cell.scheduleCourse else { return }
+		let courseDetailVC = CourseDetailViewController(course: scheduleCourse.course, user: user)
+		navigationController?.pushViewController(courseDetailVC, animated: true)
+	}
+	
 	func handleProfileImageTapped(_ cell: NotificationTableViewCell) {
 		guard let scheduleCourse = cell.scheduleCourse else { return }
 		let publicProfileVC = TutorProfileViewController(user: user, tutor: scheduleCourse.student)

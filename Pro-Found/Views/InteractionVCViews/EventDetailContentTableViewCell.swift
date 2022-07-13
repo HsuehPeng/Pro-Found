@@ -42,12 +42,16 @@ class EventDetailContentTableViewCell: UITableViewCell {
 		return label
 	}()
 	
+	private let participantCountLabel: UILabel = {
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14),
+												 textColor: .dark, text: "")
+		return label
+	}()
+	
 	// MARK: - Lifecycle
 	
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-		super.init(style: style, reuseIdentifier: reuseIdentifier)
-//		contentView.backgroundColor = .orange10
-		
+		super.init(style: style, reuseIdentifier: reuseIdentifier)		
 	}
 	
 	required init?(coder: NSCoder) {
@@ -71,24 +75,25 @@ class EventDetailContentTableViewCell: UITableViewCell {
 									 right: contentView.rightAnchor, paddingTop: 36, paddingLeft: 16)
 		
 		let participantHStack = UIStackView()
-		
-		for i in 0..<participants.count {
-			let participant = participants[i]
-			let imageView = makeParticipantImageView(participant: participant, imageURL: participant.profileImageURL)
-			imageView.setDimensions(width: 32, height: 32)
-			let imageUrl = URL(string: participant.profileImageURL)
-			imageView.kf.setImage(with: imageUrl)
-			imageView.layer.cornerRadius = 32 / 2
-			imageView.clipsToBounds = true
-			imageView.contentMode = .scaleAspectFill
-			participantHStack.addArrangedSubview(imageView)
+		if participants.count < 8 {
+			for i in 0..<participants.count {
+				makeParticipantHStack(index: i, hStack: participantHStack)
+			}
+		} else {
+			for i in 0..<8 {
+				makeParticipantHStack(index: i, hStack: participantHStack)
+			}
 		}
 		
 		participantHStack.spacing = 8
 		
 		contentView.addSubview(participantHStack)
-		participantHStack.anchor(top: participantTitleLabel.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
-								 paddingTop: 12, paddingLeft: 16, paddingBottom: 12)
+		participantHStack.anchor(top: participantTitleLabel.bottomAnchor, left: contentView.leftAnchor, paddingTop: 12, paddingLeft: 16)
+		
+		contentView.addSubview(participantCountLabel)
+		participantCountLabel.anchor(top: participantHStack.bottomAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor,
+									 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 16,
+									 paddingBottom: 12, paddingRight: 16)
 	}
 	
 	// MARK: - Actions
@@ -98,6 +103,19 @@ class EventDetailContentTableViewCell: UITableViewCell {
 	func configureUI() {
 		guard let event = event else { return }
 		detailContentLabel.text = event.introText
+		participantCountLabel.text = "\(event.participants.count) Participants"
+	}
+	
+	func makeParticipantHStack(index: Int, hStack: UIStackView) {
+		let participant = participants[index]
+		let imageView = makeParticipantImageView(participant: participant, imageURL: participant.profileImageURL)
+		imageView.setDimensions(width: 32, height: 32)
+		let imageUrl = URL(string: participant.profileImageURL)
+		imageView.kf.setImage(with: imageUrl)
+		imageView.layer.cornerRadius = 32 / 2
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
+		hStack.addArrangedSubview(imageView)
 	}
 	
 	func makeParticipantImageView(participant: User, imageURL: String) -> UIImageView {

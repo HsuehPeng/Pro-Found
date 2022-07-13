@@ -40,13 +40,18 @@ class HomeViewController: UIViewController {
 		return view
 	}()
 	
-	private let profilePhotoImageView: UIImageView = {
+	private lazy var profilePhotoImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.backgroundColor = .gray
 		imageView.setDimensions(width: 36, height: 36)
 		imageView.layer.cornerRadius = 36 / 2
 		imageView.clipsToBounds = true
 		imageView.contentMode = .scaleAspectFill
+		
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
+		
 		return imageView
 	}()
 	
@@ -285,6 +290,13 @@ class HomeViewController: UIViewController {
 		default:
 			break
 		}
+	}
+	
+	@objc func handleProfileImageTapped() {
+		print("asd")
+		guard let user = user else { return }
+		let tutorProfileVC = TutorProfileViewController(user: user, tutor: user)
+		navigationController?.pushViewController(tutorProfileVC, animated: true)
 	}
 	
 	// MARK: - Helpers

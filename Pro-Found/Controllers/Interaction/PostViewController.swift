@@ -177,8 +177,10 @@ extension PostViewController: PostPageFeedCellDelegate {
 	func likePost(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let user = user else { return }
 		
+		guard let indexPath = tableView.indexPath(for: cell) else { return }
+		
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID) {
+			PostService.shared.unlikePost(post: post, userID: user.userID) { 
 				
 			}
 			cell.post?.likes -= 1

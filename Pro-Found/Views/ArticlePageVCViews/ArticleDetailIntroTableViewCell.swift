@@ -180,8 +180,10 @@ class ArticleDetailIntroTableViewCell: UITableViewCell {
 	// MARK: - Actions
 	
 	@objc func handleRateArticle() {
-		delegate?.handleRateArticlePopUp(self)
-		guard Auth.auth().currentUser != nil else { return }
+		guard Auth.auth().currentUser != nil else {
+			delegate?.handleRateArticlePopUp(self)
+			return
+		}
 		if !rateViewIsUp {
 			contentView.addSubview(ratingView)
 			ratingView.anchor(left: contentView.leftAnchor, bottom: ratingButtonNumber.topAnchor, paddingLeft: 8,

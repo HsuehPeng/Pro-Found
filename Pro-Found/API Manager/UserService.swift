@@ -477,7 +477,7 @@ struct UserServie {
 	func toggleTutorStatus(userID: String, subject: String, isTutor: Bool, completion: @escaping () -> Void) {
 		if isTutor {
 			dbUsers.document(userID).updateData([
-				"subject": "",
+				"subject": "Student",
 				"isTutor": !isTutor
 			]) { error in
 				if let error = error {
