@@ -13,7 +13,7 @@ struct Post: Codable {
 	let contentText: String
 	var likes: Int
 	let timestamp: Double
-	let likedBy: [String]
+	var likedBy: [String]
 	let user: User
 	let imagesURL: [String]
 	var videoURL: String?

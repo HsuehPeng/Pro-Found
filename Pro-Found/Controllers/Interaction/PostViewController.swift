@@ -32,7 +32,6 @@ class PostViewController: UIViewController {
 				tableView.alpha = 1
 				noCellView.indicatorLottie.stopAnimation()
 			}
-			tableView.reloadData()
 		}
 	}
 	
@@ -42,7 +41,7 @@ class PostViewController: UIViewController {
 		return view
 	}()
 	
-	private let tableView: UITableView = {
+	let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(PostPageFeedCell.self, forCellReuseIdentifier: PostPageFeedCell.reuseIdentifier)
 		tableView.register(PostPageVideoCell.self, forCellReuseIdentifier: PostPageVideoCell.reuserIdentifier)
@@ -82,10 +81,12 @@ class PostViewController: UIViewController {
 		tableView.delegate = self
 		
 		setupUI()
+		
     }
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+		
 		let cells = tableView.visibleCells
 		cells.forEach { cell in
 			guard let cell = cell as? PostPageVideoCell else { return }
@@ -193,17 +194,31 @@ extension PostViewController: PostPageFeedCellDelegate {
 	
 	func likePost(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let user = user else { return }
+		guard let indexPath = tableView.indexPath(for: cell) else { return }
 				
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID) {
-				cell.post?.likes -= 1
-				cell.likeButton.isSelected = false
+			PostService.shared.unlikePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.filteredPosts[indexPath.row].likedBy.removeAll { userID in
+					return userID == user.userID
+				}
+				self.filteredPosts[indexPath.row].likes -= 1
 			}
+			
+			cell.post?.likes -= 1
+			cell.likeButton.isSelected = false
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID) {
-				cell.post?.likes += 1
-				cell.likeButton.isSelected = true
+			PostService.shared.likePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.filteredPosts[indexPath.row].likedBy.append(user.userID)
+				
+				self.filteredPosts[indexPath.row].likes += 1
 			}
+			
+			cell.post?.likes += 1
+			cell.likeButton.isSelected = true
 		}
 	}
 	
@@ -267,17 +282,30 @@ extension PostViewController: PostPageVideoCellDelegate {
 	
 	func likePost(_ cell: PostPageVideoCell) {
 		guard let post = cell.post, let user = user else { return }
-		
+		guard let indexPath = tableView.indexPath(for: cell) else { return }
+
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID) {
-				cell.post?.likes -= 1
-				cell.likeButton.isSelected = false
+			PostService.shared.unlikePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.filteredPosts[indexPath.row].likedBy.removeAll { userID in
+					return userID == user.userID
+				}
+				self.filteredPosts[indexPath.row].likes -= 1
 			}
+			
+			cell.post?.likes -= 1
+			cell.likeButton.isSelected = false
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID) {
-				cell.post?.likes += 1
-				cell.likeButton.isSelected = true
+			PostService.shared.likePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.filteredPosts[indexPath.row].likedBy.append(user.userID)
+				self.filteredPosts[indexPath.row].likes += 1
 			}
+			
+			cell.post?.likes += 1
+			cell.likeButton.isSelected = true
 		}
 	}
 	

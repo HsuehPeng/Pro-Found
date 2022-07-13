@@ -77,7 +77,7 @@ class ScheduleViewController: UIViewController {
 	private lazy var nextMonthButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.chevron_right), for: .normal)
-		button.setDimensions(width: 16, height: 16)
+//		button.setDimensions(width: 16, height: 16)
 		button.addTarget(self, action: #selector(goNextMonth), for: .touchUpInside)
 		return button
 	}()
@@ -85,7 +85,7 @@ class ScheduleViewController: UIViewController {
 	private lazy var previousMonthButton: UIButton = {
 		let button = UIButton()
 		button.setImage(UIImage.asset(.chevron_left), for: .normal)
-		button.setDimensions(width: 16, height: 16)
+//		button.setDimensions(width: 16, height: 16)
 		button.addTarget(self, action: #selector(goPreviousMonth), for: .touchUpInside)
 		return button
 	}()

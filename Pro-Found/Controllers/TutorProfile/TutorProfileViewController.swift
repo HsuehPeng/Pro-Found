@@ -457,15 +457,28 @@ extension TutorProfileViewController: PostPageFeedCellDelegate {
 	
 	func likePost(_ cell: PostPageFeedCell) {
 		guard let post = cell.post else { return }
+		guard let indexPath = tableView.indexPath(for: cell) else { return }
+		
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID) {
-
+			PostService.shared.unlikePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.tutorPosts[indexPath.row].likedBy.removeAll { userID in
+					return userID == self.user.userID
+				}
+				self.tutorPosts[indexPath.row].likes -= 1
+				
 			}
 			cell.post?.likes -= 1
 			cell.likeButton.isSelected = false
-			
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID) {
+			PostService.shared.likePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.tutorPosts[indexPath.row].likedBy.append(self.user.userID)
+				
+				self.tutorPosts[indexPath.row].likes += 1
+				
 
 			}
 			cell.post?.likes += 1
@@ -516,15 +529,28 @@ extension TutorProfileViewController: PostPageVideoCellDelegate {
 	
 	func likePost(_ cell: PostPageVideoCell) {
 		guard let post = cell.post else { return }
+		guard let indexPath = tableView.indexPath(for: cell) else { return }
+		
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID) {
+			PostService.shared.unlikePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.tutorPosts[indexPath.row].likedBy.removeAll { userID in
+					return userID == self.user.userID
+				}
+				self.tutorPosts[indexPath.row].likes -= 1
 
 			}
 			cell.post?.likes -= 1
 			cell.likeButton.isSelected = false
 			
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID) {
+			PostService.shared.likePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.tutorPosts[indexPath.row].likedBy.append(self.user.userID)
+				
+				self.tutorPosts[indexPath.row].likes += 1
 
 			}
 			cell.post?.likes += 1
