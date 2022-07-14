@@ -13,7 +13,7 @@ protocol PostPageVideoCellDelegate: AnyObject {
 	func goToPostUserProfile(_ cell: PostPageVideoCell)
 	func likePost(_ cell: PostPageVideoCell)
 	func checkIfLikedByUser(_ cell: PostPageVideoCell)
-	func askToDelete(_ cell: PostPageVideoCell)
+	func popUpUserContentAlert(_ cell: PostPageVideoCell)
 	func toggleVideoVolunm(_ cell: PostPageVideoCell)
 }
 
@@ -83,23 +83,9 @@ class PostPageVideoCell: UITableViewCell {
 	
 	private lazy var feedEditButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.more), for: .normal)
-		button.isHidden = true
-		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
-		return button
-	}()
-	
-	private lazy var deleteButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("Delete", for: .normal)
-		button.setTitleColor(.red, for: .normal)
-		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 12)
-		button.backgroundColor = .orange20
-		button.layer.cornerRadius = 5
-		button.setDimensions(width: 50, height: 20)
-		button.addTarget(self, action: #selector(deleteArticle), for: .touchUpInside)
-		button.isHidden = true
-		button.alpha = 0
+		let image = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleEditButtonAction), for: .touchUpInside)
 		return button
 	}()
 	
@@ -178,7 +164,6 @@ class PostPageVideoCell: UITableViewCell {
 		contentView.addSubview(feedNameLabel)
 		contentView.addSubview(feedTimeLabel)
 		contentView.addSubview(feedEditButton)
-		contentView.addSubview(deleteButton)
 
 		profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
@@ -190,8 +175,6 @@ class PostPageVideoCell: UITableViewCell {
 		
 		feedEditButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
 		feedEditButton.anchor(right: contentView.rightAnchor, paddingRight: 12)
-		
-		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
 		
 		let feedHStack = UIStackView(arrangedSubviews: [likeButton, commentButton])
 		feedHStack.axis = .horizontal
@@ -261,26 +244,8 @@ class PostPageVideoCell: UITableViewCell {
 		delegate?.likePost(self)
 	}
 	
-	@objc func handleAskToDelete() {
-		if deleteButton.isHidden {
-			UIView.animate(withDuration: 0.3) {
-				self.deleteButton.alpha = 1
-				self.deleteButton.isHidden = !self.deleteButton.isHidden
-			}
-		} else {
-			UIView.animate(withDuration: 0.3) {
-				self.deleteButton.alpha = 0
-			} completion: { done in
-				if done {
-					self.deleteButton.isHidden = !self.deleteButton.isHidden
-				}
-			}
-		}
-	}
-	
-	@objc func deleteArticle() {
-		delegate?.askToDelete(self)
-		deleteButton.isHidden = true
+	@objc func handleEditButtonAction() {
+		delegate?.popUpUserContentAlert(self)
 	}
 	
 	// MARK: - Helpers
@@ -299,12 +264,6 @@ class PostPageVideoCell: UITableViewCell {
 		likeCountLabel.text = "\(post.likes) likes"
 		
 		delegate?.checkIfLikedByUser(self)
-				
-		if post.userID == user.userID {
-			feedEditButton.isHidden = false
-		} else {
-			feedEditButton.isHidden = true
-		}
 	}
 	
 }

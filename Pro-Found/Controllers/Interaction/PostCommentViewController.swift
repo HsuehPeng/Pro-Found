@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import Lottie
 
 class PostCommentViewController: UIViewController {
 	
@@ -169,6 +170,22 @@ class PostCommentViewController: UIViewController {
 	func filterReplies(replies: [Reply]) -> [Reply] {
 		return replies.filter({ $0.postID == post.postID })
 	}
+	
+	func deletePost() {
+		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { [weak self] _ in
+			guard let self = self else { return }
+			PostService.shared.deletePost(postID: self.post.postID, userID: self.user.userID) { [weak self] in
+				guard let self = self else { return }
+				self.navigationController?.popViewController(animated: true)
+			}
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
+	}
 
 }
 
@@ -204,27 +221,40 @@ extension PostCommentViewController: UITableViewDelegate {
 // MARK: - PostCommentTableHeaderDelegate
 
 extension PostCommentViewController: PostCommentTableHeaderDelegate {
+	func popUpUserContentAlert(_ cell: PostCommentTableHeader) {
+		
+		let actionSheet = UIAlertController(title: "Actions", message: nil,
+											preferredStyle: .actionSheet)
+		
+		let reportAction = UIAlertAction(title: "Report", style: .destructive) { [weak self] action in
+			guard let self = self else { return }
+			let reportVC = ReportViewController(contentID: self.post.postID, contentType: ContentTyep.post)
+			if let reportSheet = reportVC.presentationController as? UISheetPresentationController {
+				reportSheet.detents = [.large()]
+			}
+			self.present(reportVC, animated: true)
+		}
+		actionSheet.addAction(reportAction)
+		
+		if post.user.userID == user.userID {
+			let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] action in
+				guard let self = self else { return }
+				self.deletePost()
+			}
+			actionSheet.addAction(deleteAction)
+		}
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
+	}
+	
 	func goToPublicProfile(_ cell: PostCommentTableHeader) {
 		guard let post = cell.post else { return }
 		let tutorProfileVC = TutorProfileViewController(user: user, tutor: post.user)
 		navigationController?.pushViewController(tutorProfileVC, animated: true)
-	}
-	
-	func askToDelete(_ cell: PostCommentTableHeader) {
-				
-		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
-		let okAction = UIAlertAction(title: "Sure", style: .destructive) { [weak self] _ in
-			guard let self = self else { return }
-			PostService.shared.deletePost(postID: self.post.postID, userID: self.user.userID) { [weak self] in
-				guard let self = self else { return }
-				self.navigationController?.popViewController(animated: true)
-			}
-		}
-		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-		controller.addAction(okAction)
-		controller.addAction(cancelAction)
-		
-		present(controller, animated: true, completion: nil)
 	}
 }
 

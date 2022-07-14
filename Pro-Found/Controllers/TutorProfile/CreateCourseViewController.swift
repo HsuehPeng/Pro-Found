@@ -304,7 +304,6 @@ class CreateCourseViewController: UIViewController {
 			loadingLottie.stopAnimation()
 			self.navigationController?.popViewController(animated: true)
 		}
-		
 	}
 	
 	// MARK: - Helpers
