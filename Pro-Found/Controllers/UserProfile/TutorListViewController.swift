@@ -98,6 +98,16 @@ class TutorListViewController: UIViewController {
 	}
 	
 	func setupNavBar() {
+		
+		let appearance = UINavigationBarAppearance()
+		let titleAttribute: [NSAttributedString.Key: Any] = [
+			.font: UIFont.customFont(.interBold, size: 16)
+		]
+		appearance.titleTextAttributes = titleAttribute
+		appearance.configureWithDefaultBackground()
+		navigationController?.navigationBar.standardAppearance = appearance
+		navigationController?.navigationBar.compactAppearance = appearance
+		navigationController?.navigationBar.scrollEdgeAppearance = appearance
 
 		let leftBarItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftBarItemImage, style: .done,
