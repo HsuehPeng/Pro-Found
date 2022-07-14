@@ -28,7 +28,7 @@ class ProfileViewController: UIViewController {
 	var blockingTutors = [User]()
 	
 	let profileListIcon: [UIImage?] = [UIImage.asset(.verified_user)?.withTintColor(.green),
-									   UIImage.asset(.account_pin)?.withTintColor(.dark40),
+									   UIImage.asset(.account_pin)?.withTintColor(.orange),
 									   UIImage.asset(.favorite)?.withTintColor(.dark40),
 									   UIImage.asset(.bookmark)?.withTintColor(.dark40),
 									   UIImage.asset(.password_hide)?.withTintColor(.dark40),
@@ -388,6 +388,8 @@ extension ProfileViewController: UITableViewDataSource {
 			} else {
 				cell.titleLabel.textColor = .green
 			}
+		} else if indexPath.row == 1 {
+			cell.titleLabel.textColor = .orange
 		}
 
 		return cell

@@ -64,8 +64,8 @@ class ReportViewController: UIViewController {
 	}()
 	
 	private let titleLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 20),
-												 textColor: .dark, text: "Repoert")
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16),
+												 textColor: .dark, text: "Report")
 		return label
 	}()
 	
@@ -171,7 +171,13 @@ extension ReportViewController: UITableViewDataSource {
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-		cell.textLabel?.text = ReportType.allCases[indexPath.row].description
+		
+		var content = cell.defaultContentConfiguration()
+		content.text = ReportType.allCases[indexPath.row].description
+		content.textProperties.font = UIFont.customFont(.manropeRegular, size: 16)
+		content.textProperties.color = .dark
+		cell.contentConfiguration = content
+		
 		return cell
 	}
 }

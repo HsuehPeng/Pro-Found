@@ -44,7 +44,7 @@ class EventDetailContentTableViewCell: UITableViewCell {
 	
 	private let participantCountLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14),
-												 textColor: .dark, text: "")
+												 textColor: .dark40, text: "")
 		return label
 	}()
 	
