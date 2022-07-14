@@ -216,8 +216,7 @@ class NotificationTableViewCell: UITableViewCell {
 		nameLabel.text = scheduledCourse.student.name
 		
 		let attributes: [NSAttributedString.Key: Any] = [
-			.font: UIFont.customFont(.manropeRegular, size: 14),
-			.underlineStyle: NSUnderlineStyle.thick.rawValue,
+			.font: UIFont.customFont(.interBold, size: 14),
 			.foregroundColor: UIColor.orange
 		]
 		let attributedString = NSAttributedString(string: scheduledCourse.course.courseTitle,

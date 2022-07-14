@@ -81,7 +81,6 @@ class PostViewController: UIViewController {
 		tableView.delegate = self
 		
 		setupUI()
-		
     }
 	
 	override func viewWillDisappear(_ animated: Bool) {
@@ -374,5 +373,13 @@ extension PostViewController: PostPageVideoCellDelegate {
 		} else {
 			cell.likeButton.isSelected = false
 		}
+	}
+	
+	func goFeelsVideoVC(_ cell: PostPageVideoCell) {
+		guard let post = cell.post else { return }
+		let postFeelsVideoVC = PostFeelsVideoViewController(post: post)
+		postFeelsVideoVC.modalPresentationStyle = .fullScreen
+		postFeelsVideoVC.modalTransitionStyle = .crossDissolve
+		present(postFeelsVideoVC, animated: true)
 	}
 }

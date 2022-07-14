@@ -16,5 +16,6 @@ target 'Pro-Found' do
 	pod 'Cosmos', '~> 23.0'
 	pod 'IQKeyboardManagerSwift'
 	pod 'lottie-ios'
+	pod 'MarqueeLabel'
 
 end

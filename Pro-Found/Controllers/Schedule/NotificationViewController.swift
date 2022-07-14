@@ -73,7 +73,6 @@ class NotificationViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .light60
-		tabBarController?.tabBar.isHidden = true
 		
 		tableView.delegate = self
 		tableView.dataSource = self
@@ -82,14 +81,10 @@ class NotificationViewController: UIViewController {
 		fetchScheduleCourses()
 	}
 	
-	override func viewDidDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		tabBarController?.tabBar.isHidden = false
-	}
-	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		navigationController?.navigationBar.isHidden = true
+		tabBarController?.tabBar.isHidden = true
 	}
 	
 	// MARK: - UI

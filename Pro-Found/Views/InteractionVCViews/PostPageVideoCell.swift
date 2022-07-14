@@ -15,10 +15,12 @@ protocol PostPageVideoCellDelegate: AnyObject {
 	func checkIfLikedByUser(_ cell: PostPageVideoCell)
 	func popUpUserContentAlert(_ cell: PostPageVideoCell)
 	func toggleVideoVolunm(_ cell: PostPageVideoCell)
+	func goFeelsVideoVC(_ cell: PostPageVideoCell)
 }
 
 extension PostPageVideoCellDelegate {
 	func goToPostUserProfile(_ cell: PostPageVideoCell) {}
+	func goFeelsVideoVC(_ cell: PostPageVideoCell) {}
 }
 
 class PostPageVideoCell: UITableViewCell {
@@ -96,12 +98,17 @@ class PostPageVideoCell: UITableViewCell {
 		return label
 	}()
 	
-	private let videoContainerView: UIView = {
+	private lazy var videoContainerView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .light50
-		view.setDimensions(width: UIScreen.main.bounds.width - 32, height: UIScreen.main.bounds.height * 0.3)
+		view.setDimensions(width: UIScreen.main.bounds.width - 32, height: UIScreen.main.bounds.height * 0.5)
 		view.clipsToBounds = true
 		view.layer.cornerRadius = 12
+		
+		let tap = UITapGestureRecognizer(target: self, action: #selector(goFeelsVideoVC))
+		view.addGestureRecognizer(tap)
+		view.isUserInteractionEnabled = true
+		
 		return view
 	}()
 	
@@ -212,7 +219,7 @@ class PostPageVideoCell: UITableViewCell {
 				
 				self.videoContainerView.layer.addSublayer(self.avPlayerLayer)
 				self.avPlayerLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 32,
-											 height: UIScreen.main.bounds.height * 0.3)
+											 height: UIScreen.main.bounds.height * 0.5)
 				self.avPlayerLayer.addSublayer(self.toggleVolumeButton.layer)
 				self.avQueueplayer.volume = 0
 				
@@ -248,10 +255,14 @@ class PostPageVideoCell: UITableViewCell {
 		delegate?.popUpUserContentAlert(self)
 	}
 	
+	@objc func goFeelsVideoVC() {
+		delegate?.goFeelsVideoVC(self)
+	}
+	
 	// MARK: - Helpers
 	
 	func configureUI() {
-		guard let post = post, let user = user else { return }
+		guard let post = post, let _ = user else { return }
 		let imageUrl = URL(string: post.user.profileImageURL)
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "h:mm a ∙ MM/dd/yyyy"

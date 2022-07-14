@@ -31,6 +31,7 @@
 		B80D674A287FAA08008D0FA8 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D6749287FAA08008D0FA8 /* Utility.swift */; };
 		B80D674C287FDC3A008D0FA8 /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D674B287FDC3A008D0FA8 /* ReportViewController.swift */; };
 		B80D674E287FE5E3008D0FA8 /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D674D287FE5E3008D0FA8 /* Report.swift */; };
+		B80D6750288008D7008D0FA8 /* PostFeelsVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B80D674F288008D7008D0FA8 /* PostFeelsVideoViewController.swift */; };
 		B811E3FE28531135009C0838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FD28531135009C0838 /* AppDelegate.swift */; };
 		B811E40028531135009C0838 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E3FF28531135009C0838 /* SceneDelegate.swift */; };
 		B811E40228531135009C0838 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B811E40128531135009C0838 /* MainTabController.swift */; };
@@ -149,6 +150,7 @@
 		B80D6749287FAA08008D0FA8 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		B80D674B287FDC3A008D0FA8 /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		B80D674D287FE5E3008D0FA8 /* Report.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
+		B80D674F288008D7008D0FA8 /* PostFeelsVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostFeelsVideoViewController.swift; sourceTree = "<group>"; };
 		B811E3FA28531135009C0838 /* Pro-Found.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pro-Found.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B811E3FD28531135009C0838 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B811E3FF28531135009C0838 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 			children = (
 				B8C7B392285725E200CA7370 /* InteractionViewController.swift */,
 				B89AD402285ED15900CCE027 /* PostViewController.swift */,
+				B80D674F288008D7008D0FA8 /* PostFeelsVideoViewController.swift */,
 				B8F352D12861B9CF0068E87D /* PostCommentViewController.swift */,
 				B8AB0655285CCAB0002110A4 /* WritePostViewController.swift */,
 				B89AD404285ED2A700CCE027 /* EventViewController.swift */,
@@ -810,6 +813,7 @@
 				B80D6742287D8980008D0FA8 /* EmptyIndicatorView.swift in Sources */,
 				B8AB065A285D7D15002110A4 /* PostService.swift in Sources */,
 				B8A8FDF22855E4D200F98326 /* Constraint.swift in Sources */,
+				B80D6750288008D7008D0FA8 /* PostFeelsVideoViewController.swift in Sources */,
 				B8AB0642285B0B3F002110A4 /* ReportService.swift in Sources */,
 				B8AB064B285B5DE0002110A4 /* ScheduleCourseListTableCell.swift in Sources */,
 				B83666E828578E1B00772375 /* CustomUIElements.swift in Sources */,
