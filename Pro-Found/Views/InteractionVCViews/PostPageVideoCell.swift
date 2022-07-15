@@ -101,7 +101,7 @@ class PostPageVideoCell: UITableViewCell {
 	private lazy var videoContainerView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .light50
-		view.setDimensions(width: UIScreen.main.bounds.width - 32, height: UIScreen.main.bounds.height * 0.5)
+		view.setDimensions(width: UIScreen.main.bounds.width - 32, height: UIScreen.main.bounds.height * 0.4)
 		view.clipsToBounds = true
 		view.layer.cornerRadius = 12
 		
@@ -219,7 +219,7 @@ class PostPageVideoCell: UITableViewCell {
 				
 				self.videoContainerView.layer.addSublayer(self.avPlayerLayer)
 				self.avPlayerLayer.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 32,
-											 height: UIScreen.main.bounds.height * 0.5)
+											 height: UIScreen.main.bounds.height * 0.4)
 				self.avPlayerLayer.addSublayer(self.toggleVolumeButton.layer)
 				self.avQueueplayer.volume = 0
 				

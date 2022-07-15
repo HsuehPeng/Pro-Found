@@ -41,7 +41,7 @@ class PostFeelsVideoViewController: UIViewController {
 	
 	private let titleLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interBold, size: 16),
-												 textColor: .light60, text: "Feels")
+												 textColor: .light60, text: "Mood")
 		return label
 	}()
 
@@ -68,7 +68,7 @@ class PostFeelsVideoViewController: UIViewController {
 		label.numberOfLines = 1
 		label.font = UIFont.customFont(.manropeRegular, size: 16)
 		label.textColor = .light60
-		label.speed = .rate(20)
+		label.speed = .rate(50)
 		return label
 	}()
 	

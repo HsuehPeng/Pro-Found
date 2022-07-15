@@ -21,7 +21,7 @@ extension UIViewController {
 	func showAlert(alertText : String, alertMessage : String) {
 		let alert = UIAlertController(title: alertText, message: alertMessage, preferredStyle: UIAlertController.Style.alert)
 		alert.addAction(UIAlertAction(title: "Got it", style: UIAlertAction.Style.default, handler: nil))
-		//Add more actions as you see fit
+		
 		self.present(alert, animated: true, completion: nil)
 	}
 	
@@ -30,7 +30,7 @@ extension UIViewController {
 		alert.addAction(UIAlertAction(title: "Got it", style: UIAlertAction.Style.default, handler: { action in
 			completion()
 		}))
-		//Add more actions as you see fit
+
 		self.present(alert, animated: true, completion: nil)
 	}
 	

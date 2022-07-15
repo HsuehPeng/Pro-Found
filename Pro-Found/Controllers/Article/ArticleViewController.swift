@@ -208,16 +208,17 @@ class ArticleViewController: UIViewController {
 				
 			case Subject.technology.rawValue:
 				techArticles.append(article)
-				
 			default:
 				break
 			}
 		}
+		
 		subjectDict[Subject.language.rawValue] = languageArticles.sorted { $0.timestamp > $1.timestamp }
 		subjectDict[Subject.art.rawValue] = artArticles.sorted { $0.timestamp > $1.timestamp }
 		subjectDict[Subject.music.rawValue] = musicArticles.sorted { $0.timestamp > $1.timestamp }
 		subjectDict[Subject.sport.rawValue] = sportArticles.sorted { $0.timestamp > $1.timestamp }
 		subjectDict[Subject.technology.rawValue] = techArticles.sorted { $0.timestamp > $1.timestamp }
+		
 		tableView.reloadData()
 	}
 	
