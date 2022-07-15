@@ -78,7 +78,7 @@ class CourseDetailViewController: UIViewController {
 		setupUI()
 		convertAdressToCLLocation()
 		checkIfFollowed()
-		checkIfSamePerson()
+		checkIfScheduleButtonCanClick()
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -142,6 +142,21 @@ class CourseDetailViewController: UIViewController {
 			self.present(reportVC, animated: true)
 		}
 		actionSheet.addAction(reportAction)
+		
+		if course.userID == user.userID {
+			let deleteAction = UIAlertAction(title: "Archive", style: .destructive) { [weak self] action in
+				guard let self = self else { return }
+				CourseServie.shared.archiveCourse(courseID: self.course.courseID, userID: self.user.userID) { [weak self] error in
+					guard let self = self else { return }
+					if let error = error {
+						self.showAlert(alertText: "Connection Error", alertMessage: "\(error)")
+					} else {
+						self.navigationController?.popViewController(animated: true)
+					}
+				}
+			}
+			actionSheet.addAction(deleteAction)
+		}
 
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 		
@@ -165,15 +180,8 @@ class CourseDetailViewController: UIViewController {
 		}
 	}
 	
-	func checkIfSamePerson() {
-		if user.userID == course.userID {
-			scheduleCourseButton.isEnabled = false
-			scheduleCourseButton.backgroundColor = .dark10
-		}
-	}
-	
-	func checkIfNotTutor() {
-		if !user.isTutor {
+	func checkIfScheduleButtonCanClick() {
+		if user.userID == course.userID || course.isdeleted {
 			scheduleCourseButton.isEnabled = false
 			scheduleCourseButton.backgroundColor = .dark10
 		}

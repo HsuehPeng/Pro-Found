@@ -149,7 +149,8 @@ class TutorProfileViewController: UIViewController {
 			guard let self = self else { return }
 			switch result {
 			case .success(let courses):
-				self.tutorCourses = courses
+				let filteredDeletedCourses = courses.filter({ !$0.isdeleted })
+				self.tutorCourses = filteredDeletedCourses
 			case .failure(let error):
 				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
 				print(error)

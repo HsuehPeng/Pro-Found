@@ -293,8 +293,8 @@ class CreateCourseViewController: UIViewController {
 			return
 		}
 		
-		let firebaseCourse = FirebaseCourse(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText, subject: selectedSubject, location: addressText,
-									fee: feetextDouble, briefIntro: briefText, detailIntro: introText, hours: 1)
+		let firebaseCourse = FirebaseCourse(userID: user.userID, tutorName: user.name, courseTitle: courseTitleText, subject: selectedSubject,
+											location: addressText, fee: feetextDouble, briefIntro: briefText, detailIntro: introText, hours: 1)
 		
 		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
 		loadingLottie.loadingAnimation()

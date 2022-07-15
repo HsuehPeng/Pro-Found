@@ -26,7 +26,8 @@ struct CourseServie {
 			"fee": fireBasecourse.fee,
 			"briefIntro": fireBasecourse.briefIntro,
 			"detailIntro": fireBasecourse.detailIntro,
-			"hours": fireBasecourse.hours
+			"hours": fireBasecourse.hours,
+			"isdeleted": fireBasecourse.isdeleted
 		]
 		
 		courseRef.setData(courseData) { error in
@@ -43,20 +44,6 @@ struct CourseServie {
 			}
 		}
 	}
-	
-//	func deleteCourse(course: Course, user: User) {
-//		let courseRef = dbCourses.document(course.courseID)
-//		courseRef.delete { error in
-//			if let error = error {
-//				print("Error removing document: \(error)")
-//			} else {
-//				dbUsers.document(user.userID).updateData([
-//					"courses": FieldValue.arrayRemove([course.courseID])
-//				])
-//				print("Document successfully removed!")
-//			}
-//		}
-//	}
 	
 	func fetchUserCourses(userID: String, completion: @escaping (Result<[Course], Error>) -> Void) {
 		dbCourses.whereField("userID", isEqualTo: userID).getDocuments { snapshot, error in
@@ -143,16 +130,17 @@ struct CourseServie {
 		}
 	}
 	
-	func deleteCourse(courseID: String, userID: String, completion: @escaping () -> Void) {
-		dbCourses.document(courseID).delete() { error in
+	func archiveCourse(courseID: String, userID: String, completion: @escaping (Error?) -> Void) {
+		dbCourses.document(courseID).updateData([
+			"isdeleted": true
+		]) { error in
 			if let error = error {
-				print("Error removing course: \(error)")
+				completion(error)
 			} else {
-				dbUsers.document(userID).updateData([
-					"courses": FieldValue.arrayRemove([courseID])
-				])
+				completion(nil)
 			}
 		}
+		
 	}
 	
 }
