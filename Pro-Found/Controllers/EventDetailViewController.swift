@@ -15,7 +15,7 @@ class EventDetailViewController: UIViewController {
 
 	// MARK: - Properties
 	
-	let event: Event
+	var event: Event
 	
 	let user: User
 	
@@ -48,7 +48,6 @@ class EventDetailViewController: UIViewController {
 	
 	private lazy var scheduleEventButton: UIButton = {
 		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Book Event")
-		button.setTitle("Booked", for: .disabled)
 		button.addTarget(self, action: #selector(handleBookEvent), for: .touchUpInside)
 		button.widthAnchor.constraint(equalToConstant: 200).isActive = true
 		return button
@@ -110,6 +109,8 @@ class EventDetailViewController: UIViewController {
 		title = "Event Detail"
 		let leftItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftItemImage, style: .done, target: self, action: #selector(popVC))
+		let rightItemImage = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal)
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: rightItemImage, style: .plain, target: self, action: #selector(handleReportAction))
 		tabBarController?.tabBar.isHidden = true
 	}
 	
@@ -117,17 +118,73 @@ class EventDetailViewController: UIViewController {
 	
 	@objc func handleBookEvent() {
 		let loadingLottie = Lottie(superView: view, animationView: AnimationView(name: "loadingAnimation"))
-		loadingLottie.loadingAnimation()
-		UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp) { [weak self] in
-			guard let self = self else { return }
-			self.scheduleEventButton.isEnabled = false
-			self.scheduleEventButton.backgroundColor = .dark20
-			loadingLottie.stopAnimation()
+		
+		if event.participants.contains(user.userID) {
+			
+			let controller = UIAlertController(title: "Are you sure to unbook this event?", message: nil, preferredStyle: .alert)
+			
+			let okAction = UIAlertAction(title: "Sure", style: .destructive) { [weak self] _ in
+				guard let self = self else { return }
+				
+				loadingLottie.loadingAnimation()
+				
+				UserServie.shared.deleteEventParticipant(participantID: self.user.userID, eventID: self.event.eventID) { [weak self] error in
+					guard let self = self else { return }
+					loadingLottie.stopAnimation()
+					
+					if let error = error {
+						self.showAlert(alertText: "Connection Error", alertMessage: "\(error)")
+					} else {
+						self.scheduleEventButton.backgroundColor = .orange
+						self.scheduleEventButton.setTitle("Book Event", for: .normal)
+						self.event.participants.removeAll(where: { $0 == self.user.userID })
+					}
+				}
+			}
+			
+			let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+			controller.addAction(okAction)
+			controller.addAction(cancelAction)
+			
+			present(controller, animated: true, completion: nil)
+			
+		} else {
+			loadingLottie.loadingAnimation()
+			
+			UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp) { [weak self] in
+				guard let self = self else { return }
+				loadingLottie.stopAnimation()
+				
+				self.scheduleEventButton.backgroundColor = .dark20
+				self.scheduleEventButton.setTitle("Unbook Event", for: .normal)
+			}
 		}
+
 	}
 	
 	@objc func popVC() {
 		navigationController?.popViewController(animated: true)
+	}
+	
+	@objc func handleReportAction() {
+		let actionSheet = UIAlertController(title: "Actions", message: nil,
+											preferredStyle: .actionSheet)
+		
+		let reportAction = UIAlertAction(title: "Report", style: .destructive) { [weak self] action in
+			guard let self = self else { return }
+			let reportVC = ReportViewController(contentID: self.event.eventID, contentType: ContentTyep.event)
+			if let reportSheet = reportVC.presentationController as? UISheetPresentationController {
+				reportSheet.detents = [.large()]
+			}
+			self.present(reportVC, animated: true)
+		}
+		actionSheet.addAction(reportAction)
+
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
 	}
 	
 	// MARK: - Helpers
@@ -135,7 +192,11 @@ class EventDetailViewController: UIViewController {
 	func checkIfEventBooked() {
 		if event.participants.contains(user.userID) {
 			scheduleEventButton.backgroundColor = .dark20
-			scheduleEventButton.isEnabled = false
+			scheduleEventButton.setTitle("Unbook Event", for: .normal)
+
+		} else {
+			scheduleEventButton.backgroundColor = .orange
+			scheduleEventButton.setTitle("Book Event", for: .normal)
 		}
 	}
 	

@@ -116,6 +116,8 @@ class CourseDetailViewController: UIViewController {
 		title = "Course Detail"
 		let leftItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftItemImage, style: .done, target: self, action: #selector(popVC))
+		let rightItemImage = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal)
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: rightItemImage, style: .plain, target: self, action: #selector(handleReportAction))
 		tabBarController?.tabBar.isHidden = true
 	}
 	
@@ -126,6 +128,27 @@ class CourseDetailViewController: UIViewController {
 	}
 	
 	// MARK: - Helpers
+	
+	@objc func handleReportAction() {
+		let actionSheet = UIAlertController(title: "Actions", message: nil,
+											preferredStyle: .actionSheet)
+		
+		let reportAction = UIAlertAction(title: "Report", style: .destructive) { [weak self] action in
+			guard let self = self else { return }
+			let reportVC = ReportViewController(contentID: self.course.courseID, contentType: ContentTyep.course)
+			if let reportSheet = reportVC.presentationController as? UISheetPresentationController {
+				reportSheet.detents = [.large()]
+			}
+			self.present(reportVC, animated: true)
+		}
+		actionSheet.addAction(reportAction)
+
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
+	}
 	
 	@objc func handleBookCourse() {
 		
