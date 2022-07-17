@@ -52,6 +52,14 @@ class ArticleDetailViewController: UIViewController {
 		return button
 	}()
 	
+	private lazy var editButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleEditButtonAction), for: .touchUpInside)
+		return button
+	}()
+	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(ArticleDetailIntroTableViewCell.self, forCellReuseIdentifier: ArticleDetailIntroTableViewCell.reuseIdentifier)
@@ -88,20 +96,25 @@ class ArticleDetailViewController: UIViewController {
 	func setupUI() {
 		
 		view.addSubview(topBarView)
+		topBarView.addSubview(backButton)
+		topBarView.addSubview(bookmarkButton)
+		topBarView.addSubview(shareButton)
+		topBarView.addSubview(editButton)
+		view.addSubview(tableView)
+		
 		topBarView.anchor(top:view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, height: 48)
 		
-		topBarView.addSubview(backButton)
 		backButton.centerY(inView: topBarView, leftAnchor: topBarView.leftAnchor, paddingLeft: 18)
 		
-		topBarView.addSubview(bookmarkButton)
-		bookmarkButton.anchor(right: topBarView.rightAnchor, paddingRight: 18)
-		bookmarkButton.centerY(inView: topBarView)
-		
-		topBarView.addSubview(shareButton)
 		shareButton.anchor(right: bookmarkButton.leftAnchor, paddingRight: 16)
 		shareButton.centerY(inView: backButton)
 		
-		view.addSubview(tableView)
+		bookmarkButton.anchor(right: editButton.leftAnchor, paddingRight: 16)
+		bookmarkButton.centerY(inView: topBarView)
+		
+		editButton.anchor(right: topBarView.rightAnchor, paddingRight: 16)
+		editButton.centerY(inView: topBarView)
+		
 		tableView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 	}
 	
@@ -160,6 +173,28 @@ class ArticleDetailViewController: UIViewController {
 		}
 	}
 	
+	@objc func handleEditButtonAction() {
+		
+		let actionSheet = UIAlertController(title: "Actions", message: nil,
+											preferredStyle: .actionSheet)
+		
+		let reportAction = UIAlertAction(title: "Report", style: .destructive) { [weak self] action in
+			guard let self = self else { return }
+			let reportVC = ReportViewController(contentID: self.article.articleID, contentType: ContentTyep.article)
+			if let reportSheet = reportVC.presentationController as? UISheetPresentationController {
+				reportSheet.detents = [.large()]
+			}
+			self.present(reportVC, animated: true)
+		}
+		actionSheet.addAction(reportAction)
+
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
+	}
+	
 	@objc func popVC() {
 		navigationController?.popViewController(animated: true)
 	}
@@ -187,7 +222,6 @@ class ArticleDetailViewController: UIViewController {
 			}
 		}
 	}
-
 }
 
 // MARK: - UITableViewDataSource

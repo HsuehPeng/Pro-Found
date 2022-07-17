@@ -374,7 +374,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate {
 							let user = User(name: "\(givenName) \(familyName)", userID: uid, email: userEmail, introContentText: "", school: "", schoolMajor: "",
 											ratings: [], courseBooked: 0, profileImageURL: "",
 											backgroundImageURL: "", courses: [], articles: [], favoriteArticles: [], events: [], posts: [], blockedUsers: [],
-											followers: [], followings: [], subject: "", isTutor: false)
+											followers: [], followings: [], subject: "Student", isTutor: false)
 							
 							UserServie.shared.uploadUserData(user: user) { [weak self] in
 								guard let self = self else { return }

@@ -25,6 +25,7 @@ class InteractionViewController: UIViewController {
 	var filteredPosts = [Post]() {
 		didSet {
 			postVC.filteredPosts = filteredPosts
+			postVC.tableView.reloadData()
 		}
 	}
 	
@@ -116,9 +117,7 @@ class InteractionViewController: UIViewController {
 		eventVC.view.isHidden = true
 		
 	}
-	
 
-	
 	// MARK: - UI
 	
 	func setupUI() {

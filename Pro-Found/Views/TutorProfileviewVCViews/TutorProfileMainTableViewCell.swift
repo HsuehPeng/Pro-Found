@@ -53,6 +53,15 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		return imageView
 	}()
 	
+	private lazy var chooseBackGroundImageButton: UIButton = {
+		let button = UIButton()
+		let image = UIImage.asset(.add_circle)?.withRenderingMode(.alwaysOriginal).withTintColor(.light60)
+		button.isHidden = true
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleBackgroudImageTap), for: .touchUpInside)
+		return button
+	}()
+	
 	private let profileView: UIView = {
 		let view = UIView()
 		view.backgroundColor = .light60
@@ -220,6 +229,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 	
 	func setupUI() {
 		contentView.addSubview(backImageView)
+		backImageView.addSubview(chooseBackGroundImageButton)
 		profileView.addSubview(profileActionButton)
 		contentView.addSubview(profileView)
 		profileView.addSubview(profilePhotoImageView)
@@ -230,6 +240,9 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		profileActionButton.centerY(inView: nameLabel)
 		
 		backImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, right: contentView.rightAnchor, height: 812 * (280 / 812))
+		
+		chooseBackGroundImageButton.anchor(bottom: backImageView.bottomAnchor, right: contentView.rightAnchor,
+										   paddingBottom: 32, paddingRight: 16)
 		
 		profileView.anchor(top: backImageView.bottomAnchor, left: contentView.leftAnchor,
 						   bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingTop: -28)
@@ -367,6 +380,7 @@ class TutorProfileMainTableViewCell: UITableViewCell {
 		}
 		
 		if tutor.userID == user.userID {
+			chooseBackGroundImageButton.isHidden = false
 			blockUserButton.isHidden = true
 			chatButton.isHidden = true
 			profileActionButton.isEnabled = false

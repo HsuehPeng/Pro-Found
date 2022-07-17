@@ -10,7 +10,7 @@ import Kingfisher
 import FirebaseAuth
 
 protocol ArticleListTableViewCellDelegate: AnyObject {
-	func askToDelete(_ cell: ArticleListTableViewCell)
+	func popUpUserContentAlert(_ cell: ArticleListTableViewCell)
 }
 
 class ArticleListTableViewCell: UITableViewCell {
@@ -46,23 +46,9 @@ class ArticleListTableViewCell: UITableViewCell {
 	
 	private lazy var editButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.more), for: .normal)
-		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
-		button.isHidden = true
-		return button
-	}()
-	
-	private lazy var deleteButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("Delete", for: .normal)
-		button.setTitleColor(.red, for: .normal)
-		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 12)
-		button.backgroundColor = .orange20
-		button.layer.cornerRadius = 5
-		button.setDimensions(width: 50, height: 20)
-		button.addTarget(self, action: #selector(deleteArticle), for: .touchUpInside)
-		button.isHidden = true
-		button.alpha = 0
+		let image = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleEditButtonAction), for: .touchUpInside)
 		return button
 	}()
 	
@@ -111,18 +97,12 @@ class ArticleListTableViewCell: UITableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		deleteButton.isHidden = true
-	}
-	
 	// MARK: - UI
 	
 	func setupUI() {
 		contentView.addSubview(articleImageView)
 		contentView.addSubview(articleTitleLabel)
 		contentView.addSubview(editButton)
-		contentView.addSubview(deleteButton)
 		contentView.addSubview(dateLabel)
 		contentView.addSubview(authorLabel)
 		contentView.addSubview(subjectButton)
@@ -136,8 +116,6 @@ class ArticleListTableViewCell: UITableViewCell {
 
 		editButton.centerY(inView: articleTitleLabel)
 		editButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16).isActive = true
-		
-		deleteButton.anchor(top: editButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 16)
 
 		dateLabel.anchor(top: articleTitleLabel.bottomAnchor, left: articleImageView.rightAnchor,
 								 right: contentView.rightAnchor, paddingTop: 12, paddingLeft: 12, paddingRight: 16)
@@ -154,28 +132,8 @@ class ArticleListTableViewCell: UITableViewCell {
 	
 	// MARK: - Actions
 	
-	@objc func handleAskToDelete() {
-		if deleteButton.isHidden {
-			UIView.animate(withDuration: 0.3) {
-				self.deleteButton.alpha = 1
-				self.deleteButton.isHidden = !self.deleteButton.isHidden
-			}
-		} else {
-			UIView.animate(withDuration: 0.3) {
-				self.deleteButton.alpha = 0
-//				self.deleteButton.isHidden = !self.deleteButton.isHidden
-			} completion: { done in
-				if done {
-					self.deleteButton.isHidden = !self.deleteButton.isHidden
-				}
-			}
-		}
-
-	}
-	
-	@objc func deleteArticle() {
-		delegate?.askToDelete(self)
-		deleteButton.isHidden = true
+	@objc func handleEditButtonAction() {
+		delegate?.popUpUserContentAlert(self)
 	}
 	
 	// MARK: - Helpers
@@ -194,9 +152,7 @@ class ArticleListTableViewCell: UITableViewCell {
 		dateLabel.text = articleDate
 		authorLabel.text = article.user.name
 		subjectButton.setTitle(article.subject, for: .normal)
-		
-		checkIfAuthorIsUser()
-		
+				
 		if article.ratings.count == 0 {
 			ratingButtonNumber.setTitle("0", for: .normal)
 		} else {
@@ -214,12 +170,4 @@ class ArticleListTableViewCell: UITableViewCell {
 		let roudedAverageRating = round(averageRating * 10) / 10
 		return String(roudedAverageRating)
 	}
-	
-	func checkIfAuthorIsUser() {
-		guard let uid = Auth.auth().currentUser?.uid, let article = article else { return }
-		if article.userID == uid {
-			editButton.isHidden = false
-		}
-	}
-
 }

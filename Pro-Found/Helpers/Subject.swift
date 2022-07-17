@@ -13,6 +13,7 @@ enum Subject: String, CaseIterable {
 	case music = "Music"
 	case art = "Art"
 	case sport = "Sport"
+	case student = "Student"
 	
 	var image: UIImage? {
 		switch self {
@@ -26,6 +27,8 @@ enum Subject: String, CaseIterable {
 			return UIImage.asset(.art)
 		case .sport:
 			return UIImage.asset(.sport)
+		case .student:
+			return nil
 		}
 	}
 	
@@ -41,6 +44,8 @@ enum Subject: String, CaseIterable {
 			return UIColor.yellow
 		case .sport:
 			return UIColor.dark40
+		case .student:
+			return UIColor.light
 		}
 	}
 	
@@ -56,6 +61,8 @@ enum Subject: String, CaseIterable {
 			return UIColor.yellow10
 		case .sport:
 			return UIColor.dark10
+		case .student:
+			return UIColor.light50
 		}
 	}
 
@@ -73,6 +80,8 @@ func setSubjectButtonColor(subject: String, targetView: UIView) {
 		targetView.backgroundColor = Subject.art.subjectButtonColor
 	case Subject.sport.rawValue:
 		targetView.backgroundColor = Subject.sport.subjectButtonColor
+	case Subject.student.rawValue:
+		targetView.backgroundColor = Subject.student.subjectButtonColor
 	default:
 		break
 	}
@@ -90,6 +99,8 @@ func setTutorProfileColor(subject: String, targetView: UIView) {
 		targetView.backgroundColor = Subject.art.subjectTutorProfileColor
 	case Subject.sport.rawValue:
 		targetView.backgroundColor = Subject.sport.subjectTutorProfileColor
+	case Subject.student.rawValue:
+		targetView.backgroundColor = Subject.student.subjectTutorProfileColor
 	default:
 		break
 	}

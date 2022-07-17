@@ -57,7 +57,7 @@ class PDFDINA4PrintRenderer: UIPrintPageRenderer {
 			
 			let titleBottom = addTitle(pageRect: paperRect)
 			let authorBottom = addAuthor(pageRect: paperRect, authorTop: titleBottom + 18.0)
-			let imageBottom = addImage(pageRect: paperRect, imageTop: authorBottom + 18.0)
+			let _ = addImage(pageRect: paperRect, imageTop: authorBottom + 18.0)
 			
 			for pageIndex in 0..<numberOfPages {
 				context.beginPage()

@@ -19,6 +19,7 @@ struct Course {
 	let briefIntro: String
 	let detailIntro: String
 	let hours: Int
+	var isdeleted: Bool
 }
 
 extension Course {
@@ -34,6 +35,7 @@ extension Course {
 		subject = dictionary["subject"] as? String ?? ""
 		briefIntro = dictionary["briefIntro"] as? String ?? ""
 		hours = dictionary["hours"] as? Int ?? 0
+		isdeleted = dictionary["isdeleted"] as? Bool ?? false
 	}
 }
 
@@ -47,6 +49,7 @@ struct FirebaseCourse {
 	let briefIntro: String
 	let detailIntro: String
 	let hours: Int
+	var isdeleted = false
 }
 
 struct ScheduledCourseTime {

@@ -72,7 +72,7 @@ class ChatRoomTableViewCell: UITableViewCell {
 		labelVStack.spacing = 2
 		contentView.addSubview(labelVStack)
 		labelVStack.centerY(inView: contentView, leftAnchor: profileImageView.rightAnchor,paddingLeft: 16)
-		labelVStack.rightAnchor.constraint(equalTo: timestampLabel.leftAnchor, constant: -16).isActive = true
+		labelVStack.rightAnchor.constraint(lessThanOrEqualTo: timestampLabel.leftAnchor, constant: -16).isActive = true
 		
 		timestampLabel.anchor(right: contentView.rightAnchor, paddingRight: 20)
 		timestampLabel.centerY(inView: contentView)

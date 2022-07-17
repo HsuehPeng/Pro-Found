@@ -743,6 +743,7 @@ PODS:
     - Libuv-gRPC/Interface (= 0.0.10)
   - Libuv-gRPC/Interface (0.0.10)
   - lottie-ios (3.3.0)
+  - MarqueeLabel (4.3.0)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -760,6 +761,7 @@ DEPENDENCIES:
   - IQKeyboardManagerSwift
   - Kingfisher (~> 7.0)
   - lottie-ios
+  - MarqueeLabel
 
 SPEC REPOS:
   trunk:
@@ -789,6 +791,7 @@ SPEC REPOS:
     - leveldb-library
     - Libuv-gRPC
     - lottie-ios
+    - MarqueeLabel
     - nanopb
     - PromisesObjC
 
@@ -819,9 +822,10 @@ SPEC CHECKSUMS:
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   lottie-ios: 6ac74dcc09904798f59b18cb3075c089d76be9ae
+  MarqueeLabel: 02f5ac8fd6877c94564556cb93fa86c70c08baeb
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
 
-PODFILE CHECKSUM: e01a4af53988fa9dedfa7825da93669681e166fd
+PODFILE CHECKSUM: 99aead2f8f572b2e11ab8bcf1103bf00088ee421
 
 COCOAPODS: 1.11.2

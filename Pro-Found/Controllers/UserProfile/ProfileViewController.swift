@@ -28,7 +28,7 @@ class ProfileViewController: UIViewController {
 	var blockingTutors = [User]()
 	
 	let profileListIcon: [UIImage?] = [UIImage.asset(.verified_user)?.withTintColor(.green),
-									   UIImage.asset(.account_pin)?.withTintColor(.dark40),
+									   UIImage.asset(.account_pin)?.withTintColor(.orange),
 									   UIImage.asset(.favorite)?.withTintColor(.dark40),
 									   UIImage.asset(.bookmark)?.withTintColor(.dark40),
 									   UIImage.asset(.password_hide)?.withTintColor(.dark40),
@@ -388,6 +388,8 @@ extension ProfileViewController: UITableViewDataSource {
 			} else {
 				cell.titleLabel.textColor = .green
 			}
+		} else if indexPath.row == 1 {
+			cell.titleLabel.textColor = .orange
 		}
 
 		return cell
@@ -436,6 +438,7 @@ extension ProfileViewController: UITableViewDelegate {
 			navigationController?.pushViewController(publicProfilePage, animated: true)
 		case 2:
 			let followingTutorVC = TutorListViewController(tutors: followingTutors, user: user)
+			followingTutorVC.noCellView.indicatorLabel.text = "You are not following any tutor"
 			navigationController?.pushViewController(followingTutorVC, animated: true)
 		case 3:
 			let savedArticleVC = ArticleListViewController(articles: favoriteArticles)
@@ -443,6 +446,7 @@ extension ProfileViewController: UITableViewDelegate {
 		case 4:
 			print(blockingTutors.count)
 			let blockingTutorVC = TutorListViewController(tutors: blockingTutors, user: user)
+			blockingTutorVC.noCellView.indicatorLabel.text = "You are not blocking any tutor"
 			blockingTutorVC.forBlockingPage = true
 			navigationController?.pushViewController(blockingTutorVC, animated: true)
 		case 5:

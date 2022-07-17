@@ -8,9 +8,16 @@
 import UIKit
 import Kingfisher
 
+protocol ScheduleCourseListTableCellDelegate: AnyObject {
+	func handleGoToTutorProfile(_ cell: ScheduleCourseListTableCell)
+	func handleGoToStudentProfile(_ cell: ScheduleCourseListTableCell)
+}
+
 class ScheduleCourseListTableCell: UITableViewCell {
     
 	static let reuseIdentifier = "\(ScheduleCourseListTableCell.self)"
+	
+	weak var delegate: ScheduleCourseListTableCellDelegate?
 	
 	// MARK: - Properties
 	
@@ -44,13 +51,18 @@ class ScheduleCourseListTableCell: UITableViewCell {
 		return label
 	}()
 	
-	private let instructorImageView: UIImageView = {
+	private lazy var instructorImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 36, height: 36)
 		imageView.backgroundColor = .light50
 		imageView.layer.cornerRadius = 36 / 2
 		imageView.clipsToBounds = true
 		imageView.contentMode = .scaleAspectFill
+		
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleTutorProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
+		
 		return imageView
 	}()
 	
@@ -63,13 +75,18 @@ class ScheduleCourseListTableCell: UITableViewCell {
 		return imageView
 	}()
 	
-	private let studentImageView: UIImageView = {
+	private lazy var studentImageView: UIImageView = {
 		let imageView = UIImageView()
 		imageView.setDimensions(width: 36, height: 36)
 		imageView.backgroundColor = .light50
 		imageView.layer.cornerRadius = 36 / 2
 		imageView.clipsToBounds = true
 		imageView.contentMode = .scaleAspectFill
+		
+		let tap = UITapGestureRecognizer(target: self, action: #selector(handleStudentProfileImageTapped))
+		imageView.addGestureRecognizer(tap)
+		imageView.isUserInteractionEnabled = true
+		
 		return imageView
 	}()
 	
@@ -128,7 +145,14 @@ class ScheduleCourseListTableCell: UITableViewCell {
 	}
 	
 	// MARK: - Actions
-
+	
+	@objc func handleTutorProfileImageTapped() {
+		delegate?.handleGoToTutorProfile(self)
+	}
+	
+	@objc func handleStudentProfileImageTapped() {
+		delegate?.handleGoToStudentProfile(self)
+	}
 	
 	// MARK: - Helpers
 	

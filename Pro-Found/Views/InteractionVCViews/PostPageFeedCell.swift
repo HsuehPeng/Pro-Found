@@ -13,7 +13,7 @@ protocol PostPageFeedCellDelegate: AnyObject {
 	func goToPostUserProfile(_ cell: PostPageFeedCell)
 	func likePost(_ cell: PostPageFeedCell)
 	func checkIfLikedByUser(_ cell: PostPageFeedCell)
-	func askToDelete(_ cell: PostPageFeedCell)
+	func popUpUserContentAlert(_ cell: PostPageFeedCell)
 }
 
 extension PostPageFeedCellDelegate {
@@ -69,23 +69,9 @@ class PostPageFeedCell: UITableViewCell {
 	
 	private lazy var feedEditButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.more), for: .normal)
-		button.isHidden = true
-		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
-		return button
-	}()
-	
-	private lazy var deleteButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("Delete", for: .normal)
-		button.setTitleColor(.red, for: .normal)
-		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 12)
-		button.backgroundColor = .orange20
-		button.layer.cornerRadius = 5
-		button.setDimensions(width: 50, height: 20)
-		button.addTarget(self, action: #selector(deleteArticle), for: .touchUpInside)
-		button.isHidden = true
-		button.alpha = 0
+		let image = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleEditButtonAction), for: .touchUpInside)
 		return button
 	}()
 	
@@ -144,11 +130,6 @@ class PostPageFeedCell: UITableViewCell {
 		fatalError("init(coder:) has not been implemented")
 	}
 	
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		deleteButton.isHidden = true
-	}
-	
 	// MARK: - UI
 	
 	func setupUI() {
@@ -156,7 +137,6 @@ class PostPageFeedCell: UITableViewCell {
 		contentView.addSubview(feedNameLabel)
 		contentView.addSubview(feedTimeLabel)
 		contentView.addSubview(feedEditButton)
-		contentView.addSubview(deleteButton)
 		
 		profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
@@ -168,8 +148,6 @@ class PostPageFeedCell: UITableViewCell {
 		
 		feedEditButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
 		feedEditButton.anchor(right: contentView.rightAnchor, paddingRight: 12)
-		
-		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
 		
 		let feedHStack = UIStackView(arrangedSubviews: [likeButton, commentButton])
 		feedHStack.axis = .horizontal
@@ -199,26 +177,8 @@ class PostPageFeedCell: UITableViewCell {
 		delegate?.likePost(self)
 	}
 	
-	@objc func handleAskToDelete() {
-		if deleteButton.isHidden {
-			UIView.animate(withDuration: 0.3) {
-				self.deleteButton.alpha = 1
-				self.deleteButton.isHidden = !self.deleteButton.isHidden
-			}
-		} else {
-			UIView.animate(withDuration: 0.3) {
-				self.deleteButton.alpha = 0
-			} completion: { done in
-				if done {
-					self.deleteButton.isHidden = !self.deleteButton.isHidden
-				}
-			}
-		}
-	}
-	
-	@objc func deleteArticle() {
-		delegate?.askToDelete(self)
-		deleteButton.isHidden = true
+	@objc func handleEditButtonAction() {
+		delegate?.popUpUserContentAlert(self)
 	}
 	
 	// MARK: - Helpers
@@ -237,12 +197,6 @@ class PostPageFeedCell: UITableViewCell {
 		likeCountLabel.text = "\(post.likes) likes"
 		
 		delegate?.checkIfLikedByUser(self)
-				
-		if post.userID == user.userID {
-			feedEditButton.isHidden = false
-		} else {
-			feedEditButton.isHidden = true
-		}
 		
 		if post.imagesURL.isEmpty {
 			collectionView.isHidden = true
