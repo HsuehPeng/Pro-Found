@@ -73,11 +73,15 @@ class EventListTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	lazy var bookEventButton: UIButton = {
-		let button = CustomUIElements().makeSmallButton(buttonColor: .orange, buttonTextColor: .light60, borderColor: .clear, buttonText: "Book")
+	private lazy var bookEventButton: UIButton = {
+		let button = UIButton()
 		button.addTarget(self, action: #selector(bookEvent), for: .touchUpInside)
-		button.setTitle("Booked", for: .disabled)
-		button.widthAnchor.constraint(equalToConstant: 96).isActive = true
+		button.backgroundColor = .light60
+		button.layer.borderColor = UIColor.orange.cgColor
+		button.layer.borderWidth = 1
+		button.layer.cornerRadius = 36 / 2
+		button.setImage(UIImage.asset(.arrow_right)?.withTintColor(.orange), for: .normal)
+		button.setDimensions(width: 36, height: 36)
 		return button
 	}()
 	
@@ -90,12 +94,6 @@ class EventListTableViewCell: UITableViewCell {
 	
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-	
-	override func prepareForReuse() {
-		super.prepareForReuse()
-		bookEventButton.isEnabled = true
-		bookEventButton.backgroundColor = .orange
 	}
 
 	// MARK: - UI
@@ -128,7 +126,7 @@ class EventListTableViewCell: UITableViewCell {
 		organizerNameLabel.rightAnchor.constraint(equalTo: bookEventButton.leftAnchor, constant: -16).isActive = true
 		
 		bookEventButton.centerY(inView: organizerImageView)
-		bookEventButton.anchor(right: contentView.rightAnchor, paddingRight: 16)
+		bookEventButton.anchor(right: contentView.rightAnchor, paddingRight: 32)
 	}
 	
 	// MARK: - Actions
@@ -141,8 +139,6 @@ class EventListTableViewCell: UITableViewCell {
 	
 	private func configure() {
 		guard let event = event else { return }
-		
-		checkIfBooked(event: event)
 		
 		let organizerImageUrl = URL(string: event.organizer.profileImageURL)
 		let eventImageUrl = URL(string: event.imageURL)
@@ -157,12 +153,5 @@ class EventListTableViewCell: UITableViewCell {
 		addressLabel.text = event.location
 		organizerNameLabel.text = event.organizer.name
 	}
-	
-	func checkIfBooked(event: Event) {
-		guard let uid = Auth.auth().currentUser?.uid else { return }
-		if event.participants.contains(uid) {
-			bookEventButton.backgroundColor = .dark20
-			bookEventButton.isEnabled = false
-		}
-	}
+
 }

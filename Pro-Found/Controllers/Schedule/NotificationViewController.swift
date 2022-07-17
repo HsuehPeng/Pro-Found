@@ -16,6 +16,13 @@ class NotificationViewController: UIViewController {
 			
 	var sortedScheduleCourses = [ScheduledCourseTime]() {
 		didSet {
+			if sortedScheduleCourses.isEmpty {
+				tableView.alpha = 0
+				noCellView.indicatorLottie.loadingAnimation()
+			} else {
+				tableView.alpha = 1
+				noCellView.indicatorLottie.stopAnimation()
+			}
 			tableView.reloadData()
 		}
 	}
@@ -39,6 +46,12 @@ class NotificationViewController: UIViewController {
 		return label
 	}()
 	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Course Application"
+		return view
+	}()
+	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.allowsSelection = false
@@ -60,7 +73,6 @@ class NotificationViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .light60
-		tabBarController?.tabBar.isHidden = true
 		
 		tableView.delegate = self
 		tableView.dataSource = self
@@ -69,9 +81,10 @@ class NotificationViewController: UIViewController {
 		fetchScheduleCourses()
 	}
 	
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		tabBarController?.tabBar.isHidden = false
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.navigationBar.isHidden = true
+		tabBarController?.tabBar.isHidden = true
 	}
 	
 	// MARK: - UI
@@ -86,6 +99,9 @@ class NotificationViewController: UIViewController {
 		
 		topBarView.addSubview(titleLabel)
 		titleLabel.center(inView: topBarView)
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 		
 		view.addSubview(tableView)
 		tableView.anchor(top: topBarView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
@@ -143,6 +159,12 @@ extension NotificationViewController: UITableViewDelegate {
 // MARK: - NotificationTableViewCellDelegate
 
 extension NotificationViewController: NotificationTableViewCellDelegate {
+	func handleCourseTapped(_ cell: NotificationTableViewCell) {
+		guard let scheduleCourse = cell.scheduleCourse else { return }
+		let courseDetailVC = CourseDetailViewController(course: scheduleCourse.course, user: user)
+		navigationController?.pushViewController(courseDetailVC, animated: true)
+	}
+	
 	func handleProfileImageTapped(_ cell: NotificationTableViewCell) {
 		guard let scheduleCourse = cell.scheduleCourse else { return }
 		let publicProfileVC = TutorProfileViewController(user: user, tutor: scheduleCourse.student)

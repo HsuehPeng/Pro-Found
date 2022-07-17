@@ -25,9 +25,22 @@ class EventViewController: UIViewController {
 	
 	var events = [Event]() {
 		didSet {
+			if events.isEmpty {
+				tableView.alpha = 0
+				noCellView.indicatorLottie.loadingAnimation()
+			} else {
+				tableView.alpha = 1
+				noCellView.indicatorLottie.stopAnimation()
+			}
 			tableView.reloadData()
 		}
 	}
+	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Active Events"
+		return view
+	}()
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
@@ -71,6 +84,11 @@ class EventViewController: UIViewController {
 	// MARK: - UI
 	
 	private func setupUI() {
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
+						  right: view.rightAnchor)
+		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
 						 right: view.rightAnchor)
@@ -133,13 +151,8 @@ extension EventViewController: EventListTableViewCellDelegate {
 	
 	func bookEvent(_ cell: EventListTableViewCell) {
 		guard let user = user, let event = cell.event else { return }
-		let loadingLottie = Lottie(superView: view, animationView: AnimationView(name: "loadingAnimation"))
-		loadingLottie.loadingAnimation()
-		UserServie.shared.uploadScheduledEvent(participantID: user.userID, eventID: event.eventID, time: event.timestamp) {
-			cell.bookEventButton.isEnabled = false
-			cell.bookEventButton.backgroundColor = .dark20
-			loadingLottie.stopAnimation()
-		}
+		let eventDetailVC = EventDetailViewController(event: event, user: user)
+		navigationController?.pushViewController(eventDetailVC, animated: true)
 	}
 	
 }

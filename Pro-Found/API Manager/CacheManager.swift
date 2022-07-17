@@ -21,7 +21,6 @@ class CacheManager {
 
 	func getFileWith(stringUrl: String, completionHandler: @escaping (Result<URL, Error>) -> Void ) {
 
-
 		let file = directoryFor(stringUrl: stringUrl)
 
 		//return file path if already exists in cache directory

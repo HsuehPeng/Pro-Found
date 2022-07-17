@@ -44,6 +44,7 @@ enum CourseApplicationState {
 protocol NotificationTableViewCellDelegate: AnyObject {
 	func handleCourseApplication(_ cell: NotificationTableViewCell, result: String)
 	func handleProfileImageTapped(_ cell: NotificationTableViewCell)
+	func handleCourseTapped(_ cell: NotificationTableViewCell)
 }
 
 class NotificationTableViewCell: UITableViewCell {
@@ -87,9 +88,11 @@ class NotificationTableViewCell: UITableViewCell {
 		return label
 	}()
 	
-	private let courseTitleLabel: UILabel = {
-		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 14), textColor: .dark40, text: "Course")
-		return label
+	private lazy var courseTitleButton: UIButton = {
+		let button = UIButton()
+		button.contentHorizontalAlignment = .left
+		button.addTarget(self, action: #selector(handleGoToCourseDetail), for: .touchUpInside)
+		return button
 	}()
 	
 	private let scheduleTimeLabel: UILabel = {
@@ -140,7 +143,7 @@ class NotificationTableViewCell: UITableViewCell {
 		contentView.addSubview(profileImageView)
 		contentView.addSubview(nameLabel)
 		contentView.addSubview(applicationTimeLabel)
-		contentView.addSubview(courseTitleLabel)
+		contentView.addSubview(courseTitleButton)
 		contentView.addSubview(scheduleTimeLabel)
 		
 		profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 14, paddingLeft: 20)
@@ -151,20 +154,24 @@ class NotificationTableViewCell: UITableViewCell {
 		applicationTimeLabel.anchor(top: contentView.topAnchor, left: nameLabel.rightAnchor, right: contentView.rightAnchor,
 						 paddingTop: 14, paddingLeft: 16, paddingRight: 16)
 		
-		courseTitleLabel.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, right: scheduleTimeLabel.leftAnchor,
+		courseTitleButton.anchor(top: nameLabel.bottomAnchor, left: profileImageView.rightAnchor, right: scheduleTimeLabel.leftAnchor,
 								paddingTop: 8, paddingLeft: 14, paddingRight: 16)
 		
-		scheduleTimeLabel.centerY(inView: courseTitleLabel)
+		scheduleTimeLabel.centerY(inView: courseTitleButton)
 		scheduleTimeLabel.anchor(right: contentView.rightAnchor, paddingRight: 16)
 		
 		let buttonHStack = UIStackView(arrangedSubviews: [acceptButton, rejectButton, statusButton, fillView1])
 		buttonHStack.spacing = 12
 		contentView.addSubview(buttonHStack)
-		buttonHStack.anchor(top: courseTitleLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: contentView.bottomAnchor,
+		buttonHStack.anchor(top: courseTitleButton.bottomAnchor, left: profileImageView.rightAnchor, bottom: contentView.bottomAnchor,
 							right: contentView.rightAnchor, paddingTop: 14, paddingLeft: 14, paddingBottom: 14, paddingRight: 14)
 	}
 	
 	// MARK: - Actions
+	
+	@objc func handleGoToCourseDetail() {
+		delegate?.handleCourseTapped(self)
+	}
 	
 	@objc func handleProfileImageTapped() {
 		delegate?.handleProfileImageTapped(self)
@@ -207,7 +214,15 @@ class NotificationTableViewCell: UITableViewCell {
 
 		profileImageView.kf.setImage(with: profileImageURl)
 		nameLabel.text = scheduledCourse.student.name
-		courseTitleLabel.text = scheduledCourse.course.courseTitle
+		
+		let attributes: [NSAttributedString.Key: Any] = [
+			.font: UIFont.customFont(.interBold, size: 14),
+			.foregroundColor: UIColor.orange
+		]
+		let attributedString = NSAttributedString(string: scheduledCourse.course.courseTitle,
+												  attributes: attributes)
+		courseTitleButton.setAttributedTitle(attributedString, for: .normal)
+		
 		if let formattedString = formatter.string(from: interval) {
 			applicationTimeLabel.text = "\(formattedString) ago"
 		}

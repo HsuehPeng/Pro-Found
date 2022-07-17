@@ -78,7 +78,7 @@ class CourseDetailViewController: UIViewController {
 		setupUI()
 		convertAdressToCLLocation()
 		checkIfFollowed()
-		checkIfSamePerson()
+		checkIfScheduleButtonCanClick()
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -116,6 +116,8 @@ class CourseDetailViewController: UIViewController {
 		title = "Course Detail"
 		let leftItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftItemImage, style: .done, target: self, action: #selector(popVC))
+		let rightItemImage = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal)
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: rightItemImage, style: .plain, target: self, action: #selector(handleReportAction))
 		tabBarController?.tabBar.isHidden = true
 	}
 	
@@ -126,6 +128,42 @@ class CourseDetailViewController: UIViewController {
 	}
 	
 	// MARK: - Helpers
+	
+	@objc func handleReportAction() {
+		let actionSheet = UIAlertController(title: "Actions", message: nil,
+											preferredStyle: .actionSheet)
+		
+		let reportAction = UIAlertAction(title: "Report", style: .destructive) { [weak self] action in
+			guard let self = self else { return }
+			let reportVC = ReportViewController(contentID: self.course.courseID, contentType: ContentTyep.course)
+			if let reportSheet = reportVC.presentationController as? UISheetPresentationController {
+				reportSheet.detents = [.large()]
+			}
+			self.present(reportVC, animated: true)
+		}
+		actionSheet.addAction(reportAction)
+		
+		if course.userID == user.userID {
+			let deleteAction = UIAlertAction(title: "Archive", style: .destructive) { [weak self] action in
+				guard let self = self else { return }
+				CourseServie.shared.archiveCourse(courseID: self.course.courseID, userID: self.user.userID) { [weak self] error in
+					guard let self = self else { return }
+					if let error = error {
+						self.showAlert(alertText: "Connection Error", alertMessage: "\(error)")
+					} else {
+						self.navigationController?.popViewController(animated: true)
+					}
+				}
+			}
+			actionSheet.addAction(deleteAction)
+		}
+
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
+	}
 	
 	@objc func handleBookCourse() {
 		
@@ -142,15 +180,8 @@ class CourseDetailViewController: UIViewController {
 		}
 	}
 	
-	func checkIfSamePerson() {
-		if user.userID == course.userID {
-			scheduleCourseButton.isEnabled = false
-			scheduleCourseButton.backgroundColor = .dark10
-		}
-	}
-	
-	func checkIfNotTutor() {
-		if !user.isTutor {
+	func checkIfScheduleButtonCanClick() {
+		if user.userID == course.userID || course.isdeleted {
 			scheduleCourseButton.isEnabled = false
 			scheduleCourseButton.backgroundColor = .dark10
 		}

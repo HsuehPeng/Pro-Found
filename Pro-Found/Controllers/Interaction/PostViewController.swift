@@ -25,11 +25,23 @@ class PostViewController: UIViewController {
 	
 	var filteredPosts = [Post]() {
 		didSet {
-			tableView.reloadData()
+			if filteredPosts.isEmpty {
+				tableView.alpha = 0
+				noCellView.indicatorLottie.loadingAnimation()
+			} else {
+				tableView.alpha = 1
+				noCellView.indicatorLottie.stopAnimation()
+			}
 		}
 	}
 	
-	private let tableView: UITableView = {
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "Follow Tutors to See Posts"
+		return view
+	}()
+	
+	let tableView: UITableView = {
 		let tableView = UITableView()
 		tableView.register(PostPageFeedCell.self, forCellReuseIdentifier: PostPageFeedCell.reuseIdentifier)
 		tableView.register(PostPageVideoCell.self, forCellReuseIdentifier: PostPageVideoCell.reuserIdentifier)
@@ -73,6 +85,7 @@ class PostViewController: UIViewController {
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
+		
 		let cells = tableView.visibleCells
 		cells.forEach { cell in
 			guard let cell = cell as? PostPageVideoCell else { return }
@@ -85,6 +98,10 @@ class PostViewController: UIViewController {
 	// MARK: - UI
 	
 	private func setupUI() {
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
+						  right: view.rightAnchor)
 		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
@@ -104,7 +121,26 @@ class PostViewController: UIViewController {
 	}
 	
 	// MARK: - Helper
-
+	
+	func deletePost(post: Post, indexPath: IndexPath, user: User) {
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		
+		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			loadingLottie.loadingAnimation()
+			PostService.shared.deletePost(postID: post.postID, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				self.filteredPosts.remove(at: indexPath.row)
+				self.tableView.deleteRows(at: [indexPath], with: .fade)
+				loadingLottie.stopAnimation()
+			}
+		}
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
+	}
 }
 
 // MARK: - UITableViewDataSource
@@ -163,6 +199,36 @@ extension PostViewController: UITableViewDelegate {
 // MARK: - PostPageFeedCellDelegate
 
 extension PostViewController: PostPageFeedCellDelegate {
+	func popUpUserContentAlert(_ cell: PostPageFeedCell) {
+		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell), let user = user else { return }
+		
+		let actionSheet = UIAlertController(title: "Actions", message: nil,
+											preferredStyle: .actionSheet)
+		
+		let reportAction = UIAlertAction(title: "Report", style: .destructive) { [weak self] action in
+			guard let self = self else { return }
+			let reportVC = ReportViewController(contentID: post.postID, contentType: ContentTyep.post)
+			if let reportSheet = reportVC.presentationController as? UISheetPresentationController {
+				reportSheet.detents = [.large()]
+			}
+			self.present(reportVC, animated: true)
+		}
+		actionSheet.addAction(reportAction)
+		
+		if post.user.userID == user.userID {
+			let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] action in
+				guard let self = self else { return }
+				self.deletePost(post: post, indexPath: indexPath, user: user)
+			}
+			actionSheet.addAction(deleteAction)
+		}
+
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
+	}
 	
 	func checkIfLikedByUser(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let user = user else { return }
@@ -176,17 +242,29 @@ extension PostViewController: PostPageFeedCellDelegate {
 	
 	func likePost(_ cell: PostPageFeedCell) {
 		guard let post = cell.post, let user = user else { return }
-		
-		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID) {
+		guard let indexPath = tableView.indexPath(for: cell) else { return }
 				
+		if cell.likeButton.isSelected {
+			PostService.shared.unlikePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
+				
+				self.filteredPosts[indexPath.row].likedBy.removeAll { userID in
+					return userID == user.userID
+				}
+				self.filteredPosts[indexPath.row].likes -= 1
 			}
+			
 			cell.post?.likes -= 1
 			cell.likeButton.isSelected = false
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID) {
+			PostService.shared.likePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
 				
+				self.filteredPosts[indexPath.row].likedBy.append(user.userID)
+				
+				self.filteredPosts[indexPath.row].likes += 1
 			}
+			
 			cell.post?.likes += 1
 			cell.likeButton.isSelected = true
 		}
@@ -204,30 +282,39 @@ extension PostViewController: PostPageFeedCellDelegate {
 		let publicProfilePage = TutorProfileViewController(user: user, tutor: post.user)
 		navigationController?.pushViewController(publicProfilePage, animated: true)
 	}
-	
-	func askToDelete(_ cell: PostPageFeedCell) {
-		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell), let user = user else { return }
-		
-		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
-		
-		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
-		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
-			loadingLottie.loadingAnimation()
-			PostService.shared.deletePost(postID: post.postID, userID: user.userID) { [weak self] in
-				guard let self = self else { return }
-				self.filteredPosts.remove(at: indexPath.row)
-				loadingLottie.stopAnimation()
-			}
-		}
-		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-		controller.addAction(okAction)
-		controller.addAction(cancelAction)
-		
-		present(controller, animated: true, completion: nil)
-	}
 }
 
 extension PostViewController: PostPageVideoCellDelegate {
+	func popUpUserContentAlert(_ cell: PostPageVideoCell) {
+		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell), let user = user else { return }
+		
+		let actionSheet = UIAlertController(title: "Actions", message: nil,
+											preferredStyle: .actionSheet)
+		
+		let reportAction = UIAlertAction(title: "Report", style: .destructive) {[weak self] action in
+			guard let self = self else { return }
+			let reportVC = ReportViewController(contentID: post.postID, contentType: ContentTyep.post)
+			if let reportSheet = reportVC.presentationController as? UISheetPresentationController {
+				reportSheet.detents = [.large()]
+			}
+			self.present(reportVC, animated: true)
+		}
+		actionSheet.addAction(reportAction)
+		
+		if post.user.userID == user.userID {
+			let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] action in
+				guard let self = self else { return }
+				self.deletePost(post: post, indexPath: indexPath, user: user)
+			}
+			actionSheet.addAction(deleteAction)
+		}
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
+	}
 	
 	func toggleVideoVolunm(_ cell: PostPageVideoCell) {
 		if cell.isVolumnOn {
@@ -252,17 +339,28 @@ extension PostViewController: PostPageVideoCellDelegate {
 	
 	func likePost(_ cell: PostPageVideoCell) {
 		guard let post = cell.post, let user = user else { return }
-		
+		guard let indexPath = tableView.indexPath(for: cell) else { return }
+
 		if cell.likeButton.isSelected {
-			PostService.shared.unlikePost(post: post, userID: user.userID) {
+			PostService.shared.unlikePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
 				
+				self.filteredPosts[indexPath.row].likedBy.removeAll { userID in
+					return userID == user.userID
+				}
+				self.filteredPosts[indexPath.row].likes -= 1
 			}
+			
 			cell.post?.likes -= 1
 			cell.likeButton.isSelected = false
 		} else {
-			PostService.shared.likePost(post: post, userID: user.userID) {
+			PostService.shared.likePost(post: post, userID: user.userID) { [weak self] in
+				guard let self = self else { return }
 				
+				self.filteredPosts[indexPath.row].likedBy.append(user.userID)
+				self.filteredPosts[indexPath.row].likes += 1
 			}
+			
 			cell.post?.likes += 1
 			cell.likeButton.isSelected = true
 		}
@@ -277,25 +375,11 @@ extension PostViewController: PostPageVideoCellDelegate {
 		}
 	}
 	
-	func askToDelete(_ cell: PostPageVideoCell) {
-		guard let post = cell.post, let indexPath = tableView.indexPath(for: cell), let user = user else { return }
-		
-		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
-		
-		let controller = UIAlertController(title: "Are you sure to delete this post?", message: nil, preferredStyle: .alert)
-		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
-			loadingLottie.loadingAnimation()
-			PostService.shared.deletePost(postID: post.postID, userID: user.userID) { [weak self] in
-				guard let self = self else { return }
-				self.filteredPosts.remove(at: indexPath.row)
-				loadingLottie.stopAnimation()
-			}
-		}
-		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-		controller.addAction(okAction)
-		controller.addAction(cancelAction)
-		
-		present(controller, animated: true, completion: nil)
+	func goFeelsVideoVC(_ cell: PostPageVideoCell) {
+		guard let post = cell.post else { return }
+		let postFeelsVideoVC = PostFeelsVideoViewController(post: post)
+		postFeelsVideoVC.modalPresentationStyle = .fullScreen
+		postFeelsVideoVC.modalTransitionStyle = .crossDissolve
+		present(postFeelsVideoVC, animated: true)
 	}
-	
 }

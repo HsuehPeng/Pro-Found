@@ -7,6 +7,7 @@
 
 import UIKit
 import Lottie
+import FirebaseAuth
 
 class ArticleListViewController: UIViewController {
 	
@@ -25,6 +26,12 @@ class ArticleListViewController: UIViewController {
 	}
 
 	let searchController = UISearchController()
+	
+	private let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Saved Article"
+		return view
+	}()
 	
 	private let tableView: UITableView = {
 		let tableView = UITableView()
@@ -53,6 +60,14 @@ class ArticleListViewController: UIViewController {
 		
 		setupUI()
 		setupNavBar()
+		
+		if articles.isEmpty {
+			tableView.alpha = 0
+			noCellView.indicatorLottie.loadingAnimation()
+		} else {
+			tableView.alpha = 1
+			noCellView.indicatorLottie.stopAnimation()
+		}
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -63,6 +78,10 @@ class ArticleListViewController: UIViewController {
 	// MARK: - UI
 	
 	func setupUI() {
+		
+		view.addSubview(noCellView)
+		noCellView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
+		
 		view.addSubview(tableView)
 		tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 	}
@@ -70,6 +89,17 @@ class ArticleListViewController: UIViewController {
 	func setupNavBar() {
 		navigationController?.navigationBar.isHidden = false
 		tabBarController?.tabBar.isHidden = true
+		
+		let appearance = UINavigationBarAppearance()
+		let titleAttribute: [NSAttributedString.Key: Any] = [
+			.font: UIFont.customFont(.interBold, size: 16)
+		]
+		appearance.titleTextAttributes = titleAttribute
+		appearance.configureWithDefaultBackground()
+		navigationController?.navigationBar.standardAppearance = appearance
+		navigationController?.navigationBar.compactAppearance = appearance
+		navigationController?.navigationBar.scrollEdgeAppearance = appearance
+		
 		let leftBarItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftBarItemImage, style: .done,
 														   target: self, action: #selector(popVC))
@@ -100,6 +130,33 @@ class ArticleListViewController: UIViewController {
 			return article.articleTitle.lowercased().contains(searchText.lowercased())
 		}
 		tableView.reloadData()
+	}
+	
+	func deleteArticle(article: Article, indexPath: IndexPath) {
+		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
+		let controller = UIAlertController(title: "Are you sure to delete this article?", message: nil, preferredStyle: .alert)
+		
+		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
+			loadingLottie.loadingAnimation()
+			ArticleService.shared.deleteArticle(articleID: article.articleID, userID: article.userID) { [weak self] in
+				guard let self = self else { return }
+				if self.isFiltering {
+					self.filteredArticles.remove(at: indexPath.row)
+					self.tableView.deleteRows(at: [indexPath], with: .fade)
+				} else {
+					self.articles.remove(at: indexPath.row)
+					self.tableView.deleteRows(at: [indexPath], with: .fade)
+				}
+
+				loadingLottie.stopAnimation()
+			}
+		}
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		controller.addAction(okAction)
+		controller.addAction(cancelAction)
+		
+		present(controller, animated: true, completion: nil)
 	}
 }
 
@@ -166,32 +223,35 @@ extension ArticleListViewController: UISearchBarDelegate {
 // MARK: - ArticleListTableViewCellDelegate
 
 extension ArticleListViewController: ArticleListTableViewCellDelegate {
-	func askToDelete(_ cell: ArticleListTableViewCell) {
-		guard let article = cell.article, let indexPath = tableView.indexPath(for: cell) else { return }
+	func popUpUserContentAlert(_ cell: ArticleListTableViewCell) {
+		guard let article = cell.article, let indexPath = tableView.indexPath(for: cell),
+			  let uid = Auth.auth().currentUser?.uid else { return }
 		
-		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
-		let controller = UIAlertController(title: "Are you sure to delete this article?", message: nil, preferredStyle: .alert)
+		let actionSheet = UIAlertController(title: "Actions", message: nil,
+											preferredStyle: .actionSheet)
 		
-		let okAction = UIAlertAction(title: "Sure", style: .destructive) { _ in
-			loadingLottie.loadingAnimation()
-			ArticleService.shared.deleteArticle(articleID: article.articleID, userID: article.userID) { [weak self] in
-				guard let self = self else { return }
-				if self.isFiltering {
-					self.filteredArticles.remove(at: indexPath.row)
-					self.tableView.deleteRows(at: [indexPath], with: .fade)
-				} else {
-					self.articles.remove(at: indexPath.row)
-					self.tableView.deleteRows(at: [indexPath], with: .fade)
-				}
-
-				loadingLottie.stopAnimation()
+		let reportAction = UIAlertAction(title: "Report", style: .destructive) { [weak self] action in
+			guard let self = self else { return }
+			let reportVC = ReportViewController(contentID: article.articleID, contentType: ContentTyep.article)
+			if let reportSheet = reportVC.presentationController as? UISheetPresentationController {
+				reportSheet.detents = [.large()]
 			}
+			self.present(reportVC, animated: true)
 		}
+		actionSheet.addAction(reportAction)
 		
+		if article.user.userID == uid {
+			let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] action in
+				guard let self = self else { return }
+				self.deleteArticle(article: article, indexPath: indexPath)
+			}
+			actionSheet.addAction(deleteAction)
+		}
+
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-		controller.addAction(okAction)
-		controller.addAction(cancelAction)
 		
-		present(controller, animated: true, completion: nil)
+		actionSheet.addAction(cancelAction)
+		
+		self.present(actionSheet, animated: true, completion: nil)
 	}
 }

@@ -10,8 +10,8 @@ import Kingfisher
 import FirebaseAuth
 
 protocol PostCommentTableHeaderDelegate: AnyObject {
-	func askToDelete(_ cell: PostCommentTableHeader)
 	func goToPublicProfile(_ cell: PostCommentTableHeader)
+	func popUpUserContentAlert(_ cell: PostCommentTableHeader)
 }
 
 class PostCommentTableHeader: UITableViewHeaderFooterView {
@@ -60,26 +60,12 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 	
 	private lazy var feedEditButton: UIButton = {
 		let button = UIButton()
-		button.setImage(UIImage.asset(.more), for: .normal)
-		button.isHidden = true
-		button.addTarget(self, action: #selector(handleAskToDelete), for: .touchUpInside)
+		let image = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.addTarget(self, action: #selector(handleEditButtonAction), for: .touchUpInside)
 		return button
 	}()
-	
-	private lazy var deleteButton: UIButton = {
-		let button = UIButton()
-		button.setTitle("Delete", for: .normal)
-		button.setTitleColor(.red, for: .normal)
-		button.titleLabel?.font = UIFont.customFont(.interSemiBold, size: 12)
-		button.backgroundColor = .orange20
-		button.layer.cornerRadius = 5
-		button.setDimensions(width: 50, height: 20)
-		button.addTarget(self, action: #selector(deleteArticle), for: .touchUpInside)
-		button.isHidden = true
-		button.alpha = 0
-		return button
-	}()
-	
+
 	private let contentLabel: UILabel = {
 		let label = UILabel()
 		label.font = UIFont.customFont(.manropeRegular, size: 16)
@@ -123,7 +109,6 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		contentView.addSubview(feedNameLabel)
 		contentView.addSubview(feedTimeLabel)
 		contentView.addSubview(feedEditButton)
-		contentView.addSubview(deleteButton)
 		
 		profileImageView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, paddingTop: 16, paddingLeft: 16)
 		
@@ -134,8 +119,6 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 
 		feedEditButton.centerYAnchor.constraint(equalTo: profileImageView.centerYAnchor).isActive = true
 		feedEditButton.anchor(right: contentView.rightAnchor, paddingRight: 12)
-
-		deleteButton.anchor(top: feedEditButton.bottomAnchor, right: contentView.rightAnchor, paddingTop: 6, paddingRight: 12)
 
 		let postCommentHeaderVStack = UIStackView(arrangedSubviews: [contentLabel, collectionView])
 		postCommentHeaderVStack.axis = .vertical
@@ -156,25 +139,8 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		delegate?.goToPublicProfile(self)
 	}
 	
-	@objc func handleAskToDelete() {
-		if deleteButton.isHidden {
-			UIView.animate(withDuration: 0.3) {
-				self.deleteButton.alpha = 1
-				self.deleteButton.isHidden = !self.deleteButton.isHidden
-			}
-		} else {
-			UIView.animate(withDuration: 0.3) {
-				self.deleteButton.alpha = 0
-			} completion: { done in
-				if done {
-					self.deleteButton.isHidden = !self.deleteButton.isHidden
-				}
-			}
-		}
-	}
-	
-	@objc func deleteArticle() {
-		delegate?.askToDelete(self)
+	@objc func handleEditButtonAction() {
+		delegate?.popUpUserContentAlert(self)
 	}
 	
 	// MARK: - Helpers
@@ -192,10 +158,6 @@ class PostCommentTableHeader: UITableViewHeaderFooterView {
 		feedNameLabel.text = post.user.name
 		feedTimeLabel.text = postDate
 		contentLabel.text = post.contentText
-		
-		if post.userID == uid{
-			feedEditButton.isHidden = false
-		}
 		
 		if post.imagesURL.isEmpty {
 			collectionView.isHidden = true

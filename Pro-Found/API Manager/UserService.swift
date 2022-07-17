@@ -69,36 +69,6 @@ struct UserServie {
 	
 	func uploadUserData(user: User, completion: @escaping () -> Void) {
 		let userRef = dbUsers.document(user.userID)
-//		let userData: [String: Any] = [
-//			"articles": firebaseUser.articles ?? [],
-//			"backgroundImageURL": firebaseUser.backgroundImageURL ?? "",
-//			"blockedUsers": firebaseUser.blockedUsers ?? [],
-//			"courses": firebaseUser.courses ?? [],
-//			"email": firebaseUser.email,
-//			"events": firebaseUser.events ?? [],
-//			"followings": firebaseUser.followings ?? [],
-//			"followers": firebaseUser.followers ?? [],
-//			"introContenText": firebaseUser.introContentText ?? "",
-//			"isTutor": firebaseUser.isTutor,
-//			"name": firebaseUser.name,
-//			"posts": firebaseUser.posts ?? [],
-//			"profileImageURL": firebaseUser.profileImageURL ?? "",
-//			"ratings": firebaseUser.ratings ?? Rating(rating: [], userID: []),
-//			"school": firebaseUser.school ?? "",
-//			"schoolMajor": firebaseUser.schoolMajor ?? "",
-//			"subject": firebaseUser.subject ?? "",
-//			"userID": firebaseUser.userID,
-//			"courseBooked": firebaseUser.courseBooked ?? 0
-//		]
-//
-//		userRef.setData(userData) { error in
-//			if let error = error {
-//				print("Error writing userdata: \(error)")
-//			} else {
-//				print("User successfully uploaded")
-//				completion()
-//			}
-//		}
 		
 		do {
 			try userRef.setData(from: user)
@@ -187,7 +157,6 @@ struct UserServie {
 				completion()
 			}
 		}
-		
 
 	}
 	
@@ -246,7 +215,8 @@ struct UserServie {
 	
 	func uploadScheduledEvent(organizerID: String, eventID: String, time: Double) {
 		dbUsers.document(organizerID).collection("ScheduledEvent").document().setData([
-			"\(eventID)": time
+			"scheduleTime": time,
+			"eventID": eventID
 		]) { error in
 			if let error = error {
 				print("Error writing ScheduledCourse: \(error)")
@@ -258,7 +228,8 @@ struct UserServie {
 	
 	func uploadScheduledEvent(participantID: String, eventID: String, time: Double, completion: @escaping () -> Void) {
 		dbUsers.document(participantID).collection("ScheduledEvent").document().setData([
-			"\(eventID)": time
+			"scheduleTime": time,
+			"eventID": eventID
 		]) { error in
 			if let error = error {
 				print("Error writing ScheduledCourse: \(error)")
@@ -270,14 +241,33 @@ struct UserServie {
 		}
 	}
 	
-	func deleteEventParticipant(participantID: String, eventID: String, completion: @escaping () -> Void) {
+	func deleteEventParticipant(participantID: String, eventID: String, completion: @escaping (Error?) -> Void) {
 		dbEvents.document(eventID).updateData([
 			"participants": FieldValue.arrayRemove([participantID])
 		]) { error in
 			if let error = error {
+				completion(error)
 				print("Error deleting participants: \(error)")
 			} else {
 				print("Successfully deleted participants")
+				
+				dbUsers.document(participantID).collection("ScheduledEvent").whereField("eventID", isEqualTo: eventID).getDocuments { snapshot, error in
+					if let error = error {
+						completion(error)
+						print("Error deleting scheduled Event: \(error)")
+					} else {
+						guard let snapshot = snapshot else { return }
+						for document in snapshot.documents {
+							dbUsers.document(participantID).collection("ScheduledEvent").document(document.documentID).delete { error in
+								if let error = error {
+									completion(error)
+								} else {
+									completion(nil)
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -295,7 +285,7 @@ struct UserServie {
 				for document in snapshot.documents {
 					group.enter()
 					let eventTimeData = document.data()
-					guard let eventID = eventTimeData.keys.first, let time = eventTimeData["\(eventID)"] as? Double else { return }
+					guard let eventID = eventTimeData["eventID"] as? String, let time = eventTimeData["scheduleTime"] as? Double else { return }
 					
 					EventService.shared.fetchEvent(eventID: eventID) { result in
 						switch result {
@@ -477,7 +467,7 @@ struct UserServie {
 	func toggleTutorStatus(userID: String, subject: String, isTutor: Bool, completion: @escaping () -> Void) {
 		if isTutor {
 			dbUsers.document(userID).updateData([
-				"subject": "",
+				"subject": "Student",
 				"isTutor": !isTutor
 			]) { error in
 				if let error = error {

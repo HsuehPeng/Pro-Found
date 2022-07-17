@@ -29,6 +29,12 @@ class TutorListViewController: UIViewController {
 	
 	var forBlockingPage = false
 	
+	let noCellView: EmptyIndicatorView = {
+		let view = EmptyIndicatorView()
+		view.indicatorLabel.text = "No Tutor"
+		return view
+	}()
+	
 	private lazy var collectionView: UICollectionView = {
 		let flowLayout = UICollectionViewFlowLayout()
 		let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -64,6 +70,14 @@ class TutorListViewController: UIViewController {
 		collectionView.delegate = self
 		setupNavBar()
 		setupUI()
+		
+		if tutors.isEmpty {
+			collectionView.alpha = 0
+			noCellView.indicatorLottie.loadingAnimation()
+		} else {
+			collectionView.alpha = 1
+			noCellView.indicatorLottie.stopAnimation()
+		}
     }
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -76,11 +90,24 @@ class TutorListViewController: UIViewController {
 	// MARK: - UI
 	
 	func setupUI() {
+		view.addSubview(noCellView)
+		noCellView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
+		
 		view.addSubview(collectionView)
 		collectionView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor)
 	}
 	
 	func setupNavBar() {
+		
+		let appearance = UINavigationBarAppearance()
+		let titleAttribute: [NSAttributedString.Key: Any] = [
+			.font: UIFont.customFont(.interBold, size: 16)
+		]
+		appearance.titleTextAttributes = titleAttribute
+		appearance.configureWithDefaultBackground()
+		navigationController?.navigationBar.standardAppearance = appearance
+		navigationController?.navigationBar.compactAppearance = appearance
+		navigationController?.navigationBar.scrollEdgeAppearance = appearance
 
 		let leftBarItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftBarItemImage, style: .done,
