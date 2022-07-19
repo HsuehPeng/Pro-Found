@@ -44,12 +44,7 @@ class WritePostViewController: UIViewController {
 	}()
 	
 	private let profileImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.backgroundColor = .gray
-		imageView.setDimensions(width: 42, height: 42)
-		imageView.layer.cornerRadius = 42 / 2
-		imageView.clipsToBounds = true
-		imageView.contentMode = .scaleAspectFill
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 42, height: 42)
 		return imageView
 	}()
 	

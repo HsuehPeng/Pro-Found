@@ -40,12 +40,7 @@ class PostCommentViewController: UIViewController {
 	}()
 	
 	private let commenterImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 32, height: 32)
-		imageView.layer.cornerRadius = 32 / 2
-		imageView.backgroundColor = .dark20
-		imageView.clipsToBounds = true
-		imageView.contentMode = .scaleAspectFill
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 32, height: 32)
 		return imageView
 	}()
 	

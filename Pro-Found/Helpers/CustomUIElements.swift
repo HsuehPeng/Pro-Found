@@ -112,4 +112,15 @@ class CustomUIElements {
 		return button
 	}
 	
+	func makeCircularProfileImageView(width: CGFloat, height: CGFloat) -> UIImageView {
+		let imageView = UIImageView()
+		imageView.backgroundColor = .orange10
+		imageView.setDimensions(width: width, height: height)
+		imageView.layer.cornerRadius = width / 2
+		imageView.image = UIImage.asset(.account_circle)
+		imageView.clipsToBounds = true
+		imageView.contentMode = .scaleAspectFill
+		return imageView
+	}
+	
 }

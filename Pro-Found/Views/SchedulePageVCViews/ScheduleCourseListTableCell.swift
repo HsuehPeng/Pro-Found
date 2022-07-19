@@ -52,12 +52,7 @@ class ScheduleCourseListTableCell: UITableViewCell {
 	}()
 	
 	private lazy var instructorImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 36, height: 36)
-		imageView.backgroundColor = .light50
-		imageView.layer.cornerRadius = 36 / 2
-		imageView.clipsToBounds = true
-		imageView.contentMode = .scaleAspectFill
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 36, height: 36)
 		
 		let tap = UITapGestureRecognizer(target: self, action: #selector(handleTutorProfileImageTapped))
 		imageView.addGestureRecognizer(tap)
@@ -76,12 +71,7 @@ class ScheduleCourseListTableCell: UITableViewCell {
 	}()
 	
 	private lazy var studentImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 36, height: 36)
-		imageView.backgroundColor = .light50
-		imageView.layer.cornerRadius = 36 / 2
-		imageView.clipsToBounds = true
-		imageView.contentMode = .scaleAspectFill
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 36, height: 36)
 		
 		let tap = UITapGestureRecognizer(target: self, action: #selector(handleStudentProfileImageTapped))
 		imageView.addGestureRecognizer(tap)

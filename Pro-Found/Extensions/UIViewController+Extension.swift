@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 extension UIViewController {
 	func hideKeyboardWhenTappedAround() {
@@ -32,6 +33,13 @@ extension UIViewController {
 		}))
 
 		self.present(alert, animated: true, completion: nil)
+	}
+	
+	func popUpAskToLoginView() {
+		let popUpAskToLoginVC = PopUpAskToLoginController()
+		popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
+		popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
+		self.present(popUpAskToLoginVC, animated: true)
 	}
 	
 }

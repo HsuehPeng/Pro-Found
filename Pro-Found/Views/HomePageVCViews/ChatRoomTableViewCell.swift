@@ -21,12 +21,7 @@ class ChatRoomTableViewCell: UITableViewCell {
 	}
 	
 	private let profileImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 48, height: 48)
-		imageView.layer.cornerRadius = 48 / 2
-		imageView.backgroundColor = .orange10
-		imageView.contentMode = .scaleAspectFill
-		imageView.clipsToBounds = true
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 48, height: 48)
 		return imageView
 	}()
 	
