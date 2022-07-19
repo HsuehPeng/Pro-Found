@@ -42,4 +42,28 @@ extension UIViewController {
 		self.present(popUpAskToLoginVC, animated: true)
 	}
 	
+	func popUpMissingInputVC() {
+		let missingInputVC = MissingInputViewController()
+		missingInputVC.modalTransitionStyle = .crossDissolve
+		missingInputVC.modalPresentationStyle = .overCurrentContext
+		self.present(missingInputVC, animated: true)
+	}
+	
+	func setupAttributeNavBar(titleText: String) {
+		navigationController?.navigationBar.isHidden = false
+		tabBarController?.tabBar.isHidden = true
+
+		navigationItem.title = titleText
+		let titleAttribute: [NSAttributedString.Key: Any] = [
+			.font: UIFont.customFont(.interBold, size: 16)
+		]
+		let appearance = UINavigationBarAppearance()
+		appearance.titleTextAttributes = titleAttribute
+		appearance.configureWithDefaultBackground()
+		navigationController?.navigationBar.standardAppearance = appearance
+		navigationController?.navigationBar.compactAppearance = appearance
+		navigationController?.navigationBar.scrollEdgeAppearance = appearance
+		
+	}
+	
 }

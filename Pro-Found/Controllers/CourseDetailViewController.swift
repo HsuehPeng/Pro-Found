@@ -105,20 +105,13 @@ class CourseDetailViewController: UIViewController {
 	}
 	
 	func setupNavBar() {
-		let titleAttribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.customFont(.interBold, size: 16)
-		]
-		let appearance = UINavigationBarAppearance()
-		appearance.titleTextAttributes = titleAttribute
-		appearance.configureWithDefaultBackground()
-		navigationController?.navigationBar.standardAppearance = appearance
-		navigationController?.navigationBar.isHidden = false
-		title = "Course Detail"
+		
+		setupAttributeNavBar(titleText: "Course Detail")
+
 		let leftItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftItemImage, style: .done, target: self, action: #selector(popVC))
 		let rightItemImage = UIImage.asset(.more)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.rightBarButtonItem = UIBarButtonItem(image: rightItemImage, style: .plain, target: self, action: #selector(handleReportAction))
-		tabBarController?.tabBar.isHidden = true
 	}
 	
 	// MARK: - Actions

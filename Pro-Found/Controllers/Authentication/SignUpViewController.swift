@@ -193,11 +193,8 @@ class SignUpViewController: UIViewController {
 		guard let email = emailTextField.text, !email.isEmpty,
 			  let password = passwordTextField.text, !password.isEmpty,
 			  let name = nameTextField.text, !name.isEmpty else {
-				  
-			let missingInputVC = MissingInputViewController()
-			missingInputVC.modalTransitionStyle = .crossDissolve
-			missingInputVC.modalPresentationStyle = .overCurrentContext
-			present(missingInputVC, animated: true)
+
+			popUpMissingInputVC()
 			return
 		}
 		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))

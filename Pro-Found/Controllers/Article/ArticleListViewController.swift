@@ -60,6 +60,7 @@ class ArticleListViewController: UIViewController {
 		
 		setupUI()
 		setupNavBar()
+		setupSearchController()
 		
 		if articles.isEmpty {
 			tableView.alpha = 0
@@ -87,24 +88,10 @@ class ArticleListViewController: UIViewController {
 	}
 	
 	func setupNavBar() {
-		navigationController?.navigationBar.isHidden = false
-		tabBarController?.tabBar.isHidden = true
-		
-		let appearance = UINavigationBarAppearance()
-		let titleAttribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.customFont(.interBold, size: 16)
-		]
-		appearance.titleTextAttributes = titleAttribute
-		appearance.configureWithDefaultBackground()
-		navigationController?.navigationBar.standardAppearance = appearance
-		navigationController?.navigationBar.compactAppearance = appearance
-		navigationController?.navigationBar.scrollEdgeAppearance = appearance
-		
+		setupAttributeNavBar(titleText: "Articles")
 		let leftBarItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftBarItemImage, style: .done,
 														   target: self, action: #selector(popVC))
-		title = "Articles"
-		setupSearchController()
 	}
 	
 	func setupSearchController() {

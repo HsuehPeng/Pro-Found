@@ -242,12 +242,10 @@ class LoginViewController: UIViewController {
 	@objc func handleLogin() {
 		guard let email = emailTextField.text, !email.isEmpty,
 			  let password = passwordTextField.text, !password.isEmpty else {
-				  let missingInputVC = MissingInputViewController()
-				  missingInputVC.modalTransitionStyle = .crossDissolve
-				  missingInputVC.modalPresentationStyle = .overCurrentContext
-				  present(missingInputVC, animated: true)
-				  return
-			  }
+
+			popUpMissingInputVC()
+			return
+		}
 		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
 		loadingLottie.loadingAnimation()
 		

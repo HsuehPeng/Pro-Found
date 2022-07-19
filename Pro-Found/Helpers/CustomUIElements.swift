@@ -75,27 +75,22 @@ class CustomUIElements {
 
 	}
 	
-	func inputContainerView(labelText: String) -> UIView {
-		let view = UIView()
+	func inputContainerStackView(labelText: String) -> UIStackView {
 		
-		view.heightAnchor.constraint(equalToConstant: 60).isActive = true
-		
-		let label = UILabel()
-		label.text = labelText
-		label.textColor = UIColor.dark
-		label.font = UIFont.customFont(.manropeRegular, size: 12)
-		view.addSubview(label)
-		label.anchor(top: view.topAnchor, left: view.leftAnchor)
+		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.interSemiBold, size: 12),
+												 textColor: UIColor.dark, text: labelText)
 		
 		let textField = UITextField()
-		view.addSubview(textField)
-		textField.anchor(top: label.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor)
+		textField.font = UIFont.customFont(.manropeRegular, size: 12)
+		textField.placeholder = labelText
 		
 		let dividerView = UIView()
 		dividerView.backgroundColor = .dark20
-		view.addSubview(dividerView)
-		dividerView.anchor(top: textField.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor,
-						   right: view.rightAnchor, paddingTop: 5, height: 0.75)
+		dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+		
+		let view = UIStackView(arrangedSubviews: [label, textField, dividerView])
+		view.axis = .vertical
+		view.spacing = 12
 		
 		return view
 	}
