@@ -35,15 +35,12 @@ class EventDetailListTableViewCell: UITableViewCell {
 	}
 	
 	private lazy var eventOrganizerImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 48, height: 48)
-		imageView.layer.cornerRadius = 48 / 2
-		imageView.image = UIImage.asset(.account_circle)
-		imageView.contentMode = .scaleAspectFill
-		imageView.clipsToBounds = true
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 48, height: 48)
+
 		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
 		imageView.addGestureRecognizer(tap)
 		imageView.isUserInteractionEnabled = true
+		
 		return imageView
 	}()
 	

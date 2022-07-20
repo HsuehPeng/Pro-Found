@@ -416,10 +416,7 @@ class WriteArticleViewController: UIViewController {
 			  selectedButton.count > 0, let selectedSubject = selectedButton.first?.titleLabel?.text,
 			  let articleImage = articleImageView.image else {
 			
-			let missingInputVC = MissingInputViewController()
-			missingInputVC.modalTransitionStyle = .crossDissolve
-			missingInputVC.modalPresentationStyle = .overCurrentContext
-			present(missingInputVC, animated: true)
+			popUpMissingInputVC()
 			return
 		}
 		

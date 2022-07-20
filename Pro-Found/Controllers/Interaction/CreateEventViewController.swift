@@ -235,10 +235,8 @@ class CreateEventViewController: UIViewController {
 			  let addreddText = addressTitleTextField.text, !addreddText.isEmpty,
 			  let introText = briefTextView.text, !introText.isEmpty,
 			  let eventImage = eventImageView.image else {
-			let missingInputVC = MissingInputViewController()
-			missingInputVC.modalTransitionStyle = .crossDissolve
-			missingInputVC.modalPresentationStyle = .overCurrentContext
-			present(missingInputVC, animated: true)
+			
+			popUpMissingInputVC()
 			return
 		}
 		let eventDate = datePicker.date

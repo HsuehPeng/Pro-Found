@@ -98,10 +98,7 @@ extension MainTabController: UITabBarControllerDelegate {
 		if let navigationController = viewController as? UINavigationController,
 		   navigationController.viewControllers.contains(where: { $0 is ProfileViewController || $0 is InteractionViewController || $0 is ScheduleViewController }),
 		   Auth.auth().currentUser == nil {
-			let popUpAskToLoginVC = PopUpAskToLoginController()
-			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
-			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
-			present(popUpAskToLoginVC, animated: true)
+			popUpAskToLoginView()
 			return false
 		} else {
 			return true

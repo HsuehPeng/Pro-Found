@@ -165,7 +165,7 @@ class ArticleViewController: UIViewController {
 				self.articles = filterBlockedArticles
 				self.filterArticles()
 			case .failure(let error):
-				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+				self.showAlert(alertText: "Error", alertMessage: "Internet connection issue")
 				print(error)
 			}
 		}
@@ -179,7 +179,7 @@ class ArticleViewController: UIViewController {
 				self.articles = articles
 				self.filterArticles()
 			case .failure(let error):
-				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+				self.showAlert(alertText: "Error", alertMessage: "Internet connection issue")
 				print(error)
 			}
 		}
@@ -191,28 +191,28 @@ class ArticleViewController: UIViewController {
 		var musicArticles:[Article] = []
 		var sportArticles:[Article] = []
 		var techArticles:[Article] = []
-		
+
 		for article in articles {
 			switch article.subject {
 			case Subject.language.rawValue:
 				languageArticles.append(article)
-				
+
 			case Subject.art.rawValue:
 				artArticles.append(article)
-				
+
 			case Subject.music.rawValue:
 				musicArticles.append(article)
-				
+
 			case Subject.sport.rawValue:
 				sportArticles.append(article)
-				
+
 			case Subject.technology.rawValue:
 				techArticles.append(article)
 			default:
 				break
 			}
 		}
-		
+
 		subjectDict[Subject.language.rawValue] = languageArticles.sorted { $0.timestamp > $1.timestamp }
 		subjectDict[Subject.art.rawValue] = artArticles.sorted { $0.timestamp > $1.timestamp }
 		subjectDict[Subject.music.rawValue] = musicArticles.sorted { $0.timestamp > $1.timestamp }

@@ -7,16 +7,10 @@
 
 import UIKit
 
-protocol GeneralHeaderCollectionReusableViewDelegate: AnyObject {
-	func filterByTutorSubject(_ cell: GeneralHeaderCollectionReusableView)
-}
-
 class GeneralHeaderCollectionReusableView: UICollectionReusableView {
 
 	static let reuseIdentifier = "\(GeneralHeaderCollectionReusableView.self)"
-	
-	weak var articleListDelagate: GeneralHeaderCollectionReusableViewDelegate?
-	
+		
 	// MARK: - Properties
 	
 	let titleLabel: UILabel = {

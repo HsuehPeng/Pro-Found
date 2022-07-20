@@ -40,12 +40,8 @@ class CourseDetailListTableViewCell: UITableViewCell {
 	var isFollow: Bool?
 	
 	private lazy var tutorImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 48, height: 48)
-		imageView.layer.cornerRadius = 48 / 2
-		imageView.image = UIImage.asset(.account_circle)
-		imageView.clipsToBounds = true
-		imageView.contentMode = .scaleAspectFill
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 48, height: 48)
+
 		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
 		imageView.addGestureRecognizer(tap)
 		imageView.isUserInteractionEnabled = true
