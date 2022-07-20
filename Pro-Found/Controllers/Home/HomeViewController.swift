@@ -15,7 +15,7 @@ class HomeViewController: UIViewController {
 	
 	var user: User? {
 		didSet {
-			configure()
+			configureTopBarView()
 		}
 	}
 	
@@ -68,20 +68,14 @@ class HomeViewController: UIViewController {
 	}()
 	
 	private lazy var chatRoomButton: UIButton = {
-		let button = UIButton()
-		let image = UIImage.asset(.chat)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
-		button.setImage(image, for: .normal)
+		let button = makeGeneralButton(imageAsset: .chat, width: 32, height: 32)
 		button.addTarget(self, action: #selector(goChatRoom), for: .touchUpInside)
-		button.setDimensions(width: 32, height: 32)
 		return button
 	}()
 	
 	private lazy var filterButton: UIButton = {
-		let button = UIButton()
-		let image = UIImage.asset(.filter)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
-		button.setImage(image, for: .normal)
+		let button = makeGeneralButton(imageAsset: .filter, width: 24, height: 26)
 		button.addTarget(self, action: #selector(subjectFilterPressed), for: .touchUpInside)
-		button.setDimensions(width: 24, height: 26)
 		return button
 	}()
 	
@@ -224,30 +218,10 @@ class HomeViewController: UIViewController {
 	
 	@objc func subjectFilterPressed(_ sender: UIButton) {
 		if isFiltered {
-			isFiltered = false
+			toggleFilterPressedAction(isFiltered: isFiltered)
 			filteredTutors = tutors
-			self.oneHundred?.isActive = false
-			self.sixtyFour?.isActive = true
-			subjectButtonColletions.forEach { button in
-				UIView.animate(withDuration: 0.4) {
-					button.isHidden = !button.isHidden
-					button.isSelected = false
-					button.backgroundColor = .dark10
-					button.alpha = 0
-					button.layoutIfNeeded()
-				}
-			}
 		} else {
-			isFiltered = true
-			self.sixtyFour?.isActive = false
-			self.oneHundred?.isActive = true
-			subjectButtonColletions.forEach { button in
-				UIView.animate(withDuration: 0.4) {
-					button.isHidden = !button.isHidden
-					button.alpha = 1
-					button.layoutIfNeeded()
-				}
-			}
+			toggleFilterPressedAction(isFiltered: isFiltered)
 		}
 	}
 	
@@ -316,19 +290,18 @@ class HomeViewController: UIViewController {
 		
 		UserServie.shared.getTutors { [weak self] result in
 			guard let self = self else { return }
+			
 			switch result {
 			case .success(let tutors):
-				// Filter out blocked tutors
 				let filterOutBlockTutors = tutors.filter { !user.blockedUsers.contains($0.userID) }
-				self.tutors = filterOutBlockTutors
-				self.filteredTutors = self.tutors
+				self.setTutorsFromSource(tutors: filterOutBlockTutors)
 			case .failure(let error):
 				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue: \(error)")
 			}
 		}
 	}
 	
-	private func configure() {
+	private func configureTopBarView() {
 		guard let user = user else { return }
 		let imageUrl = URL(string: user.profileImageURL)
 		nameLabel.text = "\(user.name)"
@@ -347,15 +320,45 @@ class HomeViewController: UIViewController {
 	private func configureForNoUser() {
 		UserServie.shared.getTutors { [weak self] result in
 			guard let self = self else { return }
+			
 			switch result {
 			case .success(let tutors):
-				self.tutors = tutors
-				self.filteredTutors = self.tutors
+				self.setTutorsFromSource(tutors: tutors)
 			case .failure(let error):
 				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue: \(error)")
 			}
 		}
 		nameLabel.text = "My Guest"
+	}
+	
+	func toggleFilterPressedAction(isFiltered: Bool) {
+		
+		if isFiltered {
+			self.isFiltered = false
+			self.oneHundred?.isActive = false
+			self.sixtyFour?.isActive = true
+			subjectButtonColletions.forEach { button in
+				UIView.animate(withDuration: 0.4) {
+					button.isHidden = !button.isHidden
+					button.isSelected = false
+					button.backgroundColor = .dark10
+					button.alpha = 0
+					button.layoutIfNeeded()
+				}
+			}
+		} else {
+			self.isFiltered = true
+			self.sixtyFour?.isActive = false
+			self.oneHundred?.isActive = true
+			subjectButtonColletions.forEach { button in
+				UIView.animate(withDuration: 0.4) {
+					button.isHidden = !button.isHidden
+					button.alpha = 1
+					button.layoutIfNeeded()
+				}
+			}
+		}
+		
 	}
 	
 	@objc func pullToRefresh() {
@@ -365,9 +368,11 @@ class HomeViewController: UIViewController {
 				
 				switch result {
 				case .success(let tutors):
-					self.setTutorsFromPullToRefresh(tutors: tutors)
+					self.setTutorsFromSource(tutors: tutors)
+					self.refreshControl.endRefreshing()
 				case .failure(let error):
 					self.showAlert(alertText: "Error", alertMessage: "Internet connection issue: \(error)")
+					self.refreshControl.endRefreshing()
 				}
 			}
 			return
@@ -379,23 +384,32 @@ class HomeViewController: UIViewController {
 			switch result {
 			case .success(let tutors):
 				let filterOutBlockTutors = tutors.filter { !user.blockedUsers.contains($0.userID) }
-				self.setTutorsFromPullToRefresh(tutors: filterOutBlockTutors)
+				self.setTutorsFromSource(tutors: filterOutBlockTutors)
+				self.refreshControl.endRefreshing()
 			case .failure(let error):
 				self.showAlert(alertText: "Error", alertMessage: "Internet connection issue: \(error)")
+				self.refreshControl.endRefreshing()
 			}
 		}
 	}
 	
-	private func setTutorsFromPullToRefresh(tutors: [User]) {
+	private func setTutorsFromSource(tutors: [User]) {
 		self.tutors = tutors
 		self.filteredTutors = self.tutors
-		self.refreshControl.endRefreshing()
 	}
 	
 	private func makeSubjectFilterButton(for title: String) -> UIButton {
 		let button = CustomUIElements().subjectSelectionButton(subject: Subject.music)
 		button.setTitle(title, for: .normal)
 		button.addTarget(self, action: #selector(subjectButtonPressed), for: .touchUpInside)
+		return button
+	}
+	
+	private func makeGeneralButton(imageAsset: ImageAsset, width: CGFloat, height: CGFloat) -> UIButton {
+		let button = UIButton()
+		let image = UIImage.asset(imageAsset)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
+		button.setImage(image, for: .normal)
+		button.setDimensions(width: width, height: height)
 		return button
 	}
 }

@@ -436,7 +436,6 @@ extension ScheduleViewController: UICollectionViewDataSource {
 
 		return calendarCell
 	}
-
 }
 
 // MARK: - UICollectionViewDelegate
@@ -474,11 +473,7 @@ extension ScheduleViewController: UITableViewDataSource {
 	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		if section == 0 {
-			return filteredCoursesIdWithTimes.count
-		} else {
-			return filteredEventsIdWithTimes.count
-		}
+		return section == 0 ? filteredCoursesIdWithTimes.count : filteredEventsIdWithTimes.count
 	}
 
 
@@ -524,13 +519,10 @@ extension ScheduleViewController: UITableViewDelegate {
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: GeneralTableViewHeader.reuseIdentifier)
 				as? GeneralTableViewHeader else { fatalError("Can not dequeue GeneralTableViewHeader") }
-		header.seeAllButton.isHidden = true
 		
-		if section == 0 {
-			header.titleLabel.text = "Courses"
-		} else {
-			header.titleLabel.text = "Events"
-		}
+		header.seeAllButton.isHidden = true
+		header.titleLabel.text = section == 0 ? "Courses" : "Events"
+		
 		return header
 	}
 	

@@ -31,7 +31,7 @@ extension UIViewController {
 		alert.addAction(UIAlertAction(title: "Got it", style: UIAlertAction.Style.default, handler: { action in
 			completion()
 		}))
-
+		
 		self.present(alert, animated: true, completion: nil)
 	}
 	
