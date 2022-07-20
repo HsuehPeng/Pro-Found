@@ -54,15 +54,7 @@ class PostPageVideoCell: UITableViewCell {
 	}
 	
 	private lazy var profileImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.contentMode = .scaleAspectFit
-		imageView.clipsToBounds = true
-		imageView.setDimensions(width: 36, height: 36)
-		imageView.layer.cornerRadius = 36 / 2
-		imageView.backgroundColor = .gray
-		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.contentMode = .scaleAspectFill
-		imageView.clipsToBounds = true
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 36, height: 36)
 		
 		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
 		imageView.addGestureRecognizer(tap)

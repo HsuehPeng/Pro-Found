@@ -61,6 +61,7 @@ class ChatRoomViewController: UIViewController {
 		
 		setupUI()
 		setupNavBar()
+		setupSearchController()
 		
 		tableView.alpha = 0
 		noCellView.indicatorLottie.loadingAnimation()
@@ -85,22 +86,9 @@ class ChatRoomViewController: UIViewController {
 	}
 	
 	func setupNavBar() {
-		navigationController?.navigationBar.isHidden = false
-		navigationItem.title = "Messages"
-		let titleAttribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.customFont(.interBold, size: 16)
-		]
-		let appearance = UINavigationBarAppearance()
-		appearance.titleTextAttributes = titleAttribute
-		appearance.configureWithDefaultBackground()
-		navigationController?.navigationBar.standardAppearance = appearance
-		navigationController?.navigationBar.compactAppearance = appearance
-		navigationController?.navigationBar.scrollEdgeAppearance = appearance
-		tabBarController?.tabBar.isHidden = true
+		setupAttributeNavBar(titleText: "Messages")
 		let leftImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal).withTintColor(.dark40)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftImage, style: .done, target: self, action: #selector(popVC))
-		
-		setupSearchController()
 	}
 	
 	func setupSearchController() {

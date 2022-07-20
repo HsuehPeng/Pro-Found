@@ -43,12 +43,7 @@ class ScheduleEventListTableViewCell: UITableViewCell {
 	}()
 	
 	private let organizerImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 32, height: 32)
-		imageView.layer.cornerRadius = 16
-		imageView.backgroundColor = .dark40
-		imageView.contentMode = .scaleAspectFill
-		imageView.clipsToBounds = true
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 32, height: 32)
 		return imageView
 	}()
 	

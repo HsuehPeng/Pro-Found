@@ -64,12 +64,7 @@ class NotificationTableViewCell: UITableViewCell {
 	var scheduleCourse: ScheduledCourseTime?
 	
 	private lazy var profileImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 48, height: 48)
-		imageView.layer.cornerRadius = 48 / 2
-		imageView.backgroundColor = .orange10
-		imageView.contentMode = .scaleAspectFill
-		imageView.clipsToBounds = true
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 48, height: 48)
 		
 		let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
 		imageView.addGestureRecognizer(tap)

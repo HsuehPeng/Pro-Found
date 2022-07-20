@@ -141,34 +141,26 @@ class EditProfileViewController: UIViewController {
 	// MARK: - UI
 	
 	private func setupUI() {
-		
-		let nameVStack = UIStackView(arrangedSubviews: [nameTitleLabel, nameTitleTextField, nameDividerView])
-		nameVStack.axis = .vertical
-		nameVStack.spacing = 12
+
+		let nameVStack = makeVStack(label: nameTitleLabel, textField: nameTitleTextField, dividerView: nameDividerView)
 		
 		view.addSubview(nameVStack)
 		nameVStack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor,
 							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
-		
-		let emailVStack = UIStackView(arrangedSubviews: [emailTitleLabel, emailTitleTextField, emailDividerView])
-		emailVStack.axis = .vertical
-		emailVStack.spacing = 12
+
+		let emailVStack = makeVStack(label: emailTitleLabel, textField: emailTitleTextField, dividerView: emailDividerView)
 		
 		view.addSubview(emailVStack)
 		emailVStack.anchor(top: nameVStack.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
 							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
-		
-		let schoolVStack = UIStackView(arrangedSubviews: [schoolTitleLabel, schoolTitleTextField, schoolDividerView])
-		schoolVStack.axis = .vertical
-		schoolVStack.spacing = 12
-		
+
+		let schoolVStack = makeVStack(label: schoolTitleLabel, textField: schoolTitleTextField, dividerView: schoolDividerView)
+
 		view.addSubview(schoolVStack)
 		schoolVStack.anchor(top: emailVStack.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
 							   paddingTop: 16, paddingLeft: 16, paddingRight: 16)
-		
-		let majorVStack = UIStackView(arrangedSubviews: [majorTitleLabel, majorTitleTextField, majorDividerView])
-		majorVStack.axis = .vertical
-		majorVStack.spacing = 12
+
+		let majorVStack = makeVStack(label: majorTitleLabel, textField: majorTitleTextField, dividerView: majorDividerView)
 		
 		view.addSubview(majorVStack)
 		majorVStack.anchor(top: schoolVStack.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor,
@@ -181,24 +173,14 @@ class EditProfileViewController: UIViewController {
 		view.addSubview(doneButton)
 		doneButton.anchor(top: introTextView.bottomAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor,
 						  right: view.rightAnchor, paddingTop: 16, paddingLeft: 16, paddingRight: 16)
-		
-		
 	}
 	
 	private func setupNavBar() {
-		title = "Edit Profile"
-		let titleAttribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.customFont(.interBold, size: 16)
-		]
-		let appearance = UINavigationBarAppearance()
-		appearance.titleTextAttributes = titleAttribute
-		appearance.configureWithDefaultBackground()
-		navigationController?.navigationBar.standardAppearance = appearance
-		navigationController?.navigationBar.isHidden = false
+		setupAttributeNavBar(titleText: "Edit Profile")
+		
 		let leftItemImage = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: leftItemImage, style: .done, target: self,
 														   action: #selector(popVC))
-		tabBarController?.tabBar.isHidden = true
 	}
 	
 	// MARK: - Actions
@@ -208,10 +190,8 @@ class EditProfileViewController: UIViewController {
 			  let email = emailTitleTextField.text, !email.isEmpty,
 			  let school = schoolTitleTextField.text,
 			  let major = majorTitleTextField.text, let introduction = introTextView.text else {
-			let missingInputVC = MissingInputViewController()
-			missingInputVC.modalTransitionStyle = .crossDissolve
-			missingInputVC.modalPresentationStyle = .overCurrentContext
-			present(missingInputVC, animated: true)
+			
+			popUpMissingInputVC()
 			return
 		}
 		let loadingLottie = Lottie(superView: view, animationView: AnimationView.init(name: "loadingAnimation"))
@@ -232,6 +212,13 @@ class EditProfileViewController: UIViewController {
 	}
 	
 	// MARK: - Helpers
+	
+	func makeVStack(label: UILabel, textField: UITextField, dividerView: UIView) -> UIStackView {
+		let vStack = UIStackView(arrangedSubviews: [label, textField, dividerView])
+		vStack.axis = .vertical
+		vStack.spacing = 12
+		return vStack
+	}
 	
 	func configureUI() {
 		nameTitleTextField.text = user.name

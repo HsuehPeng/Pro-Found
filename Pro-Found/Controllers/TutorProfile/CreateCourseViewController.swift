@@ -145,7 +145,6 @@ class CreateCourseViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		view.backgroundColor = .light60
-		title = "Create Course"
 		setupNavBar()
 		setupUI()
 	}
@@ -230,18 +229,10 @@ class CreateCourseViewController: UIViewController {
 	}
 	
 	func setupNavBar() {
-		navigationController?.navigationBar.isHidden = false
-		let titleAttribute: [NSAttributedString.Key: Any] = [
-			.font: UIFont.customFont(.interBold, size: 16)
-		]
-		let appearance = UINavigationBarAppearance()
-		appearance.titleTextAttributes = titleAttribute
-		appearance.configureWithDefaultBackground()
-		navigationController?.navigationBar.standardAppearance = appearance
+		setupAttributeNavBar(titleText: "Create Course")
+		
 		let image = UIImage.asset(.chevron_left)?.withRenderingMode(.alwaysOriginal)
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: #selector(popVC))
-		
-		tabBarController?.tabBar.isHidden = true
 	}
 	
 	func endSetupNavBar() {
@@ -286,10 +277,7 @@ class CreateCourseViewController: UIViewController {
 			  let feetext = feeTextField.text, !feetext.isEmpty,
 			  let feetextDouble = Double(feetext), selectedButton.count > 0,
 		let selectedSubject = selectedButton.first?.titleLabel?.text else {
-			let missingInputVC = MissingInputViewController()
-			missingInputVC.modalTransitionStyle = .crossDissolve
-			missingInputVC.modalPresentationStyle = .overCurrentContext
-			present(missingInputVC, animated: true)
+			popUpMissingInputVC()
 			return
 		}
 		

@@ -211,10 +211,8 @@ class InitialEditProfileVC: UIViewController {
 			  let major = majorTitleTextField.text, !major.isEmpty,
 			  let intro = introTextView.text, !intro.isEmpty,
 			  let image = profileImageView.image else {
-			let missingInputVC = MissingInputViewController()
-			missingInputVC.modalTransitionStyle = .crossDissolve
-			missingInputVC.modalPresentationStyle = .overCurrentContext
-			present(missingInputVC, animated: true)
+			
+			popUpMissingInputVC()
 			return
 		}
 		

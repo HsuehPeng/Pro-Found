@@ -46,12 +46,7 @@ class PostFeelsVideoViewController: UIViewController {
 	}()
 
 	private let profileImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 36, height: 36)
-		imageView.layer.cornerRadius = 18
-		imageView.backgroundColor = .light60
-		imageView.contentMode = .scaleAspectFill
-		imageView.clipsToBounds = true
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 36, height: 36)
 		return imageView
 	}()
 	

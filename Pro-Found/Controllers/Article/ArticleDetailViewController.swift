@@ -146,10 +146,7 @@ class ArticleDetailViewController: UIViewController {
 	
 	@objc func bookmarkArticle() {
 		guard let uid = Auth.auth().currentUser?.uid else {
-			let popUpAskToLoginVC = PopUpAskToLoginController()
-			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
-			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
-			present(popUpAskToLoginVC, animated: true)
+			popUpAskToLoginView()
 			return
 		}
 		
@@ -260,18 +257,12 @@ extension ArticleDetailViewController: ArticleDetailIntroTableViewCellDelegate {
 	}
 	
 	func handleRateArticlePopUp(_ cell: ArticleDetailIntroTableViewCell) {
-		let popUpAskToLoginVC = PopUpAskToLoginController()
-		popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
-		popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
-		present(popUpAskToLoginVC, animated: true)
+		popUpAskToLoginView()
 	}
 	
 	func handleSendRating(_ cell: ArticleDetailIntroTableViewCell) {
 		guard Auth.auth().currentUser != nil else {
-			let popUpAskToLoginVC = PopUpAskToLoginController()
-			popUpAskToLoginVC.modalTransitionStyle = .crossDissolve
-			popUpAskToLoginVC.modalPresentationStyle = .overCurrentContext
-			present(popUpAskToLoginVC, animated: true)
+			popUpAskToLoginView()
 			return
 		}
 		return

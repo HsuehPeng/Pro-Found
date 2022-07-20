@@ -11,7 +11,7 @@ import Kingfisher
 import PhotosUI
 
 class ProfileViewController: UIViewController {
-
+	
 	// MARK: - Properties
 	
 	var user: User? {
@@ -55,12 +55,7 @@ class ProfileViewController: UIViewController {
 	}()
 	
 	private let profileImageView: UIImageView = {
-		let imageView = UIImageView()
-		imageView.setDimensions(width: 64, height: 64)
-		imageView.layer.cornerRadius = 64 / 2
-		imageView.backgroundColor = .dark20
-		imageView.clipsToBounds = true
-		imageView.contentMode = .scaleAspectFill
+		let imageView = CustomUIElements().makeCircularProfileImageView(width: 64, height: 64)
 		return imageView
 	}()
 	
@@ -444,7 +439,6 @@ extension ProfileViewController: UITableViewDelegate {
 			let savedArticleVC = ArticleListViewController(articles: favoriteArticles)
 			navigationController?.pushViewController(savedArticleVC, animated: true)
 		case 4:
-			print(blockingTutors.count)
 			let blockingTutorVC = TutorListViewController(tutors: blockingTutors, user: user)
 			blockingTutorVC.noCellView.indicatorLabel.text = "You are not blocking any tutor"
 			blockingTutorVC.forBlockingPage = true
