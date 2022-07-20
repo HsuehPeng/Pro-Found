@@ -80,27 +80,27 @@ class HomeViewController: UIViewController {
 	}()
 	
 	private lazy var languageButton: UIButton = {
-		let button = makeSubjectFilterButton(for: "Language")
+		let button = makeSubjectFilterButton(for: Subject.language)
 		return button
 	}()
 	
 	private lazy var techButton: UIButton = {
-		let button = makeSubjectFilterButton(for: "Technology")
+		let button = makeSubjectFilterButton(for: Subject.technology)
 		return button
 	}()
 	
 	private lazy var musicButton: UIButton = {
-		let button = makeSubjectFilterButton(for: "Music")
+		let button = makeSubjectFilterButton(for: Subject.music)
 		return button
 	}()
 	
 	private lazy var sportButton: UIButton = {
-		let button = makeSubjectFilterButton(for: "Sport")
+		let button = makeSubjectFilterButton(for: Subject.sport)
 		return button
 	}()
 	
 	private lazy var artButton: UIButton = {
-		let button = makeSubjectFilterButton(for: "Art")
+		let button = makeSubjectFilterButton(for: Subject.art)
 		return button
 	}()
 	
@@ -218,10 +218,10 @@ class HomeViewController: UIViewController {
 	
 	@objc func subjectFilterPressed(_ sender: UIButton) {
 		if isFiltered {
-			toggleFilterPressedAction(isFiltered: isFiltered)
+			hideFilterBar()
 			filteredTutors = tutors
 		} else {
-			toggleFilterPressedAction(isFiltered: isFiltered)
+			showFilterBar()
 		}
 	}
 	
@@ -331,34 +331,32 @@ class HomeViewController: UIViewController {
 		nameLabel.text = "My Guest"
 	}
 	
-	func toggleFilterPressedAction(isFiltered: Bool) {
-		
-		if isFiltered {
-			self.isFiltered = false
-			self.oneHundred?.isActive = false
-			self.sixtyFour?.isActive = true
-			subjectButtonColletions.forEach { button in
-				UIView.animate(withDuration: 0.4) {
-					button.isHidden = !button.isHidden
-					button.isSelected = false
-					button.backgroundColor = .dark10
-					button.alpha = 0
-					button.layoutIfNeeded()
-				}
-			}
-		} else {
-			self.isFiltered = true
-			self.sixtyFour?.isActive = false
-			self.oneHundred?.isActive = true
-			subjectButtonColletions.forEach { button in
-				UIView.animate(withDuration: 0.4) {
-					button.isHidden = !button.isHidden
-					button.alpha = 1
-					button.layoutIfNeeded()
-				}
+	func hideFilterBar() {
+		self.isFiltered = false
+		self.oneHundred?.isActive = false
+		self.sixtyFour?.isActive = true
+		subjectButtonColletions.forEach { button in
+			UIView.animate(withDuration: 0.4) {
+				button.isHidden = !button.isHidden
+				button.isSelected = false
+				button.backgroundColor = .dark10
+				button.alpha = 0
+				button.layoutIfNeeded()
 			}
 		}
-		
+	}
+	
+	func showFilterBar() {
+		self.isFiltered = true
+		self.sixtyFour?.isActive = false
+		self.oneHundred?.isActive = true
+		subjectButtonColletions.forEach { button in
+			UIView.animate(withDuration: 0.4) {
+				button.isHidden = !button.isHidden
+				button.alpha = 1
+				button.layoutIfNeeded()
+			}
+		}
 	}
 	
 	@objc func pullToRefresh() {
@@ -398,9 +396,9 @@ class HomeViewController: UIViewController {
 		self.filteredTutors = self.tutors
 	}
 	
-	private func makeSubjectFilterButton(for title: String) -> UIButton {
-		let button = CustomUIElements().subjectSelectionButton(subject: Subject.music)
-		button.setTitle(title, for: .normal)
+	private func makeSubjectFilterButton(for subject: Subject) -> UIButton {
+		let button = CustomUIElements().subjectSelectionButton(subject: subject)
+		button.setTitle(subject.rawValue, for: .normal)
 		button.addTarget(self, action: #selector(subjectButtonPressed), for: .touchUpInside)
 		return button
 	}
