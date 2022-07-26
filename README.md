@@ -42,14 +42,14 @@ An interactive tutor matching platform that allows users to schedule courses, ho
 <img src="https://user-images.githubusercontent.com/94298439/181022568-cc830bfb-19f2-42f3-9b92-dcb0c509136b.png" width="300"/> <img src="https://user-images.githubusercontent.com/94298439/181022599-097c3faa-13a6-46cf-851a-99c416e5791a.png" width="300"/>
 
 ## Technical Highlights
-- Followed MVC pattern to structure the code base, utilized Firebase SDK to design data structure to perform CRUD operations
+- Followed `MVC pattern` to structure the code base, utilized Firebase SDK to design data structure to perform CRUD operations
 - Adopted `delegate pattern` to hand off responsibilities between different classes.
 - Utilized Lottie to display loading animation.
 - Implemented image downloading and caching via Kingfisher.
-- Implemented Auto Layout via programmatical NSLayoutConstraint to build an pleasing user interface
-- Managed asynchronous/synchronous firebase API sessions through GCD framework
-- Enable editing of technical articles via NSAttributedString and export to PDF via PDFKit
-- Optimized performance by implementing video cache functionality on post’s videos with AVPlayer to provide users a smooth scrolling experience.
+- Implemented Auto Layout via `programmatical NSLayoutConstraint` to build an pleasing user interface
+- Managed asynchronous/synchronous firebase API sessions through `GCD` framework
+- Enable editing of technical articles via `NSAttributedString` and export to PDF via `PDFKit`
+- Optimized performance by implementing video `cache` functionality on post’s videos with `AVPlayer` to provide users a smooth scrolling experience.
 - Applied multiple user roles of business logic to the application to deal with different user scenarios
 - Constructed calendar with date filtering functionality without using third-party libraries
 
