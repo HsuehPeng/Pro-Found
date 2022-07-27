@@ -52,7 +52,7 @@ class ArticleViewController: UIViewController {
 		return tableView
 	}()
 	
-	private lazy var writeArticleButton: UIButton = {
+	lazy var writeArticleButton: UIButton = {
 		let button = UIButton()
 		let image = UIImage.asset(.edit)?.withTintColor(UIColor.orange)
 		button.setImage(image, for: .normal)

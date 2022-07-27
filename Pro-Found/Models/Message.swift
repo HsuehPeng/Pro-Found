@@ -15,7 +15,9 @@ struct Message {
 	var timestamp: Double
 	var user: User?
 	let isFromCurrentUser: Bool
-	
+}
+
+extension Message {
 	init(dictionary: [String: Any]) {
 		self.text = dictionary["text"] as? String ?? ""
 		self.toID = dictionary["toID"] as? String ?? ""
@@ -24,7 +26,6 @@ struct Message {
 		self.isFromCurrentUser = fromID == Auth.auth().currentUser?.uid
 	}
 }
-
 
 struct Conversation {
 	let user: User

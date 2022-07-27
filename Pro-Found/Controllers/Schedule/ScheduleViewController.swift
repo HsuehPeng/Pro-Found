@@ -286,7 +286,7 @@ class ScheduleViewController: UIViewController {
 			case .success(let user):
 				self.user = user
 			case .failure(let error):
-				self.showAlert(alertText: "Error", alertMessage: "Internate connection issue")
+				self.showAlert(alertText: "Error", alertMessage: "Internet connection issue: \(error)")
 				print(error)
 			}
 		}

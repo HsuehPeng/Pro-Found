@@ -53,6 +53,7 @@ class LoginViewController: UIViewController {
 		textField.autocapitalizationType = .none
 		textField.font = UIFont.customFont(.manropeRegular, size: 14)
 		textField.placeholder = "Input email"
+		textField.accessibilityIdentifier = "emailTextField"
 		return textField
 	}()
 	
@@ -74,6 +75,7 @@ class LoginViewController: UIViewController {
 		textField.autocapitalizationType = .none
 		textField.placeholder = "Input password"
 		textField.isSecureTextEntry = true
+		textField.accessibilityIdentifier = "passwordTextField"
 		return textField
 	}()
 	
@@ -87,6 +89,7 @@ class LoginViewController: UIViewController {
 		let button = CustomUIElements().makeLargeButton(buttonColor: .orange, buttonTextColor: .light60,
 														borderColor: .clear, buttonText: "Log In")
 		button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+		button.accessibilityIdentifier = "loginButton"
 		return button
 	}()
 	

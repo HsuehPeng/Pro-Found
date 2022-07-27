@@ -58,6 +58,7 @@ class HomeViewController: UIViewController {
 	private let greetingLabel: UILabel = {
 		let label = CustomUIElements().makeLabel(font: UIFont.customFont(.manropeRegular, size: 12),
 											   textColor: UIColor.dark40, text: "Welcome back,")
+		label.accessibilityIdentifier = "greetingLabel"
 		return label
 	}()
 	
@@ -81,26 +82,31 @@ class HomeViewController: UIViewController {
 	
 	private lazy var languageButton: UIButton = {
 		let button = makeSubjectFilterButton(for: Subject.language)
+		button.accessibilityIdentifier = "language_filter_button"
 		return button
 	}()
 	
 	private lazy var techButton: UIButton = {
 		let button = makeSubjectFilterButton(for: Subject.technology)
+		button.accessibilityIdentifier = "technology_filter_button"
 		return button
 	}()
 	
 	private lazy var musicButton: UIButton = {
 		let button = makeSubjectFilterButton(for: Subject.music)
+		button.accessibilityIdentifier = "music_filter_button"
 		return button
 	}()
 	
 	private lazy var sportButton: UIButton = {
 		let button = makeSubjectFilterButton(for: Subject.sport)
+		button.accessibilityIdentifier = "sport_filter_button"
 		return button
 	}()
 	
 	private lazy var artButton: UIButton = {
 		let button = makeSubjectFilterButton(for: Subject.art)
+		button.accessibilityIdentifier = "art_filter_button"
 		return button
 	}()
 	

@@ -28,6 +28,36 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B80D676328880879008D0FA8"
+               BuildableName = "TextMessageViewModelTests.xctest"
+               BlueprintName = "TextMessageViewModelTests"
+               ReferencedContainer = "container:Pro-Found.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B80D67702888E218008D0FA8"
+               BuildableName = "Pro-FoundTests.xctest"
+               BlueprintName = "Pro-FoundTests"
+               ReferencedContainer = "container:Pro-Found.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B80D677F2888EA84008D0FA8"
+               BuildableName = "Pro-FoundUITests.xctest"
+               BlueprintName = "Pro-FoundUITests"
+               ReferencedContainer = "container:Pro-Found.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
